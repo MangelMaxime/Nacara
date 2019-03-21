@@ -1,0 +1,33 @@
+.toc-container {
+    // position: fixed;
+    border-left: 1px solid #e0e0e0;
+    padding-left: 1rem;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 20px;
+    font-size: 0.90em;
+
+    a {
+        color: $text;
+        &:hover {
+            color: $link;
+        }
+    }
+
+    .toc-label {
+        color: #7a7a7a;
+        font-size: 1em;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 10px 0 0 0;
+    }
+
+    .toc-headings {
+        padding: 10px 0 2px 15px;
+        // padding: 1em 0 0 1em;
+
+        > li {
+            padding: 6px 0 2px 0px;
+        }
+    }
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Libs/FrontMatter.fs" />
+    <Compile Include="Libs/LiveServer.fs" />
+    <Compile Include="Libs/Chokidar.fs" />
+    <Compile Include="Libs/Sass.fs" />
+    <Compile Include="Libs/Chalk.fs" />
+    <Compile Include="Libs/StringJS.fs" />
+    <Compile Include="Libs/CodeLightner.fs" />
+    <Compile Include="Log.fs" />
+    <Compile Include="Helpers.fs" />
+    <Compile Include="Changelog.fs" />
+    <Compile Include="Types.fs" />
+    <Compile Include="Render.Common.fs" />
+    <Compile Include="Render.DocPage.fs" />
+    <Compile Include="Render.Changelog.fs" />
+    <Compile Include="Write.fs" />
+    <Compile Include="Main.fs" />
+  </ItemGroup>
+  <Import Project="..\.paket\Paket.Restore.targets" />
+</Project>

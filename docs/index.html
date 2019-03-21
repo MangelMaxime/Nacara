@@ -1,0 +1,49 @@
+<html class="has-navbar-fixed-top"><head><title> · </title><link rel="stylesheet" type="text/css" href="style.css"/><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"/><script src="https://polyfill.app/api/polyfill?features=scroll-behavior"></script></head><body><nav class="navbar is-primary is-fixed-top"><div class="container"><div class="navbar-brand"><div class="navbar-item title is-4">Nacara</div></div><div class="navbar-start"><a class="navbar-item">0.0.0</a></div><div class="navbar-end"><a class="navbar-item" href="https://gitter.im/fable-compiler/Fable" target="_blank"><span class="icon"><i class=" fab fa-gitter fa-lg"></i></span><span>Support</span></a><a class="navbar-item" href="https://github.com/MangelMaxime/Nacara" target="_blank"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item" href="https://twitter.com/MangelMaxime" target="_blank" style="color:#55acee"><span class="icon"><i class=" fab fa-twitter fa-lg"></i></span></a></div></div></nav><div class="columns is-gapless page-content"><div class="column is-2 sidebar"></div><div class="column main-content" style="scroll-behavior:smooth"><div class="columns is-gapless"><div class="column"><section class="section"><div class="content"><div><h1><a href="#quick-start" aria-hidden="true" style="visibility:hidden"><span class="anchor" id="quick-start"></span></a> Quick start</h1>
+<article class="message is-info">
+                <div class="message-body"><p><strong>Nacara</strong> is a young project but it already make generating documentation easy.</p>
+<p>Here are some example of documentation website created using Nacara:</p>
+<ul>
+<li><a href="https://mangelmaxime.github.io/Nacara">Nacara documentation</a></li>
+</ul>
+</div>
+</article>
+<ul class="textual-steps">
+<li>
+<p>Ensure you have the latest version of Node installed. We also recommend you install Yarn as well.</p>
+<article class="message is-warning">
+                <div class="message-body"><p>You have to be on Node &gt;= 8.x and Yarn &gt;= 1.5.</p>
+</div>
+</article>
+</li>
+<li>
+<p>Add Nacara to your project by running <code>yarn add -D nacara</code></p>
+</li>
+<li>
+<p>Create a file <code>doc.json</code> at the root of your project copy this json in it:</p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span>{</span>
+<span>    </span><span style="color: #E45649">&quot;githubURL&quot;</span><span>: </span><span style="color: #50A14F">&quot;url to your github repo&quot;</span><span>,</span>
+<span>    </span><span style="color: #E45649">&quot;title&quot;</span><span>: </span><span style="color: #50A14F">&quot;name of your project&quot;</span><span>,</span>
+<span>    </span><span style="color: #E45649">&quot;version&quot;</span><span>: </span><span style="color: #50A14F">&quot;current version of your project&quot;</span>
+<span>}</span></code></pre>
+<p><em>Don't forget to adapt the values</em></p>
+</li>
+<li>
+<p>Create a folder <code>docsrc</code> it will host the source of your documenation.</p>
+<p>Create to file under this folder:</p>
+<ul>
+<li><code>index.md</code> - it will be the index of your documenation</li>
+<li><code>style.scss</code> - you will use it to load Nacara styles and customize it
+<ul>
+<li>Add this line <code>@import './node_modules/nacara/scss/nacara.scss';</code> so the basic style of Nacara are loaded</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Run Nacara: <code>yarn run nacara</code></p>
+</li>
+<li>
+<p>You can now make changes in your <code>index.md</code> and see the changes being applied directly in your browser.</p>
+</li>
+</ul>
+</div></div></section></div><div class="column is-3        is-hidden-touch     "><nav class="toc-container"></nav></div></div></div></div></body></html>

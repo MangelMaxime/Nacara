@@ -1,0 +1,8 @@
+@import "./../node_modules/bulma/sass/utilities/initial-variables";
+
+$primary: rgb(175, 64, 133);
+$text: #2b2b2b;
+
+$navbar-item-color: $white;
+
+@import './../scss/nacara.scss';

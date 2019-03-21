@@ -1,0 +1,45 @@
+# OSX
+#
+.DS_Store
+
+# node.js
+#
+**/node_modules/
+**/npm/
+npm-debug.log
+
+# F#
+.fake/
+packages/
+build/
+obj
+bin
+out
+
+# git
+*.orig
+
+.vs
+
+Meta.props
+temp
+
+dotnetsdk/
+
+paket-files/
+
+paket\.local
+
+docs/public/*
+!docs/public/libs
+!docs/public/blog
+!docs/public/assets
+
+\.idea/
+
+Fulma\.sln\.DotSettings\.user
+
+yarn-error\.log
+
+.fable
+dist/

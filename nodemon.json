@@ -1,0 +1,10 @@
+{
+    "watch": [
+        "dist/",
+        "docs.json"
+    ],
+    "env": {
+        "NODE_ENV": "development"
+    },
+    "ext": "js json"
+}
