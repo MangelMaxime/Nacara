@@ -16,6 +16,7 @@
     "fable-compiler": "^2.1.11",
     "fable-splitter": "^2.1.2",
     "nodemon": "^1.18.10",
+    "npx": "^10.2.0",
     "sass": "^1.16.1"
   },
   "dependencies": {

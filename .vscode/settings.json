@@ -12,7 +12,7 @@
         "**/packages": true,
         "**/node_modules": true,
         "**/dist": false,
-        "**/.fable": true,
+        "**/.fable": false,
         "**/paket-files": false
     },
     "search.exclude": {

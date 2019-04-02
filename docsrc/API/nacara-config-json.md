@@ -1,7 +1,6 @@
 ---
-title: Config file
+title: Quick start
 ---
-
 # Quick start
 
 :::info

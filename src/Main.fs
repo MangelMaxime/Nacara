@@ -291,7 +291,7 @@ let fileWatcherSubscription (model : Model) =
 
     [ handler ]
 
-let checkPageAttributes (path : string) =
+let tryBuildPageContext (path : string) =
     promise {
         let! fileContent = File.read path
         let fm = FrontMatter.fm.Invoke(fileContent)
@@ -309,7 +309,7 @@ let checkPageAttributes (path : string) =
     }
 
 promise {
-    let configPath = Node.Exports.path.join(cwd, "docs.json")
+    let configPath = Node.Exports.path.join(cwd, "nacara.json")
     let! hasDocsConfig = File.exist(configPath)
 
     if hasDocsConfig then
@@ -323,7 +323,13 @@ promise {
                 |> Array.map (fun file ->
                     config.Source + "/" + file
                 )
-                |> Array.map checkPageAttributes
+                // Remove directories from the list
+                |> Array.filter (fun path ->
+                    let stats = File.statsSync path
+                    stats.isDirectory()
+                    |> not
+                )
+                |> Array.map tryBuildPageContext
                 |> Promise.all
 
             let (validContext, erroredContext) =
@@ -393,8 +399,7 @@ promise {
             Log.error "Your config file seems invalid."
             Log.errorFn "%s" msg
     else
-        Log.error "No file `docs.json` found."
-        Log.errorFn "Nacara doesn't support yet zero configuration option."
+        Log.error "No file `nacara.json` found."
         Node.Globals.``process``.exit(1)
 }
 |> Promise.start

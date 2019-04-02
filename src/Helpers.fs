@@ -54,7 +54,6 @@ module Directory =
     let dirname (dir : string) =
         Node.Exports.path.dirname(dir)
 
-
     let getFiles (dir : string) =
         Promise.create (fun resolve reject ->
             Node.Exports.fs.readdir(U2.Case1 dir, (fun (err: Node.Base.NodeJS.ErrnoException option) (files : ResizeArray<string>) ->
@@ -109,6 +108,22 @@ module File =
 
     let absolutePath (dir : string) =
         Node.Exports.path.resolve(dir)
+
+    let stats (path : string) =
+        Promise.create (fun resolve reject ->
+            Node.Exports.fs.stat(U2.Case1 path, (fun (err: Node.Base.NodeJS.ErrnoException option) (stats : Node.Fs.Stats) ->
+                match err with
+                | Some err ->
+                    reject (err :?> System.Exception)
+                    null
+                | None ->
+                    resolve stats
+                    null
+            ))
+        )
+
+    let statsSync (path : string) =
+        Node.Exports.fs.statSync(U2.Case1 path)
 
 
 

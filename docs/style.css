@@ -9164,9 +9164,8 @@ ul.textual-steps > li::before {
   border-left: 1px solid #e0e0e0;
   padding-left: 1rem;
   position: sticky;
-  position: -webkit-sticky;
-  top: 20px;
-  font-size: 0.9em;
+  top: 3.25rem;
+  font-size: 12px;
 }
 .toc-container a {
   color: #2b2b2b;
@@ -9199,18 +9198,6 @@ html.has-navbar-fixed-top body {
 body {
   height: calc(100vh - 3.25rem);
   min-height: calc(100vh - 3.25rem);
-  overflow: hidden;
-}
-
-.page-content {
-  overflow: auto;
-  height: 100%;
-}
-
-.main-content {
-  overflow-y: auto;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
 }
 
 .icon + span {

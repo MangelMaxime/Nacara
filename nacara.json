@@ -3,7 +3,7 @@
     "title": "Nacara",
     "debug": true,
     "changelog": "CHANGELOG.md",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "navbar": {
         "showVersion": true,
         "community": "community",
@@ -27,8 +27,27 @@
             }
         ]
     },
-    "menuCollapsible": true,
-    "menuDefault": "expanded",
+    "menu": {
+        "Getting Started": [
+            "index"
+        ],
+        "API": [
+            "nacara-config-json",
+            "nacara-config-json2"
+        ],
+        "Fulma": [
+            "Introduction",
+            "Versions",
+            {
+                "Modifiers": [
+                    "Basics",
+                    "Color & Shades",
+                    "Typographie",
+                    "Responsive"
+                ]
+            }
+        ]
+    },
     "lightner": {
         "backgroundColor": "#FAFAFA",
         "textColor": "",

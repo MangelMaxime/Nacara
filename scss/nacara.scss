@@ -24,18 +24,7 @@ html {
 body {
     height: calc(100vh - 3.25rem);
     min-height: calc(100vh - 3.25rem);
-    overflow: hidden;
-}
-
-.page-content {
-    overflow: auto;
-    height: 100%;
-}
-
-.main-content {
-    overflow-y: auto;
-    overflow-x: hidden;
-    scroll-behavior: smooth;
+    // overflow: hidden;
 }
 
 // Add a space between an icon and the text

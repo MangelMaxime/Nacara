@@ -3,7 +3,6 @@ module Types
 open Thoth.Json
 open System.Collections.Generic
 open Fable.Import
-open Fable.Core.JsInterop
 
 type PostRenderDemos =
     { Script : string
@@ -30,22 +29,6 @@ type PageContext =
       Attributes : PageAttributes
       TableOfContent : string
       Content : string }
-
-
-type MenuState =
-    | Expanded
-    | Collapsed
-
-    static member Decoder =
-        Decode.string
-        |> Decode.andThen(
-            function
-            | "expanded" -> Decode.succeed Expanded
-            | "collapsed" -> Decode.succeed Collapsed
-            | unkown ->
-                sprintf "`%s` is an invalid value. Possible values are:\n-expanded\n- collapsed" unkown
-                |> Decode.fail
-        )
 
 type Link =
     { Href : string
@@ -94,6 +77,77 @@ type LightnerConfig =
               GrammarFiles = get.Required.Field "grammars" (Decode.list Decode.string) }
         )
 
+type MenuState =
+    | Static
+    | Expanded
+    | Collapsed
+
+    static member Decoder =
+        Decode.string
+        |> Decode.andThen(
+            function
+            | "expanded" -> Decode.succeed Expanded
+            | "collapsed" -> Decode.succeed Collapsed
+            | "static" -> Decode.succeed Static
+            | unkown ->
+                sprintf "`%s` is an invalid value. Possible values are:\n-expanded\n- collapsed" unkown
+                |> Decode.fail
+        )
+
+module Helpers =
+
+    open Fable.Core
+
+    [<Emit("Object.getPrototypeOf($0 || false) === Object.prototype")>]
+    let isObject (_ : obj) : bool = jsNative
+
+    let inline isArray (o: obj) : bool = JS.Array.isArray(o)
+
+    let inline objectKeys (o: obj) : string seq = upcast JS.Object.keys(o)
+
+open Fable.Core.JsInterop
+
+type MenuItem =
+    | MenuItem of string
+    | MenuList of JS.Map<string, MenuItem list>
+
+    static member Decoder =
+        Decode.oneOf [
+            Decode.string
+            |> Decode.map MenuItem
+
+            (fun path value ->
+                if not (Helpers.isObject value) || Helpers.isArray value then
+                    (path, Decode.BadPrimitive ("an object", value))
+                    |> Error
+                else
+                    let keys = Helpers.objectKeys value
+
+                    if Seq.length keys > 1 then
+                        (path, Decode.BadPrimitive ("an object with 1 property", value))
+                        |> Error
+                    else
+                        JS.Map.Create<string, MenuItem list>()
+                        |> Ok )
+            |> Decode.map MenuList
+        ]
+
+type MenuConfig = JS.Map<string, MenuItem list>
+
+let menuConfigDecoder : Decode.Decoder<JS.Map<string, MenuItem list>> =
+    fun path value ->
+        if not (Helpers.isObject value) || Helpers.isArray value then
+            (path, Decode.BadPrimitive ("an object", value))
+            |> Error
+        else
+            value
+            |> Helpers.objectKeys
+            |> Seq.map (fun key -> (key, value?(key) |> Decode.unwrap path (Decode.list MenuItem.Decoder)))
+            |> Seq.fold (fun (state : JS.Map<string, MenuItem list>) (key, value) ->
+                state.set(key, value)
+            ) (JS.Map.Create<string, MenuItem list>())
+            |> Ok
+
 type Config =
     { NpmURL : string option
       GithubURL : string option
@@ -104,8 +158,7 @@ type Config =
       IsDebug : bool
       Changelog : string option
       Navbar : NavbarConfig option
-      MenuCollapsible : bool
-      MenuDefault : MenuState
+      MenuConfig : MenuConfig option
       LightnerConfig : LightnerConfig option }
 
     static member Decoder =
@@ -122,10 +175,7 @@ type Config =
                         |> Option.defaultValue false
               Changelog = get.Optional.Field "changelog" Decode.string
               Navbar = get.Optional.Field "navbar" NavbarConfig.Decoder
-              MenuCollapsible = get.Optional.Field "menuCollapsible" Decode.bool
-                                |> Option.defaultValue false
-              MenuDefault = get.Optional.Field "menuDefault" MenuState.Decoder
-                            |> Option.defaultValue Collapsed
+              MenuConfig = get.Optional.Field "menu" menuConfigDecoder
               LightnerConfig = get.Optional.Field "lightner" LightnerConfig.Decoder }
         )
 

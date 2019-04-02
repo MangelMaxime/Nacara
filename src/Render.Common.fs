@@ -86,10 +86,11 @@ let private navbar (config : Config) =
                     [ str config.Title ] ]
               navbarItems config ] ]
 
-let basePage (model : Model) (content : React.ReactElement) =
-    let siteTitle = ""
-    let pageTitle = ""
-    let titleStr = pageTitle + " · " +  siteTitle
+let basePage (model : Model) (pageTitle : string option) (content : React.ReactElement) =
+    let titleStr =
+        match pageTitle with
+        | Some pageTitle -> pageTitle + " · " + model.Config.Title
+        | None -> model.Config.Title
 
     html [ Class "has-navbar-fixed-top" ]
         [ head [ ]
@@ -106,14 +107,17 @@ let basePage (model : Model) (content : React.ReactElement) =
                 [ ] ]
           body [ ]
             [ navbar model.Config
-              Columns.columns [ Columns.IsGapless
-                                Columns.CustomClass "page-content" ]
-                [ Column.column [ Column.Width (Screen.All, Column.Is2)
-                                  Column.CustomClass "sidebar" ]
-                    [ ]
-                  Column.column [ Column.CustomClass "main-content"
-                                  // We need to set ScrollBehavior as inline style
-                                  // for the polyfill to detect it and apply
-                                  // Needed for IE11 + Safari for example
-                                  Column.Props [ Style [ ScrollBehavior "smooth" ] ] ]
-                    [ content ] ] ] ]
+              Container.container [ ]
+                [ content ] ] ]
+            //   Columns.columns [ Columns.IsGapless
+            //                     Columns.CustomClass "page-content" ]
+            //     [ Column.column [ Column.Width (Screen.All, Column.Is3)
+            //                       Column.CustomClass "sidebar" ]
+            //         [ ]
+            //       Column.column [ Column.CustomClass "main-content"
+            //                       Column.Width (Screen.All, Column.Is8)
+            //                       // We need to set ScrollBehavior as inline style
+            //                       // for the polyfill to detect it and apply
+            //                       // Needed for IE11 + Safari for example
+            //                       Column.Props [ Style [ ScrollBehavior "smooth" ] ] ]
+            //         [ content ] ] ] ]
