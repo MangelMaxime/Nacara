@@ -6,7 +6,6 @@ $body-size: 14px;
 @import "../node_modules/bulma/bulma.sass";
 
 @import './components/changelog.scss';
-@import './components/sidebar.scss';
 @import './components/textual-steps.scss';
 @import './components/toc.scss';
 
@@ -16,15 +15,21 @@ html {
 
         body {
             padding-top: 0;
-            margin-top: 3.25rem;
+            margin-top: $navbar-height;
         }
     }
 }
 
 body {
-    height: calc(100vh - 3.25rem);
-    min-height: calc(100vh - 3.25rem);
+    height: calc(100vh - #{$navbar-height});
+    min-height: calc(100vh - #{$navbar-height});
     // overflow: hidden;
+
+    .full-height-scrollable-content {
+        height: calc(100vh - #{$navbar-height});
+        min-height: calc(100vh - #{$navbar-height});
+        overflow-y: auto;
+    }
 }
 
 // Add a space between an icon and the text

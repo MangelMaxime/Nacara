@@ -9131,11 +9131,6 @@ label.panel-block:hover {
   padding: 0 0 0 8em;
 }
 
-.sidebar {
-  height: 100vh;
-  overflow-y: auto;
-}
-
 ul.textual-steps {
   list-style: none;
   padding-left: 0;
@@ -9198,6 +9193,11 @@ html.has-navbar-fixed-top body {
 body {
   height: calc(100vh - 3.25rem);
   min-height: calc(100vh - 3.25rem);
+}
+body .full-height-scrollable-content {
+  height: calc(100vh - 3.25rem);
+  min-height: calc(100vh - 3.25rem);
+  overflow-y: auto;
 }
 
 .icon + span {

@@ -10,24 +10,25 @@ let private renderPage (menu : React.ReactElement option) (tocContent : string) 
     Columns.columns [ Columns.IsGapless ]
         [ Column.column [ Column.Width (Screen.Desktop, Column.Is2)
                           Column.Width (Screen.Touch, Column.Is3)
-                          Column.Props [ Style [ OverflowY "auto"
-                                                 Height "100%" ] ] ]
-            [ div [ Style [ MaxHeight "100%" ] ]
-                [ ofOption menu ] ]
+                          Column.CustomClass "full-height-scrollable-content"
+                        //   Column.Props [ Style [ OverflowY "auto"
+                        //                          Height "100%" ] ]
+                                                  ]
+            [ ofOption menu ]
           Column.column [ Column.Width (Screen.Desktop, Column.Is8)
                           Column.Width (Screen.Touch, Column.Is9)
-                          Column.Props [ Style [ OverflowY "auto"
-                                                 Height "100%"
+                          Column.CustomClass "full-height-scrollable-content"
+                          Column.Props [ Style [ //OverflowY "auto"
+                                                 //Height "100%"
+                                                 // We need to set ScrollBehavior via style so the polyfill can work
                                                  ScrollBehavior "smooth" ] ] ]
             [ Section.section [ ]
                 [ Content.content [ ]
                     [ div [ DangerouslySetInnerHTML { __html =  pageContent } ] [ ] ] ] ]
           Column.column [ Column.Width (Screen.Desktop, Column.Is2)
-                          Column.Modifiers [ Modifier.IsHidden (Screen.Touch, true) ] ]
-            [ div [ Style [ OverflowY "auto"
-                            MaxHeight "100%"
-                            Width "100%" ]
-                    DangerouslySetInnerHTML { __html =  tocContent } ]
+                          Column.Modifiers [ Modifier.IsHidden (Screen.Touch, true) ]
+                          Column.CustomClass "full-height-scrollable-content" ]
+            [ div [ DangerouslySetInnerHTML { __html =  tocContent } ]
                 [ ] ] ]
 
 let private generateMenu (model : Model) (pageContext : PageContext) =
