@@ -4,8 +4,8 @@ source https://www.nuget.org/api/v2
 storage:none
 framework: netstandard2.0
 
-nuget Fable.Promise
 nuget FSharp.Core redirects:force
+nuget Fable.Promise
 nuget Fable.Core
 nuget Fable.Import.Browser
 nuget Fable.React
@@ -20,3 +20,15 @@ nuget Fable.Elmish
 github akamud/vscode-theme-onelight themes/OneLight.json
 github ionide/ionide-fsgrammar grammar/fsharp.json
 github Microsoft/vscode extensions/json/syntaxes/JSON.tmLanguage.json
+
+group netcorebuild
+    source https://www.nuget.org/api/v2
+    storage:none
+
+    nuget FSharp.Core redirects:force
+    nuget Fake.DotNet.Cli
+    nuget Fake.IO.FileSystem
+    nuget Fake.Core.Target
+    nuget Fake.Tools.Git
+    nuget Fake.JavaScript.Yarn
+    nuget BlackFox.Fake.BuildTask
