@@ -3,6 +3,7 @@ module Render.DocPage
 open Fable.Helpers.React
 open Fable.Helpers.React.Props
 open Fulma
+open Fable.FontAwesome
 open Types
 open Fable.Import
 
@@ -34,7 +35,6 @@ let private renderPage (menu : React.ReactElement option) (tocContent : string) 
 let private generateMenu (model : Model) (pageContext : PageContext) =
     match model.Config.MenuConfig with
     | Some menuConfig ->
-        JS.console.log "has menu"
         let keys =
             menuConfig.keys() :?> JS.Iterable<string>
             |> JS.Array.from
@@ -44,16 +44,57 @@ let private generateMenu (model : Model) (pageContext : PageContext) =
         |> Array.map (fun key ->
             let items =
                 menuConfig.get(key)
-                |> List.map (fun id ->
-                    JS.console.log id
-                    Menu.Item.li [ ]
-                        [  ]
+                |> List.map (function
+                    | MenuItem pageId ->
+                        match Map.tryFind pageId model.DocFiles with
+                        | Some pageInfo ->
+                            Menu.Item.li [ Menu.Item.Props [ Data("menu-id", pageId) ] ]
+                                [ str pageInfo.Attributes.Title ]
+                        | None ->
+                            Log.error "Unable to find the file: %s" pageId
+                            nothing
+                    | MenuList menuListInfo ->
+                        let keys =
+                            menuListInfo.keys() :?> JS.Iterable<string>
+                            |> JS.Array.from
+                            |> unbox<string array>
+
+                        keys
+                        |> Array.map (fun key ->
+                            let subMenu =
+                                menuListInfo.get(key)
+                                |> List.map (function
+                                    | MenuItem pageId ->
+                                        match Map.tryFind pageId model.DocFiles with
+                                        | Some pageInfo ->
+                                            Menu.Item.li [ Menu.Item.Props [ Data("menu-id", pageId) ] ]
+                                                [ str pageInfo.Attributes.Title ]
+                                        | None ->
+                                            Log.error "Unable to find the file: %s" pageId
+                                            nothing
+                                    | MenuList x ->
+                                        Log.warn "Nacara only support only 2 level deep menus. The following menu is too deep:\n%A" x
+                                        nothing
+                                )
+                                |> ul [ ]
+
+                            li [ ]
+                                [ a [ Class "menu-group" ]
+                                    [ span [ ]
+                                        [ str key ]
+                                      Icon.icon [ ]
+                                        [ Fa.i [ Fa.Solid.AngleRight
+                                                 Fa.Size Fa.FaLarge ]
+                                            [ ] ] ]
+                                  subMenu ]
+
+                        )
+                        |> Array.toList
+                        |> Menu.list [ ]
                 )
 
             fragment [ ]
-                [ div [ Key "" ]
-                    [ ]
-                  Menu.label [ ]
+                [ Menu.label [ ]
                     [ str key ]
                   Menu.list [ ]
                     items ]
@@ -64,22 +105,21 @@ let private generateMenu (model : Model) (pageContext : PageContext) =
         JS.console.log "no menu"
         None
 
+let addJavaScriptConfig (model : Model) (pageContext : PageContext) (pageContent : React.ReactElement) =
+    fragment [ ]
+        [ pageContent
+          script [ Type "text/javascript"
+                   DangerouslySetInnerHTML { __html = sprintf
+                """
+nacara.pageId = '%s';
+                """
+                (getFileId model.Config.Source pageContext) } ]
+            [ ] ]
+
 let toHtml (model : Model) (pageContext : PageContext) =
-    let pathPrefix =
-        let levelDiff =
-            pageContext.Path
-                .Replace(model.WorkingDirectory, "")
-                .Split(char Fable.Import.Node.Exports.path.sep)
-                |> Array.skip 1
-                |> Array.length
-
-        if levelDiff = 1 then
-            ""
-        else
-            String.replicate (levelDiff - 1)  (".." + Fable.Import.Node.Exports.path.sep)
-
     renderPage
         (generateMenu model pageContext)
         pageContext.TableOfContent
         pageContext.Content
+    |> addJavaScriptConfig model pageContext
     |> Render.Common.basePage model pageContext.Attributes.Title

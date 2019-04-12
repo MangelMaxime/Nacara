@@ -86,11 +86,21 @@ let private navbar (config : Config) =
                     [ str config.Title ] ]
               navbarItems config ] ]
 
-let basePage (model : Model) (pageTitle : string option) (content : React.ReactElement) =
-    let titleStr =
-        match pageTitle with
-        | Some pageTitle -> pageTitle + " · " + model.Config.Title
-        | None -> model.Config.Title
+let basePage (model : Model) (pageTitle : string) (content : React.ReactElement) =
+    let titleStr = pageTitle + " · " + model.Config.Title
+
+    let toUrl (url : string) =
+        model.Config.BaseUrl + url
+
+    let menuScript =
+        let sourceCode =
+            Directory.join Node.Globals.__dirname "../scripts/menu.js"
+            |> File.readSync
+
+        script [ Type "text/javascript"
+                 DangerouslySetInnerHTML { __html = sourceCode } ]
+            [ ]
+
 
     html [ Class "has-navbar-fixed-top" ]
         [ head [ ]
@@ -98,26 +108,21 @@ let basePage (model : Model) (pageTitle : string option) (content : React.ReactE
                 [ str titleStr ]
               link [ Rel "stylesheet"
                      Type "text/css"
-                     Href "style.css" ]
+                     Href (toUrl "style.css") ]
               link [ Rel "stylesheet"
                      Href "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
                      Integrity "sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
                      CrossOrigin "anonymous" ]
               script [ Src "https://polyfill.app/api/polyfill?features=scroll-behavior" ]
-                [ ] ]
+                [ ]
+              script [ Type "text/javascript"
+                       DangerouslySetInnerHTML { __html = sprintf
+                """
+var nacara = {};
+                """ } ]
+                    [ ]
+              menuScript ]
           body [ ]
             [ navbar model.Config
               Container.container [ ]
                 [ content ] ] ]
-            //   Columns.columns [ Columns.IsGapless
-            //                     Columns.CustomClass "page-content" ]
-            //     [ Column.column [ Column.Width (Screen.All, Column.Is3)
-            //                       Column.CustomClass "sidebar" ]
-            //         [ ]
-            //       Column.column [ Column.CustomClass "main-content"
-            //                       Column.Width (Screen.All, Column.Is8)
-            //                       // We need to set ScrollBehavior as inline style
-            //                       // for the polyfill to detect it and apply
-            //                       // Needed for IE11 + Safari for example
-            //                       Column.Props [ Style [ ScrollBehavior "smooth" ] ] ]
-            //         [ content ] ] ] ]

@@ -5,8 +5,9 @@ module LiveServer
 
 open Fable.Core
 open Fable.Import
+open Fable.Import.JS
 
-type Middleware = obj -> obj -> (unit -> unit) -> unit
+type Middleware = Node.Http.ServerRequest -> Node.Http.ServerResponse -> Function -> unit
 
 type Options =
     /// Set the server port. Defaults to 8080.
@@ -28,7 +29,7 @@ type Options =
     /// 0 = errors only, 1 = some, 2 = lots
     abstract logLevel: int with get, set
     /// Takes an array of Connect-compatible middleware that are injected into the server middleware stack
-    abstract middleware: Middleware with get, set
+    abstract middleware: Middleware array with get, set
 
 type [<AllowNullLiteral>] LiveServer =
     abstract start: ?options : Options -> Node.Http.Server

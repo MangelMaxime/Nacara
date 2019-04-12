@@ -1,6 +1,4 @@
-<html class="has-navbar-fixed-top"><head><title>Changelog · Nacara</title><link rel="stylesheet" type="text/css" href="/Nacara/style.css"/><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"/><script src="https://polyfill.app/api/polyfill?features=scroll-behavior"></script><script type="text/javascript">
-var nacara = {};
-                </script><script type="text/javascript">window.onload = function () {
+window.onload = function () {
     // Initialize the menu state
     // Set as active the menu for the current page
     document
@@ -57,4 +55,3 @@ var nacara = {};
             });
         });
 };
-</script></head><body><nav class="navbar is-primary is-fixed-top"><div class="container"><div class="navbar-brand"><div class="navbar-item title is-4">Nacara</div></div><div class="navbar-start"><a class="navbar-item">0.1.0</a></div><div class="navbar-end"><a class="navbar-item" href="https://gitter.im/fable-compiler/Fable" target="_blank"><span class="icon"><i class=" fab fa-gitter fa-lg"></i></span><span>Support</span></a><a class="navbar-item" href="https://github.com/MangelMaxime/Nacara" target="_blank"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item" href="https://twitter.com/MangelMaxime" target="_blank" style="color:#55acee"><span class="icon"><i class=" fab fa-twitter fa-lg"></i></span></a></div></div></nav><div class="container"><div class="columns"><div class="column is-9"><div class="content"><section class="changelog"><ul class="changelog-list"></ul></section></div></div></div></div></body></html>

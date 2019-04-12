@@ -1,5 +1,7 @@
 {
     "githubURL": "https://github.com/MangelMaxime/Nacara",
+    "url": "https://mangelmaxime.github.io",
+    "baseUrl": "/Nacara/",
     "title": "Nacara",
     "debug": true,
     "changelog": "CHANGELOG.md",
@@ -32,18 +34,24 @@
             "index"
         ],
         "API": [
-            "nacara-config-json",
-            "nacara-config-json2"
+            "API/nacara-config-json",
+            "API/nacara-config-json"
         ],
         "Fulma": [
-            "Introduction",
-            "Versions",
+            "test",
+            "test",
             {
                 "Modifiers": [
-                    "Basics",
-                    "Color & Shades",
-                    "Typographie",
-                    "Responsive"
+                    "API/nacara-config-json",
+                    "API/nacara-config-json",
+                    "API/nacara-config-json",
+                    "API/nacara-config-json"
+                ],
+                "sub item 2": [
+                    "API/nacara-config-json",
+                    "API/nacara-config-json",
+                    "API/nacara-config-json",
+                    "test"
                 ]
             }
         ]

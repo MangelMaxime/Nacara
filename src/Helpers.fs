@@ -1,5 +1,5 @@
 [<AutoOpen>]
-module Global
+module rec Global
 
 open Fable.Helpers.React
 open Fable.Helpers.React.Props
@@ -12,6 +12,16 @@ let require<'T> (modulePath : string) : 'T = jsNative
 
 let isNotNull (o : 'T) =
     not (isNull o)
+
+let getFileId (sourceDir : string) (pageContext : Types.PageContext) =
+    match pageContext.Attributes.Id with
+    | Some id -> id
+    | None ->
+        let extensionPos = pageContext.Path.LastIndexOf('.')
+
+        pageContext.Path
+            .Substring(0, extensionPos) // Remove extension
+            .Substring((sourceDir + "/").Length) // Remove the source directory info
 
 module Directory =
 
@@ -54,7 +64,7 @@ module Directory =
     let dirname (dir : string) =
         Node.Exports.path.dirname(dir)
 
-    let getFiles (dir : string) =
+    let getFiles (isRecursive : bool) (dir : string) =
         Promise.create (fun resolve reject ->
             Node.Exports.fs.readdir(U2.Case1 dir, (fun (err: Node.Base.NodeJS.ErrnoException option) (files : ResizeArray<string>) ->
                 match err with
@@ -62,7 +72,39 @@ module Directory =
                     reject (err :?> System.Exception)
                 | None ->
                     files.ToArray()
-                    |> resolve
+                    |> Array.map (fun file ->
+                        file, File.statsSync (Directory.join dir file)
+                    )
+                    |> Array.map (fun (filePath, fileInfo) ->
+                        if fileInfo.isDirectory() then
+                            // If recursive then get the files from the others sub dirs
+                            if isRecursive then
+                                promise {
+                                    let! files = getFiles true (Directory.join dir filePath)
+                                    return files
+                                            |> List.map (Directory.join filePath)
+                                }
+                            else
+                            // Else, we return an empty list and this will have the effect
+                            // of removing the directory from the final list
+                                promise {
+                                    return [ ]
+                                }
+                        else
+                            promise {
+                                return [ filePath ]
+                            }
+                    )
+                    |> Promise.all
+                    |> Promise.map (fun directories ->
+                        Array.reduce (fun a b ->
+                            a @ b
+                        ) directories
+                    )
+                    |> Promise.map (fun files ->
+                        resolve files
+                    )
+                    |> ignore
             ))
         )
 
@@ -122,7 +164,7 @@ module File =
             ))
         )
 
-    let statsSync (path : string) =
+    let statsSync (path : string) : Node.Fs.Stats =
         Node.Exports.fs.statSync(U2.Case1 path)
 
 
@@ -159,10 +201,6 @@ module Helpers =
             .Replace("&quot;", "\"")
             .Replace("&#039;", "'")
 
-    open Fable.Core
-    open Fable.Helpers.React
-    open Fable.Helpers.React.Props
-    open Fulma
 
     // type DangerousInnerHtml =
     //     { __html : string }

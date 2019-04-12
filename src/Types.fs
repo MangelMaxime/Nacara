@@ -15,13 +15,15 @@ type PostRenderDemos =
         )
 
 type PageAttributes =
-    { Title : string option
-      PostRenderDemos : PostRenderDemos option }
+    { Title : string
+      PostRenderDemos : PostRenderDemos option
+      Id : string option }
 
     static member Decoder =
         Decode.object (fun get ->
-            { Title = get.Optional.Field "title" Decode.string
-              PostRenderDemos = get.Optional.Field "postRenderDemos" PostRenderDemos.Decoder }
+            { Title = get.Required.Field "title" Decode.string
+              PostRenderDemos = get.Optional.Field "postRenderDemos" PostRenderDemos.Decoder
+              Id = get.Optional.Field "id" Decode.string }
         )
 
 type PageContext =
@@ -123,11 +125,16 @@ type MenuItem =
                 else
                     let keys = Helpers.objectKeys value
 
-                    if Seq.length keys > 1 then
+                    if Seq.length keys < 1 then
                         (path, Decode.BadPrimitive ("an object with 1 property", value))
                         |> Error
                     else
-                        JS.Map.Create<string, MenuItem list>()
+                        value
+                        |> Helpers.objectKeys
+                        |> Seq.map (fun key -> (key, value?(key) |> Decode.unwrap path (Decode.list MenuItem.Decoder)))
+                        |> Seq.fold (fun (state : JS.Map<string, MenuItem list>) (key, value) ->
+                            state.set(key, value)
+                        ) (JS.Map.Create<string, MenuItem list>())
                         |> Ok )
             |> Decode.map MenuList
         ]
@@ -151,6 +158,8 @@ let menuConfigDecoder : Decode.Decoder<JS.Map<string, MenuItem list>> =
 type Config =
     { NpmURL : string option
       GithubURL : string option
+      Url : string
+      BaseUrl : string
       Title : string
       Version : string
       Source : string
@@ -165,6 +174,8 @@ type Config =
         Decode.object (fun get ->
             { NpmURL = get.Optional.Field "npmURL" Decode.string
               GithubURL = get.Optional.Field "githubURL" Decode.string
+              Url = get.Required.Field "url" Decode.string
+              BaseUrl = get.Required.Field "baseUrl" Decode.string
               Title = get.Required.Field "title" Decode.string
               Version = get.Required.Field "version" Decode.string
               Source = get.Optional.Field "source" Decode.string

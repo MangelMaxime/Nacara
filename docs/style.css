@@ -9200,6 +9200,29 @@ body .full-height-scrollable-content {
   overflow-y: auto;
 }
 
+.menu-group .icon {
+  float: right;
+}
+.menu-group .icon, .menu-group .icon.is-small, .menu-group .icon.is-medium, .menu-group .icon.is-large {
+  height: 1.5em;
+  width: 1.5em;
+}
+.menu-group .icon:first-child:not(:last-child) {
+  margin-left: calc(-0.375em - 1px);
+  margin-right: 0.1875em;
+}
+.menu-group .icon:last-child:not(:first-child) {
+  margin-left: 0.1875em;
+  margin-right: calc(-0.375em - 1px);
+}
+.menu-group .icon:first-child:last-child {
+  margin-left: calc(-0.375em - 1px);
+  margin-right: calc(-0.375em - 1px);
+}
+.menu-group.is-expanded .icon {
+  transform: rotate(90deg);
+}
+
 .icon + span {
   margin-left: 0.5rem;
 }

@@ -22,5 +22,6 @@
         "**/paket-files": true,
         "**/artifacts": true,
         ".fable": true
-    }
+    },
+    "FSharp.fsacRuntime": "netcore"
 }

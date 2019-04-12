@@ -105,4 +105,4 @@ let toHtml (model : Model) (changelog : Changelog.Types.Changelog) =
                 [ section [ Class "changelog" ]
                     [ ul [ Class "changelog-list" ]
                         changelogItems ] ] ] ]
-    |> Render.Common.basePage model (Some "Changelog")
+    |> Render.Common.basePage model "Changelog"

@@ -1,5 +1,5 @@
 ---
-title: Switch | Fulma.Extensions.Wikiki
+title: Switch
 # postRenderDemos:
 #     script: ../tests/build/tests_bundle.min.js
 #     importSelector: api

@@ -12,9 +12,9 @@
     <Compile Include="Libs/StringJS.fs" />
     <Compile Include="Libs/CodeLightner.fs" />
     <Compile Include="Log.fs" />
+    <Compile Include="Types.fs" />
     <Compile Include="Helpers.fs" />
     <Compile Include="Changelog.fs" />
-    <Compile Include="Types.fs" />
     <Compile Include="Render.Common.fs" />
     <Compile Include="Render.DocPage.fs" />
     <Compile Include="Render.Changelog.fs" />

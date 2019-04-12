@@ -178,6 +178,8 @@ module Process =
 
 open Elmish
 
+let baseUrlMiddleware (baseUrl : string) : LiveServer.Middleware = import "default" "./js/base-url-middleware.js"
+
 let init (config : Config, docFiles : Map<string, PageContext>, lightnerCache : Map<string,CodeLightner.Config>) =
     // Start the LiveServer instance
     let liveServerOption =
@@ -186,6 +188,11 @@ let init (config : Config, docFiles : Map<string, PageContext>, lightnerCache : 
             o.``open`` <- false
             o.logLevel <- 0
         )
+
+    if config.BaseUrl <> "/" then
+        liveServerOption.middleware <- [|
+                baseUrlMiddleware config.BaseUrl
+            |]
 
     let server = LiveServer.liveServer.start(liveServerOption)
 
@@ -203,7 +210,7 @@ let init (config : Config, docFiles : Map<string, PageContext>, lightnerCache : 
       WorkingDirectory = cwd
       IsDebug = config.IsDebug
       JavaScriptFiles = Dictionary<string, string>()
-      DocFiles = Map.empty
+      DocFiles = docFiles
       LightnerCache = lightnerCache }, Cmd.none
 
 let update (msg : Msg) (model : Model) =
@@ -235,8 +242,10 @@ let update (msg : Msg) (model : Model) =
             model, Cmd.none
 
         | Ok pageContext ->
-            let newDocFiles = Map.add pageContext.Path pageContext model.DocFiles
-            { model with DocFiles = newDocFiles }, Cmd.ofPromise Write.standard (model, pageContext) WriteFileSuccess WriteFileFailed
+            let pageId = getFileId model.Config.Source pageContext
+            let newDocFiles = Map.add pageId pageContext model.DocFiles
+            let newModel = { model with DocFiles = newDocFiles }
+            newModel, Cmd.ofPromise Write.standard (newModel, pageContext) WriteFileSuccess WriteFileFailed
 
     | ProcessChangelogResult (path, result) ->
         match result with
@@ -302,10 +311,10 @@ let tryBuildPageContext (path : string) =
                 sprintf "The attributes of %s are invalid.\n%s" path msg
             return Error (path, errorMsg)
         | Ok pageAttributes ->
-            return Ok (path, { Path = path
-                               Attributes = pageAttributes
-                               TableOfContent = ""
-                               Content = fm.body })
+            return Ok { Path = path
+                        Attributes = pageAttributes
+                        TableOfContent = ""
+                        Content = fm.body }
     }
 
 promise {
@@ -316,20 +325,23 @@ promise {
         let! fileContent = File.read configPath
         match Decode.fromString Config.Decoder fileContent  with
         | Ok config ->
-            let! files = Directory.getFiles config.Source
+            let! files = Directory.getFiles true config.Source
 
             let! pageContexts =
                 files
-                |> Array.map (fun file ->
+                |> List.map (fun file ->
                     config.Source + "/" + file
                 )
-                // Remove directories from the list
-                |> Array.filter (fun path ->
-                    let stats = File.statsSync path
-                    stats.isDirectory()
-                    |> not
+                |> List.filter (fun path ->
+                    match path with
+                    | MarkdownFile ->
+                        true
+                    | JavaScriptFile
+                    | SassFile
+                    | UnsupportedFile _ ->
+                        false
                 )
-                |> Array.map tryBuildPageContext
+                |> List.map tryBuildPageContext
                 |> Promise.all
 
             let (validContext, erroredContext) =
@@ -350,8 +362,9 @@ promise {
             let docFiles =
                 validContext
                 |> Array.map (function
-                    | Ok (path, pageContext) ->
-                        (path, pageContext)
+                    | Ok pageContext ->
+                        let id = getFileId config.Source pageContext
+                        (id, pageContext)
                     | Error _ -> failwith "Should not happen we filtered them before"
                 )
                 |> Map.ofArray
