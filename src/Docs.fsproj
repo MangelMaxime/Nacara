@@ -12,6 +12,7 @@
     <Compile Include="Libs/StringJS.fs" />
     <Compile Include="Libs/CodeLightner.fs" />
     <Compile Include="Log.fs" />
+    <Compile Include="Node.Extra.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Helpers.fs" />
     <Compile Include="Changelog.fs" />

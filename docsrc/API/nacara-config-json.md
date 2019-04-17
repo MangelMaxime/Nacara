@@ -1,65 +1,142 @@
 ---
 title: nacara.json
 ---
-# Quick start
+
+[[toc]]
 
 :::info
-**Nacara** is a young project but it already make generating documentation easy.
-
-Here are some example of documentation website created using Nacara:
-
-- [Nacara documentation](https://mangelmaxime.github.io/Nacara)
+We are working on improving the documentation in order to make it easier to read.
 :::
 
-<ul class="textual-steps">
-<li>
+## Config file
 
-Ensure you have the latest version of Node installed. We also recommend you install Yarn as well.
+You can use the file `nacara.json` in order to configure most of Nacara behaviour.
 
-:::warning
-You have to be on Node >= 8.x and Yarn >= 1.5.
-:::
-</li>
+### Mandatory fields
 
-<li>
+#### `url` - [string]
 
-Add Nacara to your project by running `yarn add -D nacara`
-</li>
+This is the protocol and host part of your website URL.
 
-<li>
+For the website `https://mangelmaxime.github.io/Nacara/`, it is `https://mangelmaxime.github.io`
 
-Create a file `doc.json` at the root of your project copy this json in it:
+#### `baseUrl` - [string]
+
+This is the path after the host part of your website URL.
+
+For the website `https://mangelmaxime.github.io/Nacara/`, it is `/Nacara/`. If you have no path you can set it to `/`.
+
+#### `version` - [string]
+
+This is the version of the website. It's used in order to show the version in the navbar if `navbar.showVersion` is `true`. It will also be used in order to handle versionning of the documentation.
+
+#### `title` - [string]
+
+Title for your website.
+
+It's shown in the navbar and in the `title` tag of your page.
+
+### Optional fields
+
+#### `source` - [string]
+
+Relative path to the folder used as source.
+
+The default value is `docsrc`.
+
+#### `output` - [string]
+
+Relative path to the output folder.
+
+The default value is `docs`.
+
+#### `changelog` - [string]
+
+Relative path to the file used as a changelog. If you set this value, the changelog will be parsed and you will be able to accessible at the root your website.
+
+#### `navbar` - [object]
+
+This property allow you to control the navbar component of your website.
+
+* `showVersion` - [bool]
+
+    If `true`, the `version` from the config file will be shown in the navbar.
+
+    Later, this "navbar item" will be clickable in order to choose another version of the documentation.
+
+* `doc` - [string]
+
+    If set then a link `Documentation` will be added to the navbar. The value provided is the id of the page to link to.
+
+* `links` - [list]
+
+    * Required
+        * `href` - [string]
+    * Optional
+        * `label` - [string]
+
+            If provided this will be displayed as text in the link
+        * `icon` - [string]
+
+            If provided this will be displayed as an icon in the link. It needs to be a FontAwesome5 icon class. Ex: `fab fa-twitter`
+        * `color` - [string]
+
+            If provided it will be apply to the CSS property `color` for the link.
+        * `isExternal` - [string]
+
+            If `true`, then clicking on the link will open a new tab in the browser
+
+#### `menu` - [object]
+
+This property is used to configure the menu.
+
+Every property `"page-id"` means you need to specify the `id` of the page you want to link to. The title of the page will be used as the label for the menu item.
 
 ```json
 {
-    "githubURL": "url to your github repo",
-    "title": "name of your project",
-    "version": "current version of your project"
+    //...
+    "menu": {
+        "Category 1": [
+            "page-id",
+            "page-id"
+        ],
+        "Category 2": [
+            "page-id",
+        ],
+        "Category 3": [
+            "page-id",
+            {
+                "Sub category 3-1": [
+                    "page-id"
+                ],
+                "Sub category 3-2": [
+                    "page-id"
+                ]
+            }
+        ]
+    }
+    //...
 }
 ```
 
-*Don't forget to adapt the values*
+#### `lightner` - [object]
 
-</li>
+This property is used to configure [Code-Lightner](https://github.com/MangelMaxime/Code-Lightner).
 
-<li>
+Code-Lightner is a project which use TextMate grammar in order to highlight the code. This is how highlights is done in VSCode for example so you can have the same result in your website.
 
-Create a folder `docsrc` it will host the source of your documenation.
+* `backgroundColor` - [string]
 
-Create to file under this folder:
-- `index.md` - it will be the main page of your documenation website
-- `style.scss` - you will use it to load Nacara styles and customize it
-    - Add this line `@import './node_modules/nacara/scss/nacara.scss';`
-</li>
+    Set the background color of the pre element
 
-<li>
+* `textColor` - [string]
 
-Run Nacara: `yarn run nacara`
-</li>
+    Set the color of the text
 
-<li>
+* `themeFile` - [string]
 
-You can now make changes in your `index.md` and see the changes being applied directly in your browser.
-</li>
+    Relative path to the theme file
 
-</ul>
+* `grammars` - [list]
+
+    List of the grammar file to load

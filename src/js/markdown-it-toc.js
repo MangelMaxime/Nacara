@@ -55,8 +55,13 @@ module.exports = (md) => {
             let heading = tokens[i - 1];
             let level = token.tag && parseInt(token.tag.substr(1, 1));
 
+            if (level === 1) {
+                i++;
+                continue;
+            }
+
             // If the current type is not a `heading_close` then we continue processing the tokens
-            if (token.type !== 'heading_close' || level > 3 || heading.type !== 'inline') {
+            if (token.type !== 'heading_close' || level > 4 || heading.type !== 'inline') {
                 i++;
                 continue; // Skip if not matching criteria
             }
@@ -83,7 +88,7 @@ module.exports = (md) => {
                     headings.push(buffer);
                 }
             }
-            if (level === 1) {
+            if (level === 2) {
                 buffer = `<div class="toc-label"><a href="${heading.children[0].attrs[0][1]}">`;
             } else {
                 buffer = `<li><a href="${heading.children[0].attrs[0][1]}">`;
@@ -91,7 +96,7 @@ module.exports = (md) => {
 
             buffer += heading.content;
 
-            if (level === 1) {
+            if (level === 2) {
                 buffer += `</a></div>`;
             } else {
                 buffer += `</a>`;

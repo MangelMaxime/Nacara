@@ -2,7 +2,7 @@ window.onload = function () {
     // Initialize the menu state
     // Set as active the menu for the current page
     document
-        .querySelectorAll(`.menu [data-menu-id=${nacara.pageId}]`)
+        .querySelectorAll(`.menu [data-menu-id='${nacara.pageId}']`)
         .forEach(function (menuItem) {
             menuItem.classList.add("is-active")
         });
@@ -21,8 +21,6 @@ window.onload = function () {
                         .find(function (child) {
                         return child.firstChild.classList.contains("is-active")
                     });
-
-            console.log(activeMenu);
 
             if (activeMenu === undefined) {
                 menuGroup.classList.remove("is-expanded");

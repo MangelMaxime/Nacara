@@ -9193,6 +9193,7 @@ html.has-navbar-fixed-top body {
 body {
   height: calc(100vh - 3.25rem);
   min-height: calc(100vh - 3.25rem);
+  overflow: hidden;
 }
 body .full-height-scrollable-content {
   height: calc(100vh - 3.25rem);

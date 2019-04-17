@@ -48,7 +48,9 @@ let private generateMenu (model : Model) (pageContext : PageContext) =
                     | MenuItem pageId ->
                         match Map.tryFind pageId model.DocFiles with
                         | Some pageInfo ->
-                            Menu.Item.li [ Menu.Item.Props [ Data("menu-id", pageId) ] ]
+                            Menu.Item.li [ Menu.Item.Props [ Data("menu-id", pageId) ]
+                                           generateUrl model.Config pageInfo
+                                           |> Menu.Item.Href ]
                                 [ str pageInfo.Attributes.Title ]
                         | None ->
                             Log.error "Unable to find the file: %s" pageId
@@ -67,7 +69,9 @@ let private generateMenu (model : Model) (pageContext : PageContext) =
                                     | MenuItem pageId ->
                                         match Map.tryFind pageId model.DocFiles with
                                         | Some pageInfo ->
-                                            Menu.Item.li [ Menu.Item.Props [ Data("menu-id", pageId) ] ]
+                                            Menu.Item.li [ Menu.Item.Props [ Data("menu-id", pageId) ]
+                                                           generateUrl model.Config pageInfo
+                                                           |> Menu.Item.Href ]
                                                 [ str pageInfo.Attributes.Title ]
                                         | None ->
                                             Log.error "Unable to find the file: %s" pageId

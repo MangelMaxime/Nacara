@@ -1,5 +1,5 @@
 ---
-title: Config file
+title: Getting started
 ---
 
 # Quick start
@@ -33,9 +33,10 @@ Create a file `doc.json` at the root of your project copy this json in it:
 
 ```json
 {
-    "githubURL": "url to your github repo",
-    "title": "name of your project",
-    "version": "current version of your project"
+    "url": "https://mangelmaxime.github.io",
+    "baseUrl": "/Nacara/",
+    "title": "Nacara",
+    "version": "0.1.0"
 }
 ```
 

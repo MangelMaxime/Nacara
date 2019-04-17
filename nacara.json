@@ -35,25 +35,7 @@
         ],
         "API": [
             "API/nacara-config-json",
-            "API/nacara-config-json"
-        ],
-        "Fulma": [
-            "test",
-            "test",
-            {
-                "Modifiers": [
-                    "API/nacara-config-json",
-                    "API/nacara-config-json",
-                    "API/nacara-config-json",
-                    "API/nacara-config-json"
-                ],
-                "sub item 2": [
-                    "API/nacara-config-json",
-                    "API/nacara-config-json",
-                    "API/nacara-config-json",
-                    "test"
-                ]
-            }
+            "API/page-attributes"
         ]
     },
     "lightner": {

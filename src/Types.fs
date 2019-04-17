@@ -52,7 +52,7 @@ type Link =
 type NavbarConfig =
     { ShowVersion : bool
       Doc : string option
-      Community : string option
+    //   Community : string option
       Links : Link list }
 
     static member Decoder =
@@ -60,7 +60,7 @@ type NavbarConfig =
             { ShowVersion = get.Optional.Field "showVersion" Decode.bool
                         |> Option.defaultValue false
               Doc = get.Optional.Field "doc" Decode.string
-              Community = get.Optional.Field "community" Decode.string
+            //   Community = get.Optional.Field "community" Decode.string
               Links = get.Optional.Field "links" (Decode.list Link.Decoder)
                         |> Option.defaultValue [] }
         )

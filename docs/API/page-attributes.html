@@ -1,0 +1,89 @@
+<html class="has-navbar-fixed-top"><head><title>Page attributes · Nacara</title><link rel="stylesheet" type="text/css" href="/Nacara/style.css"/><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"/><script src="https://polyfill.app/api/polyfill?features=scroll-behavior"></script><script type="text/javascript">
+var nacara = {};
+                </script><script type="text/javascript">window.onload = function () {
+    // Initialize the menu state
+    // Set as active the menu for the current page
+    document
+        .querySelectorAll(`.menu [data-menu-id='${nacara.pageId}']`)
+        .forEach(function (menuItem) {
+            menuItem.classList.add("is-active")
+        });
+
+    // Collapse menu-group which doesn't concerns the current page
+    document
+        .querySelectorAll(`.menu .menu-group`)
+        .forEach(function (menuGroup) {
+            var parentChildren = Array.from(menuGroup.parentElement.children);
+            var subItems = parentChildren.find(function (child) {
+                        return child.nodeName === "UL";
+                    });
+
+            var activeMenu =
+                    Array.from(subItems.children)
+                        .find(function (child) {
+                        return child.firstChild.classList.contains("is-active")
+                    });
+
+            if (activeMenu === undefined) {
+                menuGroup.classList.remove("is-expanded");
+                subItems.style.display = "none";
+            } else {
+                menuGroup.classList.add("is-expanded");
+                subItems.style.display = "block";
+            }
+        });
+
+    // Register listener to handle menu-group
+    document
+        .querySelectorAll(`.menu .menu-group`)
+        .forEach(function (menuGroup) {
+            menuGroup.addEventListener("click", function (ev) {
+                var parentChildren = Array.from(ev.target.parentElement.children);
+                var subItems =
+                    parentChildren.find(function (child) {
+                        return child.nodeName === "UL";
+                    });
+
+                if (ev.target.classList.contains("is-expanded")) {
+                    ev.target.classList.remove("is-expanded");
+                    subItems.style.display = "none";
+                } else {
+                    ev.target.classList.add("is-expanded");
+                    subItems.style.display = "block";
+                }
+
+            });
+        });
+};
+</script></head><body><nav class="navbar is-primary is-fixed-top"><div class="container"><div class="navbar-brand"><div class="navbar-item title is-4">Nacara</div></div><div class="navbar-start"><a class="navbar-item">0.1.0</a></div><div class="navbar-end"><a class="navbar-item" href="https://gitter.im/fable-compiler/Fable" target="_blank"><span class="icon"><i class=" fab fa-gitter fa-lg"></i></span><span>Support</span></a><a class="navbar-item" href="https://github.com/MangelMaxime/Nacara" target="_blank"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item" href="https://twitter.com/MangelMaxime" target="_blank" style="color:#55acee"><span class="icon"><i class=" fab fa-twitter fa-lg"></i></span></a></div></div></nav><div class="container"><div class="columns is-gapless"><div class="column is-2-desktop is-3-touch full-height-scrollable-content"><aside class="menu" style="margin-top:3.25rem"><p class="menu-label">Getting Started</p><ul class="menu-list"><li><a class="" href="/index.html" data-menu-id="index">Getting started</a></li></ul><p class="menu-label">API</p><ul class="menu-list"><li><a class="" href="/API/nacara-config-json.html" data-menu-id="API/nacara-config-json">nacara.json</a></li><li><a class="" href="/API/page-attributes.html" data-menu-id="API/page-attributes">Page attributes</a></li></ul></aside></div><div class="column is-8-desktop is-9-touch full-height-scrollable-content" style="scroll-behavior:smooth"><section class="section"><div class="content"><div><p></p>
+<h1><a href="#page-attributes" aria-hidden="true" style="visibility:hidden"><span class="anchor" id="page-attributes"></span></a> Page attributes</h1>
+<p>All your pages needs to provide a block called &quot;Front Matter&quot; at the top of their content:</p>
+<pre><code>---
+title: Title of your page
+---
+
+Content of your page
+</code></pre>
+<h2><a href="#mandatory-fields" aria-hidden="true" style="visibility:visible"><span class="anchor" id="mandatory-fields"></span>#</a> Mandatory fields</h2>
+<h3><a href="#title-string" aria-hidden="true" style="visibility:visible"><span class="anchor" id="title-string"></span>#</a> <code>title</code> - [string]</h3>
+<p>This will be used as the title of your page. It can be used in the as a label in the menu or in the <code>title</code> tag of your page.</p>
+<h2><a href="#optional-fields" aria-hidden="true" style="visibility:visible"><span class="anchor" id="optional-fields"></span>#</a> Optional fields</h2>
+<h3><a href="#id-string" aria-hidden="true" style="visibility:visible"><span class="anchor" id="id-string"></span>#</a> <code>id</code> - [string]</h3>
+<p>Use to override the <code>id</code> generated by default by Nacara.</p>
+<p>By default, the <code>id</code> of a page is it's path inside the <code>source</code> folder without the extension.</p>
+<p>If you have the follwing content in your <code>source</code> folder:</p>
+<pre><code>docsrc
+├── API
+│   ├── nacara-config-json.md
+│   └── page-attributes.md
+├── index.md
+├── style.scss
+</code></pre>
+<p>Then:</p>
+<ul>
+<li><code>index</code> refers to <code>index.md</code></li>
+<li><code>API/nacara-config-json</code> refers to <code>API/nacara-config-json.md</code></li>
+</ul>
+</div></div></section></div><div class="column is-2-desktop full-height-scrollable-content        is-hidden-touch     "><div><nav class="toc-container"><ul class="toc-headings"><div class="toc-label"><a href="#mandatory-fields">Mandatory fields</a></div><ul class="toc-headings"><li><a href="#title-string">`title` - [string]</a></li></ul></li><div class="toc-label"><a href="#optional-fields">Optional fields</a></div><ul class="toc-headings"><li><a href="#id-string">`id` - [string]</a></li></ul></li></ul></nav></div></div></div><script type="text/javascript">
+nacara.pageId = 'API/page-attributes';
+                </script></div></body></html>
