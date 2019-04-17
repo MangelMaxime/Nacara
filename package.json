@@ -1,9 +1,8 @@
 {
   "name": "nacara",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "dist/Main.js",
   "license": "MIT",
-  "private": true,
   "scripts": {
     "watch": "nodemon dist/Main.js",
     "start": "fable-splitter --watch -c src/splitter.config.js"
