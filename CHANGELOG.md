@@ -8,12 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+## 0.1.2 - 2019-04-17
+
+### Added
+
+* Add `cli.js` so nacara can be used as a CLI tool
+
 ## 0.1.1 - 2019-04-17
 
 ### Added
 
 * Make `nacara` a "CLI" package
-
 
 ## 0.1.0 - 2019-04-17
 

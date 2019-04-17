@@ -317,102 +317,103 @@ let tryBuildPageContext (path : string) =
                         Content = fm.body }
     }
 
-promise {
-    let configPath = Node.Exports.path.join(cwd, "nacara.json")
-    let! hasDocsConfig = File.exist(configPath)
+let start () =
+    promise {
+        let configPath = Node.Exports.path.join(cwd, "nacara.json")
+        let! hasDocsConfig = File.exist(configPath)
 
-    if hasDocsConfig then
-        let! fileContent = File.read configPath
-        match Decode.fromString Config.Decoder fileContent  with
-        | Ok config ->
-            let! files = Directory.getFiles true config.Source
+        if hasDocsConfig then
+            let! fileContent = File.read configPath
+            match Decode.fromString Config.Decoder fileContent  with
+            | Ok config ->
+                let! files = Directory.getFiles true config.Source
 
-            let! pageContexts =
-                files
-                |> List.map (fun file ->
-                    config.Source + "/" + file
+                let! pageContexts =
+                    files
+                    |> List.map (fun file ->
+                        config.Source + "/" + file
+                    )
+                    |> List.filter (fun path ->
+                        match path with
+                        | MarkdownFile ->
+                            true
+                        | JavaScriptFile
+                        | SassFile
+                        | UnsupportedFile _ ->
+                            false
+                    )
+                    |> List.map tryBuildPageContext
+                    |> Promise.all
+
+                let (validContext, erroredContext) =
+                    pageContexts
+                    |> Array.partition (fun result ->
+                        match result with
+                        | Ok _ -> true
+                        | Error _ -> false
+                    )
+
+                erroredContext
+                |> Array.iter (function
+                    | Error (path, msg) ->
+                        Log.error "Error when processing file: %s\n%s" path msg
+                    | Ok _ -> failwith "Should not happen we filtered them before"
                 )
-                |> List.filter (fun path ->
-                    match path with
-                    | MarkdownFile ->
-                        true
-                    | JavaScriptFile
-                    | SassFile
-                    | UnsupportedFile _ ->
-                        false
-                )
-                |> List.map tryBuildPageContext
-                |> Promise.all
 
-            let (validContext, erroredContext) =
-                pageContexts
-                |> Array.partition (fun result ->
-                    match result with
-                    | Ok _ -> true
-                    | Error _ -> false
-                )
+                let docFiles =
+                    validContext
+                    |> Array.map (function
+                        | Ok pageContext ->
+                            let id = getFileId config.Source pageContext
+                            (id, pageContext)
+                        | Error _ -> failwith "Should not happen we filtered them before"
+                    )
+                    |> Map.ofArray
 
-            erroredContext
-            |> Array.iter (function
-                | Error (path, msg) ->
-                    Log.error "Error when processing file: %s\n%s" path msg
-                | Ok _ -> failwith "Should not happen we filtered them before"
-            )
-
-            let docFiles =
-                validContext
-                |> Array.map (function
-                    | Ok pageContext ->
-                        let id = getFileId config.Source pageContext
-                        (id, pageContext)
-                    | Error _ -> failwith "Should not happen we filtered them before"
-                )
-                |> Map.ofArray
-
-            let lightnerCache =
-                match config.LightnerConfig with
-                | Some lightnerConfig ->
-                    lightnerConfig.GrammarFiles
-                    |> List.map (fun filePath ->
-                        if File.existSync filePath then
-                            let grammarText = File.readSync filePath
-                            match Decode.fromString (Decode.field "scopeName" Decode.string) grammarText with
-                            | Ok scopeName ->
-                                Some (scopeName, filePath)
-                            | Error msg ->
-                                Log.error "Unable to find `scopeName` in `%s`.\Sub decoder error:\n%s" filePath msg
+                let lightnerCache =
+                    match config.LightnerConfig with
+                    | Some lightnerConfig ->
+                        lightnerConfig.GrammarFiles
+                        |> List.map (fun filePath ->
+                            if File.existSync filePath then
+                                let grammarText = File.readSync filePath
+                                match Decode.fromString (Decode.field "scopeName" Decode.string) grammarText with
+                                | Ok scopeName ->
+                                    Some (scopeName, filePath)
+                                | Error msg ->
+                                    Log.error "Unable to find `scopeName` in `%s`.\Sub decoder error:\n%s" filePath msg
+                                    None
+                            else
+                                Log.error "File not found: %s" filePath
                                 None
-                        else
-                            Log.error "File not found: %s" filePath
-                            None
-                    )
-                    |> List.filter Option.isSome
-                    |> List.map (function
-                        | Some (scopeName, grammarPath) ->
-                            let config =
-                                jsOptions<CodeLightner.Config>(fun o ->
-                                    o.backgroundColor <- lightnerConfig.BackgroundColor
-                                    o.textColor <- lightnerConfig.TextColor
-                                    o.themeFile <- lightnerConfig.ThemeFile
-                                    o.scopeName <- scopeName
-                                    o.grammarFiles <- [| Directory.join cwd grammarPath |]
-                                )
-                            scopeName.Split('.').[1], config
-                        | None -> failwith "Should not happen, we filtered the list before"
-                    )
-                    |> Map.ofList
-                | None ->
-                    Map.empty
+                        )
+                        |> List.filter Option.isSome
+                        |> List.map (function
+                            | Some (scopeName, grammarPath) ->
+                                let config =
+                                    jsOptions<CodeLightner.Config>(fun o ->
+                                        o.backgroundColor <- lightnerConfig.BackgroundColor
+                                        o.textColor <- lightnerConfig.TextColor
+                                        o.themeFile <- lightnerConfig.ThemeFile
+                                        o.scopeName <- scopeName
+                                        o.grammarFiles <- [| Directory.join cwd grammarPath |]
+                                    )
+                                scopeName.Split('.').[1], config
+                            | None -> failwith "Should not happen, we filtered the list before"
+                        )
+                        |> Map.ofList
+                    | None ->
+                        Map.empty
 
-            Program.mkProgram init update (fun _ _ -> ())
-            |> Program.withSubscription fileWatcherSubscription
-            |> Program.runWith (config, docFiles, lightnerCache)
+                Program.mkProgram init update (fun _ _ -> ())
+                |> Program.withSubscription fileWatcherSubscription
+                |> Program.runWith (config, docFiles, lightnerCache)
 
-        | Error msg ->
-            Log.error "Your config file seems invalid."
-            Log.errorFn "%s" msg
-    else
-        Log.error "No file `nacara.json` found."
-        Node.Globals.``process``.exit(1)
-}
-|> Promise.start
+            | Error msg ->
+                Log.error "Your config file seems invalid."
+                Log.errorFn "%s" msg
+        else
+            Log.error "No file `nacara.json` found."
+            Node.Globals.``process``.exit(1)
+    }
+    |> Promise.start

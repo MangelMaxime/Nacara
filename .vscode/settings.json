@@ -10,7 +10,7 @@
         "**/bin": true,
         "**/obj": true,
         "**/packages": true,
-        "**/node_modules": true,
+        "**/node_modules": false,
         "**/dist": false,
         "**/.fable": false,
         "**/paket-files": false
