@@ -25,7 +25,7 @@ let getFileId (sourceDir : string) (pageContext : Types.PageContext) =
 
 let generateUrl (config : Types.Config) (pageContext : Types.PageContext) =
     pageContext.Path.Replace(config.Source + "/", "")
-    |> Directory.join "/"
+    |> Directory.join config.BaseUrl
     |> File.changeExtension "html"
 
 module Helpers =
