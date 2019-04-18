@@ -5329,7 +5329,7 @@ a.list-item {
 }
 
 .navbar {
-  background-color: white;
+  background-color: #af4085;
   min-height: 3.25rem;
   position: relative;
   z-index: 30;
@@ -6050,7 +6050,7 @@ a.navbar-item:hover, a.navbar-item.is-active,
   }
 
   .navbar-menu {
-    background-color: white;
+    background-color: #af4085;
     box-shadow: 0 8px 16px rgba(10, 10, 10, 0.1);
     padding: 0.5rem 0;
   }

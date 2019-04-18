@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+## 0.1.4 - 2019-04-18
+
+### Changed
+
+* Remove `is-primary` class from the navbar.
+
+Please use the variable `$navbar-background-color` in order to customize it
+
 ## 0.1.3 - 2019-04-18
 
 ### Fixed

@@ -4,6 +4,7 @@ $primary: rgb(175, 64, 133);
 $text: #2b2b2b;
 
 $navbar-item-color: $white;
+$navbar-background-color: $primary;
 $body-size: 14px;
 
 @import './../node_modules/bulma/bulma.sass';

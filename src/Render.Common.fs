@@ -78,8 +78,7 @@ let private navbarItems (config : Config) =
     | None -> nothing
 
 let private navbar (config : Config) =
-    Navbar.navbar [ Navbar.IsFixedTop
-                    Navbar.Color IsPrimary ]
+    Navbar.navbar [ Navbar.IsFixedTop ]
         [ Container.container [ ]
             [ Navbar.Brand.div [ ]
                 [ Navbar.Item.div [ Navbar.Item.CustomClass "title is-4" ]
