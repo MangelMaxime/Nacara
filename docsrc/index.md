@@ -51,7 +51,13 @@ Create a folder `docsrc` it will host the source of your documenation.
 Create to file under this folder:
 - `index.md` - it will be the main page of your documenation website
 - `style.scss` - you will use it to load Nacara styles and customize it
-    - Add this line `@import './node_modules/nacara/scss/nacara.scss';`
+    - By default, you need to add this lines in it:
+        ```
+            @import './../node_modules/bulma/bulma.sass';
+            @import './../node_modules/nacara/scss/nacara.scss';
+        ```
+
+        *Please make check that the paths are correct for your repo setup*
 </li>
 
 <li>

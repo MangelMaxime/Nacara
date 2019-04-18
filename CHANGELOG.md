@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+## 0.1.3 - 2019-04-18
+
+### Fixed
+
+* Fix `nacara.scss`, user needs to provide Bulma in is own `style.scss` file
+
 ## 0.1.2 - 2019-04-17
 
 ### Added

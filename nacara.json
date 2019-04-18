@@ -5,11 +5,21 @@
     "title": "Nacara",
     "debug": true,
     "changelog": "CHANGELOG.md",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "navbar": {
         "showVersion": true,
         "community": "community",
         "links": [
+            {
+                "href": "/Nacara/index.html",
+                "label": "Documentation",
+                "icon": "fas fa-book"
+            },
+            {
+                "href": "/Nacara/changelog.html",
+                "label": "Changelog",
+                "icon": "fas fa-tasks"
+            },
             {
                 "href": "https://gitter.im/fable-compiler/Fable",
                 "label": "Support",
