@@ -21,13 +21,14 @@ let getFileId (sourceDir : string) (pageContext : Types.PageContext) =
 
         pageContext.Path
             .Substring(0, extensionPos) // Remove extension
-            .Substring((sourceDir + "/").Length)
+            .Substring((sourceDir + Node.Exports.path.sep).Length)
             .Replace("\\", "/") // Remove the source directory info
+        
 
 let generateUrl (config : Types.Config) (pageContext : Types.PageContext) =
-    pageContext.Path.Replace(config.Source + "/", "")
-    |> Directory.join config.BaseUrl
-    |> File.changeExtension "html"
+    (pageContext.Path.Substring((config.Source + Node.Exports.path.sep).Length)
+        |> Directory.join config.BaseUrl
+        |> File.changeExtension "html").Replace("\\", "/")
 
 module Helpers =
 
