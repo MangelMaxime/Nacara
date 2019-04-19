@@ -21,7 +21,8 @@ let getFileId (sourceDir : string) (pageContext : Types.PageContext) =
 
         pageContext.Path
             .Substring(0, extensionPos) // Remove extension
-            .Substring((sourceDir + "/").Length) // Remove the source directory info
+            .Substring((sourceDir + "/").Length)
+            .Replace("\\", "/") // Remove the source directory info
 
 let generateUrl (config : Types.Config) (pageContext : Types.PageContext) =
     pageContext.Path.Replace(config.Source + "/", "")

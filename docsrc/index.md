@@ -57,7 +57,7 @@ Create to file under this folder:
             @import './../node_modules/nacara/scss/nacara.scss';
         ```
 
-        *Please make check that the paths are correct for your repo setup*
+        *Please check that the paths are correct for your repo setup*
 </li>
 
 <li>
