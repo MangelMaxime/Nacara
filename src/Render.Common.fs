@@ -81,9 +81,19 @@ let private navbar (config : Config) =
     Navbar.navbar [ Navbar.IsFixedTop ]
         [ Container.container [ ]
             [ Navbar.Brand.div [ ]
-                [ Navbar.Item.div [ Navbar.Item.CustomClass "title is-4" ]
-                    [ str config.Title ] ]
-              navbarItems config ] ]
+                [ Navbar.Item.div [ Navbar.Item.CustomClass "title is-4"
+                                    // TODO: This should go in the CSS, but I had some trouble
+                                    Navbar.Item.Props [ Style [ MarginBottom "0" ] ] ]
+                    [ str config.Title ]
+                  Navbar.burger
+                        [ GenericOption.Props [ Data("target", "navMenu") ]
+                          GenericOption.CustomClass "is-active" ]
+                        [ span [ ] [ ]
+                          span [ ] [ ]
+                          span [ ] [ ] ] ]
+              Navbar.menu [ Navbar.Menu.Props [Id "navMenu"] ]
+                [ navbarItems config ]
+            ] ]
 
 let basePage (model : Model) (pageTitle : string) (content : React.ReactElement) =
     let titleStr = pageTitle + " · " + model.Config.Title

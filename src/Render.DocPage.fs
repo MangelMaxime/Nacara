@@ -9,17 +9,31 @@ open Fable.Import
 
 let private renderPage (menu : React.ReactElement option) (tocContent : string) (pageContent : string) =
     Columns.columns [ Columns.IsGapless ]
-        [ Column.column [ Column.Width (Screen.Desktop, Column.Is2)
-                          Column.Width (Screen.Touch, Column.Is3)
+        [ // TODO: Make this nicer
+          Button.button [ Button.Modifiers [ Modifier.IsHidden (Screen.Tablet, true) ]
+                          Button.Props [ Id "toc-toggle"
+                                         Style [ Position "fixed"
+                                                 Bottom "0"
+                                                 Right "0"
+                                                 Margin "10px"
+                                                 ZIndex "1000" ] ] ]
+                        [ str "Menu" ]
+
+          Column.column [ Column.Width (Screen.Desktop, Column.Is2)
+                          Column.Width (Screen.Tablet, Column.Is3)
+                          Column.Width (Screen.Mobile, Column.IsFull)
                           Column.CustomClass "full-height-scrollable-content"
-                        //   Column.Props [ Style [ OverflowY "auto"
-                        //                          Height "100%" ] ]
-                                                  ]
+                          Column.Props [ Id "toc-column"
+                                        //  Style [ OverflowY "auto"
+                                        //          Height "100%" ]
+                                       ] ]
             [ ofOption menu ]
           Column.column [ Column.Width (Screen.Desktop, Column.Is8)
-                          Column.Width (Screen.Touch, Column.Is9)
-                          Column.CustomClass "full-height-scrollable-content"
-                          Column.Props [ Style [ //OverflowY "auto"
+                          Column.Width (Screen.Tablet, Column.Is9)
+                          Column.Width (Screen.Mobile, Column.IsFull)
+                          Column.CustomClass "full-height-scrollable-content is-active"
+                          Column.Props [ Id "content-column"
+                                         Style [ //OverflowY "auto"
                                                  //Height "100%"
                                                  // We need to set ScrollBehavior via style so the polyfill can work
                                                  ScrollBehavior "smooth" ] ] ]

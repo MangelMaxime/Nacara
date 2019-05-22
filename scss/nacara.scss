@@ -63,3 +63,18 @@ body {
 .icon+span {
     margin-left: .5rem;
 }
+
+// TODO: Mobile width, is there a variable for this?
+@media (max-width: 768px) {
+    #toc-column {
+        &:not(.is-active) {
+            display: none;
+        }
+    }
+
+    #content-column {
+        &:not(.is-active) {
+            display: none;
+        }
+    }
+}

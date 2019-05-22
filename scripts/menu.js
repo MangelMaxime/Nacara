@@ -52,4 +52,21 @@ window.onload = function () {
 
             });
         });
+
+    var burger = document.querySelector(".navbar-burger");
+    burger.addEventListener("click", function () {
+        // Get the target from the "data-target" attribute
+        var target = burger.dataset.target;
+        var $target = document.getElementById(target);
+
+        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+        burger.classList.toggle('is-active');
+        $target.classList.toggle('is-active');
+    });
+
+    document.getElementById("toc-toggle")
+        .addEventListener("click", function () {
+            document.getElementById("toc-column").classList.toggle("is-active");
+            document.getElementById("content-column").classList.toggle("is-active");
+        });
 };
