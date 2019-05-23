@@ -115,6 +115,10 @@ let basePage (model : Model) (pageTitle : string) (content : React.ReactElement)
         [ head [ ]
             [ title [ ]
                 [ str titleStr ]
+              meta [ HttpEquiv "Content-Type"
+                     HTMLAttr.Content "text/html; charset=utf-8" ]
+              meta [ Name "viewport"
+                     HTMLAttr.Content "width=device-width, initial-scale=1" ]
               link [ Rel "stylesheet"
                      Type "text/css"
                      Href (toUrl "style.css") ]
