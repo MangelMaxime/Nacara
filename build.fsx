@@ -22,16 +22,7 @@ let clean = BuildTask.create "Clean" [] {
 }
 
 let watch = BuildTask.create "Watch" [clean.IfNeeded] {
-    [ async {
-        Yarn.exec "fable-splitter --watch -c src/splitter.config.js" id
-      }
-      async {
-          Yarn.exec "nodemon dist/Main.js" id
-      }
-    ]
-    |> Async.Parallel
-    |> Async.RunSynchronously
-    |> ignore
+    Yarn.exec "fable-splitter --watch -c src/splitter.config.js" id
 }
 
 let all = BuildTask.createEmpty "All" [clean; watch]
