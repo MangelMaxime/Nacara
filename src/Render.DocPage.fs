@@ -9,19 +9,10 @@ open Fable.Import
 
 let private renderPage (menu : React.ReactElement option) (tocContent : string) (pageContent : string) =
     Columns.columns [ Columns.IsGapless ]
-        [ // TODO: Make this nicer
-          Button.button [ Button.Modifiers [ Modifier.IsHidden (Screen.Tablet, true) ]
-                          Button.Props [ Id "toc-toggle"
-                                         Style [ Position "fixed"
-                                                 Bottom "0"
-                                                 Right "0"
-                                                 Margin "10px"
-                                                 ZIndex "1000" ] ] ]
-                        [ str "Menu" ]
-
-          Column.column [ Column.Width (Screen.Desktop, Column.Is2)
+        [ Column.column [ Column.Width (Screen.Desktop, Column.Is2)
                           Column.Width (Screen.Tablet, Column.Is3)
                           Column.Width (Screen.Mobile, Column.IsFull)
+                          Column.Modifiers [ Modifier.IsHidden (Screen.Mobile, true) ]
                           Column.CustomClass "full-height-scrollable-content"
                           Column.Props [ Id "toc-column"
                                         //  Style [ OverflowY "auto"
@@ -31,7 +22,7 @@ let private renderPage (menu : React.ReactElement option) (tocContent : string) 
           Column.column [ Column.Width (Screen.Desktop, Column.Is8)
                           Column.Width (Screen.Tablet, Column.Is9)
                           Column.Width (Screen.Mobile, Column.IsFull)
-                          Column.CustomClass "full-height-scrollable-content is-active"
+                          Column.CustomClass "full-height-scrollable-content"
                           Column.Props [ Id "content-column"
                                          Style [ //OverflowY "auto"
                                                  //Height "100%"
@@ -41,10 +32,23 @@ let private renderPage (menu : React.ReactElement option) (tocContent : string) 
                 [ Content.content [ ]
                     [ div [ DangerouslySetInnerHTML { __html =  pageContent } ] [ ] ] ] ]
           Column.column [ Column.Width (Screen.Desktop, Column.Is2)
-                          Column.Modifiers [ Modifier.IsHidden (Screen.Touch, true) ]
+                          Column.Modifiers [ Modifier.IsHidden (Screen.Tablet, true) ]
                           Column.CustomClass "full-height-scrollable-content" ]
             [ div [ DangerouslySetInnerHTML { __html =  tocContent } ]
-                [ ] ] ]
+                [ ] ]
+
+          Fa.stack [ Fa.Stack.Size Fa.Fa2x
+                     Fa.Stack.CustomClass "is-hidden-tablet"
+                     Fa.Stack.Props [ Id "toc-toggle"
+                                      Style [ Position "fixed"
+                                              Bottom "0"
+                                              Right "0"
+                                              Margin "10px" ] ] ]
+            [ Fa.i [ Fa.Regular.Circle
+                     Fa.Stack2x ] [ ]
+              Fa.i [ Fa.Solid.Sync
+                     Fa.Stack1x ] [ ] ]
+        ]
 
 let private generateMenu (model : Model) (pageContext : PageContext) =
     match model.Config.MenuConfig with
@@ -117,7 +121,7 @@ let private generateMenu (model : Model) (pageContext : PageContext) =
                   Menu.list [ ]
                     items ]
         )
-        |> Menu.menu [ Props [ Style [ MarginTop "3.25rem" ] ] ]
+        |> Menu.menu [ ]
         |> Some
     | None ->
         JS.console.log "no menu"

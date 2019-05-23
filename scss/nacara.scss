@@ -64,17 +64,25 @@ body {
     margin-left: .5rem;
 }
 
-// TODO: Mobile width, is there a variable for this?
-@media (max-width: 768px) {
-    #toc-column {
-        &:not(.is-active) {
-            display: none;
+#toc-column {
+    // TODO: I'd like to reduce the top margin in mobile
+    // But the jump when changing to content is noticeable
+    $margin-top: 3.25rem;
+    margin-top: $margin-top;
+
+    @media (max-width: $tablet) {
+        &:not(.is-hidden-mobile) {
+            animation: fade-in 0.8s;
         }
     }
 
-    #content-column {
-        &:not(.is-active) {
-            display: none;
-        }
+    @media (max-width: $desktop) {
+        margin: $margin-top 0.5rem;
+    }
+
+    // TODO: fade-out animation is quite tricky, couldn't do it
+    @keyframes fade-in {
+        from { opacity: 0; margin-top: $margin-top * 1.5; }
+        to { opacity: 1; margin-top: $margin-top; }
     }
 }

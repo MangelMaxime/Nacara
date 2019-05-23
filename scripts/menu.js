@@ -66,7 +66,7 @@ window.onload = function () {
 
     document.getElementById("toc-toggle")
         .addEventListener("click", function () {
-            document.getElementById("toc-column").classList.toggle("is-active");
-            document.getElementById("content-column").classList.toggle("is-active");
+            document.getElementById("toc-column").classList.toggle("is-hidden-mobile");
+            document.getElementById("content-column").classList.toggle("is-hidden-mobile");
         });
 };
