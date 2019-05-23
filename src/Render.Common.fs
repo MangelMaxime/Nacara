@@ -86,8 +86,7 @@ let private navbar (config : Config) =
                                     Navbar.Item.Props [ Style [ MarginBottom "0" ] ] ]
                     [ str config.Title ]
                   Navbar.burger
-                        [ GenericOption.Props [ Data("target", "navMenu") ]
-                          GenericOption.CustomClass "is-active" ]
+                        [ GenericOption.Props [ Data("target", "navMenu") ] ]
                         [ span [ ] [ ]
                           span [ ] [ ]
                           span [ ] [ ] ] ]
