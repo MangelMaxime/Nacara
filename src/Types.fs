@@ -165,6 +165,7 @@ type Config =
       Source : string
       Output : string
       IsDebug : bool
+      DevServerPort : int
       Changelog : string option
       Navbar : NavbarConfig option
       MenuConfig : MenuConfig option
@@ -184,6 +185,8 @@ type Config =
                         |> Option.defaultValue "docs"
               IsDebug = get.Optional.Field "debug" Decode.bool
                         |> Option.defaultValue false
+              DevServerPort = get.Optional.Field "devServerPort" Decode.int
+                              |> Option.defaultValue 8080
               Changelog = get.Optional.Field "changelog" Decode.string
               Navbar = get.Optional.Field "navbar" NavbarConfig.Decoder
               MenuConfig = get.Optional.Field "menu" menuConfigDecoder

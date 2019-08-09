@@ -187,6 +187,7 @@ let init (config : Config, docFiles : Map<string, PageContext>, lightnerCache : 
             o.root <- Node.Exports.path.join(cwd, config.Output)
             o.``open`` <- false
             o.logLevel <- 0
+            o.port <- config.DevServerPort
         )
 
     if config.BaseUrl <> "/" then
