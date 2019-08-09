@@ -11,8 +11,11 @@ module.exports = {
     },
     onCompiled() {
         if (!nodemonStarted) {
-            nodemonStarted = true;
-            runScript("./node_modules/.bin/nodemon", ["cli.js"])
+            const isWatch = process.argv.indexOf("--watch") !== -1 || process.argv.indexOf("-w") !== -1;
+            if (isWatch) {
+                nodemonStarted = true;
+                runScript("./node_modules/.bin/nodemon", ["cli.js"])
+            }
         }
     }
 };

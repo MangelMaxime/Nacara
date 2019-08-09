@@ -1,5 +1,5 @@
 {
-  "name": "nacara",
+  "name": "@fable-compiler/nacara",
   "version": "0.1.6",
   "main": "dist/Main.js",
   "license": "MIT",
