@@ -1,12 +1,14 @@
 {
   "name": "@fable-compiler/nacara",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "main": "dist/Main.js",
   "license": "MIT",
   "bin": {
     "nacara": "./cli.js"
   },
-  "scripts": {},
+  "scripts": {
+    "build": "fable-splitter -c src/splitter.config.js"
+  },
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.2.0",
     "fable-compiler": "^2.3.10",

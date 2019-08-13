@@ -1,5 +1,6 @@
 # Override .gitignore to include the `dist` folder
 .fable/
+.ionide/
 paket-files/
 src/bin/
 src/obj/

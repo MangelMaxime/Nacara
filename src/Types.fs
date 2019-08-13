@@ -165,7 +165,9 @@ type Config =
       Source : string
       Output : string
       IsDebug : bool
-      DevServerPort : int
+      IsWatch : bool
+      IsServer : bool
+      ServerPort : int
       Changelog : string option
       Navbar : NavbarConfig option
       MenuConfig : MenuConfig option
@@ -173,20 +175,23 @@ type Config =
 
     static member Decoder =
         Decode.object (fun get ->
+            let withDefault fieldName decoder defValue =
+                get.Optional.Field fieldName decoder
+                |> Option.defaultValue defValue
+            let optionalFlag fieldName =
+                withDefault fieldName Decode.bool false
             { NpmURL = get.Optional.Field "npmURL" Decode.string
               GithubURL = get.Optional.Field "githubURL" Decode.string
               Url = get.Required.Field "url" Decode.string
               BaseUrl = get.Required.Field "baseUrl" Decode.string
               Title = get.Required.Field "title" Decode.string
               Version = get.Required.Field "version" Decode.string
-              Source = get.Optional.Field "source" Decode.string
-                        |> Option.defaultValue "docsrc"
-              Output = get.Optional.Field "output" Decode.string
-                        |> Option.defaultValue "docs"
-              IsDebug = get.Optional.Field "debug" Decode.bool
-                        |> Option.defaultValue false
-              DevServerPort = get.Optional.Field "devServerPort" Decode.int
-                              |> Option.defaultValue 8080
+              Source = withDefault "source" Decode.string "docsrc"
+              Output =  withDefault "output" Decode.string "docs"
+              IsDebug = optionalFlag "debug"
+              IsWatch = optionalFlag "watch"
+              IsServer = optionalFlag "server"
+              ServerPort = withDefault "serverPort" Decode.int 8080
               Changelog = get.Optional.Field "changelog" Decode.string
               Navbar = get.Optional.Field "navbar" NavbarConfig.Decoder
               MenuConfig = get.Optional.Field "menu" menuConfigDecoder
@@ -195,8 +200,8 @@ type Config =
 
 type Model =
     { Config : Config
-      FileWatcher : Chokidar.FSWatcher
-      Server : Node.Http.Server
+      FileWatcher : Chokidar.FSWatcher option
+      Server : Node.Http.Server option
       WorkingDirectory : string
       IsDebug : bool
       JavaScriptFiles : Dictionary<string, string>

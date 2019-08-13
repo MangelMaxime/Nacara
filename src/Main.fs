@@ -180,34 +180,43 @@ open Elmish
 
 let baseUrlMiddleware (baseUrl : string) : LiveServer.Middleware = import "default" "./js/base-url-middleware.js"
 
+let runServer (config : Config) =
+    if not config.IsServer then None
+    else
+        // Start the LiveServer instance
+        let liveServerOption =
+            jsOptions<LiveServer.Options>(fun o ->
+                o.root <- Node.Exports.path.join(cwd, config.Output)
+                o.``open`` <- false
+                o.logLevel <- 0
+                o.port <- config.ServerPort
+            )
+
+        if config.BaseUrl <> "/" then
+            liveServerOption.middleware <- [|
+                    baseUrlMiddleware config.BaseUrl
+                |]
+
+        let server = LiveServer.liveServer.start(liveServerOption)
+
+        // We need to register in the event in order have access to the server info
+        // Otherwise, the server isn't ready yet
+        server.on("listening", (fun _ ->
+            let address = server.address()
+            Log.success "Server started at: http://%s:%i" address?address address?port
+        ))
+        |> ignore
+
+        Some server
+
 let init (config : Config, docFiles : Map<string, PageContext>, lightnerCache : Map<string,CodeLightner.Config>) =
-    // Start the LiveServer instance
-    let liveServerOption =
-        jsOptions<LiveServer.Options>(fun o ->
-            o.root <- Node.Exports.path.join(cwd, config.Output)
-            o.``open`` <- false
-            o.logLevel <- 0
-            o.port <- config.DevServerPort
-        )
-
-    if config.BaseUrl <> "/" then
-        liveServerOption.middleware <- [|
-                baseUrlMiddleware config.BaseUrl
-            |]
-
-    let server = LiveServer.liveServer.start(liveServerOption)
-
-    // We need to register in the event in order have access to the server info
-    // Otherwise, the server isn't ready yet
-    server.on("listening", (fun _ ->
-        let address = server.address()
-        Log.success "Server started at: http://%s:%i" address?address address?port
-    ))
-    |> ignore
 
     { Config = config
-      FileWatcher = chokidar.watch(config.Source)
-      Server = server
+      FileWatcher =
+        if config.IsWatch then
+            chokidar.watch(config.Source) |> Some
+        else None
+      Server = runServer config
       WorkingDirectory = cwd
       IsDebug = config.IsDebug
       JavaScriptFiles = Dictionary<string, string>()
@@ -266,16 +275,16 @@ let update (msg : Msg) (model : Model) =
         model, Cmd.none
 
 let fileWatcherSubscription (model : Model) =
-    let handler dispatch =
+    let handler (fileWatcher: Chokidar.FSWatcher) dispatch =
         match model.Config.Changelog with
         | Some filePath ->
-            model.FileWatcher.add(filePath)
+            fileWatcher.add(filePath)
         | None -> ()
 
         // Register behavior when:
         // - a new file is added to the `Source` directory
         // - a tracked file change
-        model.FileWatcher.on(Chokidar.Events.All, (fun event path ->
+        fileWatcher.on(Chokidar.Events.All, (fun event path ->
             match event with
             | Chokidar.Events.Add
             | Chokidar.Events.Change ->
@@ -299,7 +308,7 @@ let fileWatcherSubscription (model : Model) =
             | _ -> ()
         ))
 
-    [ handler ]
+    model.FileWatcher |> Option.map handler |> Option.toList
 
 let tryBuildPageContext (path : string) =
     promise {
@@ -318,6 +327,16 @@ let tryBuildPageContext (path : string) =
                         Content = fm.body }
     }
 
+let checkCliArgs (config: Config) =
+    let args = Node.Globals.``process``.argv |> Seq.skip 2 |> Seq.toList
+    let ifHasFlag (flags: string list) f (config: Config) =
+        args |> List.exists (fun a -> flags |> List.exists (fun f -> a = f))
+        |> function true -> f config | false -> config
+
+    config
+    |> ifHasFlag ["--watch"; "-w"] (fun c -> { c with IsWatch = true })
+    |> ifHasFlag ["--server"] (fun c -> { c with IsServer = true })
+
 let start () =
     promise {
         let configPath = Node.Exports.path.join(cwd, "nacara.json")
@@ -327,6 +346,8 @@ let start () =
             let! fileContent = File.read configPath
             match Decode.fromString Config.Decoder fileContent  with
             | Ok config ->
+                let config = checkCliArgs config
+
                 let! files = Directory.getFiles true config.Source
 
                 let! pageContexts =
