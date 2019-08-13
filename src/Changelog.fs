@@ -273,6 +273,6 @@ let parse (changelogContent : string) =
 //         | Error msg ->
 //             Log.error "%s" msg
 //             // Crash the program
-//             Fable.Import.Node.Globals.``process``.exit(1)
+//             Fable.Node.Api.``process``.exit(1)
 //             |> unbox
 //     }

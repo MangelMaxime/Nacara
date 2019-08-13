@@ -1,4 +1,4 @@
-<html class="has-navbar-fixed-top"><head><title>nacara.json · Nacara</title><link rel="stylesheet" type="text/css" href="/Nacara/style.css"/><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"/><script src="https://polyfill.app/api/polyfill?features=scroll-behavior"></script><script type="text/javascript">
+<html class="has-navbar-fixed-top"><head><title>nacara.json · Nacara</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" type="text/css" href="/Nacara/style.css"/><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"/><script src="https://polyfill.app/api/polyfill?features=scroll-behavior"></script><script type="text/javascript">
 var nacara = {};
                 </script><script type="text/javascript">window.onload = function () {
     // Initialize the menu state
@@ -54,19 +54,36 @@ var nacara = {};
 
             });
         });
+
+    var burger = document.querySelector(".navbar-burger");
+    burger.addEventListener("click", function () {
+        // Get the target from the "data-target" attribute
+        var target = burger.dataset.target;
+        var $target = document.getElementById(target);
+
+        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+        burger.classList.toggle('is-active');
+        $target.classList.toggle('is-active');
+    });
+
+    document.getElementById("toc-toggle")
+        .addEventListener("click", function () {
+            document.getElementById("toc-column").classList.toggle("is-hidden-mobile");
+            document.getElementById("content-column").classList.toggle("is-hidden-mobile");
+        });
 };
-</script></head><body><nav class="navbar is-fixed-top"><div class="container"><div class="navbar-brand"><div class="navbar-item title is-4">Nacara</div></div><div class="navbar-start"><a class="navbar-item">0.1.6</a></div><div class="navbar-end"><a class="navbar-item" href="/Nacara/index.html" target="_self"><span class="icon"><i class=" fas fa-book fa-lg"></i></span><span>Documentation</span></a><a class="navbar-item" href="/Nacara/changelog.html" target="_self"><span class="icon"><i class=" fas fa-tasks fa-lg"></i></span><span>Changelog</span></a><a class="navbar-item" href="https://gitter.im/fable-compiler/Fable" target="_blank"><span class="icon"><i class=" fab fa-gitter fa-lg"></i></span><span>Support</span></a><a class="navbar-item" href="https://github.com/MangelMaxime/Nacara" target="_blank"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item" href="https://twitter.com/MangelMaxime" target="_blank" style="color:#55acee"><span class="icon"><i class=" fab fa-twitter fa-lg"></i></span></a></div></div></nav><div class="container"><div class="columns is-gapless"><div class="column is-2-desktop is-3-touch full-height-scrollable-content"><aside class="menu" style="margin-top:3.25rem"><p class="menu-label">Getting Started</p><ul class="menu-list"><li><a class="" href="/Nacara/index.html" data-menu-id="index">Getting started</a></li></ul><p class="menu-label">API</p><ul class="menu-list"><li><a class="" href="/Nacara/API/nacara-config-json.html" data-menu-id="API/nacara-config-json">nacara.json</a></li><li><a class="" href="/Nacara/API/page-attributes.html" data-menu-id="API/page-attributes">Page attributes</a></li></ul></aside></div><div class="column is-8-desktop is-9-touch full-height-scrollable-content" style="scroll-behavior:smooth"><section class="section"><div class="content"><div><p></p>
+</script></head><body><nav class="navbar is-fixed-top"><div class="container"><div class="navbar-brand"><div class="navbar-item title is-4" style="margin-bottom:0">Nacara</div><div class="navbar-burger" data-target="navMenu"><span></span><span></span><span></span></div></div><div class="navbar-menu" id="navMenu"><div class="navbar-start"><a class="navbar-item">0.1.6</a></div><div class="navbar-end"><a class="navbar-item" href="/Nacara/index.html" target="_self"><span class="icon"><i class=" fas fa-book fa-lg"></i></span><span>Documentation</span></a><a class="navbar-item" href="/Nacara/changelog.html" target="_self"><span class="icon"><i class=" fas fa-tasks fa-lg"></i></span><span>Changelog</span></a><a class="navbar-item" href="https://gitter.im/fable-compiler/Fable" target="_blank"><span class="icon"><i class=" fab fa-gitter fa-lg"></i></span><span>Support</span></a><a class="navbar-item" href="https://github.com/MangelMaxime/Nacara" target="_blank"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item" href="https://twitter.com/MangelMaxime" target="_blank" style="color:#55acee"><span class="icon"><i class=" fab fa-twitter fa-lg"></i></span></a></div></div></div></nav><div class="container"><div class="columns is-gapless"><div class="column full-height-scrollable-content is-hidden-mobile is-full-mobile is-3-tablet is-2-desktop" id="toc-column"><aside class="menu"><p class="menu-label">Getting Started</p><ul class="menu-list"><li><a class="" href="/Nacara/index.html" data-menu-id="index">Getting started</a></li></ul><p class="menu-label">API</p><ul class="menu-list"><li><a class="" href="/Nacara/API/nacara-config-json.html" data-menu-id="API/nacara-config-json">nacara.json</a></li><li><a class="" href="/Nacara/API/page-attributes.html" data-menu-id="API/page-attributes">Page attributes</a></li></ul></aside></div><div class="column full-height-scrollable-content is-full-mobile is-9-tablet is-8-desktop" id="content-column" style="scroll-behavior:smooth"><section class="section"><div class="content"><div><p></p>
 <article class="message is-info">
                 <div class="message-body"><p>We are working on improving the documentation in order to make it easier to read.</p>
 </div>
 </article>
-<h2><a href="#config-file" aria-hidden="true" style="visibility:visible"><span class="anchor" id="config-file"></span>#</a> Config file</h2>
+<h2><a href="#Config-file" aria-hidden="true" style="visibility:visible"><span class="anchor" id="Config-file"></span>#</a> Config file</h2>
 <p>You can use the file <code>nacara.json</code> in order to configure most of Nacara behaviour.</p>
-<h3><a href="#mandatory-fields" aria-hidden="true" style="visibility:visible"><span class="anchor" id="mandatory-fields"></span>#</a> Mandatory fields</h3>
+<h3><a href="#Mandatory-fields" aria-hidden="true" style="visibility:visible"><span class="anchor" id="Mandatory-fields"></span>#</a> Mandatory fields</h3>
 <h4><a href="#url-string" aria-hidden="true" style="visibility:visible"><span class="anchor" id="url-string"></span>#</a> <code>url</code> - [string]</h4>
 <p>This is the protocol and host part of your website URL.</p>
 <p>For the website <code>https://mangelmaxime.github.io/Nacara/</code>, it is <code>https://mangelmaxime.github.io</code></p>
-<h4><a href="#baseurl-string" aria-hidden="true" style="visibility:visible"><span class="anchor" id="baseurl-string"></span>#</a> <code>baseUrl</code> - [string]</h4>
+<h4><a href="#baseUrl-string" aria-hidden="true" style="visibility:visible"><span class="anchor" id="baseUrl-string"></span>#</a> <code>baseUrl</code> - [string]</h4>
 <p>This is the path after the host part of your website URL.</p>
 <p>For the website <code>https://mangelmaxime.github.io/Nacara/</code>, it is <code>/Nacara/</code>. If you have no path you can set it to <code>/</code>.</p>
 <h4><a href="#version-string" aria-hidden="true" style="visibility:visible"><span class="anchor" id="version-string"></span>#</a> <code>version</code> - [string]</h4>
@@ -74,7 +91,7 @@ var nacara = {};
 <h4><a href="#title-string" aria-hidden="true" style="visibility:visible"><span class="anchor" id="title-string"></span>#</a> <code>title</code> - [string]</h4>
 <p>Title for your website.</p>
 <p>It's shown in the navbar and in the <code>title</code> tag of your page.</p>
-<h3><a href="#optional-fields" aria-hidden="true" style="visibility:visible"><span class="anchor" id="optional-fields"></span>#</a> Optional fields</h3>
+<h3><a href="#Optional-fields" aria-hidden="true" style="visibility:visible"><span class="anchor" id="Optional-fields"></span>#</a> Optional fields</h3>
 <h4><a href="#source-string" aria-hidden="true" style="visibility:visible"><span class="anchor" id="source-string"></span>#</a> <code>source</code> - [string]</h4>
 <p>Relative path to the folder used as source.</p>
 <p>The default value is <code>docsrc</code>.</p>
@@ -174,6 +191,6 @@ var nacara = {};
 <p>List of the grammar file to load</p>
 </li>
 </ul>
-</div></div></section></div><div class="column is-2-desktop full-height-scrollable-content        is-hidden-touch     "><div><nav class="toc-container"><ul class="toc-headings"><div class="toc-label"><a href="#config-file">Config file</a></div><ul class="toc-headings"><li><a href="#mandatory-fields">Mandatory fields</a><ul class="toc-headings"><li><a href="#url-string">`url` - [string]</a></li><li><a href="#baseurl-string">`baseUrl` - [string]</a></li><li><a href="#version-string">`version` - [string]</a></li><li><a href="#title-string">`title` - [string]</a></li></ul></li><li><a href="#optional-fields">Optional fields</a><ul class="toc-headings"><li><a href="#source-string">`source` - [string]</a></li><li><a href="#output-string">`output` - [string]</a></li><li><a href="#changelog-string">`changelog` - [string]</a></li><li><a href="#navbar-object">`navbar` - [object]</a></li><li><a href="#menu-object">`menu` - [object]</a></li><li><a href="#lightner-object">`lightner` - [object]</a></li></ul></li></ul></li></ul></nav></div></div></div><script type="text/javascript">
+</div></div></section></div><div class="column full-height-scrollable-content is-hidden-tablet is-2-desktop"><div><nav class="toc-container"><ul class="toc-headings"><div class="toc-label"><a href="#Config-file">Config file</a></div><ul class="toc-headings"><li><a href="#Mandatory-fields">Mandatory fields</a><ul class="toc-headings"><li><a href="#url-string">`url` - [string]</a></li><li><a href="#baseUrl-string">`baseUrl` - [string]</a></li><li><a href="#version-string">`version` - [string]</a></li><li><a href="#title-string">`title` - [string]</a></li></ul></li><li><a href="#Optional-fields">Optional fields</a><ul class="toc-headings"><li><a href="#source-string">`source` - [string]</a></li><li><a href="#output-string">`output` - [string]</a></li><li><a href="#changelog-string">`changelog` - [string]</a></li><li><a href="#navbar-object">`navbar` - [object]</a></li><li><a href="#menu-object">`menu` - [object]</a></li><li><a href="#lightner-object">`lightner` - [object]</a></li></ul></li></ul></li></ul></nav></div></div><span class="fa-stack fa-2x is-hidden-tablet" id="toc-toggle" style="position:fixed;bottom:0;right:0;margin:10px"><i class=" far fa-circle fa-stack-2x"></i><i class=" fas fa-sync fa-stack-1x"></i></span></div><script type="text/javascript">
 nacara.pageId = 'API/nacara-config-json';
                 </script></div></body></html>

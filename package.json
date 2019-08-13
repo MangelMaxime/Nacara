@@ -1,16 +1,16 @@
 {
   "name": "@fable-compiler/nacara",
-  "version": "0.1.7",
+  "version": "0.1.9",
   "main": "dist/Main.js",
   "license": "MIT",
   "bin": {
     "nacara": "./cli.js"
   },
   "scripts": {
-    "build": "fable-splitter -c src/splitter.config.js"
+    "start": "fable-splitter -c src/splitter.config.js --commonjs --watch",
+    "build": "fable-splitter -c src/splitter.config.js --commonjs"
   },
   "devDependencies": {
-    "@babel/plugin-transform-modules-commonjs": "^7.2.0",
     "fable-compiler": "^2.3.10",
     "fable-splitter": "^2.1.10",
     "nodemon": "^1.18.10"
@@ -29,6 +29,6 @@
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "sass": "^1.16.1",
-    "string": "^3.3.3"
+    "slugify": "^1.3.4"
   }
 }

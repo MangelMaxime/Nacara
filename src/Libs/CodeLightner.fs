@@ -2,7 +2,6 @@ module CodeLightner
 
 open System
 open Fable.Core
-open Fable.Import
 
 type [<AllowNullLiteral>] Config =
     abstract backgroundColor: string option with get, set

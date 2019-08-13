@@ -2,7 +2,7 @@ module rec Chalk
 
 open System
 open Fable.Core
-open Fable.Import.JS
+open Fable.Core.JS
 
 
 /// Main Chalk object that allows to chain styles together.
@@ -58,7 +58,7 @@ type Chalk =
     abstract Invoke: [<ParamArray>] text: string array -> string
 
     [<Emit "$0($1...)">]
-    abstract Invoke: text: TemplateStringsArray * [<ParamArray>] placeholders: string array -> string
+    abstract Invoke: text: string[] * [<ParamArray>] placeholders: string array -> string
 
     /// Return a new Chalk instance.
     abstract ``constructor``: ?options: ChalkOptions -> Chalk with get

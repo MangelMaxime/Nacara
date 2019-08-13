@@ -118,7 +118,7 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.3.4.tgz#a43357e4bbf4b92a437fb9e465c192848287f27c"
   integrity sha512-tXZCqWtlOOP4wgCp6RjRvLmfuhnqTLy9VHwRochJBCP2nDm27JnnuFEnXFASVyQNHk36jD1tAammsCEEqgscIQ==
 
-"@babel/plugin-transform-modules-commonjs@^7.1.0", "@babel/plugin-transform-modules-commonjs@^7.2.0":
+"@babel/plugin-transform-modules-commonjs@^7.1.0":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-modules-commonjs/-/plugin-transform-modules-commonjs-7.2.0.tgz#c4f1933f5991d5145e9cfad1dfd848ea1727f404"
   integrity sha512-V6y0uaUQrQPXUrmj+hgnks8va2L0zcZymeU7TtWEgdRLNkceafKXEduv7QzgQAE4lT+suwooG9dC7LFhdRAbVQ==
@@ -762,26 +762,26 @@ extglob@^2.0.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-fable-babel-plugins@^2.1.0:
+fable-babel-plugins@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/fable-babel-plugins/-/fable-babel-plugins-2.2.0.tgz#2c61be1bd1afb1f03da4e66ccaa1bfecf92063a3"
   integrity sha512-4g8CIyXCILk5LLiwNPtvtrPy3YuV5eJV18SYJCZxu3A1BSKNvPGHLSg5YcFJ2zt4qmBvSkBewlQ2bVQYG+TnrQ==
 
-fable-compiler@^2.1.11:
-  version "2.1.12"
-  resolved "https://registry.yarnpkg.com/fable-compiler/-/fable-compiler-2.1.12.tgz#471e825bf94a3de62a4a1656a1ea928076424f52"
-  integrity sha512-oFnFHSC0gJyQvVmefOruyvxx7ucqt79ElovNxTMxhNGg06iONETTW1+QPh0VY4TRxL4hJxdo9GLLK37wzk57ow==
+fable-compiler@^2.3.10:
+  version "2.3.18"
+  resolved "https://registry.yarnpkg.com/fable-compiler/-/fable-compiler-2.3.18.tgz#99ce1fd60be15193f6205e90f0087e3f222fa346"
+  integrity sha512-wibbsLJ+oMO7stRz86nFSMF8HvDyTcAHwrjjLhsDrqc7/w5yKEnxQJ20zYX1PM/u4U9aRquOZgraftl9cRhURg==
 
-fable-splitter@^2.1.2:
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/fable-splitter/-/fable-splitter-2.1.5.tgz#444dd15277a44225e22b408d440914c837dec6aa"
-  integrity sha512-p06d3a/uR1wGA02VIrhOvfLYRD6hQANPH5pSAvQuZzJlvsSdzMlzbxMU18fPq85vRZ2mUpH04gknbFZbhVIOFg==
+fable-splitter@^2.1.10:
+  version "2.1.10"
+  resolved "https://registry.yarnpkg.com/fable-splitter/-/fable-splitter-2.1.10.tgz#b99eb470793bd4c1c996ad53af7e7dfac2a30e94"
+  integrity sha512-yQeBh+63iv8mRHkMvxB2RHZyxYclIUj6Er/bKZdnEBmoV0eNqtulbbV1OrdIcCLkgeSA8050JUAvp494otWhUw==
   dependencies:
     "@babel/core" "^7.1.6"
     "@babel/plugin-transform-modules-commonjs" "^7.1.0"
     chalk "^2.4.1"
     chokidar "^2.0.4"
-    fable-babel-plugins "^2.1.0"
+    fable-babel-plugins "^2.2.0"
     fs-extra "^7.0.0"
 
 fast-plist@^0.1.2:
@@ -1525,7 +1525,12 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
   integrity sha512-tgp+dl5cGk28utYktBsrFqA7HKgrhgPsg6Z/EfhWI4gl1Hwq8B/GmY/0oXZ6nF8hDVesS/FpnYaD/kOWhYQvyg==
 
-nan@^2.10.0, nan@^2.9.2:
+nan@^2.14.0:
+  version "2.14.0"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.0.tgz#7818f722027b2459a86f0295d434d1fc2336c52c"
+  integrity sha512-INOFj37C7k3AfaNTtX8RhsTw7qRy7eLET14cROi9+5HAVbbHuIWUHEauBv5qT4Av2tWasiTY1Jw6puUNqRJXQg==
+
+nan@^2.9.2:
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.13.0.tgz#7bdfc27dd3c060c46e60b62c72b74012d1a4cd68"
   integrity sha512-5DDQvN0luhXdut8SCwzm/ZuAX2W+fwhqNzfq7CZ+OJzQ6NwpcqmIGyLD1R8MEt7BeErzcsI0JLr4pND2pNp2Cw==
@@ -1702,12 +1707,12 @@ once@^1.3.0:
   dependencies:
     wrappy "1"
 
-oniguruma@^7.0.0:
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/oniguruma/-/oniguruma-7.0.2.tgz#a5c922cf7066da1dbcc60f6385a90437a83f8d0b"
-  integrity sha512-zCsdNxTrrB4yVPMxhcIODGv1p4NVBu9WvsWnIGhMpu5djO4MQWXrC7YKjtza+OyoRqqgy27CqYWa1h5e2DDbig==
+oniguruma@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/oniguruma/-/oniguruma-7.2.0.tgz#c9a59c1ea7b9fe67e237a02e02139b638856f3af"
+  integrity sha512-bh+ZLdykY1sdIx8jBp2zpLbVFDBc3XmKH4Ceo2lijNaN1WhEqtnpqFlmtCbRuDB17nJ58RAUStVwfW8e8uEbnA==
   dependencies:
-    nan "^2.10.0"
+    nan "^2.14.0"
 
 opn@latest:
   version "5.4.0"
@@ -2087,6 +2092,11 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
 
+slugify@^1.3.4:
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/slugify/-/slugify-1.3.4.tgz#78d2792d7222b55cd9fc81fa018df99af779efeb"
+  integrity sha512-KP0ZYk5hJNBS8/eIjGkFDCzGQIoZ1mnfQRYS5WM3273z+fxGWXeN0fkwf2ebEweydv9tioZIHGZKoF21U07/nw==
+
 snapdragon-node@^2.0.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/snapdragon-node/-/snapdragon-node-2.1.1.tgz#6c175f86ff14bdb0724563e8f3c1b021a286853b"
@@ -2203,11 +2213,6 @@ string-width@^1.0.1:
   dependencies:
     is-fullwidth-code-point "^2.0.0"
     strip-ansi "^4.0.0"
-
-string@^3.3.3:
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/string/-/string-3.3.3.tgz#5ea211cd92d228e184294990a6cc97b366a77cb0"
-  integrity sha1-XqIRzZLSKOGEKUmQpsyXs2anfLA=
 
 string_decoder@~1.1.1:
   version "1.1.1"
@@ -2435,11 +2440,11 @@ vary@^1:
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
 vscode-textmate@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/vscode-textmate/-/vscode-textmate-4.0.1.tgz#6c36f28e9059ce12bc34907f7a33ea43166b26a8"
-  integrity sha512-gHTXTj04TUgbjB8y7pkVwxOiuCuD6aU5gnFzIByQuqdgFpe/bJaaEIS4geGjbjWbd1XJh6zG1EthLfpNaXEqUw==
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/vscode-textmate/-/vscode-textmate-4.2.2.tgz#0b4dabc69a6fba79a065cb6b615f66eac07c8f4c"
+  integrity sha512-1U4ih0E/KP1zNK/EbpUqyYtI7PY+Ccd2nDGTtiMR/UalLFnmaYkwoWhN1oI7B91ptBN8NdVwWuvyUnvJAulCUw==
   dependencies:
-    oniguruma "^7.0.0"
+    oniguruma "^7.2.0"
 
 websocket-driver@>=0.5.1:
   version "0.7.0"

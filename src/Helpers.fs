@@ -1,11 +1,10 @@
 [<AutoOpen>]
 module rec Global
 
-open Fable.Helpers.React
-open Fable.Helpers.React.Props
+open Fable.React
+open Fable.React.Props
 open Fable.Core
 open Fable.Core.JsInterop
-open Fable.Import
 
 [<Emit("require($0)")>]
 let require<'T> (modulePath : string) : 'T = jsNative
@@ -21,33 +20,30 @@ let getFileId (sourceDir : string) (pageContext : Types.PageContext) =
 
         pageContext.Path
             .Substring(0, extensionPos) // Remove extension
-            .Substring((sourceDir + Node.Exports.path.sep).Length)
+            .Substring((sourceDir + Node.Api.path.sep).Length)
             .Replace("\\", "/") // Remove the source directory info
         
 
 let generateUrl (config : Types.Config) (pageContext : Types.PageContext) =
-    (pageContext.Path.Substring((config.Source + Node.Exports.path.sep).Length)
+    (pageContext.Path.Substring((config.Source + Node.Api.path.sep).Length)
         |> Directory.join config.BaseUrl
         |> File.changeExtension "html").Replace("\\", "/")
 
 module Helpers =
-
-    open Fable.Import.Node
-    open Fable.Import.Node.Globals
 
     let markdown (_:string) : string = importMember "./js/utils.js"
 
     /// Resolves a path to prevent using location of target JS file
     /// Note the function is inline so `__dirname` will belong to the calling file
     let inline resolve (path: string) =
-        Exports.path.resolve(__dirname, path)
+        Node.Api.path.resolve(Node.Api.__dirname, path)
 
     /// Parses a React element invoking ReactDOMServer.renderToString
-    let parseReact (el: React.ReactElement) =
+    let parseReact (el: ReactElement) =
         ReactDomServer.renderToString el
 
     /// Parses a React element invoking ReactDOMServer.renderToStaticMarkup
-    let parseReactStatic (el: React.ReactElement) =
+    let parseReactStatic (el: ReactElement) =
         ReactDomServer.renderToStaticMarkup el
 
     let unEscapeHTML (unsafe : string) =
@@ -78,3 +74,15 @@ module Helpers =
     let whitespace =
         span [ DangerouslySetInnerHTML { __html = " " } ]
             [ ]
+
+    let partition (xs: 'T[]) (f: 'T->Choice<'TO1, 'TO2>) =
+        let o1 = ResizeArray()
+        let o2 = ResizeArray()
+        for x in xs do
+            match f x with
+            | Choice1Of2 x -> o1.Add(x)
+            | Choice2Of2 x -> o2.Add(x)
+        o1.ToArray(), o2.ToArray()
+
+    let resultPartition xs =
+        partition xs (function Ok x -> Choice1Of2 x | Error x -> Choice2Of2 x)

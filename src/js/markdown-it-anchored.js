@@ -1,7 +1,4 @@
-const string = require('string')
-
-const slugify = s =>
-    string(s).slugify().toString()
+const slugify = require('slugify');
 
 const hasProp = ({}).hasOwnProperty
 

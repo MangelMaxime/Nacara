@@ -1,13 +1,13 @@
 module Render.DocPage
 
-open Fable.Helpers.React
-open Fable.Helpers.React.Props
+open Fable.Core
+open Fable.React
+open Fable.React.Props
 open Fulma
 open Fable.FontAwesome
 open Types
-open Fable.Import
 
-let private renderPage (menu : React.ReactElement option) (tocContent : string) (pageContent : string) =
+let private renderPage (menu : ReactElement option) (tocContent : string) (pageContent : string) =
     Columns.columns [ Columns.IsGapless ]
         [ Column.column [ Column.Width (Screen.Desktop, Column.Is2)
                           Column.Width (Screen.Tablet, Column.Is3)
@@ -40,7 +40,7 @@ let private renderPage (menu : React.ReactElement option) (tocContent : string) 
           Fa.stack [ Fa.Stack.Size Fa.Fa2x
                      Fa.Stack.CustomClass "is-hidden-tablet"
                      Fa.Stack.Props [ Id "toc-toggle"
-                                      Style [ Position "fixed"
+                                      Style [ Position PositionOptions.Fixed
                                               Bottom "0"
                                               Right "0"
                                               Margin "10px" ] ] ]
@@ -53,16 +53,9 @@ let private renderPage (menu : React.ReactElement option) (tocContent : string) 
 let private generateMenu (model : Model) (pageContext : PageContext) =
     match model.Config.MenuConfig with
     | Some menuConfig ->
-        let keys =
-            menuConfig.keys() :?> JS.Iterable<string>
-            |> JS.Array.from
-            |> unbox<string array>
-
-        keys
-        |> Array.map (fun key ->
+        menuConfig |> Seq.map (fun (KeyValue(key, value)) ->
             let items =
-                menuConfig.get(key)
-                |> List.map (function
+                value |> List.map (function
                     | MenuItem pageId ->
                         match Map.tryFind pageId model.DocFiles with
                         | Some pageInfo ->
@@ -74,15 +67,9 @@ let private generateMenu (model : Model) (pageContext : PageContext) =
                             Log.error "Unable to find the file: %s" pageId
                             nothing
                     | MenuList menuListInfo ->
-                        let keys =
-                            menuListInfo.keys() :?> JS.Iterable<string>
-                            |> JS.Array.from
-                            |> unbox<string array>
-
-                        keys
-                        |> Array.map (fun key ->
+                        menuListInfo |> Seq.map (fun (KeyValue(key, value)) ->
                             let subMenu =
-                                menuListInfo.get(key)
+                                value
                                 |> List.map (function
                                     | MenuItem pageId ->
                                         match Map.tryFind pageId model.DocFiles with
@@ -111,7 +98,7 @@ let private generateMenu (model : Model) (pageContext : PageContext) =
                                   subMenu ]
 
                         )
-                        |> Array.toList
+                        |> Seq.toList
                         |> Menu.list [ ]
                 )
 
@@ -121,13 +108,14 @@ let private generateMenu (model : Model) (pageContext : PageContext) =
                   Menu.list [ ]
                     items ]
         )
+        |> Seq.toList
         |> Menu.menu [ ]
         |> Some
     | None ->
         JS.console.log "no menu"
         None
 
-let addJavaScriptConfig (model : Model) (pageContext : PageContext) (pageContent : React.ReactElement) =
+let addJavaScriptConfig (model : Model) (pageContext : PageContext) (pageContent : ReactElement) =
     fragment [ ]
         [ pageContent
           script [ Type "text/javascript"

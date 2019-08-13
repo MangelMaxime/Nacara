@@ -22,7 +22,7 @@ let clean = BuildTask.create "Clean" [] {
 }
 
 let watch = BuildTask.create "Watch" [clean.IfNeeded] {
-    Yarn.exec "fable-splitter --watch -c src/splitter.config.js" id
+    Yarn.exec "fable-splitter -c src/splitter.config.js --commonjs --watch" id
 }
 
 let all = BuildTask.createEmpty "All" [clean; watch]

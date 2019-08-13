@@ -1,12 +1,10 @@
 module Main
 
-open Fable.Import
-
 open Fable.Core
 open Fable.Core.JsInterop
 open Fulma
-open Fable.Helpers.React
-open Fable.Helpers.React.Props
+open Fable.React
+open Fable.React.Props
 open Thoth.Json
 open Types
 open System
@@ -86,47 +84,44 @@ let processPostJavaScriptRender (pageContext : PageContext) =
     }
 
 let processCodeHighlights (lightnerConfig : Map<string, CodeLightner.Config>) (pageContext : PageContext) =
-    let codeBlockRegex = JS.RegExp.Create("""<pre\b[^>]*><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", "gms")
+    let codeBlockRegex = Regex("""<pre\b[^>]*><code class="language-([^"]*)">([\S\s]*?)<\/code><\/pre>""", RegexOptions.Multiline)
 
-    let rec apply (text : string) =
+    let rec apply searchIndex (text : string) =
         promise {
-            let m = codeBlockRegex.exec pageContext.Content
-            if isNotNull m then
-                let wholeText = m.[0]
-                let lang = m.[1]
-                let codeText =
-                    m.[2]
-                    |> Helpers.unEscapeHTML
-                    // Escape single `$` caracter otherwise vscode-textmaste inject
-                    // source code at `$` place.
-                    |> (fun str -> str.Replace("$", "$$"))
-
+            let m = codeBlockRegex.Match(text, searchIndex)
+            if m.Success then
+                let lang = m.Groups.[1].Value
                 match Map.tryFind lang lightnerConfig with
                 | Some config ->
+                    let codeText =
+                         m.Groups.[2].Value
+                        |> Helpers.unEscapeHTML
+                        // Escape single `$` caracter otherwise vscode-textmaste inject
+                        // source code at `$` place.
+                        |> (fun str -> str.Replace("$", "$$"))
                     let! formattedText = CodeLightner.lighten config codeText
-                    return! text.Replace(wholeText, formattedText)
-                            |> apply
+                    let text = text.Substring(0, m.Index) + formattedText + text.Substring(m.Index + m.Length)
+                    return! apply (searchIndex + m.Length) text
                 | None ->
                     Log.warnFn "No grammar found for language: `%s`" lang
-                    return! pageContext.Content
-                            |> apply
+                    return! apply (searchIndex + m.Length) text
             else
                 return text
         }
 
     promise {
-        let! processedContent = apply pageContext.Content
+        let! processedContent = apply 0 pageContext.Content
         return { pageContext with Content = processedContent }
     }
 
-let cwd = Node.Globals.``process``.cwd()
+let cwd = Node.Api.``process``.cwd()
 
 Log.infoFn "Current directory:\n%s" cwd
 
 open Chokidar
 
 let (|MarkdownFile|JavaScriptFile|SassFile|UnsupportedFile|) (path : string) =
-    let ext = Node.Exports.path.extname(path)
+    let ext = Node.Api.path.extname(path)
 
     match ext.ToLower() with
     | ".md" -> MarkdownFile
@@ -135,6 +130,7 @@ let (|MarkdownFile|JavaScriptFile|SassFile|UnsupportedFile|) (path : string) =
     | _ -> UnsupportedFile ext
 
 type Msg =
+    | ProcessAllFiles of string list
     | ProcessMarkdown of string
     | ProcessSass of string
     | ProcessChangelogResult of string * Result<Changelog.Types.Changelog, string>
@@ -186,7 +182,7 @@ let runServer (config : Config) =
         // Start the LiveServer instance
         let liveServerOption =
             jsOptions<LiveServer.Options>(fun o ->
-                o.root <- Node.Exports.path.join(cwd, config.Output)
+                o.root <- Node.Api.path.join(cwd, config.Output)
                 o.``open`` <- false
                 o.logLevel <- 0
                 o.port <- config.ServerPort
@@ -209,32 +205,54 @@ let runServer (config : Config) =
 
         Some server
 
+let processFile isDebug path dispatch =
+    match path with
+    | MarkdownFile ->
+        ProcessMarkdown path |> dispatch
+    | SassFile ->
+        ProcessSass path |> dispatch
+    | JavaScriptFile ->
+        () // TODO: Refresh all the page using this file for post process
+    | UnsupportedFile _ ->
+        if isDebug then
+            Log.warn "Unsupported file cannot be processed: %s" path
+
 let init (config : Config, docFiles : Map<string, PageContext>, lightnerCache : Map<string,CodeLightner.Config>) =
+    let cmd =
+        if not config.IsWatch then
+            Cmd.OfPromise.either (fun (config : Config) ->
+                    Directory.getFiles true config.Source
+                    |> Promise.map (fun paths ->
+                        paths |> List.map (fun p -> Node.Api.path.join(config.Source, p))))
+                config ProcessAllFiles ProcessFailed
+        else Cmd.none
 
     { Config = config
-      FileWatcher =
-        if config.IsWatch then
-            chokidar.watch(config.Source) |> Some
-        else None
       Server = runServer config
       WorkingDirectory = cwd
       IsDebug = config.IsDebug
       JavaScriptFiles = Dictionary<string, string>()
       DocFiles = docFiles
-      LightnerCache = lightnerCache }, Cmd.none
+      LightnerCache = lightnerCache }, cmd
 
 let update (msg : Msg) (model : Model) =
     match msg with
+    | ProcessAllFiles filePaths ->
+        let cmd1 = filePaths |> List.map (processFile model.IsDebug)
+        let cmd2 =
+            match model.Config.Changelog with
+            | Some changelogPath ->
+                Cmd.OfPromise.either Process.changelog changelogPath ProcessChangelogResult ProcessFailed
+            | None -> Cmd.none
+        model, Cmd.batch [cmd1; cmd2]
+
     | ProcessMarkdown filePath ->
         let cmd =
             match model.Config.Changelog with
-            | Some changelogPath ->
-                if filePath = changelogPath then
-                    Cmd.ofPromise Process.changelog filePath ProcessChangelogResult ProcessFailed
-                else
-                    Cmd.ofPromise Process.markdownFile (filePath, model.LightnerCache) ProcessMarkdownResult ProcessFailed
-            | None ->
-                Cmd.ofPromise Process.markdownFile (filePath, model.LightnerCache) ProcessMarkdownResult ProcessFailed
+            | Some changelogPath when filePath = changelogPath ->
+                Cmd.OfPromise.either Process.changelog filePath ProcessChangelogResult ProcessFailed
+            | _ ->
+                Cmd.OfPromise.either Process.markdownFile (filePath, model.LightnerCache) ProcessMarkdownResult ProcessFailed
 
         model, cmd
 
@@ -243,7 +261,7 @@ let update (msg : Msg) (model : Model) =
         model, Cmd.none
 
     | ProcessSass filePath ->
-        model, Cmd.ofPromise Write.sassFile (model, filePath) WriteFileSuccess WriteFileFailed
+        model, Cmd.OfPromise.either Write.sassFile (model, filePath) WriteFileSuccess WriteFileFailed
 
     | ProcessMarkdownResult result ->
         match result with
@@ -255,7 +273,7 @@ let update (msg : Msg) (model : Model) =
             let pageId = getFileId model.Config.Source pageContext
             let newDocFiles = Map.add pageId pageContext model.DocFiles
             let newModel = { model with DocFiles = newDocFiles }
-            newModel, Cmd.ofPromise Write.standard (newModel, pageContext) WriteFileSuccess WriteFileFailed
+            newModel, Cmd.OfPromise.either Write.standard (newModel, pageContext) WriteFileSuccess WriteFileFailed
 
     | ProcessChangelogResult (path, result) ->
         match result with
@@ -264,7 +282,7 @@ let update (msg : Msg) (model : Model) =
             model, Cmd.none
 
         | Ok changelog ->
-            model, Cmd.ofPromise Write.changelog (model,changelog, path) WriteFileSuccess WriteFileFailed
+            model, Cmd.OfPromise.either Write.changelog (model,changelog, path) WriteFileSuccess WriteFileFailed
 
     | WriteFileSuccess path ->
         Log.log "Write: %s" path
@@ -288,17 +306,7 @@ let fileWatcherSubscription (model : Model) =
             match event with
             | Chokidar.Events.Add
             | Chokidar.Events.Change ->
-                match path with
-                | MarkdownFile ->
-                    ProcessMarkdown path
-                    |> dispatch
-                | JavaScriptFile -> () // TODO: Refresh all the page using this file for post process
-                | SassFile ->
-                    ProcessSass path
-                    |> dispatch
-                | UnsupportedFile _ ->
-                    if model.IsDebug then
-                        Log.warn "Watcher has been triggered on an unsupported file: %s" path
+                processFile model.IsDebug path dispatch
             | Chokidar.Events.Unlink
             | Chokidar.Events.UnlinkDir
             | Chokidar.Events.Ready
@@ -308,7 +316,9 @@ let fileWatcherSubscription (model : Model) =
             | _ -> ()
         ))
 
-    model.FileWatcher |> Option.map handler |> Option.toList
+    if model.Config.IsWatch then
+        [ chokidar.watch(model.Config.Source) |> handler ]
+    else []
 
 let tryBuildPageContext (path : string) =
     promise {
@@ -328,7 +338,7 @@ let tryBuildPageContext (path : string) =
     }
 
 let checkCliArgs (config: Config) =
-    let args = Node.Globals.``process``.argv |> Seq.skip 2 |> Seq.toList
+    let args = Node.Api.``process``.argv |> Seq.skip 2 |> Seq.toList
     let ifHasFlag (flags: string list) f (config: Config) =
         args |> List.exists (fun a -> flags |> List.exists (fun f -> a = f))
         |> function true -> f config | false -> config
@@ -339,7 +349,7 @@ let checkCliArgs (config: Config) =
 
 let start () =
     promise {
-        let configPath = Node.Exports.path.join(cwd, "nacara.json")
+        let configPath = Node.Api.path.join(cwd, "nacara.json")
         let! hasDocsConfig = File.exist(configPath)
 
         if hasDocsConfig then
@@ -353,7 +363,7 @@ let start () =
                 let! pageContexts =
                     files
                     |> List.map (fun file ->
-                        config.Source + "/" + file
+                        config.Source.TrimEnd('/', '\\') + "/" + file
                     )
                     |> List.filter (fun path ->
                         match path with
@@ -368,28 +378,15 @@ let start () =
                     |> Promise.all
 
                 let (validContext, erroredContext) =
-                    pageContexts
-                    |> Array.partition (fun result ->
-                        match result with
-                        | Ok _ -> true
-                        | Error _ -> false
-                    )
+                    Helpers.resultPartition pageContexts
 
-                erroredContext
-                |> Array.iter (function
-                    | Error (path, msg) ->
-                        Log.error "Error when processing file: %s\n%s" path msg
-                    | Ok _ -> failwith "Should not happen we filtered them before"
-                )
+                for (path, msg) in erroredContext do
+                    Log.error "Error when processing file: %s\n%s" path msg
 
                 let docFiles =
                     validContext
-                    |> Array.map (function
-                        | Ok pageContext ->
-                            let id = getFileId config.Source pageContext
-                            (id, pageContext)
-                        | Error _ -> failwith "Should not happen we filtered them before"
-                    )
+                    |> Array.map (fun pageContext ->
+                        getFileId config.Source pageContext, pageContext)
                     |> Map.ofArray
 
                 let lightnerCache =
@@ -436,6 +433,6 @@ let start () =
                 Log.errorFn "%s" msg
         else
             Log.error "No file `nacara.json` found."
-            Node.Globals.``process``.exit(1)
+            Node.Api.``process``.exit(1)
     }
     |> Promise.start

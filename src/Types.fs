@@ -2,7 +2,6 @@ module Types
 
 open Thoth.Json
 open System.Collections.Generic
-open Fable.Import
 
 type PostRenderDemos =
     { Script : string
@@ -107,11 +106,16 @@ module Helpers =
 
     let inline objectKeys (o: obj) : string seq = upcast JS.Object.keys(o)
 
+    let unwrap path decoder value = 
+        match Decode.fromValue path decoder value with
+        | Ok x -> x
+        | Error er -> failwith er
+
 open Fable.Core.JsInterop
 
 type MenuItem =
     | MenuItem of string
-    | MenuList of JS.Map<string, MenuItem list>
+    | MenuList of Dictionary<string, MenuItem list>
 
     static member Decoder =
         Decode.oneOf [
@@ -120,39 +124,39 @@ type MenuItem =
 
             (fun path value ->
                 if not (Helpers.isObject value) || Helpers.isArray value then
-                    (path, Decode.BadPrimitive ("an object", value))
+                    (path, BadPrimitive ("an object", value))
                     |> Error
                 else
                     let keys = Helpers.objectKeys value
 
                     if Seq.length keys < 1 then
-                        (path, Decode.BadPrimitive ("an object with 1 property", value))
+                        (path, BadPrimitive ("an object with 1 property", value))
                         |> Error
                     else
                         value
                         |> Helpers.objectKeys
-                        |> Seq.map (fun key -> (key, value?(key) |> Decode.unwrap path (Decode.list MenuItem.Decoder)))
-                        |> Seq.fold (fun (state : JS.Map<string, MenuItem list>) (key, value) ->
-                            state.set(key, value)
-                        ) (JS.Map.Create<string, MenuItem list>())
+                        |> Seq.map (fun key -> (key, value?(key) |> Helpers.unwrap path (Decode.list MenuItem.Decoder)))
+                        |> Seq.fold (fun (state : Dictionary<string, MenuItem list>) (key, value) ->
+                            state.Add(key, value); state
+                        ) (Dictionary<string, MenuItem list>())
                         |> Ok )
             |> Decode.map MenuList
         ]
 
-type MenuConfig = JS.Map<string, MenuItem list>
+type MenuConfig = Dictionary<string, MenuItem list>
 
-let menuConfigDecoder : Decode.Decoder<JS.Map<string, MenuItem list>> =
+let menuConfigDecoder : Decoder<Dictionary<string, MenuItem list>> =
     fun path value ->
         if not (Helpers.isObject value) || Helpers.isArray value then
-            (path, Decode.BadPrimitive ("an object", value))
+            (path, BadPrimitive ("an object", value))
             |> Error
         else
             value
             |> Helpers.objectKeys
-            |> Seq.map (fun key -> (key, value?(key) |> Decode.unwrap path (Decode.list MenuItem.Decoder)))
-            |> Seq.fold (fun (state : JS.Map<string, MenuItem list>) (key, value) ->
-                state.set(key, value)
-            ) (JS.Map.Create<string, MenuItem list>())
+            |> Seq.map (fun key -> (key, value?(key) |> Helpers.unwrap path (Decode.list MenuItem.Decoder)))
+            |> Seq.fold (fun (state : Dictionary<string, MenuItem list>) (key, value) ->
+                state.Add(key, value); state
+            ) (Dictionary<string, MenuItem list>())
             |> Ok
 
 type Config =
@@ -200,7 +204,6 @@ type Config =
 
 type Model =
     { Config : Config
-      FileWatcher : Chokidar.FSWatcher option
       Server : Node.Http.Server option
       WorkingDirectory : string
       IsDebug : bool

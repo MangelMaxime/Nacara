@@ -9,7 +9,6 @@
     <Compile Include="Libs/Chokidar.fs" />
     <Compile Include="Libs/Sass.fs" />
     <Compile Include="Libs/Chalk.fs" />
-    <Compile Include="Libs/StringJS.fs" />
     <Compile Include="Libs/CodeLightner.fs" />
     <Compile Include="Log.fs" />
     <Compile Include="Node.Extra.fs" />

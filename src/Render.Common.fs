@@ -1,8 +1,7 @@
 module Render.Common
 
-open Fable.Import
-open Fable.Helpers.React
-open Fable.Helpers.React.Props
+open Fable.React
+open Fable.React.Props
 open Fulma
 open Types
 open Fable.FontAwesome
@@ -94,7 +93,7 @@ let private navbar (config : Config) =
                 [ navbarItems config ]
             ] ]
 
-let basePage (model : Model) (pageTitle : string) (content : React.ReactElement) =
+let basePage (model : Model) (pageTitle : string) (content : ReactElement) =
     let titleStr = pageTitle + " · " + model.Config.Title
 
     let toUrl (url : string) =
@@ -102,7 +101,7 @@ let basePage (model : Model) (pageTitle : string) (content : React.ReactElement)
 
     let menuScript =
         let sourceCode =
-            Directory.join Node.Globals.__dirname "../scripts/menu.js"
+            Directory.join Node.Api.__dirname "../scripts/menu.js"
             |> File.readSync
 
         script [ Type "text/javascript"
