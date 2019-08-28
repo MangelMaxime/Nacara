@@ -4,10 +4,8 @@
 module LiveServer
 
 open Fable.Core
-open Fable.Import
-open Fable.Import.JS
 
-type Middleware = Node.Http.ServerRequest -> Node.Http.ServerResponse -> Function -> unit
+type Middleware = Node.Http.ServerRequest -> Node.Http.ServerResponse -> System.Delegate -> unit
 
 type Options =
     /// Set the server port. Defaults to 8080.

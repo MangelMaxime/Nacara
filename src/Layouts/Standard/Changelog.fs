@@ -1,11 +1,15 @@
-module Render.Changelog
+module Changelog
 
 open Fulma
 open Types
 open System
 open System.Text.RegularExpressions
-open Fable.Helpers.React
-open Fable.Helpers.React.Props
+open Fable.React
+open Fable.React.Props
+open Fable.Core.JsInterop
+open Thoth.Json
+
+let slugify (_s: string): string = importDefault "slugify"
 
 let renderVersion (versionText : string) (date : DateTime option) =
     let dateText =
@@ -14,7 +18,7 @@ let renderVersion (versionText : string) (date : DateTime option) =
             Date.Format.localFormat Date.Local.englishUK "MMM yyyy" date
         | None -> ""
 
-    let slug = StringJS.S.Invoke(versionText).toString()
+    let slug = slugify versionText
 
     li [ Class "changelog-list-item is-version" ]
         [ a [ Href ("#" + slug) ]
@@ -23,7 +27,7 @@ let renderVersion (versionText : string) (date : DateTime option) =
               span [ Id slug
                      Style [ Visibility "hidden"
                              MarginTop "-1rem"
-                             Position "absolute" ] ]
+                             Position PositionOptions.Absolute ] ]
                 [ str "#" ]
               Tag.tag [ Tag.Color IsPrimary
                         Tag.Size IsLarge
@@ -60,7 +64,7 @@ type Changelog.Types.CategoryBody with
         match this with
         | Changelog.Types.CategoryBody.ListItem text ->
             let htmlText =
-                Helpers.markdown text
+                Helpers.markdown text [||]
                 |> removeParagraphMarkup
 
             li [ Class "changelog-list-item" ]
@@ -74,15 +78,15 @@ type Changelog.Types.CategoryBody with
                   div [ Class "changelog-details" ]
                     [ ] ]
         | Changelog.Types.CategoryBody.Text text ->
-            let htmlText = Helpers.markdown text
+            let htmlText = Helpers.markdown text [||]
             li [ Class "changelog-list-item" ]
                 [ div [ Class "changelog-details"
                         DangerouslySetInnerHTML { __html = htmlText } ]
                             [ ] ]
 
 
-let toHtml (model : Model) (changelog : Changelog.Types.Changelog) =
-    let changelogItems =
+let toHtml (model : Model) (pageContext : PageContext) =
+    let changelogItems (changelog : Changelog.Types.Changelog) =
         changelog.Versions
         |> List.map (fun version ->
             match version.Version with
@@ -99,10 +103,40 @@ let toHtml (model : Model) (changelog : Changelog.Types.Changelog) =
             | None -> nothing
         )
 
-    Columns.columns [ ]
-        [ Column.column [ Column.Width (Screen.All, Column.Is9) ]
-            [ Content.content [ ]
-                [ section [ Class "changelog" ]
-                    [ ul [ Class "changelog-list" ]
-                        changelogItems ] ] ] ]
-    |> Render.Common.basePage model "Changelog"
+    promise {
+        let getChangelogPath =
+            Decode.field "changelog_path" Decode.string
+
+        match Decode.fromValue "$.extra" getChangelogPath pageContext.Attributes.Extra with
+        | Ok relativePath ->
+            let changelogPath = Directory.join pageContext.Path relativePath
+            let! changelogContent = File.read changelogPath
+
+            match Changelog.parse changelogContent with
+            | Ok changelog ->
+                return
+                    Columns.columns [ ]
+                        [
+                            Column.column
+                                [
+                                    Column.Width (Screen.All, Column.Is8)
+                                    Column.Offset (Screen.All, Column.Is2)
+                                    Column.CustomClass "full-height-scrollable-content"
+                                    Column.Props [ Style [ // We need to set ScrollBehavior via style so the polyfill can work
+                                                           ScrollBehavior "smooth" ] ]
+                                ]
+                                [
+                                    Content.content [ ]
+                                        [
+                                            section [ Class "changelog" ]
+                                                [ ul [ Class "changelog-list" ]
+                                            (changelogItems changelog) ]
+                                        ]
+                                ]
+                        ]
+                    |> Prelude.basePage model pageContext.Attributes.Title
+            | Error msg ->
+                return failwith msg
+        | Error msg ->
+            return failwith msg
+    }

@@ -1,3 +1,10 @@
+$toc-item-active-background-color: transparent !default;
+$toc-item-active-color: $link !default;
+$toc-item-active-font-weight: $weight-normal !default;
+$toc-item-hover-color: $link !default;
+$toc-item-hover-background-color: transparent !default;
+
+
 .toc-container {
     // position: fixed;
     border-left: 1px solid #e0e0e0;
@@ -9,7 +16,13 @@
     a {
         color: $text;
         &:hover {
-            color: $link;
+            color: $toc-item-hover-color;
+        }
+
+        &.is-active {
+            background-color: $toc-item-active-background-color;
+            color: $toc-item-active-color;
+            font-weight: $toc-item-active-font-weight;
         }
     }
 

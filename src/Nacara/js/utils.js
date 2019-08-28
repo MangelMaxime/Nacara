@@ -3,7 +3,7 @@
 
 const lightner = require('code-lightner');
 
-const mdMessage = (level) => {
+export const mdMessage = (level) => {
 
     return {
         validate: function (params) {
@@ -25,15 +25,15 @@ const mdMessage = (level) => {
     }
 }
 
-const md = require('markdown-it')({
-    html: true
-})
-    .use(require('./markdown-it-anchored'))
-    .use(require('./markdown-it-toc'))
-    .use(require('markdown-it-container'), 'warning', mdMessage("warning"))
-    .use(require('markdown-it-container'), 'info', mdMessage("info"))
-    .use(require('markdown-it-container'), 'success', mdMessage("success"))
-    .use(require('markdown-it-container'), 'danger', mdMessage("danger"));
+// const md = require('markdown-it')({
+//     html: true
+// })
+//     .use(require('./markdown-it-anchored'))
+//     .use(require('./markdown-it-toc'));
+//     .use(require('markdown-it-container'), 'warning', mdMessage("warning"))
+//     .use(require('markdown-it-container'), 'info', mdMessage("info"))
+//     .use(require('markdown-it-container'), 'success', mdMessage("success"))
+//     .use(require('markdown-it-container'), 'danger', mdMessage("danger"));
 
 const startTag = `<pre><code class="language-fsharp">`;
 const endTag = `</code></pre>`;
@@ -59,7 +59,20 @@ export function unEscapeHtml(unsafe) {
         .replace(/&#039;/g, "'")
 }
 
-export function markdown(content) {
+export function markdown(content, plugins) {
+    let md = require('markdown-it')({
+        html: true
+    });
+        // .use(require('./markdown-it-anchored'))
+        // .use(require('./markdown-it-toc'));
+
+    // Dynamically load the plugins
+    // Should be possible to add a cache for the plugins
+    // or for the whole md instance by generating a hash with all the plugins info
+    plugins.forEach(plugin => {
+        md = md.use(require(plugin.Path), ...plugin.Args)
+    });
+
     return md.render(content);
 }
 

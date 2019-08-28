@@ -26,7 +26,7 @@ let watch = BuildTask.create "Watch" [clean.IfNeeded] {
         Yarn.exec "fable-splitter --watch -c src/splitter.config.js" id
       }
       async {
-          Yarn.exec "nodemon dist/Main.js" id
+          Yarn.exec "nodemon cli.js" id
       }
     ]
     |> Async.Parallel

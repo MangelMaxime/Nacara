@@ -2,10 +2,9 @@ FSharp.Core
 Fable.Core
 Fable.Date
 Fable.React
-Fable.Import.Node
+Fable.Node
 Fulma
 Fable.FontAwesome
 Fable.FontAwesome.Free
 Fable.Promise
 Thoth.Json
-Fable.Elmish

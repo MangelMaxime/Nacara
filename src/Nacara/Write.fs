@@ -3,6 +3,9 @@ module Write
 open Types
 open System
 open Fable.Core.JsInterop
+open Fable.React
+open Fable.React.Props
+open Fulma
 
 let sassFile (model : Model, filePath : string) =
     promise {
@@ -27,10 +30,6 @@ let sassFile (model : Model, filePath : string) =
 
 let standard (model : Model, pageContext : PageContext) =
     promise {
-        let fileContent =
-            Render.DocPage.toHtml model pageContext
-            |> Helpers.parseReactStatic
-
         let outputPath =
             pageContext.Path
             |> Directory.moveUp
@@ -38,29 +37,12 @@ let standard (model : Model, pageContext : PageContext) =
             |> Directory.join model.WorkingDirectory
             |> File.changeExtension "html"
 
-        do! File.write outputPath fileContent
+        do! File.write outputPath pageContext.Content
         return pageContext.Path
     }
 
 let changelog (model : Model, changelog : Changelog.Types.Changelog, path : string) =
     promise {
-        // let versionsList =
-        //     changelog.Versions
-        //     |> List.map (fun version ->
-        //         match version.Version with
-        //         | Some versionText ->
-        //             fragment [ ]
-        //                 [ yield renderVersion versionText version.Date
-        //                   for category in version.Categories do
-        //                     yield!
-        //                         category.Value
-        //                         |> List.map (fun body ->
-        //                             body.ToHtml(category.Key)
-        //                         ) ]
-
-        //         | None -> nothing
-        //     )
-
         let outputPath =
             path.ToLower()
             |> Directory.join model.Config.Output
@@ -68,12 +50,10 @@ let changelog (model : Model, changelog : Changelog.Types.Changelog, path : stri
             |> File.changeExtension "html"
 
         let html =
-            // Content.content [ ]
-            //     [ section [ Class "changelog" ]
-            //         [ ul [ Class "changelog-list" ]
-            //             versionsList ] ]
-            changelog
-            |> Render.Changelog.toHtml model
+            // changelog
+            // |> Templates.Centered.Changelog.toHtml model
+
+            nothing
             |> Helpers.parseReactStatic
 
         do! File.write outputPath html

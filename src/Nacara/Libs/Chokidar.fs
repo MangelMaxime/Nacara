@@ -1,7 +1,6 @@
 module Chokidar
 
 open Fable.Core
-open Fable.Import.JS
 
 module Events =
     let [<Literal>] Add = "add"
@@ -39,12 +38,12 @@ type [<AllowNullLiteral>] IOptions =
 
 type [<AllowNullLiteral>] FSWatcher =
     abstract add: fileDirOrGlob: string -> unit
-    abstract add: filesDirsOrGlobs: Array<string> -> unit
+    abstract add: filesDirsOrGlobs: string array -> unit
     abstract unwatch: fileDirOrGlob: string -> unit
-    abstract unwatch: filesDirsOrGlobs: Array<string> -> unit
+    abstract unwatch: filesDirsOrGlobs: string array -> unit
     /// Listen for an FS event. Available events: add, addDir, change, unlink, unlinkDir, error. Additionally all is available which gets emitted for every non-error event.
     abstract on: ``event``: string * clb: (string -> string -> unit) -> unit
-    abstract on: ``event``: string * clb: (Error -> unit) -> unit
+    abstract on: ``event``: string * clb: (exn -> unit) -> unit
     /// Removes all listeners from watched files.
     abstract close: unit -> unit
     abstract options: IOptions with get, set

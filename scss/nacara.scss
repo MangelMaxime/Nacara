@@ -2,6 +2,10 @@
 @import './components/textual-steps.scss';
 @import './components/toc.scss';
 
+.navbar-item.title.is-4 {
+    margin-bottom: 0;
+}
+
 html {
     &.has-navbar-fixed-top {
         padding-top: 0;
@@ -62,4 +66,34 @@ body {
 // Add a space between an icon and the text
 .icon+span {
     margin-left: .5rem;
+}
+
+span+.icon {
+    margin-left: .5rem;
+}
+
+// Force the margin-left when using span+.icon in a button element
+// otherwise the margin seems to small to me
+.button span+.icon {
+    margin-left: .5rem !important;
+}
+
+.page-header {
+    h1 {
+        margin-top: 0 !important;
+    }
+}
+
+// Anchor behaviour
+h2, h3, h4, h5, h6  {
+    a {
+        visibility: hidden;
+    }
+
+    &:hover {
+
+        a {
+            visibility: visible;
+        }
+    }
 }

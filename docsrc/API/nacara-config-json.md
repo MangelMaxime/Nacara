@@ -8,8 +8,6 @@ title: nacara.json
 We are working on improving the documentation in order to make it easier to read.
 :::
 
-## Config file
-
 You can use the file `nacara.json` in order to configure most of Nacara behaviour.
 
 ### Mandatory fields

@@ -5,8 +5,8 @@ open Fable.Import
 open Fable.Core
 open Fable.Core.JsInterop
 open Fulma
-open Fable.Helpers.React
-open Fable.Helpers.React.Props
+open Fable.React
+open Fable.React.Props
 open Thoth.Json
 open Types
 open System
@@ -18,84 +18,19 @@ open System.Collections.Generic
 importSideEffects "./js/markdown-it-anchored.js"
 importSideEffects "./js/markdown-it-toc.js"
 
-let processTableOfContent (pageContext : PageContext) =
-    promise {
-        let tocRegex = new Regex("""(<nav class="toc-container">.*<\/nav>)""")
-
-        let tocContent =
-            let result = tocRegex.Match(pageContext.Content)
-
-            if result.Success then
-                result.Value
-            else
-                """<nav class="toc-container"></nav>"""
-
-        let pageContent =
-            tocRegex.Replace(pageContext.Content, "")
-
-        return { pageContext with TableOfContent = tocContent
-                                  Content = pageContent }
-    }
-
-let rec replacePostJavaScript (importedModule : obj) (config : PostRenderDemos) (result : string) =
-    promise {
-        let jsRenderRegex = new Regex("\[@js:(.*)\]")
-
-        match jsRenderRegex.Match(result) with
-        | m when m.Success ->
-            let toReplace = m.Groups.[0].Value
-            let functioName : string = m.Groups.[1].Value
-
-            try
-                let htmlOutput =
-                    importedModule?(config.ImportSelector)?(functioName)()
-                    |> Helpers.parseReactStatic
-
-
-                return result.Replace(toReplace, htmlOutput)
-            with
-                | _ ->
-                    Log.warn "An error occured when trying to execute post JavaScript rendering"
-                    Log.warn "Module path: %s" config.Script
-                    Log.warn "Selector: %s" config.ImportSelector
-                    Log.warn "Function: %s" functioName
-
-                    return! result.Replace(toReplace, "")
-                            |> replacePostJavaScript importedModule config
-        | _ ->
-            return result
-    }
-
-let processPostJavaScriptRender (pageContext : PageContext) =
-    promise {
-        match pageContext.Attributes.PostRenderDemos with
-        | Some config ->
-            let scriptPath =
-                pageContext.Path
-                |> Directory.dirname
-                |> (fun dir -> Directory.join dir config.Script)
-                |> File.absolutePath
-
-            let importedModule : obj = require scriptPath
-
-            let! newContent = replacePostJavaScript importedModule config pageContext.Content
-
-            return { pageContext with Content = newContent }
-        | None ->
-            return pageContext
-    }
-
 let processCodeHighlights (lightnerConfig : Map<string, CodeLightner.Config>) (pageContext : PageContext) =
-    let codeBlockRegex = JS.RegExp.Create("""<pre\b[^>]*><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", "gms")
+    let codeBlockRegex =
+        // Regex("""<pre\b[^>]*><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", RegexOptions.Multiline ||| RegexOptions.Singleline)
+        JS.RegExp.Create("""<pre\b[^>]*><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", "gms")
 
     let rec apply (text : string) =
         promise {
-            let m = codeBlockRegex.exec pageContext.Content
-            if isNotNull m then
-                let wholeText = m.[0]
-                let lang = m.[1]
+            let m = codeBlockRegex.Match pageContext.Content
+            if m.Success then
+                let wholeText = m.Groups.[0].Value
+                let lang = m.Groups.[1].Value
                 let codeText =
-                    m.[2]
+                    m.Groups.[2].Value
                     |> Helpers.unEscapeHTML
                     // Escape single `$` caracter otherwise vscode-textmaste inject
                     // source code at `$` place.
@@ -119,14 +54,14 @@ let processCodeHighlights (lightnerConfig : Map<string, CodeLightner.Config>) (p
         return { pageContext with Content = processedContent }
     }
 
-let cwd = Node.Globals.``process``.cwd()
+let cwd = Node.Api.``process``.cwd()
 
 Log.infoFn "Current directory:\n%s" cwd
 
 open Chokidar
 
 let (|MarkdownFile|JavaScriptFile|SassFile|UnsupportedFile|) (path : string) =
-    let ext = Node.Exports.path.extname(path)
+    let ext = Node.Api.path.extname(path)
 
     match ext.ToLower() with
     | ".md" -> MarkdownFile
@@ -143,38 +78,44 @@ type Msg =
     | WriteFileSuccess of string
     | WriteFileFailed of exn
 
-module Process =
+let processFile (path : string, model : Model) =
+    promise {
+        let! fileContent = File.read path
+        let fm = FrontMatter.fm.Invoke(fileContent)
 
-    let markdownFile (path : string, lightnerConfig : Map<string, CodeLightner.Config>) =
-        promise {
-            let! fileContent = File.read path
-            let fm = FrontMatter.fm.Invoke(fileContent)
+        match Decode.fromValue "$" PageAttributes.Decoder fm.attributes with
+        | Error msg ->
+            let errorMsg =
+                sprintf "The attributes of %s are invalid.\n%s" path msg
+            return Error (path, errorMsg)
 
-            match Decode.fromValue "$" PageAttributes.Decoder fm.attributes with
-            | Error msg ->
+        | Ok pageAttributes ->
+            match Map.tryFind pageAttributes.Layout model.Config.LayoutConfig with
+            | Some layoutFunc ->
+                let pageContext =
+                    {
+                        Path = path
+                        Attributes = pageAttributes
+                        Content = fm.body
+                    }
+
+                // Seems like calling: layoutFunc model pageContext
+                // doesn't pass the pageContext correctly, so we use interop for now
+                let! layout = layoutFunc$(model, pageContext)
+
+                let result =
+                    { pageContext with
+                        Content =
+                            Helpers.parseReactStatic layout
+                    }
+
+                return Ok result
+
+            | None ->
                 let errorMsg =
-                    sprintf "The attributes of %s are invalid.\n%s" path msg
+                    sprintf "No layout '%s' found in your config file." pageAttributes.Layout
                 return Error (path, errorMsg)
-            | Ok pageAttributes ->
-                let markdown = Helpers.markdown fm.body
-
-                let! pageContext =
-                    { Path = path
-                      Attributes = pageAttributes
-                      TableOfContent = ""
-                      Content = markdown }
-                    |> processTableOfContent
-                    |> Promise.bind (processCodeHighlights lightnerConfig)
-                    |> Promise.bind processPostJavaScriptRender
-
-                return Ok pageContext
-        }
-
-    let changelog (path : string) =
-        promise {
-            let! fileContent = File.read path
-            return path, Changelog.parse fileContent
-        }
+    }
 
 open Elmish
 
@@ -184,7 +125,7 @@ let init (config : Config, docFiles : Map<string, PageContext>, lightnerCache : 
     // Start the LiveServer instance
     let liveServerOption =
         jsOptions<LiveServer.Options>(fun o ->
-            o.root <- Node.Exports.path.join(cwd, config.Output)
+            o.root <- Node.Api.path.join(cwd, config.Output)
             o.``open`` <- false
             o.logLevel <- 0
         )
@@ -198,33 +139,38 @@ let init (config : Config, docFiles : Map<string, PageContext>, lightnerCache : 
 
     // We need to register in the event in order have access to the server info
     // Otherwise, the server isn't ready yet
-    server.on("listening", (fun _ ->
+    server.on("listening", (fun _ _ ->
         let address = server.address()
         Log.success "Server started at: http://%s:%i" address?address address?port
     ))
     |> ignore
 
-    { Config = config
-      FileWatcher = chokidar.watch(config.Source)
-      Server = server
-      WorkingDirectory = cwd
-      IsDebug = config.IsDebug
-      JavaScriptFiles = Dictionary<string, string>()
-      DocFiles = docFiles
-      LightnerCache = lightnerCache }, Cmd.none
+    {
+        Config = config
+        FileWatcher = chokidar.watch(config.Source)
+        Server = server
+        WorkingDirectory = cwd
+        IsDebug = config.IsDebug
+        JavaScriptFiles = Dictionary<string, string>()
+        DocFiles = docFiles
+        LightnerCache = lightnerCache
+    }
+    , Cmd.none
 
 let update (msg : Msg) (model : Model) =
     match msg with
     | ProcessMarkdown filePath ->
         let cmd =
-            match model.Config.Changelog with
-            | Some changelogPath ->
-                if filePath = changelogPath then
-                    Cmd.ofPromise Process.changelog filePath ProcessChangelogResult ProcessFailed
-                else
-                    Cmd.ofPromise Process.markdownFile (filePath, model.LightnerCache) ProcessMarkdownResult ProcessFailed
-            | None ->
-                Cmd.ofPromise Process.markdownFile (filePath, model.LightnerCache) ProcessMarkdownResult ProcessFailed
+            Cmd.OfPromise.either processFile (filePath, model) ProcessMarkdownResult ProcessFailed
+
+            // match model.Config.Changelog with
+            // | Some changelogPath ->
+            //     if filePath = changelogPath then
+            //         Cmd.OfPromise.either Process.changelog filePath ProcessChangelogResult ProcessFailed
+            //     else
+            //         Cmd.OfPromise.either Process.markdownFile (filePath, model.LightnerCache) ProcessMarkdownResult ProcessFailed
+            // | None ->
+            //     Cmd.OfPromise.either Process.markdownFile (filePath, model.LightnerCache) ProcessMarkdownResult ProcessFailed
 
         model, cmd
 
@@ -233,7 +179,7 @@ let update (msg : Msg) (model : Model) =
         model, Cmd.none
 
     | ProcessSass filePath ->
-        model, Cmd.ofPromise Write.sassFile (model, filePath) WriteFileSuccess WriteFileFailed
+        model, Cmd.OfPromise.either Write.sassFile (model, filePath) WriteFileSuccess WriteFileFailed
 
     | ProcessMarkdownResult result ->
         match result with
@@ -245,7 +191,7 @@ let update (msg : Msg) (model : Model) =
             let pageId = getFileId model.Config.Source pageContext
             let newDocFiles = Map.add pageId pageContext model.DocFiles
             let newModel = { model with DocFiles = newDocFiles }
-            newModel, Cmd.ofPromise Write.standard (newModel, pageContext) WriteFileSuccess WriteFileFailed
+            newModel, Cmd.OfPromise.either Write.standard (newModel, pageContext) WriteFileSuccess WriteFileFailed
 
     | ProcessChangelogResult (path, result) ->
         match result with
@@ -254,7 +200,7 @@ let update (msg : Msg) (model : Model) =
             model, Cmd.none
 
         | Ok changelog ->
-            model, Cmd.ofPromise Write.changelog (model,changelog, path) WriteFileSuccess WriteFileFailed
+            model, Cmd.OfPromise.either Write.changelog (model,changelog, path) WriteFileSuccess WriteFileFailed
 
     | WriteFileSuccess path ->
         Log.log "Write: %s" path
@@ -266,10 +212,10 @@ let update (msg : Msg) (model : Model) =
 
 let fileWatcherSubscription (model : Model) =
     let handler dispatch =
-        match model.Config.Changelog with
-        | Some filePath ->
-            model.FileWatcher.add(filePath)
-        | None -> ()
+        // match model.Config.Changelog with
+        // | Some filePath ->
+        //     model.FileWatcher.add(filePath)
+        // | None -> ()
 
         // Register behavior when:
         // - a new file is added to the `Source` directory
@@ -313,18 +259,17 @@ let tryBuildPageContext (path : string) =
         | Ok pageAttributes ->
             return Ok { Path = path
                         Attributes = pageAttributes
-                        TableOfContent = ""
                         Content = fm.body }
     }
 
 let start () =
     promise {
-        let configPath = Node.Exports.path.join(cwd, "nacara.json")
+        let configPath = Node.Api.path.join(cwd, "nacara.js")
         let! hasDocsConfig = File.exist(configPath)
 
         if hasDocsConfig then
-            let! fileContent = File.read configPath
-            match Decode.fromString Config.Decoder fileContent  with
+            let importedModule : obj = require configPath
+            match Decode.fromValue "$" Config.Decoder importedModule  with
             | Ok config ->
                 let! files = Directory.getFiles true config.Source
 
@@ -414,6 +359,6 @@ let start () =
                 Log.errorFn "%s" msg
         else
             Log.error "No file `nacara.json` found."
-            Node.Globals.``process``.exit(1)
+            Node.Api.``process``.exit(1)
     }
     |> Promise.start

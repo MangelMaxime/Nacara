@@ -1,10 +1,22 @@
 @import "./../node_modules/bulma/sass/utilities/initial-variables";
 
-$primary: rgb(175, 64, 133);
+$primary: #bb3c8c;
 $text: #2b2b2b;
 
 $navbar-item-color: $white;
 $navbar-background-color: $primary;
+$navbar-item-hover-color: $white;
+$navbar-item-hover-background-color: lighten($primary, 8%);
+
+$menu-item-active-background-color: transparent;
+$menu-item-active-color: $primary;
+$menu-item-hover-color: $primary;
+$menu-item-hover-background-color: transparent;
+
+$toc-item-active-font-weight: $weight-semibold;
+
+$link: $primary;
+
 $body-size: 14px;
 
 @import './../node_modules/bulma/bulma.sass';

@@ -1,7 +1,4 @@
-const string = require('string')
-
-const slugify = s =>
-    string(s).slugify().toString()
+const slugify = require('slugify');
 
 const hasProp = ({}).hasOwnProperty
 
@@ -16,7 +13,7 @@ const renderPermalink = (slug, state, idx, showAnchor) => {
             attrs: [
                 ['href', permalinkHref(slug, state)],
                 ['aria-hidden', 'true'],
-                ['style', showAnchor ? 'visibility:visible' : 'visibility:hidden']
+                // ['style', showAnchor ? 'visibility:visible' : 'visibility:hidden']
             ]
         }),
         Object.assign(new state.Token('anchor_open', 'span', 1), {
@@ -25,17 +22,15 @@ const renderPermalink = (slug, state, idx, showAnchor) => {
                 ['id', slug]
             ]
         }),
-        new state.Token('anchor_open', 'span', -1),
+        new state.Token('anchor_close', 'span', -1),
         Object.assign(new state.Token('html_block', '', 0), {
             content: showAnchor ? '#' : ''
         }),
         new state.Token('link_close', 'a', -1)
     ];
 
-    // `push` or `unshift` according to position option.
-    // Space is at the opposite side.
-    linkTokens.push(space());
-    state.tokens[idx + 1].children.unshift(...linkTokens);
+    linkTokens.unshift(space());
+    state.tokens[idx + 1].children.push(...linkTokens);
 }
 
 const uniqueSlug = (slug, slugs) => {

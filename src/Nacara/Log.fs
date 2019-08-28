@@ -1,6 +1,6 @@
 module Log
 
-open Fable.Import
+open Fable.Core
 
 let private chalk = Chalk.chalk
 

@@ -42,6 +42,13 @@ module.exports = (md) => {
         return true;
     };
 
+    const getHref = (tokens) => {
+        return tokens
+            .find(token => token.type === 'anchor_open')
+            .attrs
+            .find(attr => attr[0] === 'id')[1];
+    };
+
     const renderChildsTokens = (pos, tokens) => {
         let headings = [],
             buffer = '',
@@ -88,10 +95,11 @@ module.exports = (md) => {
                     headings.push(buffer);
                 }
             }
+
             if (level === 2) {
-                buffer = `<div class="toc-label"><a href="${heading.children[0].attrs[0][1]}">`;
+                buffer = `<div class="toc-label"><a href="#${getHref(heading.children)}">`;
             } else {
-                buffer = `<li><a href="${heading.children[0].attrs[0][1]}">`;
+                buffer = `<li><a href="#${getHref(heading.children)}">`;
             }
 
             buffer += heading.content;

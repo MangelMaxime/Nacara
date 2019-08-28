@@ -2,8 +2,7 @@
 module Sass
 
 open Fable.Core
-open Fable.Import
-open Fable.Import.JS
+open System
 
 type ImporterReturnFile =
     { file : string }
@@ -12,7 +11,7 @@ type ImporterReturnContents =
     { contents : string }
 
 type ImporterReturnType =
-    U3<ImporterReturnFile, ImporterReturnContents, Error> option
+    U3<ImporterReturnFile, ImporterReturnContents, Exception> option
 
 type [<AllowNullLiteral>] Importer =
     [<Emit "$0($1...)">]
@@ -48,8 +47,8 @@ type [<AllowNullLiteral>] Options =
     abstract sourceMapEmbed: bool with get, set
     abstract sourceMapRoot: string with get, set
 
-type [<AllowNullLiteral>] SassError =
-    inherit Error
+type [<AllowNullLiteral; AbstractClass>] SassError(msg) =
+    inherit Exception(msg)
     abstract message: string with get, set
     abstract line: float with get, set
     abstract column: float with get, set

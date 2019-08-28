@@ -11,16 +11,16 @@ module Extra =
     module Directory =
 
         let moveUp (path : string) =
-            path.Split(char Node.Exports.path.sep)
+            path.Split(char Node.Api.path.sep)
             |> Array.skip 1
-            |> String.concat Node.Exports.path.sep
+            |> String.concat Node.Api.path.sep
 
         let join (pathA : string) (pathB : string) =
-            Node.Exports.path.join(pathA, pathB)
+            Node.Api.path.join(pathA, pathB)
 
         let exists (dir : string) =
             Promise.create (fun resolve reject ->
-                Node.Exports.fs.exists((U2.Case1 dir), (fun res ->
+                Node.Api.fs.exists((U2.Case1 dir), (fun res ->
                     resolve res
                 ))
             )
@@ -31,7 +31,7 @@ module Extra =
             ]
 
             Promise.create (fun resolve reject ->
-                Node.Exports.fs?mkdir(dir, options, (fun (err : Node.Base.NodeJS.ErrnoException option) ->
+                Node.Api.fs?mkdir(dir, options, (fun (err : Node.Base.ErrnoException option) ->
                     match err with
                     | Some err -> reject (err :?> System.Exception)
                     | None -> resolve ()
@@ -47,11 +47,11 @@ module Extra =
             }
 
         let dirname (dir : string) =
-            Node.Exports.path.dirname(dir)
+            Node.Api.path.dirname(dir)
 
         let getFiles (isRecursive : bool) (dir : string) =
             Promise.create (fun resolve reject ->
-                Node.Exports.fs.readdir(U2.Case1 dir, (fun (err: Node.Base.NodeJS.ErrnoException option) (files : ResizeArray<string>) ->
+                Node.Api.fs.readdir(U2.Case1 dir, (fun (err: Node.Base.ErrnoException option) (files : ResizeArray<string>) ->
                     match err with
                     | Some err ->
                         reject (err :?> System.Exception)
@@ -100,22 +100,22 @@ module Extra =
 
         let read (path: string) =
             Promise.create (fun resolve reject ->
-                Node.Exports.fs.readFile(path, (fun err buffer ->
+                Node.Api.fs.readFile(path, (fun err buffer ->
                     match err with
                     | Some err -> reject (err :?> System.Exception)
-                    | None -> resolve (buffer.toString())
+                    | None -> resolve (buffer.ToString())
                 ))
             )
 
         let readSync (path: string) =
-            Node.Exports.fs.readFileSync(path).toString()
+            Node.Api.fs.readFileSync(path).ToString()
 
         let write (path: string) (content: string) =
             promise {
                 do! path |> Directory.dirname |> Directory.ensure
                 return!
                     Promise.create (fun resolve reject ->
-                        Node.Exports.fs.writeFile(path, content, (fun res ->
+                        Node.Api.fs.writeFile(path, content, (fun res ->
                             match res with
                             | Some res -> reject (res :?> System.Exception)
                             | None -> resolve ()
@@ -125,20 +125,20 @@ module Extra =
 
         let exist (path : string) =
             Promise.create (fun resolve reject ->
-                Node.Exports.fs.exists(U2.Case1 path, (fun res ->
+                Node.Api.fs.exists(U2.Case1 path, (fun res ->
                     resolve res
                 ))
             )
 
         let existSync (path : string) =
-            Node.Exports.fs.existsSync(U2.Case1 path)
+            Node.Api.fs.existsSync(U2.Case1 path)
 
         let absolutePath (dir : string) =
-            Node.Exports.path.resolve(dir)
+            Node.Api.path.resolve(dir)
 
         let stats (path : string) =
             Promise.create (fun resolve reject ->
-                Node.Exports.fs.stat(U2.Case1 path, (fun (err: Node.Base.NodeJS.ErrnoException option) (stats : Node.Fs.Stats) ->
+                Node.Api.fs.stat(U2.Case1 path, (fun (err: Node.Base.ErrnoException option) (stats : Node.Fs.Stats) ->
                     match err with
                     | Some err ->
                         reject (err :?> System.Exception)
@@ -150,4 +150,4 @@ module Extra =
             )
 
         let statsSync (path : string) : Node.Fs.Stats =
-            Node.Exports.fs.statSync(U2.Case1 path)
+            Node.Api.fs.statSync(U2.Case1 path)

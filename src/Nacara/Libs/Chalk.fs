@@ -2,7 +2,6 @@ module rec Chalk
 
 open System
 open Fable.Core
-open Fable.Import.JS
 
 
 /// Main Chalk object that allows to chain styles together.
@@ -50,6 +49,9 @@ type ColorSupport =
 
     /// Return whether Chalk supports Truecolor 16 million colors.
     abstract has16m: bool with get, set
+
+
+type TemplateStringsArray = ResizeArray<string>
 
 
 [<AllowNullLiteral>]
