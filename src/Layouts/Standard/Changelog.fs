@@ -120,7 +120,9 @@ let renderChangelogItems
                                 |> Promise.all
 
                             return
-                                ofArray bodyItemsHtml
+                                // Use fragment instead of `ofArray` to avoid having to set a `Key` on each children
+                                fragment [ ]
+                                    bodyItemsHtml
                         }
                     )
                     |> Promise.all
