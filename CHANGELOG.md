@@ -27,13 +27,13 @@ Example:
 
 * Responsive mode is now implemented supported in the standard layout
 
-<img style="width: 75%; margin-left: 12.5%;" src="Nacara/public/changelog/0_2_0/desktop_preview.png" alt="Desktop preview">
+<img style="width: 75%; margin-left: 12.5%;" src="/Nacara/public/changelog/0_2_0/desktop_preview.png" alt="Desktop preview">
 <br/>
 <br/>
 <div class="has-text-weight-bold has-text-centered">Desktop preview</div>
 <br/>
 
-<img style="width: 75%; margin-left: 12.5%;" src="Nacara/public/changelog/0_2_0/touch_preview.gif" alt="Touchscreen preview">
+<img style="width: 75%; margin-left: 12.5%;" src="/Nacara/public/changelog/0_2_0/touch_preview.gif" alt="Touchscreen preview">
 <br/>
 <br/>
 <div class="has-text-weight-bold has-text-centered">Desktop preview</div>
