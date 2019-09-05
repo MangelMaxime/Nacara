@@ -70,6 +70,7 @@ let (|MarkdownFile|JavaScriptFile|SassFile|UnsupportedFile|) (path : string) =
     | _ -> UnsupportedFile ext
 
 type Msg =
+    | ProcessBuildMode
     | ProcessMarkdown of string
     | ProcessSass of string
     | ProcessChangelogResult of string * Result<Changelog.Types.Changelog, string>
@@ -77,6 +78,7 @@ type Msg =
     | ProcessFailed of exn
     | WriteFileSuccess of string
     | WriteFileFailed of exn
+    | ProgramExitFailed of exn
 
 let processFile (path : string, model : Model) =
     promise {
@@ -121,65 +123,75 @@ open Elmish
 
 let baseUrlMiddleware (baseUrl : string) : LiveServer.Middleware = import "default" "./js/base-url-middleware.js"
 
-let init (config : Config, docFiles : Map<string, PageContext>, lightnerCache : Map<string,CodeLightner.Config>) =
-    // Start the LiveServer instance
-    let liveServerOption =
-        jsOptions<LiveServer.Options>(fun o ->
-            o.root <- Node.Api.path.join(cwd, config.Output)
-            o.``open`` <- false
-            o.logLevel <- 0
-        )
+let private startServerIfNeeded (config : Config) =
+    if config.IsWatch then
+        // Start the LiveServer instance
+        let liveServerOption =
+            jsOptions<LiveServer.Options>(fun o ->
+                o.root <- Node.Api.path.join(cwd, config.Output)
+                o.``open`` <- false
+                o.logLevel <- 0
+                o.port <- config.ServerPort
+            )
 
-    if config.BaseUrl <> "/" then
-        liveServerOption.middleware <- [|
-                baseUrlMiddleware config.BaseUrl
-            |]
+        if config.BaseUrl <> "/" then
+            liveServerOption.middleware <- [|
+                    baseUrlMiddleware config.BaseUrl
+                |]
 
-    let server = LiveServer.liveServer.start(liveServerOption)
+        let server = LiveServer.liveServer.start(liveServerOption)
 
-    // We need to register in the event in order have access to the server info
-    // Otherwise, the server isn't ready yet
-    server.on("listening", (fun _ _ ->
-        let address = server.address()
-        Log.success "Server started at: http://%s:%i" address?address address?port
-    ))
-    |> ignore
+        // We need to register in the event in order have access to the server info
+        // Otherwise, the server isn't ready yet
+        server.on("listening", (fun _ _ ->
+            let address = server.address()
+            Log.success "Server started at: http://%s:%i" address?address address?port
+        ))
+        |> ignore
+
+        Some server
+    else
+        None
+
+let startFileWatcherIfNeeded (config : Config) =
+    if config.IsWatch then
+        Some (chokidar.watch(config.Source))
+    else
+        None
+
+let init (config : Config, processQueue : string list, docFiles : Map<string, PageContext>, lightnerCache : Map<string,CodeLightner.Config>) =
+    let cmd =
+        if config.IsWatch then
+            Cmd.none
+        else
+            Cmd.ofMsg ProcessBuildMode
 
     {
+        ProcessQueue = processQueue
         Config = config
-        FileWatcher = chokidar.watch(config.Source)
-        Server = server
+        FileWatcher = startFileWatcherIfNeeded config
+        Server = startServerIfNeeded config
         WorkingDirectory = cwd
         IsDebug = config.IsDebug
         JavaScriptFiles = Dictionary<string, string>()
         DocFiles = docFiles
         LightnerCache = lightnerCache
     }
-    , Cmd.none
+    , cmd
 
 let update (msg : Msg) (model : Model) =
     match msg with
     | ProcessMarkdown filePath ->
-        let cmd =
-            Cmd.OfPromise.either processFile (filePath, model) ProcessMarkdownResult ProcessFailed
-
-            // match model.Config.Changelog with
-            // | Some changelogPath ->
-            //     if filePath = changelogPath then
-            //         Cmd.OfPromise.either Process.changelog filePath ProcessChangelogResult ProcessFailed
-            //     else
-            //         Cmd.OfPromise.either Process.markdownFile (filePath, model.LightnerCache) ProcessMarkdownResult ProcessFailed
-            // | None ->
-            //     Cmd.OfPromise.either Process.markdownFile (filePath, model.LightnerCache) ProcessMarkdownResult ProcessFailed
-
-        model, cmd
+        model
+        , Cmd.OfPromise.either processFile (filePath, model) ProcessMarkdownResult ProcessFailed
 
     | ProcessFailed error ->
         Log.error "%s" error.Message
         model, Cmd.none
 
     | ProcessSass filePath ->
-        model, Cmd.OfPromise.either Write.sassFile (model, filePath) WriteFileSuccess WriteFileFailed
+        model
+        , Cmd.OfPromise.either Write.sassFile (model, filePath) WriteFileSuccess WriteFileFailed
 
     | ProcessMarkdownResult result ->
         match result with
@@ -191,7 +203,9 @@ let update (msg : Msg) (model : Model) =
             let pageId = getFileId model.Config.Source pageContext
             let newDocFiles = Map.add pageId pageContext model.DocFiles
             let newModel = { model with DocFiles = newDocFiles }
-            newModel, Cmd.OfPromise.either Write.standard (newModel, pageContext) WriteFileSuccess WriteFileFailed
+
+            newModel
+            , Cmd.OfPromise.either Write.standard (newModel, pageContext) WriteFileSuccess WriteFileFailed
 
     | ProcessChangelogResult (path, result) ->
         match result with
@@ -204,45 +218,89 @@ let update (msg : Msg) (model : Model) =
 
     | WriteFileSuccess path ->
         Log.log "Write: %s" path
-        model, Cmd.none
+
+        let cmd =
+            if model.Config.IsWatch then
+                Cmd.none
+            else
+                Cmd.ofMsg ProcessBuildMode
+
+        model, cmd
 
     | WriteFileFailed error ->
         Log.error "Error when writting a file:\n%s" error.Message
         model, Cmd.none
 
+    | ProcessBuildMode ->
+        match model.ProcessQueue with
+        | filePath::tail ->
+            let cmd =
+                match filePath with
+                | MarkdownFile ->
+                    Cmd.ofMsg (ProcessMarkdown filePath)
+
+                | JavaScriptFile ->
+                    Cmd.none // TODO: Refresh all the page using this file for post process
+                | SassFile ->
+                    Cmd.ofMsg (ProcessSass filePath)
+                | UnsupportedFile _ ->
+                    if model.IsDebug then
+                        Log.warn "Watcher has been triggered on an unsupported file: %s" filePath
+                    Cmd.none
+
+            { model with
+                ProcessQueue = tail
+            }
+            , cmd
+        | [ ] ->
+            // All files has been process, kill the process as it was launch in Build mode
+            let exit () =
+                Node.Api.``process``.exit(0)
+
+            Log.success "Generation done, exiting..."
+            model
+            , Cmd.OfFunc.attempt exit () ProgramExitFailed
+
+    | ProgramExitFailed error ->
+        if model.IsDebug then
+            Log.errorFn "%A" error
+
+        Log.error "Failed to exit the process, please kill it manually using `Ctrl+C`"
+        model, Cmd.none
+
+
 let fileWatcherSubscription (model : Model) =
     let handler dispatch =
-        // match model.Config.Changelog with
-        // | Some filePath ->
-        //     model.FileWatcher.add(filePath)
-        // | None -> ()
-
         // Register behavior when:
         // - a new file is added to the `Source` directory
         // - a tracked file change
-        model.FileWatcher.on(Chokidar.Events.All, (fun event path ->
-            match event with
-            | Chokidar.Events.Add
-            | Chokidar.Events.Change ->
-                match path with
-                | MarkdownFile ->
-                    ProcessMarkdown path
-                    |> dispatch
-                | JavaScriptFile -> () // TODO: Refresh all the page using this file for post process
-                | SassFile ->
-                    ProcessSass path
-                    |> dispatch
-                | UnsupportedFile _ ->
-                    if model.IsDebug then
-                        Log.warn "Watcher has been triggered on an unsupported file: %s" path
-            | Chokidar.Events.Unlink
-            | Chokidar.Events.UnlinkDir
-            | Chokidar.Events.Ready
-            | Chokidar.Events.Raw
-            | Chokidar.Events.Error
-            | Chokidar.Events.AddDir
-            | _ -> ()
-        ))
+        match model.FileWatcher with
+        | Some fileWatcher ->
+            fileWatcher.on(Chokidar.Events.All, (fun event path ->
+                match event with
+                | Chokidar.Events.Add
+                | Chokidar.Events.Change ->
+                    match path with
+                    | MarkdownFile ->
+                        ProcessMarkdown path
+                        |> dispatch
+                    | JavaScriptFile -> () // TODO: Refresh all the page using this file for post process
+                    | SassFile ->
+                        ProcessSass path
+                        |> dispatch
+                    | UnsupportedFile _ ->
+                        if model.IsDebug then
+                            Log.warn "Watcher has been triggered on an unsupported file: %s" path
+                | Chokidar.Events.Unlink
+                | Chokidar.Events.UnlinkDir
+                | Chokidar.Events.Ready
+                | Chokidar.Events.Raw
+                | Chokidar.Events.Error
+                | Chokidar.Events.AddDir
+                | _ -> ()
+            ))
+        | None ->
+            ()
 
     [ handler ]
 
@@ -262,6 +320,27 @@ let tryBuildPageContext (path : string) =
                         Content = fm.body }
     }
 
+let checkCliArgs (config: Config) =
+    let args =
+        Node.Api.``process``.argv
+        // 0. Is node program
+        // 1. Is the JavaScript file
+        |> Seq.skip 2
+        |> Seq.toList
+
+    let onFlag (flags: string list) func (config: Config) =
+        args
+        |> List.exists (fun a ->
+            flags
+            |> List.exists (fun flag -> a = flag)
+        )
+        |> function
+            | true -> func config
+            | false -> config
+
+    config
+    |> onFlag ["--watch"; "-w"] (fun c -> { c with IsWatch = true })
+
 let start () =
     promise {
         let configPath = Node.Api.path.join(cwd, "nacara.js")
@@ -271,6 +350,8 @@ let start () =
             let importedModule : obj = require configPath
             match Decode.fromValue "$" Config.Decoder importedModule  with
             | Ok config ->
+                let config = checkCliArgs config
+
                 let! files = Directory.getFiles true config.Source
 
                 let! pageContexts =
@@ -350,9 +431,18 @@ let start () =
                     | None ->
                         Map.empty
 
+                let processQueue =
+                    if config.IsWatch then
+                        [ ]
+                    else
+                        files
+                        |> List.map (fun filePath ->
+                            Directory.join config.Source filePath
+                        )
+
                 Program.mkProgram init update (fun _ _ -> ())
                 |> Program.withSubscription fileWatcherSubscription
-                |> Program.runWith (config, docFiles, lightnerCache)
+                |> Program.runWith (config, processQueue, docFiles, lightnerCache)
 
             | Error msg ->
                 Log.error "Your config file seems invalid."

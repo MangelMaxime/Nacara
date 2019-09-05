@@ -53,56 +53,91 @@ type Changelog.Types.CategoryType with
             | Changelog.Types.CategoryType.Security -> IsInfo
             | Changelog.Types.CategoryType.Unkown _ -> IsInfo
 
-type Changelog.Types.CategoryBody with
-    member this.ToHtml(category : Changelog.Types.CategoryType) =
+let private renderCategoryBody
+    (lightnerConfig : Map<string, CodeLightner.Config>)
+    (category : Changelog.Types.CategoryType)
+    (body : Changelog.Types.CategoryBody) =
+
         let removeParagraphMarkup (text : string) =
             match Regex.Match(text.Trim(), "^<p>(.*)</p>$") with
             | m when m.Success ->
                 m.Groups.[1].Value
             | _ -> text
 
-        match this with
+        let textToHtml (text : string) =
+            Helpers.markdown text [||]
+            |> highlightCode lightnerConfig
+            |> Promise.map removeParagraphMarkup
+
+        match body with
         | Changelog.Types.CategoryBody.ListItem text ->
-            let htmlText =
-                Helpers.markdown text [||]
-                |> removeParagraphMarkup
+            promise {
+                let! htmlText = textToHtml text
 
-            li [ Class "changelog-list-item" ]
-                [ Tag.tag [ Tag.Color category.Color
-                            Tag.Size IsMedium
-                            Tag.Modifiers [ Modifier.TextWeight TextWeight.Bold ] ]
-                    [ str category.Text ]
-                  div [ Class "changelog-list-item-text" ]
-                    [ span [ DangerouslySetInnerHTML { __html = htmlText } ]
-                        [ ] ]
-                  div [ Class "changelog-details" ]
-                    [ ] ]
-        | Changelog.Types.CategoryBody.Text text ->
-            let htmlText = Helpers.markdown text [||]
-            li [ Class "changelog-list-item" ]
-                [ div [ Class "changelog-details"
-                        DangerouslySetInnerHTML { __html = htmlText } ]
+                return
+                    li [ Class "changelog-list-item" ]
+                        [ Tag.tag [ Tag.Color category.Color
+                                    Tag.Size IsMedium
+                                    Tag.Modifiers [ Modifier.TextWeight TextWeight.Bold ] ]
+                            [ str category.Text ]
+                          div [ Class "changelog-list-item-text" ]
+                            [ span [ DangerouslySetInnerHTML { __html = htmlText } ]
+                                [ ] ]
+                          div [ Class "changelog-details" ]
                             [ ] ]
+            }
 
+        | Changelog.Types.CategoryBody.Text text ->
+            promise {
+                let! htmlText = textToHtml text
+
+                return
+                    li [ Class "changelog-list-item" ]
+                       [ div [ Class "changelog-details"
+                               DangerouslySetInnerHTML { __html = htmlText } ]
+                                    [ ] ]
+            }
+
+let renderChangelogItems
+    (model : Model)
+    (items : Changelog.Types.Version list) =
+
+    items
+    |> List.map (fun version ->
+        match version.Version with
+        | Some versionText ->
+            promise {
+                let! categoriesHtml =
+                    version.Categories
+                    |> Map.toList
+                    |> List.map (fun (categoryType, bodyItems) ->
+                        promise {
+                            let! bodyItemsHtml =
+                                bodyItems
+                                |> List.map (fun body ->
+                                    renderCategoryBody model.LightnerCache categoryType body
+                                )
+                                |> Promise.all
+
+                            return
+                                ofArray bodyItemsHtml
+                        }
+                    )
+                    |> Promise.all
+
+                return
+                    fragment [ ]
+                        [
+                            yield renderVersion versionText version.Date
+                            yield! categoriesHtml
+                        ]
+            }
+
+        | None ->
+            Promise.lift nothing
+    )
 
 let toHtml (model : Model) (pageContext : PageContext) =
-    let changelogItems (changelog : Changelog.Types.Changelog) =
-        changelog.Versions
-        |> List.map (fun version ->
-            match version.Version with
-            | Some versionText ->
-                fragment [ ]
-                    [ yield renderVersion versionText version.Date
-                      for category in version.Categories do
-                        yield!
-                            category.Value
-                            |> List.map (fun body ->
-                                body.ToHtml(category.Key)
-                            ) ]
-
-            | None -> nothing
-        )
-
     promise {
         let getChangelogPath =
             Decode.field "changelog_path" Decode.string
@@ -114,6 +149,10 @@ let toHtml (model : Model) (pageContext : PageContext) =
 
             match Changelog.parse changelogContent with
             | Ok changelog ->
+                let! changelogItems =
+                    renderChangelogItems model changelog.Versions
+                    |> Promise.all
+
                 return
                     Columns.columns [ ]
                         [
@@ -130,7 +169,7 @@ let toHtml (model : Model) (pageContext : PageContext) =
                                         [
                                             section [ Class "changelog" ]
                                                 [ ul [ Class "changelog-list" ]
-                                            (changelogItems changelog) ]
+                                            changelogItems ]
                                         ]
                                 ]
                         ]

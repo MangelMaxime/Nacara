@@ -2,8 +2,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const refContainer = document.querySelector(".toc-scrollable-container");
 
-    refContainer.addEventListener("scroll", (ev) => {
-        const scrollPos = refContainer.scrollTop;
+    // Listener used to update the active section in the TOC
+    refContainer.addEventListener("scroll", () => {
         const headers = document.querySelectorAll("h2, h3, h4");
 
         // In order tof in the active section, we iterate over all the header
@@ -43,5 +43,17 @@ window.addEventListener("DOMContentLoaded", () => {
             .querySelector(`.toc-container a[href="${anchorTag}"]`)
             .classList.add("is-active");
     });
+
+    document
+        .querySelector(".material-like-button.toggle-toc")
+        .addEventListener("click", () => {
+            document
+                .querySelector(".toc-container")
+                .classList.toggle("force-show");
+
+            document
+                .querySelector(".column.toc-column")
+                .classList.toggle("force-show");
+        });
 
 });

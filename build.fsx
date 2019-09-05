@@ -22,12 +22,22 @@ let clean = BuildTask.create "Clean" [] {
 }
 
 let watch = BuildTask.create "Watch" [clean.IfNeeded] {
-    [ async {
-        Yarn.exec "fable-splitter --watch -c src/splitter.config.js" id
-      }
-      async {
-          Yarn.exec "nodemon cli.js" id
-      }
+    [
+        async {
+            Yarn.exec "fable-splitter -c src/Nacara/splitter.config.js --watch" id
+        }
+
+        async {
+            Yarn.exec "fable-splitter -c src/Layouts/Standard/splitter.config.js --watch" id
+        }
+
+        async {
+            CreateProcess.fromRawCommand
+                "npx"
+                [ "nodemon"; "cli.js"; "--"; "--watch"]
+            |> Proc.run
+            |> ignore
+        }
     ]
     |> Async.Parallel
     |> Async.RunSynchronously

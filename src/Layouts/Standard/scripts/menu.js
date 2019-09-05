@@ -113,6 +113,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // IIFE function in order to not pollute the function scope
     (() => {
+
         const currentMenuRank =
             parseInt(
                 document
@@ -120,16 +121,35 @@ window.addEventListener("DOMContentLoaded", () => {
                     .getAttribute("data-menu-rank")
             );
 
+        // Initialize the text of the Previous button
+        if (currentMenuRank >= 1) {
+            const previousText =
+                document
+                    .querySelector(`.menu [data-menu-rank='${currentMenuRank - 1}']`)
+                    .textContent;
+
+            document
+                .querySelector(".navigate-to-previous .text")
+                .textContent = previousText;
+        }
+
+        // Initialize the text of the Next button
+        if (currentMenuRank < computedMaxRank) {
+            const previousText =
+                document
+                    .querySelector(`.menu [data-menu-rank='${currentMenuRank + 1}']`)
+                    .textContent;
+
+            document
+                .querySelector(".navigate-to-next .text")
+                .textContent = previousText;
+        }
+
+        // Hide the navigation button depending on the page rank
         if (currentMenuRank == 0) {
-            document
-                .querySelector(".navigate-to-previous")
-                .classList
-                .add("is-hidden");
+            document.querySelector(".navigate-to-previous").style.visibility = "hidden";
         } else if (currentMenuRank == computedMaxRank) {
-            document
-                .querySelector(".navigate-to-next")
-                .classList
-                .add("is-hidden");
+            document.querySelector(".navigate-to-next").style.visibility = "visibile";
         }
     })();
 
@@ -162,4 +182,13 @@ window.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
+
+    document
+        .querySelector(".mobile-menu .menu-trigger")
+        .addEventListener("click", () => {
+            document
+                .querySelector(".is-menu-column")
+                .classList
+                .toggle("force-show");
+        });
 });

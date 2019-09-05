@@ -397,6 +397,8 @@ type Config =
         LightnerConfig : LightnerConfig option
         LayoutConfig : Map<string, Model -> PageContext -> JS.Promise<ReactElement>>
         Plugins : PluginsConfig
+        IsWatch : bool
+        ServerPort : int
     }
 
     static member Decoder =
@@ -422,14 +424,18 @@ type Config =
                 LayoutConfig = get.Required.Field "layouts" (Decode.dict Decode.forward)
                 Plugins = get.Optional.Field "plugins" PluginsConfig.Decoder
                             |> Option.defaultValue PluginsConfig.Empty
+                IsWatch = false
+                ServerPort = get.Optional.Field "serverPort" Decode.int
+                                |> Option.defaultValue 8080
             }
         )
 
 type Model =
     {
         Config : Config
-        FileWatcher : Chokidar.FSWatcher
-        Server : Node.Http.Server
+        ProcessQueue : string list
+        FileWatcher : Chokidar.FSWatcher option
+        Server : Node.Http.Server option
         WorkingDirectory : string
         IsDebug : bool
         JavaScriptFiles : Dictionary<string, string>

@@ -29,8 +29,7 @@ let generateUrl (config : Types.Config) (pageContext : Types.PageContext) =
         |> Directory.join config.BaseUrl
         |> File.changeExtension "html").Replace("\\", "/")
 
-
-let processCodeHighlights (lightnerConfig : Map<string, CodeLightner.Config>) (pageContext : Types.PageContext) =
+let highlightCode (lightnerConfig : Map<string, CodeLightner.Config>) (text : string) =
     let codeBlockRegex =
         // Regex("""<pre\b[^>]*><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", RegexOptions.Multiline ||| RegexOptions.Singleline)
         JS.RegExp.Create("""<pre\b(?!class="skip-code-lightner-grammar-not-found")><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", "gms")
@@ -66,19 +65,26 @@ let processCodeHighlights (lightnerConfig : Map<string, CodeLightner.Config>) (p
         }
 
     promise {
-        let! content = apply pageContext.Content
-        return
-            { pageContext with
-                    Content = content
-            }
+        return! apply text
     }
 
-let processMarkdown (model : Types.Model) (pageContext : Types.PageContext) =
-    { pageContext with
-        Content =
-            Helpers.markdown pageContext.Content model.Config.Plugins.Markdown
-    }
-    |> processCodeHighlights model.LightnerCache
+module PageContext =
+
+    let processCodeHighlights (lightnerConfig : Map<string, CodeLightner.Config>) (pageContext : Types.PageContext) =
+        promise {
+            let! highlightedText = highlightCode lightnerConfig pageContext.Content
+            return
+                { pageContext with
+                    Content = highlightedText
+                }
+        }
+
+    let processMarkdown (model : Types.Model) (pageContext : Types.PageContext) =
+        { pageContext with
+            Content =
+                Helpers.markdown pageContext.Content model.Config.Plugins.Markdown
+        }
+        |> processCodeHighlights model.LightnerCache
 
 module Helpers =
 

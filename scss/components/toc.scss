@@ -42,3 +42,49 @@ $toc-item-hover-background-color: transparent !default;
         }
     }
 }
+
+@include mobile {
+    .toc-container {
+        opacity: 0;
+        width: 0;
+        position: fixed;
+        right: 0;
+        background: white;
+        height: 100%;
+        padding-right: 5rem;
+        z-index: 200;
+        transition: width .2s;
+
+        &.force-show {
+            opacity: 1;
+            width: 100%;
+        }
+    }
+
+    .column.toc-column {
+        display: block !important;
+    }
+}
+
+@include tablet-only {
+    .toc-container {
+        opacity: 0;
+        width: 0;
+        position: fixed;
+        right: 0;
+        background: white;
+        height: 100%;
+        padding-right: 5rem;
+        z-index: 200;
+        transition: width .2s;
+
+        &.force-show {
+            opacity: 1;
+            width: 300px;
+        }
+    }
+
+    .column.toc-column {
+        display: block !important;
+    }
+}

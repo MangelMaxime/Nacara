@@ -9240,6 +9240,48 @@ ul.textual-steps > li::before {
   padding: 6px 0 2px 0px;
 }
 
+@media screen and (max-width: 768px) {
+  .toc-container {
+    opacity: 0;
+    width: 0;
+    position: fixed;
+    right: 0;
+    background: white;
+    height: 100%;
+    padding-right: 5rem;
+    z-index: 200;
+    transition: width 0.2s;
+  }
+  .toc-container.force-show {
+    opacity: 1;
+    width: 100%;
+  }
+
+  .column.toc-column {
+    display: block !important;
+  }
+}
+@media screen and (min-width: 769px) and (max-width: 1023px) {
+  .toc-container {
+    opacity: 0;
+    width: 0;
+    position: fixed;
+    right: 0;
+    background: white;
+    height: 100%;
+    padding-right: 5rem;
+    z-index: 200;
+    transition: width 0.2s;
+  }
+  .toc-container.force-show {
+    opacity: 1;
+    width: 300px;
+  }
+
+  .column.toc-column {
+    display: block !important;
+  }
+}
 .navbar-item.title.is-4 {
   margin-bottom: 0;
 }
@@ -9263,6 +9305,13 @@ body .full-height-scrollable-content {
   overflow-y: auto;
 }
 
+@media screen and (max-width: 1023px) {
+  body .full-height-scrollable-content {
+    height: calc(100vh - 3.25rem * 2);
+    min-height: calc(100vh - 3.25rem * 2);
+    overflow-y: auto;
+  }
+}
 .menu-group .icon {
   float: right;
 }
@@ -9307,4 +9356,121 @@ h2 a, h3 a, h4 a, h5 a, h6 a {
 }
 h2:hover a, h3:hover a, h4:hover a, h5:hover a, h6:hover a {
   visibility: visible;
+}
+
+.material-like-container {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  cursor: pointer;
+  opacity: 1;
+  outline: 0;
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  transition: bottom 0.2s, opacity 0.2s;
+  user-select: none;
+  width: 56px;
+  z-index: 500;
+}
+.material-like-container.hide {
+  bottom: -56px;
+  opacity: 0;
+}
+.material-like-container .material-like-container-body {
+  opacity: 0;
+  margin-bottom: 1rem;
+  transition: opacity 0.2s;
+}
+.material-like-container .material-like-container-body.show {
+  opacity: 1;
+}
+.material-like-container .material-like-button {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background-color: #bb3c8c;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 3px 5px 0 #666;
+}
+.material-like-container .material-like-button.close-open-button .icon {
+  transition: all 0.2s ease-in-out;
+}
+.material-like-container .material-like-button.close-open-button.is-open .icon {
+  transform: rotate(225deg);
+}
+.material-like-container .material-like-button:not(:last-child) {
+  margin-bottom: 1rem;
+}
+.material-like-container .material-like-button:hover {
+  transition: all 0.1s ease-in-out;
+  transform: scale(1.05);
+  box-shadow: 0 3px 10px 0 #666;
+}
+.material-like-container .material-like-button:hover .material-like-button-label {
+  box-shadow: 0 3px 10px 0 #666;
+}
+.material-like-container .material-like-button-label {
+  position: absolute;
+  right: 5rem;
+  white-space: nowrap;
+  padding: 0.5rem;
+  border-radius: 5px;
+  background-color: #bb3c8c;
+  color: white;
+  box-shadow: 0 3px 5px 0 #666;
+}
+
+.navigation-container {
+  padding: 0 2rem 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 1023px) {
+  .navigate-to-next {
+    margin-right: 5rem;
+  }
+}
+@media screen and (min-width: 1024px) and (max-width: 1215px) {
+  .mobile-menu {
+    display: none;
+  }
+}
+@media screen and (max-width: 1023px) {
+  .mobile-menu {
+    display: flex;
+    flex-direction: revert;
+    align-items: center;
+    height: 3.25rem;
+    background: whitesmoke;
+  }
+  .mobile-menu .menu-trigger .icon {
+    margin-right: 0;
+  }
+  .mobile-menu .breadcrumb > ul > li:last-child {
+    font-weight: 700;
+  }
+}
+@media screen and (max-width: 1023px) {
+  .is-main-content .section {
+    padding-top: 1rem;
+  }
+}
+.column.is-menu-column.force-show {
+  display: block !important;
+  padding: 0 !important;
+}
+.column.is-menu-column.force-show .menu-container {
+  position: fixed;
+  left: 0;
+  background: #fafafa;
+  width: 100%;
+  height: 100%;
+  padding-left: 2rem;
+  z-index: 100;
 }

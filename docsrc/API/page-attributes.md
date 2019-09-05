@@ -4,8 +4,6 @@ title: Page attributes
 
 [[toc]]
 
-# Page attributes
-
 All your pages needs to provide a block called "Front Matter" at the top of their content:
 
 ```

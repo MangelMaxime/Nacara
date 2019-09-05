@@ -115,6 +115,7 @@ var nacara = {};
 
     // IIFE function in order to not pollute the function scope
     (() => {
+
         const currentMenuRank =
             parseInt(
                 document
@@ -122,16 +123,35 @@ var nacara = {};
                     .getAttribute("data-menu-rank")
             );
 
+        // Initialize the text of the Previous button
+        if (currentMenuRank >= 1) {
+            const previousText =
+                document
+                    .querySelector(`.menu [data-menu-rank='${currentMenuRank - 1}']`)
+                    .textContent;
+
+            document
+                .querySelector(".navigate-to-previous .text")
+                .textContent = previousText;
+        }
+
+        // Initialize the text of the Next button
+        if (currentMenuRank < computedMaxRank) {
+            const previousText =
+                document
+                    .querySelector(`.menu [data-menu-rank='${currentMenuRank + 1}']`)
+                    .textContent;
+
+            document
+                .querySelector(".navigate-to-next .text")
+                .textContent = previousText;
+        }
+
+        // Hide the navigation button depending on the page rank
         if (currentMenuRank == 0) {
-            document
-                .querySelector(".navigate-to-previous")
-                .classList
-                .add("is-hidden");
+            document.querySelector(".navigate-to-previous").style.visibility = "hidden";
         } else if (currentMenuRank == computedMaxRank) {
-            document
-                .querySelector(".navigate-to-next")
-                .classList
-                .add("is-hidden");
+            document.querySelector(".navigate-to-next").style.visibility = "visibile";
         }
     })();
 
@@ -164,9 +184,17 @@ var nacara = {};
             });
         });
     }
+
+    document
+        .querySelector(".mobile-menu .menu-trigger")
+        .addEventListener("click", () => {
+            document
+                .querySelector(".is-menu-column")
+                .classList
+                .toggle("force-show");
+        });
 });
-</script></head><body><nav class="navbar is-fixed-top"><div class="container"><div class="navbar-brand"><div class="navbar-item title is-4">Nacara</div><a class="navbar-item is-hidden-desktop" href="https://github.com/MangelMaxime/Nacara" target="_blank"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item is-hidden-desktop" href="https://twitter.com/MangelMaxime" target="_blank" style="color:#55acee"><span class="icon"><i class=" fab fa-twitter fa-lg"></i></span></a><div class="navbar-burger" data-target="nav-menu"><span></span><span></span><span></span></div></div><div class="navbar-menu" id="nav-menu"><div class="navbar-start"><a class="navbar-item">0.1.6</a></div><div class="navbar-end"><a class="navbar-item" href="/Nacara/index.html" target="_self"><span class="icon"><i class=" fas fa-book fa-lg"></i></span><span>Documentation</span></a><a class="navbar-item" href="/Nacara/changelog.html" target="_self"><span class="icon"><i class=" fas fa-tasks fa-lg"></i></span><span>Changelog</span></a><a class="navbar-item" href="https://gitter.im/fable-compiler/Fable" target="_blank"><span class="icon"><i class=" fab fa-gitter fa-lg"></i></span><span>Support</span></a><a class="navbar-item is-hidden-touch" href="https://github.com/MangelMaxime/Nacara" target="_blank"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item is-hidden-touch" href="https://twitter.com/MangelMaxime" target="_blank" style="color:#55acee"><span class="icon"><i class=" fab fa-twitter fa-lg"></i></span></a></div></div></div></nav><div class="container"><div><div class="columns is-mobile is-gapless"><div class="column is-hidden-mobile full-height-scrollable-content is-3-touch is-2-desktop"><aside class="menu" style="margin-top:3.25rem"><p class="menu-label">Getting Started</p><ul class="menu-list"><li><a class="" href="/Nacara/index.html" data-menu-id="index">Getting started</a></li></ul><p class="menu-label">API</p><ul class="menu-list"><li><a class="" href="/Nacara/API/nacara-config-json.html" data-menu-id="API/nacara-config-json">nacara.json</a></li><li><a class="" href="/Nacara/API/page-attributes.html" data-menu-id="API/page-attributes">Page attributes</a></li></ul></aside></div><div class="column full-height-scrollable-content toc-scrollable-container is-9-tablet is-full-mobile is-8-desktop" style="scroll-behavior:smooth;overflow-x:hidden"><section class="section"><div class="content"><header class="page-header"><a class="button is-pulled-right is-primary is-outlined" target="_blank" href="https://github.com/MangelMaxime/Nacara/edit/master/docsrc/API/page-attributes.md">Edit</a><h1>Page attributes</h1></header><div><p></p>
-<h1>Page attributes <a href="#Page-attributes" aria-hidden="true"><span class="anchor" id="Page-attributes"></span></a></h1>
+</script></head><body><nav class="navbar is-fixed-top"><div class="container"><div class="navbar-brand"><div class="navbar-item title is-4">Nacara</div><a class="navbar-item is-hidden-desktop" href="https://github.com/MangelMaxime/Nacara" target="_blank"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item is-hidden-desktop" href="https://twitter.com/MangelMaxime" target="_blank" style="color:#55acee"><span class="icon"><i class=" fab fa-twitter fa-lg"></i></span></a><div class="navbar-burger" data-target="nav-menu"><span></span><span></span><span></span></div></div><div class="navbar-menu" id="nav-menu"><div class="navbar-start"><a class="navbar-item">0.1.6</a></div><div class="navbar-end"><a class="navbar-item" href="/Nacara/index.html" target="_self"><span class="icon"><i class=" fas fa-book fa-lg"></i></span><span>Documentation</span></a><a class="navbar-item" href="/Nacara/changelog.html" target="_self"><span class="icon"><i class=" fas fa-tasks fa-lg"></i></span><span>Changelog</span></a><a class="navbar-item" href="https://gitter.im/fable-compiler/Fable" target="_blank"><span class="icon"><i class=" fab fa-gitter fa-lg"></i></span><span>Support</span></a><a class="navbar-item is-hidden-touch" href="https://github.com/MangelMaxime/Nacara" target="_blank"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item is-hidden-touch" href="https://twitter.com/MangelMaxime" target="_blank" style="color:#55acee"><span class="icon"><i class=" fab fa-twitter fa-lg"></i></span></a></div></div></div></nav><div class="container"><div><div class="mobile-menu is-hidden-desktop"><nav class="breadcrumb"><ul><li class=""><a class="menu-trigger"><span class="icon"><i class=" fas fa-bars"></i></span></a></li><li class="is-active"><a>API</a></li><li class="is-active"><a>Page attributes</a></li></ul></nav></div><div class="columns is-mobile is-gapless"><div class="column is-hidden-touch full-height-scrollable-content is-menu-column is-2-desktop" style="padding-left:1.5rem !important"><div class="menu-container"><aside class="menu" style="margin-top:3.25rem"><p class="menu-label">Getting Started</p><ul class="menu-list"><li><a class="" href="/Nacara/index.html" data-menu-id="index">Getting started</a></li></ul><p class="menu-label">API</p><ul class="menu-list"><li><a class="" href="/Nacara/API/nacara-config-json.html" data-menu-id="API/nacara-config-json">nacara.json</a></li><li><a class="" href="/Nacara/API/page-attributes.html" data-menu-id="API/page-attributes">Page attributes</a></li></ul></aside></div></div><div class="column full-height-scrollable-content toc-scrollable-container is-main-content is-full-touch is-8-desktop" style="scroll-behavior:smooth;overflow-x:hidden"><section class="section"><div class="content"><header class="page-header"><a class="button is-pulled-right is-primary is-outlined is-hidden-touch" target="_blank" href="https://github.com/MangelMaxime/Nacara/edit/master/docsrc/API/page-attributes.md">Edit</a><h1>Page attributes</h1></header><div><p></p>
 <p>All your pages needs to provide a block called &quot;Front Matter&quot; at the top of their content:</p>
 <pre><code>---
 title: Title of your page
@@ -194,14 +222,14 @@ Content of your page
 <li><code>index</code> refers to <code>index.md</code></li>
 <li><code>API/nacara-config-json</code> refers to <code>API/nacara-config-json.md</code></li>
 </ul>
-</div></div></section><div class="columns is-mobile"><div class="column has-text-centered"><button class="button is-outlined is-primary navigate-to-previous"><span class="icon"><i class=" fas fa-arrow-left"></i></span><span>Previous</span></button></div><div class="column"></div><div class="column has-text-centered"><button class="button is-outlined is-primary navigate-to-next"><span>Next</span><span class="icon"><i class=" fas fa-arrow-right"></i></span></button></div></div></div><div class="column full-height-scrollable-content is-hidden-touch is-2-desktop"><div><nav class="toc-container"><ul class="toc-headings"><div class="toc-label"><a href="#Mandatory-fields">Mandatory fields</a></div><ul class="toc-headings"><li><a href="#title-string">`title` - [string]</a></li></ul></li><div class="toc-label"><a href="#Optional-fields">Optional fields</a></div><ul class="toc-headings"><li><a href="#id-string">`id` - [string]</a></li></ul></li></ul></nav></div></div></div></div><script type="text/javascript">
+</div></div></section><div class="navigation-container"><button class="button is-outlined is-primary navigate-to-previous"><span class="icon"><i class=" fas fa-arrow-left"></i></span><span class="is-uppercase text">Previous</span></button><button class="button is-outlined is-primary navigate-to-next"><span class="is-uppercase text">Next</span><span class="icon"><i class=" fas fa-arrow-right"></i></span></button></div></div><div class="column full-height-scrollable-content toc-column is-hidden-touch is-2-desktop"><div><nav class="toc-container"><ul class="toc-headings"><div class="toc-label"><a href="#Mandatory-fields">Mandatory fields</a></div><ul class="toc-headings"><li><a href="#title-string">`title` - [string]</a></li></ul></li><div class="toc-label"><a href="#Optional-fields">Optional fields</a></div><ul class="toc-headings"><li><a href="#id-string">`id` - [string]</a></li></ul></li></ul></nav></div></div></div><div class="is-hidden-touch material-like-container is-for-desktop"><div class="material-like-button scroll-to-top"><span class="icon is-medium"><i class=" fas fa-angle-up fa-lg"></i></span></div></div><div class="is-hidden-desktop material-like-container is-for-touch"><div class="material-like-container-body"><div class="material-like-button toggle-toc"><span class="icon is-medium"><i class=" fas fa-ellipsis-v fa-lg"></i></span><div class="material-like-button-label">Table of content</div></div><div class="material-like-button scroll-to-top"><span class="icon is-medium"><i class=" fas fa-angle-up fa-lg"></i></span><div class="material-like-button-label">Scroll to top</div></div></div><div class="material-like-button close-open-button"><span class="icon is-medium"><i class=" fas fa-plus fa-lg"></i></span></div></div></div><script type="text/javascript">
 nacara.pageId = 'API/page-attributes';
                                         </script><script type="text/javascript">window.addEventListener("DOMContentLoaded", () => {
 
     const refContainer = document.querySelector(".toc-scrollable-container");
 
-    refContainer.addEventListener("scroll", (ev) => {
-        const scrollPos = refContainer.scrollTop;
+    // Listener used to update the active section in the TOC
+    refContainer.addEventListener("scroll", () => {
         const headers = document.querySelectorAll("h2, h3, h4");
 
         // In order tof in the active section, we iterate over all the header
@@ -240,6 +268,63 @@ nacara.pageId = 'API/page-attributes';
         document
             .querySelector(`.toc-container a[href="${anchorTag}"]`)
             .classList.add("is-active");
+    });
+
+    document
+        .querySelector(".material-like-button.toggle-toc")
+        .addEventListener("click", () => {
+            document
+                .querySelector(".toc-container")
+                .classList.toggle("force-show");
+
+            document
+                .querySelector(".column.toc-column")
+                .classList.toggle("force-show");
+        });
+
+});
+</script><script type="text/javascript">window.addEventListener("DOMContentLoaded", () => {
+
+    const refContainer = document.querySelector(".toc-scrollable-container");
+
+    // Register scroll to top button
+    document
+        .querySelectorAll(".scroll-to-top")
+        .forEach(element => {
+            element.addEventListener("click", () => {
+                document
+                    .querySelector(".toc-scrollable-container")
+                    .scrollTo(0, 0);
+            });
+        });
+
+    // Listener used to update the position of TOC button at the bottom of the page
+    refContainer.addEventListener("scroll", () => {
+
+        // If we are at the end of the element
+        // Source: https://developer.mozilla.org/fr/docs/Web/API/Element/scrollHeight#D%C3%A9terminer_si_un_%C3%A9l%C3%A9ment_a_compl%C3%A8tement_%C3%A9t%C3%A9_d%C3%A9fil%C3%A9
+        if (refContainer.scrollTop > 30) {
+            document
+                .querySelector(".material-like-container.is-for-desktop")
+                .classList
+                .remove("hide");
+        } else {
+            document
+                .querySelector(".material-like-container.is-for-desktop")
+                .classList
+                .add("hide");
+        }
+    });
+
+    const bodyContainer = document.querySelector(".material-like-container.is-for-touch .material-like-container-body");
+
+    document
+        .querySelector(".material-like-button.close-open-button")
+        .addEventListener("click", () => {
+            bodyContainer.classList.toggle("show");
+            document
+                .querySelector(".material-like-button.close-open-button")
+                .classList.toggle("is-open");
     });
 
 });
