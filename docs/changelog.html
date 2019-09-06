@@ -116,6 +116,13 @@ var nacara = {};
     // IIFE function in order to not pollute the function scope
     (() => {
 
+        // The menu is an optional element, if no menu found then hide the Next & Previous buttons
+        if (document.querySelector(".menu") === null) {
+            document.querySelector(".navigate-to-next").style.visibility = "hidden"
+            document.querySelector(".navigate-to-previous").style.visibility = "hidden"
+            return;
+        }
+
         const currentMenuRank =
             parseInt(
                 document
@@ -185,16 +192,20 @@ var nacara = {};
         });
     }
 
-    document
-        .querySelector(".mobile-menu .menu-trigger")
-        .addEventListener("click", () => {
-            document
-                .querySelector(".is-menu-column")
-                .classList
-                .toggle("force-show");
+    const mobileMenuTrigger = document.querySelector(".mobile-menu .menu-trigger");
+
+    if (mobileMenuTrigger !== null) {
+        mobileMenuTrigger
+            .addEventListener("click", () => {
+                document
+                    .querySelector(".is-menu-column")
+                    .classList
+                    .toggle("force-show");
         });
+    }
+
 });
-</script></head><body><nav class="navbar is-fixed-top"><div class="container"><div class="navbar-brand"><div class="navbar-item title is-4">Nacara</div><a class="navbar-item is-hidden-desktop" href="https://github.com/MangelMaxime/Nacara" target="_blank"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item is-hidden-desktop" href="https://twitter.com/MangelMaxime" target="_blank" style="color:#55acee"><span class="icon"><i class=" fab fa-twitter fa-lg"></i></span></a><div class="navbar-burger" data-target="nav-menu"><span></span><span></span><span></span></div></div><div class="navbar-menu" id="nav-menu"><div class="navbar-start"><a class="navbar-item">0.1.6</a></div><div class="navbar-end"><a class="navbar-item" href="/Nacara/index.html" target="_self"><span class="icon"><i class=" fas fa-book fa-lg"></i></span><span>Documentation</span></a><a class="navbar-item" href="/Nacara/changelog.html" target="_self"><span class="icon"><i class=" fas fa-tasks fa-lg"></i></span><span>Changelog</span></a><a class="navbar-item" href="https://gitter.im/fable-compiler/Fable" target="_blank"><span class="icon"><i class=" fab fa-gitter fa-lg"></i></span><span>Support</span></a><a class="navbar-item is-hidden-touch" href="https://github.com/MangelMaxime/Nacara" target="_blank"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item is-hidden-touch" href="https://twitter.com/MangelMaxime" target="_blank" style="color:#55acee"><span class="icon"><i class=" fab fa-twitter fa-lg"></i></span></a></div></div></div></nav><div class="container"><div class="columns"><div class="column full-height-scrollable-content is-offset-2 is-8" style="scroll-behavior:smooth"><div class="content"><section class="changelog"><ul class="changelog-list"><li class="changelog-list-item is-version"><a href="#0.2.0"><span id="0.2.0" style="visibility:hidden;margin-top:-1rem;position:absolute">#</span><span class="tag has-text-weight-bold is-large is-primary">0.2.0</span></a><span class="is-size-5 has-text-weight-bold is-uppercase release-date">Sep 2019</span><div class="changelog-details"></div></li><li class="changelog-list-item"><div class="changelog-details"></div></li><li class="changelog-list-item"><span class="tag has-text-weight-bold is-medium is-success">Added</span><div class="changelog-list-item-text"><span>Layout system has been added</span></div><div class="changelog-details"></div></li><li class="changelog-list-item"><div class="changelog-details"><p>User can add <code>layouts</code> node to <code>nacara.js</code>, it takes an object.</p>
+</script></head><body><nav class="navbar is-fixed-top"><div class="container"><div class="navbar-brand"><a class="navbar-item title is-4" href="https://mangelmaxime.github.io/Nacara/">Nacara</a><a class="navbar-item is-hidden-desktop" href="https://github.com/MangelMaxime/Nacara" target="_blank"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item is-hidden-desktop" href="https://twitter.com/MangelMaxime" target="_blank" style="color:#55acee"><span class="icon"><i class=" fab fa-twitter fa-lg"></i></span></a><div class="navbar-burger" data-target="nav-menu"><span></span><span></span><span></span></div></div><div class="navbar-menu" id="nav-menu"><div class="navbar-start"><a class="navbar-item">0.2.1</a></div><div class="navbar-end"><a class="navbar-item" href="/Nacara/index.html" target="_self"><span class="icon"><i class=" fas fa-book fa-lg"></i></span><span>Documentation</span></a><a class="navbar-item" href="/Nacara/changelog.html" target="_self"><span class="icon"><i class=" fas fa-tasks fa-lg"></i></span><span>Changelog</span></a><a class="navbar-item" href="https://gitter.im/fable-compiler/Fable" target="_blank"><span class="icon"><i class=" fab fa-gitter fa-lg"></i></span><span>Support</span></a><a class="navbar-item is-hidden-touch" href="https://github.com/MangelMaxime/Nacara" target="_blank"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item is-hidden-touch" href="https://twitter.com/MangelMaxime" target="_blank" style="color:#55acee"><span class="icon"><i class=" fab fa-twitter fa-lg"></i></span></a></div></div></div></nav><div class="container"><div class="columns"><div class="column full-height-scrollable-content is-offset-2 is-8" style="scroll-behavior:smooth"><div class="content"><section class="changelog"><ul class="changelog-list"><li class="changelog-list-item is-version"><a href="#0.2.1"><span id="0.2.1" style="visibility:hidden;margin-top:-1rem;position:absolute">#</span><span class="tag has-text-weight-bold is-large is-primary">0.2.1</span></a><span class="is-size-5 has-text-weight-bold is-uppercase release-date">Sep 2019</span><div class="changelog-details"></div></li><li class="changelog-list-item"><div class="changelog-details"></div></li><li class="changelog-list-item"><span class="tag has-text-weight-bold is-medium is-success">Added</span><div class="changelog-list-item-text"><span>User can now click on the navbar brand to go &quot;index&quot; page.</span></div><div class="changelog-details"></div></li><li class="changelog-list-item"><div class="changelog-details">The &quot;index&quot; page is calculated as follow <code>config.url + config.baseUrl</code></div></li><li class="changelog-list-item"><div class="changelog-details"></div></li><li class="changelog-list-item"><span class="tag has-text-weight-bold is-medium is-info">Fixed</span><div class="changelog-list-item-text"><span>If no menu found on the page, hide the Next &amp; Previous button</span></div><div class="changelog-details"></div></li><li class="changelog-list-item"><span class="tag has-text-weight-bold is-medium is-info">Fixed</span><div class="changelog-list-item-text"><span>Secure access to <code>.mobile-menu .menu-trigger</code> to avoid error in the console if no menu found</span></div><div class="changelog-details"></div></li><li class="changelog-list-item"><span class="tag has-text-weight-bold is-medium is-info">Fixed</span><div class="changelog-list-item-text"><span>Fix menu scroll on touch display</span></div><div class="changelog-details"></div></li><li class="changelog-list-item"><div class="changelog-details"></div></li><li class="changelog-list-item is-version"><a href="#0.2.0"><span id="0.2.0" style="visibility:hidden;margin-top:-1rem;position:absolute">#</span><span class="tag has-text-weight-bold is-large is-primary">0.2.0</span></a><span class="is-size-5 has-text-weight-bold is-uppercase release-date">Sep 2019</span><div class="changelog-details"></div></li><li class="changelog-list-item"><div class="changelog-details"></div></li><li class="changelog-list-item"><span class="tag has-text-weight-bold is-medium is-success">Added</span><div class="changelog-list-item-text"><span>Layout system has been added</span></div><div class="changelog-details"></div></li><li class="changelog-list-item"><div class="changelog-details"><p>User can add <code>layouts</code> node to <code>nacara.js</code>, it takes an object.</p>
 <p>Example:</p>
 <pre><code>{
     default: standard.Default,

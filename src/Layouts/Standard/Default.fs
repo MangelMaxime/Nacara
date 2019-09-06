@@ -272,7 +272,7 @@ let private renderPage (menu : ReactElement option) (breadcrumb : ReactElement o
                     Column.column
                         [
                             Column.Width (Screen.Desktop, Column.Is2)
-                            Column.CustomClass "full-height-scrollable-content is-menu-column"
+                            Column.CustomClass "is-menu-column"
                             Column.Modifiers
                                 [
                                     Modifier.IsHidden (Screen.Touch, true)
@@ -448,7 +448,7 @@ let private generateMenu (model : Model) (pageContext : PageContext) =
 
         )
         |> fun content ->
-            div [ Class "menu-container" ]
+            div [ Class "menu-container full-height-scrollable-content" ]
                 [
                     Menu.menu [ Props [ Style [ MarginTop "3.25rem" ] ] ]
                         content

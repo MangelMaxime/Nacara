@@ -8,6 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+## 0.2.1 - 2019-09-06
+
+### Added
+
+* User can now click on the navbar brand to go "index" page.
+
+The "index" page is calculated as follow `config.url + config.baseUrl`
+
+### Fixed
+
+* If no menu found on the page, hide the Next & Previous button
+* Secure access to `.mobile-menu .menu-trigger` to avoid error in the console if no menu found
+* Fix menu scroll on touch display
+
 ## 0.2.0 - 2019-09-05
 
 ### Added

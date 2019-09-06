@@ -10,7 +10,7 @@ module.exports = {
     title: "Nacara",
     debug: true,
     changelog: "CHANGELOG.md",
-    version: "0.1.6",
+    version: "0.2.1",
     navbar: {
         showVersion: true,
         links: [

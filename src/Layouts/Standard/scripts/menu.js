@@ -114,6 +114,13 @@ window.addEventListener("DOMContentLoaded", () => {
     // IIFE function in order to not pollute the function scope
     (() => {
 
+        // The menu is an optional element, if no menu found then hide the Next & Previous buttons
+        if (document.querySelector(".menu") === null) {
+            document.querySelector(".navigate-to-next").style.visibility = "hidden"
+            document.querySelector(".navigate-to-previous").style.visibility = "hidden"
+            return;
+        }
+
         const currentMenuRank =
             parseInt(
                 document
@@ -183,12 +190,16 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    document
-        .querySelector(".mobile-menu .menu-trigger")
-        .addEventListener("click", () => {
-            document
-                .querySelector(".is-menu-column")
-                .classList
-                .toggle("force-show");
+    const mobileMenuTrigger = document.querySelector(".mobile-menu .menu-trigger");
+
+    if (mobileMenuTrigger !== null) {
+        mobileMenuTrigger
+            .addEventListener("click", () => {
+                document
+                    .querySelector(".is-menu-column")
+                    .classList
+                    .toggle("force-show");
         });
+    }
+
 });

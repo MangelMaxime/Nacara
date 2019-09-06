@@ -176,7 +176,14 @@ let private navbar (config : Config) =
                 [
                     Navbar.Brand.div [ ]
                         [
-                            Navbar.Item.div [ Navbar.Item.CustomClass "title is-4" ]
+                            Navbar.Item.a
+                                [
+                                    Navbar.Item.CustomClass "title is-4"
+                                    Navbar.Item.Props
+                                        [
+                                            Href (config.Url + config.BaseUrl)
+                                        ]
+                                ]
                                 [ str config.Title ]
 
                             config.Navbar
