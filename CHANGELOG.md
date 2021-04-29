@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+## 0.3.0 - 2021-04-29
+
+### Fixed
+
+* Fix #21: Make sure that the user can't click on the material like button when they are hidden
+
 ## 0.2.1 - 2019-09-06
 
 ### Added
