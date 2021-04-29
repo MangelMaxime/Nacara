@@ -9362,7 +9362,6 @@ h2:hover a, h3:hover a, h4:hover a, h5:hover a, h6:hover a {
   display: flex;
   flex-direction: column;
   height: auto;
-  cursor: pointer;
   opacity: 1;
   outline: 0;
   position: fixed;
@@ -9377,17 +9376,43 @@ h2:hover a, h3:hover a, h4:hover a, h5:hover a, h6:hover a {
   bottom: -56px;
   opacity: 0;
 }
+@keyframes fade_in_show {
+  0% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fade_out_show {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  99% {
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
 .material-like-container .material-like-container-body {
   opacity: 0;
+  transform: scale(0);
   margin-bottom: 1rem;
-  transition: opacity 0.2s;
+  animation: fade_out_show 0.2s;
 }
 .material-like-container .material-like-container-body.show {
   opacity: 1;
+  transform: scale(1);
+  animation: fade_in_show 0.2s;
 }
 .material-like-container .material-like-button {
   width: 4rem;
   height: 4rem;
+  cursor: pointer;
   border-radius: 50%;
   background-color: #bb3c8c;
   color: white;
