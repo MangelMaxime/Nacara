@@ -448,7 +448,7 @@ let start () =
                 Log.error "Your config file seems invalid."
                 Log.errorFn "%s" msg
         else
-            Log.error "No file `nacara.json` found."
+            Log.error "File `nacara.js` not found."
             Node.Api.``process``.exit(1)
     }
     |> Promise.start

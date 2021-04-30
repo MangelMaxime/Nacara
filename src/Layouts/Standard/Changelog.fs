@@ -37,9 +37,7 @@ let renderVersion (versionText : string) (date : DateTime option) =
                       Modifiers [ Modifier.TextTransform TextTransform.UpperCase
                                   Modifier.TextWeight TextWeight.Bold
                                   Modifier.TextSize (Screen.All, TextSize.Is5) ] ]
-            [ str dateText ]
-          div [ Class "changelog-details" ]
-            [ ] ]
+            [ str dateText ] ]
 
 type Changelog.Types.CategoryType with
     member this.Color
@@ -82,9 +80,7 @@ let private renderCategoryBody
                             [ str category.Text ]
                           div [ Class "changelog-list-item-text" ]
                             [ span [ DangerouslySetInnerHTML { __html = htmlText } ]
-                                [ ] ]
-                          div [ Class "changelog-details" ]
-                            [ ] ]
+                                [ ] ] ]
             }
 
         | Changelog.Types.CategoryBody.Text text ->

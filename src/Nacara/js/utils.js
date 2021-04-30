@@ -85,7 +85,7 @@ const codeFormat = html => {
 
         let startStr = html.substring(0, startIndex);
         let codeTxt = html.substring(startIndex + startTag.length, endIndex);
-        let endStr = html.substring(endIndex + endTag.length); // 13 = `</code></pre>`.length
+        let endStr = html.substring(endIndex + endTag.length);
 
         let code = unEscapeHtml(codeTxt);
 
