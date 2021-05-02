@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+## 0.4.0 - 2021-05-02
+
+### Changed
+
+* Change the config file name from `nacara.js` is now `nacara.config.js`
+
+    It seems like the new version of `npm exec` and `npx` execute/open `nacara.js` when executing `npx nacara`. Probably because the file as the same name as the package 🤷‍♂️
+
+### Fixed
+
+* Make the `pre` element horizontal scrollable. This avoid to have the whole page having an horizontal scroll when a code snippet is a bit large
+
 ## 0.3.0 - 2021-04-29
 
 ### Fixed

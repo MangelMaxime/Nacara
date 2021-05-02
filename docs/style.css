@@ -9180,6 +9180,7 @@ label.panel-block:hover {
   align-items: center;
 }
 .changelog ul.changelog-list li.changelog-list-item .changelog-details {
+  width: 100%;
   position: relative;
   padding: 0 0 0 8em;
 }
@@ -9371,12 +9372,19 @@ h2:hover a, h3:hover a, h4:hover a, h5:hover a, h6:hover a {
   user-select: none;
   width: 56px;
   z-index: 500;
+  /**
+      fade_in & fade_out animation are used to animate the material like menu
+      We use the opacity to make the appearance/disappearance of the menu smoother
+      We use the transform property so when the menu is collapse the user can't click on it
+
+      Fix for https://github.com/MangelMaxime/Nacara/issues/21
+  */
 }
 .material-like-container.hide {
   bottom: -56px;
   opacity: 0;
 }
-@keyframes fade_in_show {
+@keyframes fade_in {
   0% {
     opacity: 0;
     transform: scale(1);
@@ -9385,7 +9393,7 @@ h2:hover a, h3:hover a, h4:hover a, h5:hover a, h6:hover a {
     opacity: 1;
   }
 }
-@keyframes fade_out_show {
+@keyframes fade_out {
   0% {
     opacity: 1;
     transform: scale(1);
@@ -9402,12 +9410,12 @@ h2:hover a, h3:hover a, h4:hover a, h5:hover a, h6:hover a {
   opacity: 0;
   transform: scale(0);
   margin-bottom: 1rem;
-  animation: fade_out_show 0.2s;
+  animation: fade_out 0.2s;
 }
 .material-like-container .material-like-container-body.show {
   opacity: 1;
   transform: scale(1);
-  animation: fade_in_show 0.2s;
+  animation: fade_in 0.2s;
 }
 .material-like-container .material-like-button {
   width: 4rem;
