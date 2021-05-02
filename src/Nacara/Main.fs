@@ -343,7 +343,7 @@ let checkCliArgs (config: Config) =
 
 let start () =
     promise {
-        let configPath = Node.Api.path.join(cwd, "nacara.js")
+        let configPath = Node.Api.path.join(cwd, "nacara.config.js")
         let! hasDocsConfig = File.exist(configPath)
 
         if hasDocsConfig then
@@ -448,7 +448,7 @@ let start () =
                 Log.error "Your config file seems invalid."
                 Log.errorFn "%s" msg
         else
-            Log.error "File `nacara.js` not found."
+            Log.error "File `nacara.config.js` not found."
             Node.Api.``process``.exit(1)
     }
     |> Promise.start
