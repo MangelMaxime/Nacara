@@ -1,4 +1,4 @@
-window.addEventListener("DOMContentLoaded", () => {
+const setupMenuNavigation = () => {
     /*
      * Initialize the menu state
      */
@@ -159,7 +159,17 @@ window.addEventListener("DOMContentLoaded", () => {
             document.querySelector(".navigate-to-next").style.visibility = "visibile";
         }
     })();
+}
 
+
+window.addEventListener("DOMContentLoaded", () => {
+
+    if (document.querySelector(".menu") !== null
+            && document.querySelector(".navigate-to-previous") !== null
+            && document.querySelector(".navigate-to-next") !== null) {
+
+        setupMenuNavigation();
+    }
 
     /*
      * Setup menu burger behaviour
