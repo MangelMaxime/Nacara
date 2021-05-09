@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+- Added `.paket/` to `.gitignore`.
+- Added dotnet tools: `paket` and `fake-cli`.
+
+### Removed
+- Removed `.paket/` from repository.
 
 ## 0.4.1 - 2021-05-10
 
