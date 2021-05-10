@@ -241,7 +241,7 @@ let private errorToString (path : string, error) =
 module Decode =
     let forward<'T> =
         // DecodeLayout are function, for now just unbox them
-        // Letter we can, check that they indeed are functions and perhaps their number of arguments
+        // Later we can, check that they indeed are functions and perhaps their number of arguments
         fun _ v ->
             Ok (unbox<'T> v)
 
