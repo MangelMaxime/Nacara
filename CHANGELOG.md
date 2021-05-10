@@ -10,8 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `.paket/` to `.gitignore`.
 - Added dotnet tools: `paket` and `fake-cli`.
 
+### Changed
+- Changed `version` in `paket.dependencies` to `5.257.0` so that it matches the version in `.config/dotnet-tools.json`. This fixes the issue which required having .NET DSK version `'2.1.0`.
+
 ### Removed
 - Removed `.paket/` from repository.
+- Removed files `fake.cmd` and `fake.sh` because they are no longer needed.
+- Removed unused code from `build.fsx`.
 
 ## 0.4.0 - 2021-05-02
 
