@@ -293,7 +293,7 @@ th:not([align]) {
 
 html {
   background-color: white;
-  font-size: 14px;
+  font-size: 16px;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   min-width: 300px;
@@ -9195,7 +9195,6 @@ ul.textual-steps > li {
   position: relative;
   padding-left: 4em;
   margin-bottom: 2em;
-  font-weight: 300;
   padding-top: 1em;
 }
 ul.textual-steps > li::before {

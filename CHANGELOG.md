@@ -18,6 +18,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed files `fake.cmd` and `fake.sh` because they are no longer needed.
 - Removed unused code from `build.fsx`.
 
+## 0.4.1 - 2021-05-10
+
+### Fixed
+
+* When Nacara encounter an unknown file in build mode skip it and trigger the next process.
+
+    It was stopping the whole generation causing problem is the user hosted some PNG files in the source folder for example.
+
+### Changed
+
+* Make the text in the textual steps use a normal `font-weight`. It was making it hard to read the text when on a white background
+* Change the font-size to `16px` to improve readibility and accessibility
+
+
 ## 0.4.0 - 2021-05-02
 
 ### Changed

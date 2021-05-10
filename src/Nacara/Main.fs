@@ -240,13 +240,14 @@ let update (msg : Msg) (model : Model) =
                     Cmd.ofMsg (ProcessMarkdown filePath)
 
                 | JavaScriptFile ->
-                    Cmd.none // TODO: Refresh all the page using this file for post process
+                    Cmd.ofMsg ProcessBuildMode // TODO: Refresh all the page using this file for post process
+
                 | SassFile ->
                     Cmd.ofMsg (ProcessSass filePath)
                 | UnsupportedFile _ ->
                     if model.IsDebug then
                         Log.warn "Watcher has been triggered on an unsupported file: %s" filePath
-                    Cmd.none
+                    Cmd.ofMsg ProcessBuildMode
 
             { model with
                 ProcessQueue = tail
