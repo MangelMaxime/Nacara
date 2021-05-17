@@ -6,7 +6,14 @@
   "bin": {
     "nacara": "./cli.js"
   },
-  "scripts": {},
+  "scripts": {
+    "nacara": "fable-splitter -c src/Nacara/splitter.config.js",
+    "nacara-watch": "fable-splitter -c src/Nacara/splitter.config.js --watch",
+    "layouts-standard": "fable-splitter -c src/Layouts/Standard/splitter.config.js",
+    "layouts-standard-watch": "fable-splitter -c src/Layouts/Standard/splitter.config.js --watch",
+    "nodemon": "npx nodemon cli.js",
+    "build": "yarn nacara && yarn layouts-standard"
+  },
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.5.0",
     "@types/react": "^16.9.2",

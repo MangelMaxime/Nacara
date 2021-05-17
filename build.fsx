@@ -1,16 +1,9 @@
 #r "paket: groupref netcorebuild //"
 #load ".fake/build.fsx/intellisense.fsx"
 
-#if !FAKE
-#r "Facades/netstandard"
-#r "netstandard"
-#endif
-
 open Fake.Core
-open Fake.DotNet
 open Fake.JavaScript
 open Fake.IO
-open Fake.IO.FileSystemOperators
 open Fake.IO.Globbing.Operators
 open BlackFox.Fake
 

@@ -252,8 +252,6 @@ let basePage (model : Model) (pageTitle : string) (content : ReactElement) =
                             Integrity "sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
                             CrossOrigin "anonymous"
                         ]
-                    script [ Src "https://polyfill.app/api/polyfill?features=scroll-behavior" ]
-                        [ ]
                     script
                         [
                             Type "text/javascript"
