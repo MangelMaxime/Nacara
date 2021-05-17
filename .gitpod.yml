@@ -1,0 +1,21 @@
+image:
+  file: .docker/Dockerfile
+
+ports:
+  - port: 8080
+
+tasks:
+  - init: npm install
+
+github:
+  prebuilds:
+    # enable for pull requests coming from forks (defaults to false)
+    pullRequestsFromForks: true
+    # add a "Review in Gitpod" button as a comment to pull requests (defaults to false)
+    addComment: true
+
+vscode:
+  extensions:
+    - christian-kohler.path-intellisense
+    - mrmlnc.vscode-scss
+    - Ionide.Ionide-fsharp
