@@ -52,6 +52,7 @@ module Types =
               Description = ""
               Versions = [] }
 
+    [<RequireQualifiedAccess>]
     type Symbols =
         | Title of title : string
         | RawText of body : string
@@ -254,25 +255,3 @@ let parse (changelogContent : string) =
     |> Array.toList
     |> Lexer.toSymbols
     |> Transform.fromSymbols
-
-// let test () =
-//     promise {
-//         let! changelogContent = File.read "CHANGELOG.md"
-
-//         match parse changelogContent with
-//         | Ok changelog ->
-
-//             printfn "Title: %s" changelog.Title
-//             printfn "Description: %s" changelog.Description
-
-//             changelog.Versions
-//             |> List.iter (fun version ->
-//                 printfn "%A" version.Version
-//                 printfn "%A" version.Categories
-//             )
-//         | Error msg ->
-//             Log.error "%s" msg
-//             // Crash the program
-//             Fable.Import.Node.Globals.``process``.exit(1)
-//             |> unbox
-//     }

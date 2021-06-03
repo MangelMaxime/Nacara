@@ -1,26 +1,14 @@
 module rec Types
 
 open Thoth.Json
-open System.Collections.Generic
 open Fable.Core
 open Fable.React
 open Fable.Core.JsInterop
-
-type PostRenderDemos =
-    { Script : string
-      ImportSelector : string }
-
-    static member Decoder =
-        Decode.object (fun get ->
-            { Script = get.Required.Field "script" Decode.string
-              ImportSelector = get.Required.Field "importSelector" Decode.string }
-        )
 
 [<NoComparison>]
 type PageAttributes =
     {
         Title : string
-        PostRenderDemos : PostRenderDemos option
         Layout : string
         Id : string option
         Extra : JsonValue option
@@ -30,7 +18,6 @@ type PageAttributes =
         Decode.object (fun get ->
             {
                 Title = get.Required.Field "title" Decode.string
-                PostRenderDemos = get.Optional.Field "postRenderDemos" PostRenderDemos.Decoder
                 Layout = get.Optional.Field "layout" Decode.string
                             |> Option.defaultValue "default"
                 Id = get.Optional.Field "id" Decode.string
@@ -383,6 +370,8 @@ type PluginsConfig =
             Markdown = [||]
         }
 
+type LayoutFunc = System.Func<Model, PageContext, JS.Promise<ReactElement>>
+
 [<NoComparison; NoEquality>]
 type Config =
     {
@@ -400,7 +389,7 @@ type Config =
         Navbar : NavbarConfig option
         MenuConfig : MenuConfig option
         LightnerConfig : LightnerConfig option
-        LayoutConfig : Map<string, Model -> PageContext -> JS.Promise<ReactElement>>
+        LayoutConfig : Map<string, LayoutFunc>
         Plugins : PluginsConfig
         IsWatch : bool
         ServerPort : int
@@ -444,7 +433,10 @@ type Model =
         Server : Node.Http.Server option
         WorkingDirectory : string
         IsDebug : bool
-        JavaScriptFiles : Dictionary<string, string>
-        DocFiles : Map<string, PageContext>
+        // We use a JS.Map instead of an F# Map because of a bug when upgrading to Fable 3
+        // I suspect that Fable 3, generate some reflection information differently when the file the file is being use in 2 differents project
+        // and so the comparer function or something is broken
+        // We need to investigate more later if we want to go back using an immutable map
+        DocFiles : JS.Map<string, PageContext>
         LightnerCache : Map<string, CodeLightner.Config>
     }

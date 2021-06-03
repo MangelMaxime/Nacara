@@ -166,11 +166,12 @@ module Default =
 
     let private renderBreadcrumb (model : Model) (pageContext : PageContext) =
         let getTitle pageId =
-            match Map.tryFind pageId model.DocFiles with
-            | Some pageContext ->
+            let pageContext = model.DocFiles.get pageId
+
+            if box pageContext <> null then
                 pageContext.Attributes.Title
 
-            | None ->
+            else
                 Log.error "Unable to find the fil2e: %s" pageId
                 sprintf "Page `%s` not found" pageId
 
@@ -380,18 +381,15 @@ module Default =
     let rec private renderMenuItem (model : Model) (menuItem : MenuItem) =
         match menuItem with
         | MenuItem pageId ->
-            match Map.tryFind pageId model.DocFiles with
-            | Some pageInfo ->
+            let pageInfo = model.DocFiles.get pageId
+
+            if box pageInfo <> null then
                 Menu.Item.li [ Menu.Item.Props [ Data("menu-id", pageId) ]
                                generateUrl model.Config pageInfo
                                |> Menu.Item.Href ]
                     [ str pageInfo.Attributes.Title ]
-            | None ->
-                model.DocFiles
-                |> Map.toList
-                |> List.iter (fun (k, v) ->
-                    printfn "%A" k
-                )
+            
+            else
                 Log.error "Unable to find the file33: %s" pageId
                 nothing
 
@@ -400,13 +398,15 @@ module Default =
                 items
                 |> Array.map (function
                     | MenuItem pageId ->
-                        match Map.tryFind pageId model.DocFiles with
-                        | Some pageInfo ->
+                        let pageInfo = model.DocFiles.get pageId
+
+                        if box pageInfo <> null then
                             Menu.Item.li [ Menu.Item.Props [ Data("menu-id", pageId) ]
                                            generateUrl model.Config pageInfo
                                            |> Menu.Item.Href ]
                                 [ str pageInfo.Attributes.Title ]
-                        | None ->
+                        
+                        else
                             Log.error "Unable to find the file4: %s" pageId
                             nothing
                     | MenuList (label, x) ->

@@ -16,6 +16,10 @@ type IExport =
 exportDefault
     {
         new IExport with
-            member __.Default (model, pageContext) = Layout.Standard.Default.toHtml model pageContext
-            member __.Changelog (model, pageContext) = Layout.Standard.Changelog.toHtml model pageContext
+            member __.Default (model, pageContext) =
+                Layout.Standard.Default.toHtml model pageContext
+
+            member __.Changelog (model, pageContext) =
+                Layout.Standard.Changelog.toHtml model pageContext
     }
+}

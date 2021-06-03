@@ -74,7 +74,6 @@ type Msg =
     | ProcessBuildMode
     | ProcessMarkdown of string
     | ProcessSass of string
-    | ProcessChangelogResult of string * Result<ChangelogParser.Types.Changelog, string>
     | ProcessMarkdownResult of Result<PageContext, string * string>
     | ProcessFailed of exn
     | WriteFileSuccess of string
@@ -102,9 +101,7 @@ let processFile (path : string, model : Model) =
                         Content = fm.body
                     }
 
-                // Seems like calling: layoutFunc model pageContext
-                // doesn't pass the pageContext correctly, so we use interop for now
-                let! layout = layoutFunc$(model, pageContext)
+                let! layout = layoutFunc.Invoke(model, pageContext)
 
                 let result =
                     { pageContext with
@@ -133,6 +130,7 @@ let private startServerIfNeeded (config : Config) =
                 o.``open`` <- false
                 o.logLevel <- 0
                 o.port <- config.ServerPort
+                o.host <- "localhost"
             )
 
         if config.BaseUrl <> "/" then
@@ -161,7 +159,7 @@ let startFileWatcherIfNeeded (config : Config) =
     else
         None
 
-let init (config : Config, processQueue : string list, docFiles : Map<string, PageContext>, lightnerCache : Map<string,CodeLightner.Config>) =
+let init (config : Config, processQueue : string list, docFiles : JS.Map<string, PageContext>, lightnerCache : Map<string,CodeLightner.Config>) =
     let cmd =
         if config.IsWatch then
             Cmd.none
@@ -175,7 +173,6 @@ let init (config : Config, processQueue : string list, docFiles : Map<string, Pa
         Server = startServerIfNeeded config
         WorkingDirectory = cwd
         IsDebug = config.IsDebug
-        JavaScriptFiles = Dictionary<string, string>()
         DocFiles = docFiles
         LightnerCache = lightnerCache
     }
@@ -203,20 +200,12 @@ let update (msg : Msg) (model : Model) =
 
         | Ok pageContext ->
             let pageId = getFileId model.Config.Source pageContext
-            let newDocFiles = Map.add pageId pageContext model.DocFiles
+            let newDocFiles = model.DocFiles.set(pageId, pageContext) // Map.add pageId pageContext model.DocFiles
+
             let newModel = { model with DocFiles = newDocFiles }
 
             newModel
             , Cmd.OfPromise.either Write.standard (newModel, pageContext) WriteFileSuccess WriteFileFailed
-
-    | ProcessChangelogResult (path, result) ->
-        match result with
-        | Error msg ->
-            Log.error "Error when processing file: %s\n%s" path msg
-            model, Cmd.none
-
-        | Ok changelog ->
-            model, Cmd.OfPromise.either Write.changelog (model,changelog, path) WriteFileSuccess WriteFileFailed
 
     | WriteFileSuccess path ->
         Log.log "Write: %s" path
@@ -398,7 +387,9 @@ let start () =
                             (id, pageContext)
                         | Error _ -> failwith "Should not happen we filtered them before"
                     )
-                    |> Map.ofArray
+
+                let docFiles =
+                    JS.Constructors.Map.Create(docFiles)
 
                 let lightnerCache =
                     match config.LightnerConfig with

@@ -4,18 +4,18 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="../../Nacara/Source/Libs/FrontMatter.fs" />
-    <Compile Include="../../Nacara/Source/Libs/LiveServer.fs" />
-    <Compile Include="../../Nacara/Source/Libs/Chokidar.fs" />
-    <Compile Include="../../Nacara/Source/Libs/Sass.fs" />
-    <Compile Include="../../Nacara/Source/Libs/Chalk.fs" />
-    <Compile Include="../../Nacara/Source/Libs/CodeLightner.fs" />
+    <Compile Include="../../Libs/FrontMatter.fs" />
+    <Compile Include="../../Libs/LiveServer.fs" />
+    <Compile Include="../../Libs/Chokidar.fs" />
+    <Compile Include="../../Libs/Sass.fs" />
+    <Compile Include="../../Libs/Chalk.fs" />
+    <Compile Include="../../Libs/CodeLightner.fs" />
     <Compile Include="../../Nacara/Source/Log.fs" />
     <Compile Include="../../Nacara/Source/Node.Extra.fs" />
     <Compile Include="../../Nacara/Source/Types.fs" />
     <Compile Include="../../Nacara/Source/Helpers.fs" />
-    <Compile Include="../../Nacara/Source/Changelog.fs" />
     <Compile Include="Prelude.fs" />
+    <Compile Include="ChangelogParser.fs" />
     <Compile Include="Changelog.fs" />
     <Compile Include="Default.fs" />
     <Compile Include="Export.fs" />

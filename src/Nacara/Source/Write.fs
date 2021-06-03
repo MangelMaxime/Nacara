@@ -41,21 +41,21 @@ let standard (model : Model, pageContext : PageContext) =
         return pageContext.Path
     }
 
-let changelog (model : Model, changelog : ChangelogParser.Types.Changelog, path : string) =
-    promise {
-        let outputPath =
-            path.ToLower()
-            |> Directory.join model.Config.Output
-            |> Directory.join model.WorkingDirectory
-            |> File.changeExtension "html"
+// let changelog (model : Model, changelog : ChangelogParser.Types.Changelog, path : string) =
+//     promise {
+//         let outputPath =
+//             path.ToLower()
+//             |> Directory.join model.Config.Output
+//             |> Directory.join model.WorkingDirectory
+//             |> File.changeExtension "html"
 
-        let html =
-            // changelog
-            // |> Templates.Centered.Changelog.toHtml model
+//         let html =
+//             // changelog
+//             // |> Templates.Centered.Changelog.toHtml model
 
-            nothing
-            |> Helpers.parseReactStatic
+//             nothing
+//             |> Helpers.parseReactStatic
 
-        do! File.write outputPath html
-        return path
-    }
+//         do! File.write outputPath html
+//         return path
+//     }
