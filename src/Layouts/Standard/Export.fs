@@ -22,4 +22,3 @@ exportDefault
             member __.Changelog (model, pageContext) =
                 Layout.Standard.Changelog.toHtml model pageContext
     }
-}
