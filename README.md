@@ -9,9 +9,9 @@ This chapter contains the instructions for building Nacara and generating its do
 ### Requirements
 
 > **For Linux**
-> 
+>
 > If on Linux, you should install the following packages on your system before procedding:
-> 
+>
 > ```bash
 > # Debian based
 > sudo apt-get install make gcc g++
@@ -45,13 +45,13 @@ dotnet tool run fake
 dotnet tool run paket
 ```
 
-### Build 
+### Build
 
 Currently there are two ways of building the program to run, with FAKE or with Yarn/NPM.
 
 #### Yarn (Recommended)
 
-You will need three terminals open. 
+You will need three terminals open.
 
 1. In the first terminal run this command:
 

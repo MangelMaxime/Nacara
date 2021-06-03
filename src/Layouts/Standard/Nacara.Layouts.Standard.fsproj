@@ -4,21 +4,31 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="../../Nacara/Libs/FrontMatter.fs" />
-    <Compile Include="../../Nacara/Libs/LiveServer.fs" />
-    <Compile Include="../../Nacara/Libs/Chokidar.fs" />
-    <Compile Include="../../Nacara/Libs/Sass.fs" />
-    <Compile Include="../../Nacara/Libs/Chalk.fs" />
-    <Compile Include="../../Nacara/Libs/CodeLightner.fs" />
-    <Compile Include="../../Nacara/Log.fs" />
-    <Compile Include="../../Nacara/Node.Extra.fs" />
-    <Compile Include="../../Nacara/Types.fs" />
-    <Compile Include="../../Nacara/Helpers.fs" />
-    <Compile Include="../../Nacara/Changelog.fs" />
+    <Compile Include="../../Nacara/Source/Libs/FrontMatter.fs" />
+    <Compile Include="../../Nacara/Source/Libs/LiveServer.fs" />
+    <Compile Include="../../Nacara/Source/Libs/Chokidar.fs" />
+    <Compile Include="../../Nacara/Source/Libs/Sass.fs" />
+    <Compile Include="../../Nacara/Source/Libs/Chalk.fs" />
+    <Compile Include="../../Nacara/Source/Libs/CodeLightner.fs" />
+    <Compile Include="../../Nacara/Source/Log.fs" />
+    <Compile Include="../../Nacara/Source/Node.Extra.fs" />
+    <Compile Include="../../Nacara/Source/Types.fs" />
+    <Compile Include="../../Nacara/Source/Helpers.fs" />
+    <Compile Include="../../Nacara/Source/Changelog.fs" />
     <Compile Include="Prelude.fs" />
     <Compile Include="Changelog.fs" />
     <Compile Include="Default.fs" />
     <Compile Include="Export.fs" />
   </ItemGroup>
-  <Import Project="..\..\..\.paket\Paket.Restore.targets" />
+  <ItemGroup>
+    <PackageReference Include="Fable.Core" Version="3.2.7" />
+    <PackageReference Include="Fable.Date" Version="1.0.0" />
+    <PackageReference Include="Fable.FontAwesome" Version="2.0.0" />
+    <PackageReference Include="Fable.FontAwesome.Free" Version="2.1.0" />
+    <PackageReference Include="Fable.Node" Version="1.2.0" />
+    <PackageReference Include="Fable.Promise" Version="2.2.0" />
+    <PackageReference Include="Fable.React" Version="7.4.0" />
+    <PackageReference Include="Fulma" Version="2.10.1" />
+    <PackageReference Include="Thoth.Json" Version="5.1.0" />
+  </ItemGroup>
 </Project>

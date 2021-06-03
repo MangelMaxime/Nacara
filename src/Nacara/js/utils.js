@@ -3,28 +3,6 @@
 
 const lightner = require('code-lightner');
 
-export const mdMessage = (level) => {
-
-    return {
-        validate: function (params) {
-            return params.trim() === level;
-        },
-
-        render: function (tokens, idx) {
-            if (tokens[idx].nesting === 1) {
-                // opening tag
-                return `<article class="message is-${level}">
-                <div class="message-body">`;
-
-
-            } else {
-                // closing tag
-                return '</div>\n</article>\n';
-            }
-        }
-    }
-}
-
 // const md = require('markdown-it')({
 //     html: true
 // })

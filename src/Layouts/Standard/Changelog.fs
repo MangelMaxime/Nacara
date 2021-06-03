@@ -1,179 +1,181 @@
-module Changelog
+namespace Layout.Standard
 
-open Fulma
-open Types
-open System
-open System.Text.RegularExpressions
-open Fable.React
-open Fable.React.Props
-open Fable.Core.JsInterop
-open Thoth.Json
+module Changelog =
 
-let slugify (_s: string): string = importDefault "slugify"
+    open Fulma
+    open Types
+    open System
+    open System.Text.RegularExpressions
+    open Fable.React
+    open Fable.React.Props
+    open Fable.Core.JsInterop
+    open Thoth.Json
 
-let renderVersion (versionText : string) (date : DateTime option) =
-    let dateText =
-        match date with
-        | Some date ->
-            Date.Format.localFormat Date.Local.englishUK "MMM yyyy" date
-        | None -> ""
+    let slugify (_s: string): string = importDefault "slugify"
 
-    let slug = slugify versionText
+    let renderVersion (versionText : string) (date : DateTime option) =
+        let dateText =
+            match date with
+            | Some date ->
+                Date.Format.localFormat Date.Local.englishUK "MMM yyyy" date
+            | None -> ""
 
-    li [ Class "changelog-list-item is-version" ]
-        [ a [ Href ("#" + slug) ]
-            [ // This is the element used as an anchor
-              // We make it appear a bit highter so the tag isn't squash against the navbar
-              span [ Id slug
-                     Style [ Visibility "hidden"
-                             MarginTop "-1rem"
-                             Position PositionOptions.Absolute ] ]
-                [ str "#" ]
-              Tag.tag [ Tag.Color IsPrimary
-                        Tag.Size IsLarge
-                        Tag.Modifiers [ Modifier.TextWeight TextWeight.Bold ] ]
-                [ str versionText ] ]
-          Text.span [ CustomClass "release-date"
-                      Modifiers [ Modifier.TextTransform TextTransform.UpperCase
-                                  Modifier.TextWeight TextWeight.Bold
-                                  Modifier.TextSize (Screen.All, TextSize.Is5) ] ]
-            [ str dateText ] ]
+        let slug = slugify versionText
 
-type Changelog.Types.CategoryType with
-    member this.Color
-        with get () =
-            match this with
-            | Changelog.Types.CategoryType.Added -> IsSuccess
-            | Changelog.Types.CategoryType.Changed -> IsInfo
-            | Changelog.Types.CategoryType.Deprecated -> IsWarning
-            | Changelog.Types.CategoryType.Removed -> IsDanger
-            | Changelog.Types.CategoryType.Fixed -> IsInfo
-            | Changelog.Types.CategoryType.Security -> IsInfo
-            | Changelog.Types.CategoryType.Unkown _ -> IsInfo
+        li [ Class "changelog-list-item is-version" ]
+            [ a [ Href ("#" + slug) ]
+                [ // This is the element used as an anchor
+                  // We make it appear a bit highter so the tag isn't squash against the navbar
+                  span [ Id slug
+                         Style [ Visibility "hidden"
+                                 MarginTop "-1rem"
+                                 Position PositionOptions.Absolute ] ]
+                    [ str "#" ]
+                  Tag.tag [ Tag.Color IsPrimary
+                            Tag.Size IsLarge
+                            Tag.Modifiers [ Modifier.TextWeight TextWeight.Bold ] ]
+                    [ str versionText ] ]
+              Text.span [ CustomClass "release-date"
+                          Modifiers [ Modifier.TextTransform TextTransform.UpperCase
+                                      Modifier.TextWeight TextWeight.Bold
+                                      Modifier.TextSize (Screen.All, TextSize.Is5) ] ]
+                [ str dateText ] ]
 
-let private renderCategoryBody
-    (lightnerConfig : Map<string, CodeLightner.Config>)
-    (category : Changelog.Types.CategoryType)
-    (body : Changelog.Types.CategoryBody) =
+    type ChangelogParser.Types.CategoryType with
+        member this.Color
+            with get () =
+                match this with
+                | ChangelogParser.Types.CategoryType.Added -> IsSuccess
+                | ChangelogParser.Types.CategoryType.Changed -> IsInfo
+                | ChangelogParser.Types.CategoryType.Deprecated -> IsWarning
+                | ChangelogParser.Types.CategoryType.Removed -> IsDanger
+                | ChangelogParser.Types.CategoryType.Fixed -> IsInfo
+                | ChangelogParser.Types.CategoryType.Security -> IsInfo
+                | ChangelogParser.Types.CategoryType.Unkown _ -> IsInfo
 
-        let removeParagraphMarkup (text : string) =
-            match Regex.Match(text.Trim(), "^<p>(.*)</p>$") with
-            | m when m.Success ->
-                m.Groups.[1].Value
-            | _ -> text
+    let private renderCategoryBody
+        (lightnerConfig : Map<string, CodeLightner.Config>)
+        (category : ChangelogParser.Types.CategoryType)
+        (body : ChangelogParser.Types.CategoryBody) =
 
-        let textToHtml (text : string) =
-            Helpers.markdown text [||]
-            |> highlightCode lightnerConfig
-            |> Promise.map removeParagraphMarkup
+            let removeParagraphMarkup (text : string) =
+                match Regex.Match(text.Trim(), "^<p>(.*)</p>$") with
+                | m when m.Success ->
+                    m.Groups.[1].Value
+                | _ -> text
 
-        match body with
-        | Changelog.Types.CategoryBody.ListItem text ->
-            promise {
-                let! htmlText = textToHtml text
+            let textToHtml (text : string) =
+                Helpers.markdown text [||]
+                |> highlightCode lightnerConfig
+                |> Promise.map removeParagraphMarkup
 
-                return
-                    li [ Class "changelog-list-item" ]
-                        [ Tag.tag [ Tag.Color category.Color
-                                    Tag.Size IsMedium
-                                    Tag.Modifiers [ Modifier.TextWeight TextWeight.Bold ] ]
-                            [ str category.Text ]
-                          div [ Class "changelog-list-item-text" ]
-                            [ span [ DangerouslySetInnerHTML { __html = htmlText } ]
-                                [ ] ] ]
-            }
+            match body with
+            | ChangelogParser.Types.CategoryBody.ListItem text ->
+                promise {
+                    let! htmlText = textToHtml text
 
-        | Changelog.Types.CategoryBody.Text text ->
-            promise {
-                let! htmlText = textToHtml text
+                    return
+                        li [ Class "changelog-list-item" ]
+                            [ Tag.tag [ Tag.Color category.Color
+                                        Tag.Size IsMedium
+                                        Tag.Modifiers [ Modifier.TextWeight TextWeight.Bold ] ]
+                                [ str category.Text ]
+                              div [ Class "changelog-list-item-text" ]
+                                [ span [ DangerouslySetInnerHTML { __html = htmlText } ]
+                                    [ ] ] ]
+                }
 
-                return
-                    li [ Class "changelog-list-item" ]
-                       [ div [ Class "changelog-details"
-                               DangerouslySetInnerHTML { __html = htmlText } ]
-                                    [ ] ]
-            }
+            | ChangelogParser.Types.CategoryBody.Text text ->
+                promise {
+                    let! htmlText = textToHtml text
 
-let renderChangelogItems
-    (model : Model)
-    (items : Changelog.Types.Version list) =
+                    return
+                        li [ Class "changelog-list-item" ]
+                           [ div [ Class "changelog-details"
+                                   DangerouslySetInnerHTML { __html = htmlText } ]
+                                        [ ] ]
+                }
 
-    items
-    |> List.map (fun version ->
-        match version.Version with
-        | Some versionText ->
-            promise {
-                let! categoriesHtml =
-                    version.Categories
-                    |> Map.toList
-                    |> List.map (fun (categoryType, bodyItems) ->
-                        promise {
-                            let! bodyItemsHtml =
-                                bodyItems
-                                |> List.map (fun body ->
-                                    renderCategoryBody model.LightnerCache categoryType body
-                                )
-                                |> Promise.all
+    let renderChangelogItems
+        (model : Model)
+        (items : ChangelogParser.Types.Version list) =
 
-                            return
-                                // Use fragment instead of `ofArray` to avoid having to set a `Key` on each children
-                                fragment [ ]
-                                    bodyItemsHtml
-                        }
-                    )
-                    |> Promise.all
+        items
+        |> List.map (fun version ->
+            match version.Version with
+            | Some versionText ->
+                promise {
+                    let! categoriesHtml =
+                        version.Categories
+                        |> Map.toList
+                        |> List.map (fun (categoryType, bodyItems) ->
+                            promise {
+                                let! bodyItemsHtml =
+                                    bodyItems
+                                    |> List.map (fun body ->
+                                        renderCategoryBody model.LightnerCache categoryType body
+                                    )
+                                    |> Promise.all
 
-                return
-                    fragment [ ]
-                        [
-                            yield renderVersion versionText version.Date
-                            yield! categoriesHtml
-                        ]
-            }
+                                return
+                                    // Use fragment instead of `ofArray` to avoid having to set a `Key` on each children
+                                    fragment [ ]
+                                        bodyItemsHtml
+                            }
+                        )
+                        |> Promise.all
 
-        | None ->
-            Promise.lift nothing
-    )
+                    return
+                        fragment [ ]
+                            [
+                                yield renderVersion versionText version.Date
+                                yield! categoriesHtml
+                            ]
+                }
 
-let toHtml (model : Model) (pageContext : PageContext) =
-    promise {
-        let getChangelogPath =
-            Decode.field "changelog_path" Decode.string
+            | None ->
+                Promise.lift nothing
+        )
 
-        match Decode.fromValue "$.extra" getChangelogPath pageContext.Attributes.Extra with
-        | Ok relativePath ->
-            let changelogPath = Directory.join pageContext.Path relativePath
-            let! changelogContent = File.read changelogPath
+    let toHtml (model : Model) (pageContext : PageContext) =
+        promise {
+            let getChangelogPath =
+                Decode.field "changelog_path" Decode.string
 
-            match Changelog.parse changelogContent with
-            | Ok changelog ->
-                let! changelogItems =
-                    renderChangelogItems model changelog.Versions
-                    |> Promise.all
+            match Decode.fromValue "$.extra" getChangelogPath pageContext.Attributes.Extra with
+            | Ok relativePath ->
+                let changelogPath = Directory.join pageContext.Path relativePath
+                let! changelogContent = File.read changelogPath
 
-                return
-                    Columns.columns [ ]
-                        [
-                            Column.column
-                                [
-                                    Column.Width (Screen.All, Column.Is8)
-                                    Column.Offset (Screen.All, Column.Is2)
-                                    Column.CustomClass "full-height-scrollable-content"
-                                    Column.Props [ Style [ // We need to set ScrollBehavior via style so the polyfill can work
-                                                           ScrollBehavior "smooth" ] ]
-                                ]
-                                [
-                                    Content.content [ ]
-                                        [
-                                            section [ Class "changelog" ]
-                                                [ ul [ Class "changelog-list" ]
-                                            changelogItems ]
-                                        ]
-                                ]
-                        ]
-                    |> Prelude.basePage model pageContext.Attributes.Title
+                match ChangelogParser.parse changelogContent with
+                | Ok changelog ->
+                    let! changelogItems =
+                        renderChangelogItems model changelog.Versions
+                        |> Promise.all
+
+                    return
+                        Columns.columns [ ]
+                            [
+                                Column.column
+                                    [
+                                        Column.Width (Screen.All, Column.Is8)
+                                        Column.Offset (Screen.All, Column.Is2)
+                                        Column.CustomClass "full-height-scrollable-content"
+                                        Column.Props [ Style [ // We need to set ScrollBehavior via style so the polyfill can work
+                                                               ScrollBehavior "smooth" ] ]
+                                    ]
+                                    [
+                                        Content.content [ ]
+                                            [
+                                                section [ Class "changelog" ]
+                                                    [ ul [ Class "changelog-list" ]
+                                                changelogItems ]
+                                            ]
+                                    ]
+                            ]
+                        |> Prelude.basePage model pageContext.Attributes.Title
+                | Error msg ->
+                    return failwith msg
             | Error msg ->
                 return failwith msg
-        | Error msg ->
-            return failwith msg
-    }
+        }

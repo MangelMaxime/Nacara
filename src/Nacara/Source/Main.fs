@@ -15,13 +15,13 @@ open System.Text.RegularExpressions
 open System.Collections.Generic
 
 // We use importSideEffects so the files are included in the output by fable-splitter
-importSideEffects "./js/markdown-it-anchored.js"
-importSideEffects "./js/markdown-it-toc.js"
+// importSideEffects "./../js/markdown-it-anchored.js"
+// importSideEffects "./../js/markdown-it-toc.js"
 
 let processCodeHighlights (lightnerConfig : Map<string, CodeLightner.Config>) (pageContext : PageContext) =
     let codeBlockRegex =
         // Regex("""<pre\b[^>]*><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", RegexOptions.Multiline ||| RegexOptions.Singleline)
-        JS.RegExp.Create("""<pre\b[^>]*><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", "gms")
+        JS.Constructors.RegExp.Create("""<pre\b[^>]*><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", "gms")
 
     let rec apply (text : string) =
         promise {
@@ -69,11 +69,12 @@ let (|MarkdownFile|JavaScriptFile|SassFile|UnsupportedFile|) (path : string) =
     | ".scss" | ".sass" -> SassFile
     | _ -> UnsupportedFile ext
 
+[<NoComparison>]
 type Msg =
     | ProcessBuildMode
     | ProcessMarkdown of string
     | ProcessSass of string
-    | ProcessChangelogResult of string * Result<Changelog.Types.Changelog, string>
+    | ProcessChangelogResult of string * Result<ChangelogParser.Types.Changelog, string>
     | ProcessMarkdownResult of Result<PageContext, string * string>
     | ProcessFailed of exn
     | WriteFileSuccess of string
@@ -121,7 +122,7 @@ let processFile (path : string, model : Model) =
 
 open Elmish
 
-let baseUrlMiddleware (baseUrl : string) : LiveServer.Middleware = import "default" "./js/base-url-middleware.js"
+let baseUrlMiddleware (baseUrl : string) : LiveServer.Middleware = import "default" "./../js/base-url-middleware.js"
 
 let private startServerIfNeeded (config : Config) =
     if config.IsWatch then
@@ -135,7 +136,8 @@ let private startServerIfNeeded (config : Config) =
             )
 
         if config.BaseUrl <> "/" then
-            liveServerOption.middleware <- [|
+            liveServerOption.middleware <-
+                [|
                     baseUrlMiddleware config.BaseUrl
                 |]
 
@@ -253,6 +255,7 @@ let update (msg : Msg) (model : Model) =
                 ProcessQueue = tail
             }
             , cmd
+
         | [ ] ->
             // All files has been process, kill the process as it was launch in Build mode
             let exit () =

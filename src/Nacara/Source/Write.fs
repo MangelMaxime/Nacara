@@ -41,7 +41,7 @@ let standard (model : Model, pageContext : PageContext) =
         return pageContext.Path
     }
 
-let changelog (model : Model, changelog : Changelog.Types.Changelog, path : string) =
+let changelog (model : Model, changelog : ChangelogParser.Types.Changelog, path : string) =
     promise {
         let outputPath =
             path.ToLower()

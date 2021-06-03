@@ -26,6 +26,7 @@ let processTableOfContent (pageContext : PageContext) =
         return pageContent , tocContent
     }
 
+[<NoComparison>]
 type LinkProps =
     {
         Icon : ReactElement
@@ -194,7 +195,7 @@ let private navbar (config : Config) =
                             )
                             |> Option.defaultValue nothing
 
-                            Navbar.burger [ Props [ Data ("target", "nav-menu" ) ] ]
+                            Navbar.burger [ Navbar.Burger.Props [ Data ("target", "nav-menu" ) ] ]
                                 [
                                     span [ ] [ ]
                                     span [ ] [ ]
@@ -215,8 +216,9 @@ let basePage (model : Model) (pageTitle : string) (content : ReactElement) =
 
     let menuScript =
         let sourceCode =
-            Directory.join Node.Api.__dirname "${entryDir}/scripts/menu.js"
-            |> File.readSync
+            // Directory.join Node.Api.__dirname "${entryDir}/scripts/menu.js"
+            // |> File.readSync
+            ""
 
         script [ Type "text/javascript"
                  DangerouslySetInnerHTML { __html = sourceCode } ]

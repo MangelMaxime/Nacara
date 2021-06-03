@@ -16,6 +16,7 @@ type PostRenderDemos =
               ImportSelector = get.Required.Field "importSelector" Decode.string }
         )
 
+[<NoComparison>]
 type PageAttributes =
     {
         Title : string
@@ -37,6 +38,7 @@ type PageAttributes =
             }
         )
 
+[<NoComparison>]
 type PageContext =
     {
         Path : string
@@ -168,12 +170,12 @@ module Helpers =
 
     let inline isNumber (o: JsonValue) : bool = jsTypeof o = "number"
 
-    let inline isArray (o: JsonValue) : bool = JS.Array.isArray(o)
+    let inline isArray (o: JsonValue) : bool = JS.Constructors.Array.isArray(o)
 
     [<Emit("$0 === null ? false : (Object.getPrototypeOf($0 || false) === Object.prototype)")>]
     let isObject (_ : JsonValue) : bool = jsNative
 
-    let inline isNaN (o: JsonValue) : bool = JS.Number.isNaN(!!o)
+    let inline isNaN (o: JsonValue) : bool = JS.Constructors.Number.isNaN(!!o)
 
     let inline isNullValue (o: JsonValue): bool = isNull o
 
@@ -190,7 +192,7 @@ module Helpers =
 
     let inline isFunction (o: JsonValue) : bool = jsTypeof o = "function"
 
-    let inline objectKeys (o: JsonValue) : string seq = upcast JS.Object.keys(o)
+    let inline objectKeys (o: JsonValue) : string seq = upcast JS.Constructors.Object.keys(o)
     let inline asBool (o: JsonValue): bool = unbox o
     let inline asInt (o: JsonValue): int = unbox o
     let inline asFloat (o: JsonValue): float = unbox o
@@ -346,6 +348,7 @@ let menuConfigDecoder : Decoder<MenuConfig> =
                 Error (path, BadOneOf errors)
 
 
+[<NoComparison>]
 type MarkdownPlugin =
     {
         Path : string
@@ -361,6 +364,7 @@ type MarkdownPlugin =
             }
         )
 
+[<NoComparison>]
 type PluginsConfig =
     {
         Markdown : MarkdownPlugin array
@@ -379,6 +383,7 @@ type PluginsConfig =
             Markdown = [||]
         }
 
+[<NoComparison; NoEquality>]
 type Config =
     {
         NpmURL : string option
@@ -430,6 +435,7 @@ type Config =
             }
         )
 
+[<NoComparison; NoEquality>]
 type Model =
     {
         Config : Config

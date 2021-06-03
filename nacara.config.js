@@ -1,5 +1,27 @@
-const standard = require('./dist/layouts/standard/Export').default;
-const mdMessage = require('./src/Nacara/js/utils').mdMessage;
+const standardLayouts = require("nacara-layout-standard").default;
+
+const mdMessage = (level) => {
+
+    return {
+        validate: function (params) {
+            return params.trim() === level;
+        },
+
+        render: function (tokens, idx) {
+            if (tokens[idx].nesting === 1) {
+                // opening tag
+                return `<article class="message is-${level}">
+                <div class="message-body">`;
+
+
+            } else {
+                // closing tag
+                return '</div>\n</article>\n';
+            }
+        }
+    }
+}
+
 const path = require('path');
 
 module.exports = {
@@ -7,6 +29,8 @@ module.exports = {
     url: "https://mangelmaxime.github.io",
     baseUrl: "/Nacara/",
     editUrl : "https://github.com/MangelMaxime/Nacara/edit/master/docsrc",
+    source: "docs",
+    output: "temp",
     title: "Nacara",
     debug: true,
     changelog: "CHANGELOG.md",
@@ -55,15 +79,15 @@ module.exports = {
     lightner: {
         backgroundColor: "#FAFAFA",
         textColor: "",
-        themeFile: "./paket-files/akamud/vscode-theme-onelight/themes/OneLight.json",
+        themeFile: "./lightner/themes/OneLight.json",
         grammars: [
-            "./paket-files/ionide/ionide-fsgrammar/grammar/fsharp.json",
-            "./paket-files/Microsoft/vscode/extensions/json/syntaxes/JSON.tmLanguage.json"
+            "./lightner/grammars/fsharp.json",
+            "./lightner/grammars/json.json"
         ]
     },
     layouts: {
-        default: standard.Default,
-        changelog: standard.Changelog
+        default: standardLayouts.Default,
+        changelog: standardLayouts.Changelog
     },
     plugins: {
         markdown: [

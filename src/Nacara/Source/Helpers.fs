@@ -32,7 +32,7 @@ let generateUrl (config : Types.Config) (pageContext : Types.PageContext) =
 let highlightCode (lightnerConfig : Map<string, CodeLightner.Config>) (text : string) =
     let codeBlockRegex =
         // Regex("""<pre\b[^>]*><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", RegexOptions.Multiline ||| RegexOptions.Singleline)
-        JS.RegExp.Create("""<pre\b(?!class="skip-code-lightner-grammar-not-found")><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", "gms")
+        JS.Constructors.RegExp.Create("""<pre\b(?!class="skip-code-lightner-grammar-not-found")><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", "gms")
 
     let rec apply (text : string) =
         promise {
@@ -88,7 +88,7 @@ module PageContext =
 
 module Helpers =
 
-    let markdown (_markdownString : string) (_plugins : Types.MarkdownPlugin array) : string = importMember "./js/utils.js"
+    let markdown (_markdownString : string) (_plugins : Types.MarkdownPlugin array) : string = importMember "./../js/utils.js"
 
     /// Resolves a path to prevent using location of target JS file
     /// Note the function is inline so `__dirname` will belong to the calling file

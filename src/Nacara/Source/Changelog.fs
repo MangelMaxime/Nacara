@@ -1,11 +1,11 @@
 [<RequireQualifiedAccess>]
-module Changelog
+module ChangelogParser
 
 open Fable.Core
 open System
 open System.Text.RegularExpressions
 
-[<Emit("return $0.split(/\\r\\n|\\r|\\n/)")>]
+[<Emit("$0.split(/\\r\\n|\\r|\\n/)")>]
 let splitLines (_text : string) : string array = jsNative
 
 [<AutoOpen>]
