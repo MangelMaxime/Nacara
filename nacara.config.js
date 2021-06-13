@@ -1,4 +1,4 @@
-const standardLayouts = require("nacara-layout-standard").default;
+const standardLayouts = require("nacara-layout-standard");
 
 const mdMessage = (level) => {
 
@@ -86,8 +86,8 @@ module.exports = {
         ]
     },
     layouts: {
-        default: standardLayouts.Default,
-        changelog: standardLayouts.Changelog
+        default: standardLayouts.standard,
+        changelog: standardLayouts.changelog
     },
     plugins: {
         markdown: [
@@ -125,13 +125,6 @@ module.exports = {
             {
                 path: path.join(__dirname, './src/Nacara/js/markdown-it-toc.js')
             }
-        ],
-        layout: [
-            // {
-            //     name: "table-of-content",
-            //     apply: standard.Default.
-            // }
         ]
-
     }
 };

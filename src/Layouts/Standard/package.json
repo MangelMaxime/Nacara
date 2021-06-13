@@ -2,7 +2,7 @@
     "name": "nacara-layout-standard",
     "version": "0.0.0",
     "description": "",
-    "main": "fableBuild/Export.js",
+    "main": "dist/bundle.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },

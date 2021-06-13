@@ -20,5 +20,5 @@
 // });
 
 require = require("esm")(module/*, options*/)
-var nacara = require('./fableBuild/Main.js');
+var nacara = require('./dist/bundle.js');
 nacara.start();
