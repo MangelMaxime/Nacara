@@ -26,12 +26,35 @@ open Fable.Core
 // Top module function are not mangled by Fable 3, so we can use them for export
 // This avoid a warning from rollup when using `exportDefault`
 
+type LayoutFunc = System.Func<Model, PageContext, JS.Promise<ReactElement>>
+
+[<NoComparison>]
+type LayoutExport =
+    {
+        RenderFunc : LayoutFunc
+        ScriptDependencies : string list
+        LayoutName : string
+    }
+
 let standard =
-    System.Func<Model, PageContext, JS.Promise<ReactElement>>(fun model pageContext ->
-        Layout.Standard.Default.toHtml model pageContext
-    )
+    {
+        RenderFunc =
+            System.Func<Model, PageContext, JS.Promise<ReactElement>>(fun model pageContext ->
+                Layout.Standard.Default.toHtml model pageContext
+            )
+        ScriptDependencies =
+            [
+                Node.Api.path.join(__SOURCE_DIRECTORY__, "scripts/menu.js")
+            ]
+        LayoutName = "nacara-standard"
+    }
 
 let changelog =
-    System.Func<Model, PageContext, JS.Promise<ReactElement>>(fun model pageContext ->
-        Layout.Standard.Changelog.toHtml model pageContext
-    )
+    {
+        RenderFunc =
+            System.Func<Model, PageContext, JS.Promise<ReactElement>>(fun model pageContext ->
+                Layout.Standard.Changelog.toHtml model pageContext
+            )
+        ScriptDependencies = [ ]
+        LayoutName = "nacara-changelog"
+    }

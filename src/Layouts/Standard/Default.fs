@@ -1,4 +1,5 @@
 namespace Layout.Standard
+open System.Text.RegularExpressions
 
 module Default =
 
@@ -8,23 +9,9 @@ module Default =
     open Fulma
     open Fable.FontAwesome
     open Types
+    open Feliz
+    open Feliz.Bulma
     open Fable.Core
-
-    let private renderTocContent (tocContent : string option) =
-        match tocContent with
-        | None ->
-            nothing
-
-        | Some tocContent ->
-            Column.column
-                [
-                    Column.Width (Screen.Desktop, Column.Is2)
-                    Column.Modifiers [ Modifier.IsHidden (Screen.Touch, true) ]
-                    Column.CustomClass "full-height-scrollable-content toc-column"
-                ]
-                [ div [ DangerouslySetInnerHTML { __html =  tocContent } ]
-                    [ ]
-                ]
 
     let private renderEditButton (config : Config) (pageContext : PageContext) =
         match config.EditUrl with
@@ -48,98 +35,6 @@ module Default =
 
         | None ->
             nothing
-
-    let private renderMaterialLikeControls (tocContent : string option) =
-        fragment [ ]
-            [
-                // Material like container for desktop
-                Text.div
-                    [
-                        CustomClass "material-like-container is-for-desktop"
-                        Modifiers [ Modifier.IsHidden (Screen.Touch, true ) ]
-                    ]
-                    [
-                        div [ Class "material-like-button scroll-to-top"]
-                            [
-                                Icon.icon [ Icon.Size IsMedium ]
-                                    [
-                                        Fa.i
-                                            [
-                                                Fa.Solid.AngleUp
-                                                Fa.Size Fa.FaLarge
-                                            ]
-                                            [ ]
-                                    ]
-                            ]
-                    ]
-
-                // Material like container for Touch screen
-                Text.div
-                    [
-                        CustomClass "material-like-container is-for-touch"
-                        Modifiers [ Modifier.IsHidden (Screen.Desktop, true ) ]
-                    ]
-                    [
-                        div [ Class "material-like-container-body" ]
-                            [
-                                Text.div
-                                    [
-                                        CustomClass "material-like-button toggle-toc"
-                                        Modifiers [ Modifier.IsHidden (Screen.All, tocContent.IsNone) ]
-                                    ]
-                                    [
-                                        Icon.icon [ Icon.Size IsMedium ]
-                                            [
-                                                Fa.i
-                                                    [
-                                                        Fa.Solid.EllipsisV
-                                                        Fa.Size Fa.FaLarge
-                                                    ]
-                                                    [ ]
-                                            ]
-                                        Text.div
-                                            [
-                                                CustomClass "material-like-button-label"
-                                            ]
-                                            [ str "Table of content" ]
-                                    ]
-
-                                div [ Class "material-like-button scroll-to-top"]
-                                    [
-                                        Icon.icon [ Icon.Size IsMedium ]
-                                            [
-                                                Fa.i
-                                                    [
-                                                        Fa.Solid.AngleUp
-                                                        Fa.Size Fa.FaLarge
-                                                    ]
-                                                    [ ]
-                                            ]
-                                        Text.div
-                                            [
-                                                CustomClass "material-like-button-label"
-                                            ]
-                                            [ str "Scroll to top" ]
-                                    ]
-                            ]
-
-                        Text.div
-                            [
-                                CustomClass "material-like-button close-open-button"
-                            ]
-                            [
-                                Icon.icon [ Icon.Size IsMedium ]
-                                    [
-                                        Fa.i
-                                            [
-                                                Fa.Solid.Plus
-                                                Fa.Size Fa.FaLarge
-                                            ]
-                                            [ ]
-                                    ]
-                            ]
-                    ]
-            ]
 
     let rec private renderBreadcrumbItem (model : Model) (menuItem : MenuItem) =
         match menuItem with
@@ -234,15 +129,9 @@ module Default =
                         [
                             a [ Class "menu-trigger" ]
                                 [
-                                    Icon.icon
-                                        [ ]
-                                        [
-                                            Fa.i
-                                                [
-                                                    Fa.Solid.Bars
-                                                ]
-                                                [ ]
-                                        ]
+                                    span [ ] [ ]
+                                    span [ ] [ ]
+                                    span [ ] [ ]
                                 ]
                         ]
 
@@ -262,7 +151,131 @@ module Default =
             None
 
 
-    let private renderPage (menu : ReactElement option) (breadcrumb : ReactElement option) (editButton : ReactElement) (tocContent : string option) (title : string) (pageContent : string) =
+    let private renderPage (model : Model) (pageContext : PageContext) (menu : ReactElement option) (breadcrumb : ReactElement option) (editButton : ReactElement) (tocContent : string option) (title : string) (pageContent : string) =
+        let menuList =
+            match model.Config.MenuConfig with
+            | Some menuConfig ->
+                menuConfig
+                |> List.collect (fun (category, menuItems) ->
+                    let rec menuItemToList (menuItems : MenuItem array) =
+                        menuItems
+                        |> Array.toList
+                        |> List.collect (fun menuItem ->
+                            match menuItem with
+                            | MenuItem pageId ->
+                                [ pageId ]
+
+                            | MenuList (label, items) ->
+                                menuItemToList items
+                        )
+
+                    (menuItemToList menuItems)
+                )
+
+            | None ->
+                [ ]
+
+        let currentPageId =
+            getFileId model.Config.Source pageContext
+
+        let currentPageIndexInTheMenu =
+            menuList
+            |> List.tryFindIndex (fun pageId ->
+                pageId = currentPageId
+            )
+            |> function
+            | Some pageIndex ->
+                pageIndex
+            | None ->
+                failwithf "Page %s not found in the menu" currentPageId
+
+        let previousButton =
+            let emptyPreviousButton =
+                // Empty button to keep the layout working
+                // It ensure that the "Next button" is on the right of the page
+                Bulma.button.button [
+                    prop.className "navigate-to-previous is-invisible"
+                ]
+
+            if currentPageIndexInTheMenu >= 1 then
+                let previousPageFieldId = menuList.[currentPageIndexInTheMenu - 1]
+                let previousPageContext = model.DocFiles.get previousPageFieldId
+
+                if isNull (box previousPageContext) then
+                    failwithf "Page %s not found in the list of pages" previousPageFieldId
+                else
+                    if previousPageContext.Attributes.ExcludeFromNavigation then
+                        emptyPreviousButton
+                    else
+
+                        Bulma.button.a [
+                            prop.className "navigate-to-previous"
+                            color.isPrimary
+                            button.isOutlined
+                            prop.href (generateUrl model.Config previousPageContext)
+
+                            prop.children [
+                                Bulma.icon [
+                                    Fa.i
+                                        [
+                                            Fa.Solid.ArrowLeft
+                                        ]
+                                        [ ]
+                                ]
+
+                                Bulma.text.span [
+                                    text.isUppercase
+
+                                    prop.text previousPageContext.Attributes.Title
+                                ]
+                            ]
+                        ]
+
+            else
+                emptyPreviousButton
+
+        let nextButton =
+            let emptyNextButton =
+                // Empty button to keep the layout working
+                Bulma.button.button [
+                    prop.className "navigate-to-next is-invisible"
+                ]
+
+            if currentPageIndexInTheMenu < menuList.Length - 1 then
+                let nextPageFieldId = menuList.[currentPageIndexInTheMenu + 1]
+                let nextPageContext = model.DocFiles.get nextPageFieldId
+
+                if isNull (box nextPageContext) then
+                    failwithf "Page %s not found in the list of pages" nextPageFieldId
+                else
+                    if nextPageContext.Attributes.ExcludeFromNavigation then
+                        emptyNextButton
+                    else
+                        Bulma.button.a [
+                            prop.className "navigate-to-next"
+                            color.isPrimary
+                            button.isOutlined
+                            prop.href (generateUrl model.Config nextPageContext)
+
+                            prop.children [
+                                Bulma.text.span [
+                                    text.isUppercase
+
+                                    prop.text nextPageContext.Attributes.Title
+                                ]
+
+                                Bulma.icon [
+                                    Fa.i
+                                        [
+                                            Fa.Solid.ArrowRight
+                                        ]
+                                        [ ]
+                                ]
+                            ]
+                        ]
+            else
+                emptyNextButton
+
         div [ ]
             [
                 ofOption breadcrumb
@@ -274,7 +287,7 @@ module Default =
                     [
                         Column.column
                             [
-                                Column.Width (Screen.Desktop, Column.Is2)
+                                Column.Width (Screen.Desktop, Column.Is3)
                                 Column.CustomClass "is-menu-column"
                                 Column.Modifiers
                                     [
@@ -289,21 +302,8 @@ module Default =
 
                         Column.column
                             [
-                                // Even if no TOC is found, we keep the main content size constant
-                                // Otherwise it feels "too wild" and also make a strange impression
-                                // when switching from one page to another
                                 Column.Width (Screen.Desktop, Column.Is8)
                                 Column.Width (Screen.Touch, Column.IsFull)
-                                Column.CustomClass "full-height-scrollable-content toc-scrollable-container is-main-content"
-                                Column.Props
-                                    [
-                                        Style
-                                            [
-                                                // We need to set ScrollBehavior via style so the polyfill can work
-                                                ScrollBehavior "smooth"
-                                                OverflowX OverflowOptions.Hidden
-                                            ]
-                                    ]
                             ]
                             [
                                 Section.section [ ]
@@ -321,97 +321,153 @@ module Default =
                                     ]
                                 div [ Class "navigation-container" ]
                                     [
-                                        Button.button
-                                            [
-                                                Button.CustomClass "navigate-to-previous"
-                                                Button.Color IsPrimary
-                                                Button.IsOutlined
-                                            ]
-                                            [
-                                                Icon.icon [ ]
-                                                    [
-                                                        Fa.i
-                                                            [
-                                                                Fa.Solid.ArrowLeft
-                                                            ]
-                                                            [ ]
-                                                    ]
 
-                                                Text.span
-                                                    [
-                                                        CustomClass "text"
-                                                        Modifiers [ Modifier.TextTransform TextTransform.UpperCase ]
-                                                    ]
-                                                    [ str "Previous" ]
-                                            ]
+                                        previousButton
 
-                                        Button.button
-                                            [
-                                                Button.CustomClass "navigate-to-next"
-                                                Button.Color IsPrimary
-                                                Button.IsOutlined
-                                            ]
-                                            [
-                                                Text.span
-                                                    [
-                                                        CustomClass "text"
-                                                        Modifiers [ Modifier.TextTransform TextTransform.UpperCase ]
-                                                    ]
-                                                    [ str "Next" ]
 
-                                                Icon.icon [ ]
-                                                    [
-                                                        Fa.i
-                                                            [
-                                                                Fa.Solid.ArrowRight
-                                                            ]
-                                                            [ ]
-                                                    ]
-                                            ]
+                                        // Button.button
+                                        //     [
+                                        //         Button.CustomClass "navigate-to-previous"
+                                        //         Button.Color IsPrimary
+                                        //         Button.IsOutlined
+                                        //     ]
+                                        //     [
+                                        //         Icon.icon [ ]
+                                        //             [
+                                        //                 Fa.i
+                                        //                     [
+                                        //                         Fa.Solid.ArrowLeft
+                                        //                     ]
+                                        //                     [ ]
+                                        //             ]
+
+                                        //         Text.span
+                                        //             [
+                                        //                 CustomClass "text"
+                                        //                 Modifiers [ Modifier.TextTransform TextTransform.UpperCase ]
+                                        //             ]
+                                        //             [ str "Previous" ]
+                                        //     ]
+
+                                        nextButton
+
+                                        // Button.button
+                                        //     [
+                                        //         Button.CustomClass "navigate-to-next"
+                                        //         Button.Color IsPrimary
+                                        //         Button.IsOutlined
+                                        //     ]
+                                        //     [
+                                        //         Text.span
+                                        //             [
+                                        //                 CustomClass "text"
+                                        //                 Modifiers [ Modifier.TextTransform TextTransform.UpperCase ]
+                                        //             ]
+                                        //             [ str "Next" ]
+
+                                        //         Icon.icon [ ]
+                                        //             [
+                                        //                 Fa.i
+                                        //                     [
+                                        //                         Fa.Solid.ArrowRight
+                                        //                     ]
+                                        //                     [ ]
+                                        //             ]
+                                        //     ]
                                     ]
                             ]
-
-                        renderTocContent tocContent
                     ]
-
-                renderMaterialLikeControls tocContent
 
             ]
 
-    let rec private renderMenuItem (model : Model) (menuItem : MenuItem) =
+    let renderTopLevelToc (section : TableOfContentParser.Section) =
+        Html.li [
+            Html.a [
+                prop.dangerouslySetInnerHTML section.Header.Title
+                prop.href section.Header.Link
+                prop.custom("data-toc-element", true)
+            ]
+
+            if not section.SubSections.IsEmpty then
+
+                Html.ul [
+                    prop.className "table-of-content"
+
+                    prop.children [
+                        for subSection in section.SubSections do
+                            Html.li [
+                                Html.a [
+                                    prop.dangerouslySetInnerHTML subSection.Title
+                                    prop.href subSection.Link
+                                    prop.custom("data-toc-element", true)
+                                ]
+                            ]
+                    ]
+                ]
+        ]
+
+    let renderMenuItem (model : Model) (pageContext : PageContext) (tableOfContent : TableOfContentParser.TableOfContent) pageId =
+
+        let pageInfo = model.DocFiles.get pageId
+
+        let currentPageId = getFileId model.Config.Source pageContext
+
+        let isCurrentPage = (currentPageId = pageId)
+
+        let hasTableOfContent =
+            isCurrentPage && not tableOfContent.IsEmpty
+
+        let tableOfContent =
+            if hasTableOfContent then
+                Html.ul [
+                    prop.className "table-of-content"
+
+                    prop.children [
+                        for tocElement in tableOfContent do
+                            renderTopLevelToc tocElement
+                    ]
+                ]
+
+            else
+                nothing
+
+        if box pageInfo <> null then
+            Html.li [
+                if hasTableOfContent then
+                    prop.className "has-table-of-content"
+
+                prop.children [
+                    Menu.Item.a [ Menu.Item.Props [ Data("menu-id", pageId) ]
+                                  generateUrl model.Config pageInfo
+                                  |> Menu.Item.Href
+                                  Menu.Item.IsActive isCurrentPage ]
+                        [
+                            str pageInfo.Attributes.Title
+                        ]
+
+                    tableOfContent
+                ]
+            ]
+
+        else
+            Log.error "Unable to find the file33: %s" pageId
+            nothing
+
+    let rec private renderMenu (model : Model) (pageContext : PageContext) (tableOfContent : TableOfContentParser.TableOfContent) (menuItem : MenuItem) =
         match menuItem with
         | MenuItem pageId ->
-            let pageInfo = model.DocFiles.get pageId
-
-            if box pageInfo <> null then
-                Menu.Item.li [ Menu.Item.Props [ Data("menu-id", pageId) ]
-                               generateUrl model.Config pageInfo
-                               |> Menu.Item.Href ]
-                    [ str pageInfo.Attributes.Title ]
-            
-            else
-                Log.error "Unable to find the file33: %s" pageId
-                nothing
+            renderMenuItem model pageContext tableOfContent pageId
 
         | MenuList (label, items) ->
             let subMenu =
                 items
                 |> Array.map (function
                     | MenuItem pageId ->
-                        let pageInfo = model.DocFiles.get pageId
+                        renderMenuItem model pageContext tableOfContent pageId
 
-                        if box pageInfo <> null then
-                            Menu.Item.li [ Menu.Item.Props [ Data("menu-id", pageId) ]
-                                           generateUrl model.Config pageInfo
-                                           |> Menu.Item.Href ]
-                                [ str pageInfo.Attributes.Title ]
-                        
-                        else
-                            Log.error "Unable to find the file4: %s" pageId
-                            nothing
                     | MenuList (label, x) ->
 
-                        renderMenuItem model (MenuList (label, x))
+                        renderMenu model pageContext tableOfContent (MenuList (label, x))
                         // Log.warn "Nacara only support only 2 level deep menus. The following menu is too deep:\n%A" label
                         // nothing
                 )
@@ -438,7 +494,7 @@ module Default =
                         ]
                 ]
 
-    let private generateMenu (model : Model) (pageContext : PageContext) =
+    let private generateMenu (model : Model) (pageContext : PageContext) (tableOfContent : TableOfContentParser.TableOfContent) =
         match model.Config.MenuConfig with
         | Some menuConfig ->
             menuConfig
@@ -448,16 +504,16 @@ module Default =
                         Menu.label [ ]
                             [ str category ]
                         menuItems
-                        |> Array.map (renderMenuItem model)
+                        |> Array.map (renderMenu model pageContext tableOfContent)
                         |> Array.toList
                         |> Menu.list [ ]
                     ]
 
             )
             |> fun content ->
-                div [ Class "menu-container full-height-scrollable-content" ]
+                div [ Class "menu-container" ]
                     [
-                        Menu.menu [ Props [ Style [ MarginTop "3.25rem" ] ] ]
+                        Menu.menu [ ]
                             content
                     ]
             |> Some
@@ -465,76 +521,36 @@ module Default =
         | None ->
             None
 
-    let addJavaScriptConfig (model : Model) (pageContext : PageContext) (pageContent : ReactElement) =
+    let private addMenuScript (content : ReactElement) =
         fragment [ ]
             [
-                pageContent
-                script
-                    [
-                        Type "text/javascript"
-                        DangerouslySetInnerHTML
-                            {
-                                __html = sprintf
-                                            """
-    nacara.pageId = '%s';
-                                            """
-                                            (getFileId model.Config.Source pageContext)
-                            }
-                    ]
-                    [ ]
-            ]
+                content
 
-    let private addTocScript (tocContent : string option) (pageContent : ReactElement) =
-        match tocContent with
-        | Some _ ->
-            let sourceCode =
-                // Directory.join Node.Api.__dirname "${entryDir}/scripts/toc.js"
-                // |> File.readSync
-                ""
-
-            fragment [ ]
-                [
-                    pageContent
-                    script [ Type "text/javascript"
-                             DangerouslySetInnerHTML { __html = sourceCode } ]
-                        [ ]
+                Html.script [
+                    prop.src "/static/nacara-standard/menu.js"
                 ]
-
-        | None ->
-            pageContent
-
-    let addScrollToTop (pageContent : ReactElement) =
-        let sourceCode =
-            // Directory.join Node.Api.__dirname "${entryDir}/scripts/scroll-to-top.js"
-            // |> File.readSync
-            ""
-
-        fragment [ ]
-            [
-                pageContent
-                script [ Type "text/javascript"
-                         DangerouslySetInnerHTML { __html = sourceCode } ]
-                    [ ]
             ]
+
 
 
     let toHtml (model : Model) (pageContext : PageContext) =
         promise {
-            let! (html, tocContent) =
+            let! pageContext =
                 pageContext
                 |> PageContext.processMarkdown model
-                |> Promise.bind Prelude.processTableOfContent
+                // |> Promise.bind Prelude.processTableOfContent
+
+            let tocInformation =
+                TableOfContentParser.parse pageContext
 
             return
-                renderPage
-                    (generateMenu model pageContext)
+                renderPage model pageContext
+                    (generateMenu model pageContext tocInformation)
                     (renderBreadcrumb model pageContext)
                     (renderEditButton model.Config pageContext)
-                    tocContent
+                    None
                     pageContext.Attributes.Title
-                    html
-                |> addJavaScriptConfig model pageContext
-                |> addTocScript tocContent
-                |> addScrollToTop
+                    pageContext.Content
+                |> addMenuScript
                 |> Prelude.basePage model pageContext.Attributes.Title
         }

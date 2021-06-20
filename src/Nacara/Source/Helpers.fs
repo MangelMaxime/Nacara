@@ -29,7 +29,7 @@ let generateUrl (config : Types.Config) (pageContext : Types.PageContext) =
         |> Directory.join config.BaseUrl
         |> File.changeExtension "html").Replace("\\", "/")
 
-let highlightCode (lightnerConfig : Map<string, CodeLightner.Config>) (text : string) =
+let highlightCode (lightnerConfig : JS.Map<string, CodeLightner.Config>) (text : string) =
     let codeBlockRegex =
         // Regex("""<pre\b[^>]*><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", RegexOptions.Multiline ||| RegexOptions.Singleline)
         JS.Constructors.RegExp.Create("""<pre\b(?!class="skip-code-lightner-grammar-not-found")><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", "gms")
@@ -48,12 +48,13 @@ let highlightCode (lightnerConfig : Map<string, CodeLightner.Config>) (text : st
                     // source code at `$` place.
                     |> (fun (str : string) -> str.Replace("$", "$$"))
 
-                match Map.tryFind lang lightnerConfig with
-                | Some config ->
-                    let! formattedText = CodeLightner.lighten config codeText
+                let grammarConfig = lightnerConfig.get lang
+
+                if not (isNull (box grammarConfig)) then
+                    let! formattedText = CodeLightner.lighten grammarConfig codeText
                     return! text.Replace(wholeText, formattedText)
                             |> apply
-                | None ->
+                else
                     Log.warnFn "No grammar found for language: `%s`" lang
                     let replacement =
                         wholeText.Replace("<pre", """<pre class="skip-code-lightner-grammar-not-found" """)
@@ -70,7 +71,7 @@ let highlightCode (lightnerConfig : Map<string, CodeLightner.Config>) (text : st
 
 module PageContext =
 
-    let processCodeHighlights (lightnerConfig : Map<string, CodeLightner.Config>) (pageContext : Types.PageContext) =
+    let processCodeHighlights (lightnerConfig : JS.Map<string, CodeLightner.Config>) (pageContext : Types.PageContext) =
         promise {
             let! highlightedText = highlightCode lightnerConfig pageContext.Content
             return

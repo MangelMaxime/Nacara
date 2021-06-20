@@ -93,6 +93,11 @@ module Extra =
                 ))
             )
 
+    type Node.Fs.IExports with
+        [<Emit("$0.copyFileSync($1...)")>]
+        member __.copyFileSync (src: string, dest : string, ?mode : int) =
+            jsNative
+
     module File =
         let changeExtension (extention : string) (path : string) =
             let extensionPos = path.LastIndexOf('.')

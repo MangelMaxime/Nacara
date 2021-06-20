@@ -35,6 +35,7 @@ module.exports = {
     debug: true,
     changelog: "CHANGELOG.md",
     version: "0.4.0",
+    serverPort: 8081,
     navbar: {
         showVersion: true,
         links: [
@@ -72,8 +73,17 @@ module.exports = {
             "index"
         ],
         API: [
-            "API/nacara-config-json",
-            "API/page-attributes"
+            "index copy",
+            {
+                "Getting Started": [
+                    "index copy 2"
+                ],
+                API: [
+                    "index copy 3",
+                    "API/page-attributes",
+                    "API/nacara-config-json",
+                ]
+            }
         ]
     },
     lightner: {
@@ -121,9 +131,6 @@ module.exports = {
             },
             {
                 path: path.join(__dirname, './src/Nacara/js/markdown-it-anchored.js')
-            },
-            {
-                path: path.join(__dirname, './src/Nacara/js/markdown-it-toc.js')
             }
         ]
     }

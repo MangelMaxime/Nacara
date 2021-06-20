@@ -16,6 +16,7 @@
     <Compile Include="../../Nacara/Source/Helpers.fs" />
     <Compile Include="Prelude.fs" />
     <Compile Include="ChangelogParser.fs" />
+    <Compile Include="TableOfContentParser.fs" />
     <Compile Include="Changelog.fs" />
     <Compile Include="Default.fs" />
     <Compile Include="Export.fs" />
@@ -28,6 +29,7 @@
     <PackageReference Include="Fable.Node" Version="1.2.0" />
     <PackageReference Include="Fable.Promise" Version="2.2.0" />
     <PackageReference Include="Fable.React" Version="7.4.0" />
+    <PackageReference Include="Feliz.Bulma" Version="2.15.0" />
     <PackageReference Include="Fulma" Version="2.10.1" />
     <PackageReference Include="Thoth.Json" Version="5.1.0" />
   </ItemGroup>

@@ -3,34 +3,19 @@ const setupMenuNavigation = () => {
      * Initialize the menu state
      */
 
-    // Set as active the menu for the current page
-    document
-        .querySelectorAll(`.menu [data-menu-id='${nacara.pageId}']`)
-        .forEach(function (menuItem) {
-            menuItem.classList.add("is-active")
-        });
-
     // Collapse menu-group which doesn't concerns the current page
     document
         .querySelectorAll(`.menu .menu-group`)
         .forEach(function (menuGroup) {
-            var parentChildren = Array.from(menuGroup.parentElement.children);
-            var subItems = parentChildren.find(function (child) {
-                return child.nodeName === "UL";
-            });
+            // A menu-group is expanded when one of it's element is tagged as `is-active`
+            // This takes care of nested menus
+            const isActiveMenu =
+                menuGroup.parentElement.querySelector(".is-active") !== null
 
-            var activeMenu =
-                Array.from(subItems.children)
-                    .find(function (child) {
-                        return child.firstChild.classList.contains("is-active")
-                    });
-
-            if (activeMenu === undefined) {
-                menuGroup.classList.remove("is-expanded");
-                subItems.style.display = "none";
-            } else {
+            if (isActiveMenu) {
                 menuGroup.classList.add("is-expanded");
-                subItems.style.display = "block";
+            } else {
+                menuGroup.classList.remove("is-expanded");
             }
         });
 
@@ -63,111 +48,12 @@ const setupMenuNavigation = () => {
             });
         });
 
-    /*
-     * Setup menu navigation via Next and Previous button
-     */
-
-    // Start the counter from -1, but the first menu item will be 0
-    let computedMaxRank = -1;
-
-    document
-        .querySelectorAll(`.menu [data-menu-id]`)
-        .forEach(function (menuItem) {
-            computedMaxRank++;
-            menuItem.setAttribute("data-menu-rank", computedMaxRank);
-        });
-
-    document
-        .querySelector(".navigate-to-previous")
-        .addEventListener("click", () => {
-            const currentMenuRank =
-                document
-                    .querySelector(`.menu [data-menu-id='${nacara.pageId}']`)
-                    .getAttribute("data-menu-rank");
-
-            const previousRank = parseInt(currentMenuRank) - 1;
-
-            if (previousRank >= 0) {
-                document
-                    .querySelector(`.menu [data-menu-rank='${previousRank}']`)
-                    .click();
-            }
-        });
-
-    document
-        .querySelector(".navigate-to-next")
-        .addEventListener("click", () => {
-            const currentMenuRank =
-                document
-                    .querySelector(`.menu [data-menu-id='${nacara.pageId}']`)
-                    .getAttribute("data-menu-rank")
-
-            const nextRank = parseInt(currentMenuRank) + 1;
-
-            if (nextRank <= computedMaxRank) {
-                document
-                    .querySelector(`.menu [data-menu-rank='${nextRank}']`)
-                    .click();
-            }
-        });
-
-    // IIFE function in order to not pollute the function scope
-    (() => {
-
-        // The menu is an optional element, if no menu found then hide the Next & Previous buttons
-        if (document.querySelector(".menu") === null) {
-            document.querySelector(".navigate-to-next").style.visibility = "hidden"
-            document.querySelector(".navigate-to-previous").style.visibility = "hidden"
-            return;
-        }
-
-        const currentMenuRank =
-            parseInt(
-                document
-                    .querySelector(`.menu [data-menu-id='${nacara.pageId}']`)
-                    .getAttribute("data-menu-rank")
-            );
-
-        // Initialize the text of the Previous button
-        if (currentMenuRank >= 1) {
-            const previousText =
-                document
-                    .querySelector(`.menu [data-menu-rank='${currentMenuRank - 1}']`)
-                    .textContent;
-
-            document
-                .querySelector(".navigate-to-previous .text")
-                .textContent = previousText;
-        }
-
-        // Initialize the text of the Next button
-        if (currentMenuRank < computedMaxRank) {
-            const previousText =
-                document
-                    .querySelector(`.menu [data-menu-rank='${currentMenuRank + 1}']`)
-                    .textContent;
-
-            document
-                .querySelector(".navigate-to-next .text")
-                .textContent = previousText;
-        }
-
-        // Hide the navigation button depending on the page rank
-        if (currentMenuRank == 0) {
-            document.querySelector(".navigate-to-previous").style.visibility = "hidden";
-        } else if (currentMenuRank == computedMaxRank) {
-            document.querySelector(".navigate-to-next").style.visibility = "visibile";
-        }
-    })();
 }
 
 
 window.addEventListener("DOMContentLoaded", () => {
 
-    if (document.querySelector(".menu") !== null
-            && document.querySelector(".navigate-to-previous") !== null
-            && document.querySelector(".navigate-to-next") !== null) {
-
+    if (document.querySelector(".menu") !== null) {
         setupMenuNavigation();
     }
 
@@ -209,6 +95,8 @@ window.addEventListener("DOMContentLoaded", () => {
                     .querySelector(".is-menu-column")
                     .classList
                     .toggle("force-show");
+
+                mobileMenuTrigger.classList.toggle("is-active");
         });
     }
 

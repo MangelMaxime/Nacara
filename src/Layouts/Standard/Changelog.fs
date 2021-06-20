@@ -10,6 +10,7 @@ module Changelog =
     open Fable.React.Props
     open Fable.Core.JsInterop
     open Thoth.Json
+    open Fable.Core
 
     let slugify (_s: string): string = importDefault "slugify"
 
@@ -54,7 +55,7 @@ module Changelog =
                 | ChangelogParser.Types.CategoryType.Unkown _ -> IsInfo
 
     let private renderCategoryBody
-        (lightnerConfig : Map<string, CodeLightner.Config>)
+        (lightnerConfig : JS.Map<string, CodeLightner.Config>)
         (category : ChangelogParser.Types.CategoryType)
         (body : ChangelogParser.Types.CategoryBody) =
 
@@ -160,9 +161,6 @@ module Changelog =
                                     [
                                         Column.Width (Screen.All, Column.Is8)
                                         Column.Offset (Screen.All, Column.Is2)
-                                        Column.CustomClass "full-height-scrollable-content"
-                                        Column.Props [ Style [ // We need to set ScrollBehavior via style so the polyfill can work
-                                                               ScrollBehavior "smooth" ] ]
                                     ]
                                     [
                                         Content.content [ ]

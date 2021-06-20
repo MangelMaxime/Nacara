@@ -8,24 +8,6 @@ open Types
 open Fable.Core
 open System.Text.RegularExpressions
 
-let processTableOfContent (pageContext : PageContext) =
-    promise {
-        let tocRegex = new Regex("""(<nav class="toc-container">.*<\/nav>)""")
-
-        let tocContent =
-            let result = tocRegex.Match(pageContext.Content)
-
-            if result.Success then
-                Some result.Value
-            else
-                None
-
-        let pageContent =
-            tocRegex.Replace(pageContext.Content, "")
-
-        return pageContent , tocContent
-    }
-
 [<NoComparison>]
 type LinkProps =
     {
@@ -254,20 +236,6 @@ let basePage (model : Model) (pageTitle : string) (content : ReactElement) =
                             Integrity "sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
                             CrossOrigin "anonymous"
                         ]
-                    script [ Src "https://polyfill.app/api/polyfill?features=scroll-behavior" ]
-                        [ ]
-                    script
-                        [
-                            Type "text/javascript"
-                            DangerouslySetInnerHTML
-                                {
-                                __html = sprintf
-                                    """
-var nacara = {};
-                                    """
-                                }
-                        ]
-                        [ ]
                     menuScript
                 ]
             body [ ]

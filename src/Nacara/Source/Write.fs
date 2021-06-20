@@ -30,6 +30,11 @@ let sassFile (model : Model, filePath : string) =
 
 let standard (model : Model, pageContext : PageContext) =
     promise {
+
+        Fable.Core.JS.console.log(pageContext.Path)
+        Fable.Core.JS.console.log(pageContext.Path |> Directory.moveUp)
+        Fable.Core.JS.console.log(pageContext.Path |> Directory.moveUp |> Directory.join model.Config.Output)
+
         let outputPath =
             pageContext.Path
             |> Directory.moveUp

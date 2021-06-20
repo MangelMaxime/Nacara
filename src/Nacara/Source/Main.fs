@@ -18,41 +18,41 @@ open System.Collections.Generic
 // importSideEffects "./../js/markdown-it-anchored.js"
 // importSideEffects "./../js/markdown-it-toc.js"
 
-let processCodeHighlights (lightnerConfig : Map<string, CodeLightner.Config>) (pageContext : PageContext) =
-    let codeBlockRegex =
-        // Regex("""<pre\b[^>]*><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", RegexOptions.Multiline ||| RegexOptions.Singleline)
-        JS.Constructors.RegExp.Create("""<pre\b[^>]*><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", "gms")
+// let processCodeHighlights (lightnerConfig : Map<string, CodeLightner.Config>) (pageContext : PageContext) =
+//     let codeBlockRegex =
+//         // Regex("""<pre\b[^>]*><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", RegexOptions.Multiline ||| RegexOptions.Singleline)
+//         JS.Constructors.RegExp.Create("""<pre\b[^>]*><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", "gms")
 
-    let rec apply (text : string) =
-        promise {
-            let m = codeBlockRegex.Match pageContext.Content
-            if m.Success then
-                let wholeText = m.Groups.[0].Value
-                let lang = m.Groups.[1].Value
-                let codeText =
-                    m.Groups.[2].Value
-                    |> Helpers.unEscapeHTML
-                    // Escape single `$` caracter otherwise vscode-textmaste inject
-                    // source code at `$` place.
-                    |> (fun str -> str.Replace("$", "$$"))
+//     let rec apply (text : string) =
+//         promise {
+//             let m = codeBlockRegex.Match pageContext.Content
+//             if m.Success then
+//                 let wholeText = m.Groups.[0].Value
+//                 let lang = m.Groups.[1].Value
+//                 let codeText =
+//                     m.Groups.[2].Value
+//                     |> Helpers.unEscapeHTML
+//                     // Escape single `$` caracter otherwise vscode-textmaste inject
+//                     // source code at `$` place.
+//                     |> (fun str -> str.Replace("$", "$$"))
 
-                match Map.tryFind lang lightnerConfig with
-                | Some config ->
-                    let! formattedText = CodeLightner.lighten config codeText
-                    return! text.Replace(wholeText, formattedText)
-                            |> apply
-                | None ->
-                    Log.warnFn "No grammar found for language: `%s`" lang
-                    return! pageContext.Content
-                            |> apply
-            else
-                return text
-        }
+//                 match Map.tryFind lang lightnerConfig with
+//                 | Some config ->
+//                     let! formattedText = CodeLightner.lighten config codeText
+//                     return! text.Replace(wholeText, formattedText)
+//                             |> apply
+//                 | None ->
+//                     Log.warnFn "No grammar found for language: `%s`" lang
+//                     return! pageContext.Content
+//                             |> apply
+//             else
+//                 return text
+//         }
 
-    promise {
-        let! processedContent = apply pageContext.Content
-        return { pageContext with Content = processedContent }
-    }
+//     promise {
+//         let! processedContent = apply pageContext.Content
+//         return { pageContext with Content = processedContent }
+//     }
 
 let cwd = Node.Api.``process``.cwd()
 
@@ -76,6 +76,7 @@ type Msg =
     | ProcessSass of string
     | ProcessMarkdownResult of Result<PageContext, string * string>
     | ProcessFailed of exn
+    | ProcessUnkownFile of string
     | WriteFileSuccess of string
     | WriteFileFailed of exn
     | ProgramExitFailed of exn
@@ -93,15 +94,16 @@ let processFile (path : string, model : Model) =
 
         | Ok pageAttributes ->
             match Map.tryFind pageAttributes.Layout model.Config.LayoutConfig with
-            | Some layoutFunc ->
+            | Some layoutInfo ->
                 let pageContext =
                     {
                         Path = path
                         Attributes = pageAttributes
                         Content = fm.body
+                        StaticRessources = layoutInfo.ScriptDependencies
                     }
 
-                let! layout = layoutFunc.Invoke(model, pageContext)
+                let! layout = layoutInfo.RenderFunc.Invoke(model, pageContext)
 
                 let result =
                     { pageContext with
@@ -159,7 +161,7 @@ let startFileWatcherIfNeeded (config : Config) =
     else
         None
 
-let init (config : Config, processQueue : string list, docFiles : JS.Map<string, PageContext>, lightnerCache : Map<string,CodeLightner.Config>) =
+let init (config : Config, processQueue : string list, docFiles : JS.Map<string, PageContext>, lightnerCache : JS.Map<string,CodeLightner.Config>) =
     let cmd =
         if config.IsWatch then
             Cmd.none
@@ -175,6 +177,7 @@ let init (config : Config, processQueue : string list, docFiles : JS.Map<string,
         IsDebug = config.IsDebug
         DocFiles = docFiles
         LightnerCache = lightnerCache
+        StaticRessources = [ ]
     }
     , cmd
 
@@ -202,10 +205,99 @@ let update (msg : Msg) (model : Model) =
             let pageId = getFileId model.Config.Source pageContext
             let newDocFiles = model.DocFiles.set(pageId, pageContext) // Map.add pageId pageContext model.DocFiles
 
-            let newModel = { model with DocFiles = newDocFiles }
+            let newStaticRessources =
+                List.except model.StaticRessources pageContext.StaticRessources
+
+            let staticRessourcesCmd =
+                if newStaticRessources.IsEmpty then
+                    Cmd.none
+                else
+                    newStaticRessources
+                    |> List.map (fun source ->
+                        let fileName =
+                            Node.Api.path.basename(source)
+
+                        let layoutName =
+                            match Map.tryFind pageContext.Attributes.Layout model.Config.LayoutConfig with
+                            | Some layoutInfo ->
+                                Some layoutInfo.LayoutName
+
+                            | None ->
+                                Log.errorFn "No layout '%s' found in your config file." pageContext.Attributes.Layout
+                                None
+
+                        match layoutName with
+                        | Some layoutName ->
+                            let destination =
+                                Node.Api.path.join(
+                                    model.WorkingDirectory,
+                                    model.Config.Output,
+                                    "static",
+                                    layoutName
+                                )
+
+                            Cmd.OfPromise.attempt
+                                (fun (source, destinationFolder, fileName) ->
+                                    promise {
+                                        do! Directory.create destinationFolder
+
+                                        let destinationFullPath =
+                                            Node.Api.path.join(destinationFolder, fileName)
+
+                                        Node.Api.fs.copyFileSync(source, destinationFullPath)
+                                    }
+                                )
+                                (source, destination, fileName)
+                                WriteFileFailed
+                        | None ->
+                            Cmd.none
+
+                    )
+                    |> Cmd.batch
+
+            let newModel =
+                { model with
+                    DocFiles = newDocFiles
+                    StaticRessources = model.StaticRessources @ newStaticRessources
+                }
 
             newModel
-            , Cmd.OfPromise.either Write.standard (newModel, pageContext) WriteFileSuccess WriteFileFailed
+            , Cmd.batch [
+                Cmd.OfPromise.either Write.standard (newModel, pageContext) WriteFileSuccess WriteFileFailed
+                staticRessourcesCmd
+            ]
+
+    // Copy unkown file by keeping the folder structure
+    | ProcessUnkownFile source ->
+        let sourcePath = Node.Api.path.dirname source
+        let fileName = Node.Api.path.basename source
+        let docFolder = Node.Api.path.join(model.WorkingDirectory, model.Config.Source)
+        let relativeSourcePath = Node.Api.path.relative(docFolder, sourcePath)
+
+        let destination =
+            Node.Api.path.join(
+                model.WorkingDirectory,
+                model.Config.Output,
+                relativeSourcePath
+            )
+
+        let cmd =
+            Cmd.OfPromise.attempt
+                (fun (source, destinationFolder, fileName) ->
+                    promise {
+                        do! Directory.create destinationFolder
+
+                        let destinationFullPath =
+                            Node.Api.path.join(destinationFolder, fileName)
+
+                        Node.Api.fs.copyFileSync(source, destinationFullPath)
+                    }
+                )
+                (source, destination, fileName)
+                WriteFileFailed
+
+        model
+        , cmd
 
     | WriteFileSuccess path ->
         Log.log "Write: %s" path
@@ -277,13 +369,16 @@ let fileWatcherSubscription (model : Model) =
                     | MarkdownFile ->
                         ProcessMarkdown path
                         |> dispatch
-                    | JavaScriptFile -> () // TODO: Refresh all the page using this file for post process
+                    // | JavaScriptFile -> () // TODO: Refresh all the page using this file for post process
                     | SassFile ->
                         ProcessSass path
                         |> dispatch
+                    | JavaScriptFile
                     | UnsupportedFile _ ->
-                        if model.IsDebug then
-                            Log.warn "Watcher has been triggered on an unsupported file: %s" path
+                        ProcessUnkownFile path
+                        |> dispatch
+                        // if model.IsDebug then
+                        //     Log.warn "Watcher has been triggered on an unsupported file: %s" path
                 | Chokidar.Events.Unlink
                 | Chokidar.Events.UnlinkDir
                 | Chokidar.Events.Ready
@@ -310,7 +405,9 @@ let tryBuildPageContext (path : string) =
         | Ok pageAttributes ->
             return Ok { Path = path
                         Attributes = pageAttributes
-                        Content = fm.body }
+                        Content = fm.body
+                        StaticRessources = [ ]
+                         }
     }
 
 let checkCliArgs (config: Config) =
@@ -394,37 +491,41 @@ let start () =
                 let lightnerCache =
                     match config.LightnerConfig with
                     | Some lightnerConfig ->
-                        lightnerConfig.GrammarFiles
-                        |> List.map (fun filePath ->
-                            if File.existSync filePath then
-                                let grammarText = File.readSync filePath
-                                match Decode.fromString (Decode.field "scopeName" Decode.string) grammarText with
-                                | Ok scopeName ->
-                                    Some (scopeName, filePath)
-                                | Error msg ->
-                                    Log.error "Unable to find `scopeName` in `%s`.\Sub decoder error:\n%s" filePath msg
+                        let lightnerConfig =
+                            lightnerConfig.GrammarFiles
+                            |> List.map (fun filePath ->
+                                if File.existSync filePath then
+                                    let grammarText = File.readSync filePath
+                                    match Decode.fromString (Decode.field "scopeName" Decode.string) grammarText with
+                                    | Ok scopeName ->
+                                        Some (scopeName, filePath)
+                                    | Error msg ->
+                                        Log.error "Unable to find `scopeName` in `%s`.\Sub decoder error:\n%s" filePath msg
+                                        None
+                                else
+                                    Log.error "File not found: %s" filePath
                                     None
-                            else
-                                Log.error "File not found: %s" filePath
-                                None
-                        )
-                        |> List.filter Option.isSome
-                        |> List.map (function
-                            | Some (scopeName, grammarPath) ->
-                                let config =
-                                    jsOptions<CodeLightner.Config>(fun o ->
-                                        o.backgroundColor <- lightnerConfig.BackgroundColor
-                                        o.textColor <- lightnerConfig.TextColor
-                                        o.themeFile <- lightnerConfig.ThemeFile
-                                        o.scopeName <- scopeName
-                                        o.grammarFiles <- [| Directory.join cwd grammarPath |]
-                                    )
-                                scopeName.Split('.').[1], config
-                            | None -> failwith "Should not happen, we filtered the list before"
-                        )
-                        |> Map.ofList
+                            )
+                            |> List.filter Option.isSome
+                            |> List.map (function
+                                | Some (scopeName, grammarPath) ->
+                                    let config =
+                                        jsOptions<CodeLightner.Config>(fun o ->
+                                            o.backgroundColor <- lightnerConfig.BackgroundColor
+                                            o.textColor <- lightnerConfig.TextColor
+                                            o.themeFile <- lightnerConfig.ThemeFile
+                                            o.scopeName <- scopeName
+                                            o.grammarFiles <- [| Directory.join cwd grammarPath |]
+                                        )
+                                    scopeName.Split('.').[1], config
+                                | None -> failwith "Should not happen, we filtered the list before"
+                            )
+                            |> List.toArray
+
+                        JS.Constructors.Map.Create(lightnerConfig)
+
                     | None ->
-                        Map.empty
+                        JS.Constructors.Map.Create()
 
                 let processQueue =
                     if config.IsWatch then

@@ -1,50 +1,12 @@
 @import './components/changelog.scss';
 @import './components/textual-steps.scss';
-@import './components/toc.scss';
 
-$material-like-button-background-color: $primary !default;
-$material-like-button-color: $white !default;
-$material-like-button-label-background-color: lighten($primary, 10%);
-$material-like-button-shadow: 0 3px 5px 0 #666 !default;
-$material-like-button-hover-shadow: 0 3px 10px 0 #666;
-
+// Remove botton margin of the name of the project in the navbar otherwise a the navbar is distorded
 .navbar-item.title.is-4 {
     margin-bottom: 0;
 }
 
-html {
-    &.has-navbar-fixed-top {
-        padding-top: 0;
-
-        body {
-            padding-top: 0;
-            margin-top: $navbar-height;
-        }
-    }
-}
-
-body {
-    height: calc(100vh - #{$navbar-height});
-    min-height: calc(100vh - #{$navbar-height});
-    overflow: hidden;
-
-    .full-height-scrollable-content {
-        height: calc(100vh - #{$navbar-height});
-        min-height: calc(100vh - #{$navbar-height});
-        overflow-y: auto;
-    }
-}
-
-@include touch {
-    body {
-        .full-height-scrollable-content {
-            height: calc(100vh - #{$navbar-height} * 2);
-            min-height: calc(100vh - #{$navbar-height} * 2);
-            overflow-y: auto;
-        }
-    }
-}
-
+// Collapsable / Expandable menu
 .menu-group {
     .icon {
         float: right;
@@ -114,126 +76,23 @@ h2, h3, h4, h5, h6  {
     }
 }
 
+// Make sure that when jumping to an anchor, that anchor is displayed just below the navbar and visible
 
-.material-like-container {
-    display: flex;
-    flex-direction: column;
-    height: auto;
-    opacity: 1;
-    outline: 0;
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-    transition: bottom .2s,opacity .2s;
-    user-select: none;
-    width: 56px;
-    z-index: 500;
-
-    &.hide {
-        bottom: -56px;
-        opacity: 0;
-    }
-
-    /**
-        fade_in & fade_out animation are used to animate the material like menu
-        We use the opacity to make the appearance/disappearance of the menu smoother
-        We use the transform property so when the menu is collapse the user can't click on it
-
-        Fix for https://github.com/MangelMaxime/Nacara/issues/21
-    */
-    @keyframes fade_in {
-        0% {
-            opacity: 0;
-            transform: scale(1);
-        }
-
-        100% {
-            opacity: 1;
-        }
-    }
-
-    @keyframes fade_out {
-        0% {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        // Keep the scale to 1 until the last 'second'
-        // This avoid the user to see the element shrink
-        99% {
-            transform: scale(1);
-        }
-
-        100% {
-            opacity: 0;
-            transform: scale(0);
-        }
-    }
-
-    .material-like-container-body {
-        opacity: 0;
-        transform: scale(0);
-        margin-bottom: 1rem;
-        animation: fade_out .2s;
-
-        &.show {
-            opacity: 1;
-            transform: scale(1);
-            animation: fade_in .2s;
-        }
-    }
-
-    .material-like-button {
-        width: 4rem;
-        height: 4rem;
-        cursor: pointer;
-        border-radius: 50%;
-        background-color: $material-like-button-background-color;
-        color: $material-like-button-color;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: $material-like-button-shadow;
-
-        &.close-open-button {
-            .icon {
-                transition: all .2s ease-in-out;
-            }
-
-            &.is-open {
-                .icon {
-                    transform: rotate(225deg);
-                }
-            }
-        }
-
-        &:not(:last-child) {
-            margin-bottom: 1rem;
-        }
-
-        &:hover {
-            transition: all .1s ease-in-out;
-            transform: scale(1.05);
-            box-shadow: 0 3px 10px 0 #666;
-
-            .material-like-button-label {
-                box-shadow: $material-like-button-hover-shadow;
-            }
-        }
-    }
-
-    .material-like-button-label {
-        position: absolute;
-        right: 5rem;
-        white-space: nowrap;
-        padding: .5rem;
-        border-radius: 5px;
-        background-color: $material-like-button-background-color;
-        color: $material-like-button-color;
-        box-shadow: $material-like-button-shadow;
+// On desktop and above we only have the navbar to take into account
+@include desktop {
+    .anchor {
+        padding: $navbar-height 0 0;
     }
 }
 
+// On touch screen we need to take into account the navbar and the breadcumb
+@include touch {
+    .anchor {
+        padding: #{$navbar-height * 2} 0 0;
+    }
+}
+
+// Container used for the Next / Previous page buttons
 .navigation-container {
     padding: 0 2rem 1rem;
     display: flex;
@@ -260,6 +119,8 @@ h2, h3, h4, h5, h6  {
         align-items: center;
         height: $navbar-height;
         background: $white-ter;
+        position: sticky;
+        top: $navbar-height;
 
         .menu-trigger {
             .icon {
@@ -281,6 +142,32 @@ h2, h3, h4, h5, h6  {
     }
 }
 
+// Ensure mininal size of the doc content
+// This allows to not have the 'Previous' & 'Next' button in the middle of the screen
+// when their are not a lot of content on the page
+.is-main-content > .section {
+    min-height: calc(
+        100vh - 7.5em
+    ); // 7.5em = 3em (section margin top) - 3em (section margin bottom) - 1.5em (to not stick too low)
+}
+
+.menu-container {
+    // Make the menu container "static" and always displayed at the same place
+    // The menu container has its own scrollbar if needed
+    // 3.25rem is the navbar height but it is not yet available at this point of the SCSS compilation
+    position: sticky;
+    top: $navbar-height;
+    // margin: 3.25rem 0 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    height: calc(100vh - #{$navbar-height});
+
+    .menu {
+        margin-top: $navbar-height;
+        border-right: 1px solid #e0e0e0;
+        padding-right: 1rem;
+    }
+}
 
 .column.is-menu-column {
     &.force-show {
@@ -292,10 +179,50 @@ h2, h3, h4, h5, h6  {
             left: 0;
             background: $white-bis;
             width: 100%;
-            height: 100%;
             padding-left: 2rem;
             z-index: 100;
-
+            margin-top: $navbar-height;
         }
+    }
+}
+
+// Customize the menu to have a better display and also support TOC in it
+.menu {
+    .menu-label, a {
+        font-weight: $weight-semibold;
+    }
+
+    .has-table-of-content {
+        background-color: $primary-light;
+        border-radius: $menu-item-radius;
+
+        a.is-active {
+            border-radius: $menu-item-radius 0 0;
+        }
+    }
+
+    .table-of-content {
+        border-left: unset;
+        margin: 0 $size-small $size-small;
+
+        a {
+            color: $grey-dark;
+            font-size: 0.825rem;
+
+            &:hover {
+                color: $primary;
+            }
+        }
+    }
+
+}
+
+.menu-trigger {
+    @include hamburger($navbar-height);
+}
+
+.breadcrumb {
+    li {
+        height: $navbar-height;
     }
 }
