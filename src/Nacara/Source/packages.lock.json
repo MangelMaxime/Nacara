@@ -99,6 +99,16 @@
           "Fable.React": "5.1.0"
         }
       },
+      "Glutinum.Chalk": {
+        "type": "Direct",
+        "requested": "[0.1.0-alpha-001, )",
+        "resolved": "0.1.0-alpha-001",
+        "contentHash": "DKac1OEY0c/RNYDiN+n0l7swDoyQpexb+Bm+Yd8nKpy5aFqHLkpQKiovb258ptOoGqCEcrta4xHCJjTCyXwoPg==",
+        "dependencies": {
+          "FSharp.Core": "5.0.0",
+          "Fable.Core": "3.2.5"
+        }
+      },
       "NETStandard.Library": {
         "type": "Direct",
         "requested": "[2.0.3, )",

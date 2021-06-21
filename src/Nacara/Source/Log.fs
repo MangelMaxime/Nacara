@@ -1,8 +1,7 @@
 module Log
 
 open Fable.Core
-
-let private chalk = Chalk.chalk
+open Glutinum.Chalk
 
 let private _log x = JS.console.log x
 let private _warn x = JS.console.warn x

@@ -8,7 +8,6 @@
     <Compile Include="../../Libs/LiveServer.fs" />
     <Compile Include="../../Libs/Chokidar.fs" />
     <Compile Include="../../Libs/Sass.fs" />
-    <Compile Include="../../Libs/Chalk.fs" />
     <Compile Include="../../Libs/CodeLightner.fs" />
     <Compile Include="../../Nacara/Source/Log.fs" />
     <Compile Include="../../Nacara/Source/Node.Extra.fs" />
@@ -31,6 +30,7 @@
     <PackageReference Include="Fable.React" Version="7.4.0" />
     <PackageReference Include="Feliz.Bulma" Version="2.15.0" />
     <PackageReference Include="Fulma" Version="2.10.1" />
+    <PackageReference Include="Glutinum.Chalk" Version="0.1.0-alpha-001" />
     <PackageReference Include="Thoth.Json" Version="5.1.0" />
   </ItemGroup>
 </Project>
