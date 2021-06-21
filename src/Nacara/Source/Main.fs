@@ -203,6 +203,35 @@ let update (msg : Msg) (model : Model) =
 
         | Ok pageContext ->
             let pageId = getFileId model.Config.Source pageContext
+            let oldPageContext =
+                model.DocFiles.get(pageId)
+
+            let computeCmdForcingReEvaluatioOfKnownPages =
+                lazy (
+                    model.DocFiles.entries ()
+                    |> Seq.map (fun (currentPageId, currentPageContext) ->
+                        // Don't recompute the page which trigger the recompute
+                        if currentPageId = pageId then
+                            Cmd.none
+                        else
+                            Cmd.ofMsg (ProcessMarkdown currentPageContext.Path)
+                    )
+                    |> Seq.toList
+                    |> Cmd.batch
+                )
+
+            let recomputeCmd =
+                if isNull (box oldPageContext) then
+                    computeCmdForcingReEvaluatioOfKnownPages.Value
+                else
+                    // If the page attributes didn't change do nothing
+                    if oldPageContext.Attributes = pageContext.Attributes then
+                        Cmd.none
+                    // If the page attributes changed recompute all the page
+                    // This is needed to ensure the element using attributes of the pages are up to date every where
+                    else
+                        computeCmdForcingReEvaluatioOfKnownPages.Value
+
             let newDocFiles = model.DocFiles.set(pageId, pageContext) // Map.add pageId pageContext model.DocFiles
 
             let newStaticRessources =
@@ -265,6 +294,7 @@ let update (msg : Msg) (model : Model) =
             , Cmd.batch [
                 Cmd.OfPromise.either Write.standard (newModel, pageContext) WriteFileSuccess WriteFileFailed
                 staticRessourcesCmd
+                recomputeCmd
             ]
 
     // Copy unkown file by keeping the folder structure
