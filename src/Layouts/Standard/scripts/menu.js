@@ -7,6 +7,13 @@ const setupMenuNavigation = () => {
     document
         .querySelectorAll(`.menu .menu-group`)
         .forEach(function (menuGroup) {
+            var parentChildren = Array.from(menuGroup.parentElement.children);
+
+            var subItems =
+                parentChildren.find(function (child) {
+                    return child.nodeName === "UL";
+                });
+
             // A menu-group is expanded when one of it's element is tagged as `is-active`
             // This takes care of nested menus
             const isActiveMenu =
@@ -14,8 +21,10 @@ const setupMenuNavigation = () => {
 
             if (isActiveMenu) {
                 menuGroup.classList.add("is-expanded");
+                subItems.style.display = "block";
             } else {
                 menuGroup.classList.remove("is-expanded");
+                subItems.style.display = "none";
             }
         });
 
@@ -50,12 +59,7 @@ const setupMenuNavigation = () => {
 
 }
 
-
-window.addEventListener("DOMContentLoaded", () => {
-
-    if (document.querySelector(".menu") !== null) {
-        setupMenuNavigation();
-    }
+const setupNavbarBurger = () => {
 
     /*
      * Setup menu burger behaviour
@@ -86,6 +90,10 @@ window.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+}
+
+const setupMobileMenu = () => {
+
     const mobileMenuTrigger = document.querySelector(".mobile-menu .menu-trigger");
 
     if (mobileMenuTrigger !== null) {
@@ -98,6 +106,17 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 mobileMenuTrigger.classList.toggle("is-active");
         });
+    }
+
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+
+    setupNavbarBurger();
+    setupMobileMenu();
+
+    if (document.querySelector(".menu") !== null) {
+        setupMenuNavigation();
     }
 
 });
