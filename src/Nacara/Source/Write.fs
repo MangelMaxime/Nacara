@@ -1,10 +1,7 @@
 module Write
 
 open Types
-open System
 open Fable.Core.JsInterop
-open Fable.React
-open Fable.React.Props
 open Fulma
 
 let sassFile (model : Model, filePath : string) =
@@ -40,22 +37,3 @@ let standard (model : Model, pageContext : PageContext) =
         do! File.write outputPath pageContext.Content
         return pageContext.Path
     }
-
-// let changelog (model : Model, changelog : ChangelogParser.Types.Changelog, path : string) =
-//     promise {
-//         let outputPath =
-//             path.ToLower()
-//             |> Directory.join model.Config.Output
-//             |> Directory.join model.WorkingDirectory
-//             |> File.changeExtension "html"
-
-//         let html =
-//             // changelog
-//             // |> Templates.Centered.Changelog.toHtml model
-
-//             nothing
-//             |> Helpers.parseReactStatic
-
-//         do! File.write outputPath html
-//         return path
-//     }
