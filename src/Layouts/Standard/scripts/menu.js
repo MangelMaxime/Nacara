@@ -110,6 +110,43 @@ const setupMobileMenu = () => {
 
 }
 
+// Setup the copy code button for snippets
+const setupCopyCode = () => {
+    const snippetElements = Array.from(document.querySelectorAll("pre > code"));
+
+    console.log(snippetElements)
+
+    snippetElements
+        .forEach(codeElement => {
+            const copyButton = document.createElement("button");
+            copyButton.innerText = "Copy";
+            copyButton.classList.add("button");
+            copyButton.classList.add("is-primary");
+            copyButton.classList.add("is-copy-button");
+
+            const codeText = codeElement.innerText;
+
+            copyButton.addEventListener("click", () => {
+                // Copy the code into the clipboard
+                const $input = document.createElement("textarea");
+                document.body.appendChild($input);
+                $input.value = codeText;
+                $input.select();
+                document.execCommand("copy");
+                $input.remove();
+
+                // Notify the user
+                copyButton.innerText = "Copied";
+                // Revert the button text
+                window.setTimeout(() => {
+                    copyButton.innerText = "Copy";
+                }, 1000)
+            })
+
+            codeElement.appendChild(copyButton);
+        });
+}
+
 window.addEventListener("DOMContentLoaded", () => {
 
     setupNavbarBurger();
@@ -118,5 +155,7 @@ window.addEventListener("DOMContentLoaded", () => {
     if (document.querySelector(".menu") !== null) {
         setupMenuNavigation();
     }
+
+    setupCopyCode();
 
 });

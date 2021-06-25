@@ -226,3 +226,16 @@ h2, h3, h4, h5, h6  {
         height: $navbar-height;
     }
 }
+
+// Style relative to the snippet and copy button
+pre {
+    position: relative; // Make the pre relative so the copy button and positionned themself relative to it
+}
+
+button {
+    &.is-copy-button {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+    }
+}
