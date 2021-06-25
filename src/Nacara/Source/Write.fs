@@ -6,10 +6,16 @@ open Fulma
 
 let sassFile (model : Model, filePath : string) =
     promise {
+        let outputStyle =
+            if model.Config.IsWatch then
+                Sass.OutputStyle.Expanded
+            else
+                Sass.OutputStyle.Compressed
+
         let sassOption =
             jsOptions<Sass.Options>(fun o ->
                 o.file <- filePath
-                o.outputStyle <- Sass.OutputStyle.Expanded
+                o.outputStyle <- outputStyle
             )
 
         let sassResult = Sass.sass.renderSync sassOption
