@@ -10,49 +10,49 @@ We are working on improving the documentation in order to make it easier to read
 
 You can use the file `nacara.json` in order to configure most of Nacara behaviour.
 
-### Mandatory fields
+## Mandatory fields
 
-#### `url` - [string]
+### `url` - [string]
 
 This is the protocol and host part of your website URL.
 
 For the website `https://mangelmaxime.github.io/Nacara/`, it is `https://mangelmaxime.github.io`
 
-#### `baseUrl` - [string]
+### `baseUrl` - [string]
 
 This is the path after the host part of your website URL.
 
 For the website `https://mangelmaxime.github.io/Nacara/`, it is `/Nacara/`. If you have no path you can set it to `/`.
 
-#### `version` - [string]
+### `version` - [string]
 
 This is the version of the website. It's used in order to show the version in the navbar if `navbar.showVersion` is `true`. It will also be used in order to handle versionning of the documentation.
 
-#### `title` - [string]
+### `title` - [string]
 
 Title for your website.
 
 It's shown in the navbar and in the `title` tag of your page.
 
-### Optional fields
+## Optional fields
 
-#### `source` - [string]
+### `source` - [string]
 
 Relative path to the folder used as source.
 
 The default value is `docsrc`.
 
-#### `output` - [string]
+### `output` - [string]
 
 Relative path to the output folder.
 
 The default value is `docs`.
 
-#### `changelog` - [string]
+### `changelog` - [string]
 
 Relative path to the file used as a changelog. If you set this value, the changelog will be parsed and you will be able to accessible at the root your website.
 
-#### `navbar` - [object]
+### `navbar` - [object]
 
 This property allow you to control the navbar component of your website.
 
@@ -84,7 +84,7 @@ This property allow you to control the navbar component of your website.
 
             If `true`, then clicking on the link will open a new tab in the browser
 
-#### `menu` - [object]
+### `menu` - [object]
 
 This property is used to configure the menu.
 
@@ -117,7 +117,7 @@ Every property `"page-id"` means you need to specify the `id` of the page you wa
 }
 ```
 
-#### `lightner` - [object]
+### `lightner` - [object]
 
 This property is used to configure [Code-Lightner](https://github.com/MangelMaxime/Code-Lightner).
 
