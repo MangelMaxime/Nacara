@@ -86,24 +86,26 @@ let processFile (path : string, model : Model) =
         let! fileContent = File.read path
         let fm = FrontMatter.fm.Invoke(fileContent)
 
-        match Decode.fromValue "$" PageAttributes.Decoder fm.attributes with
+        let layoutDecoder =
+            Decode.field "layout" Decode.string
+
+        match Decode.fromValue "$" layoutDecoder fm.attributes with
         | Error msg ->
             let errorMsg =
                 sprintf "The attributes of %s are invalid.\n%s" path msg
             return Error (path, errorMsg)
 
-        | Ok pageAttributes ->
-            match Map.tryFind pageAttributes.Layout model.Config.LayoutConfig with
-            | Some layoutInfo ->
+        | Ok layoutName ->
+            match Map.tryFind layoutName model.Config.LayoutConfig with
+            | Some layoutFunc ->
                 let pageContext =
                     {
                         Path = path
-                        Attributes = pageAttributes
                         Content = fm.body
-                        StaticRessources = layoutInfo.ScriptDependencies
+                        FrontMatter = fm.attributes
                     }
 
-                let! layout = layoutInfo.RenderFunc.Invoke(model, pageContext)
+                let! layout = layoutFunc.Invoke(model, pageContext)
 
                 let result =
                     { pageContext with
@@ -115,7 +117,7 @@ let processFile (path : string, model : Model) =
 
             | None ->
                 let errorMsg =
-                    sprintf "No layout '%s' found in your config file." pageAttributes.Layout
+                    sprintf "No layout '%s' found in your config file." layoutName
                 return Error (path, errorMsg)
     }
 
@@ -162,11 +164,40 @@ let startFileWatcherIfNeeded (config : Config) =
         None
 
 let init (config : Config, processQueue : string list, docFiles : JS.Map<string, PageContext>, lightnerCache : JS.Map<string,CodeLightner.Config>) =
-    let cmd =
+    let buildCmd =
         if config.IsWatch then
             Cmd.none
         else
             Cmd.ofMsg ProcessBuildMode
+
+    let copyInternalRessources =
+        let destination =
+            Node.Api.path.join(
+                cwd,
+                config.Output,
+                "static",
+                "nacara_internals"
+            )
+
+        let source =
+            Node.Api.path.join(
+                __SOURCE_DIRECTORY__,
+                "./../../Layouts/Standard/scripts/menu.js"
+            )
+
+        Cmd.OfPromise.attempt
+            (fun (source, destinationFolder, fileName) ->
+                promise {
+                    do! Directory.create destinationFolder
+
+                    let destinationFullPath =
+                        Node.Api.path.join(destinationFolder, fileName)
+
+                    Node.Api.fs.copyFileSync(source, destinationFullPath)
+                }
+            )
+            (source, destination, "menu.js")
+            WriteFileFailed
 
     {
         ProcessQueue = processQueue
@@ -177,9 +208,11 @@ let init (config : Config, processQueue : string list, docFiles : JS.Map<string,
         IsDebug = config.IsDebug
         DocFiles = docFiles
         LightnerCache = lightnerCache
-        StaticRessources = [ ]
     }
-    , cmd
+    , Cmd.batch [
+        buildCmd
+        copyInternalRessources
+    ]
 
 let update (msg : Msg) (model : Model) =
     match msg with
@@ -225,75 +258,73 @@ let update (msg : Msg) (model : Model) =
                     computeCmdForcingReEvaluatioOfKnownPages.Value
                 else
                     // If the page attributes didn't change do nothing
-                    if oldPageContext.Attributes = pageContext.Attributes then
+                    // if oldPageContext = pageContext then
                         Cmd.none
                     // If the page attributes changed recompute all the page
                     // This is needed to ensure the element using attributes of the pages are up to date every where
-                    else
-                        computeCmdForcingReEvaluatioOfKnownPages.Value
+                    // else
+                    //     computeCmdForcingReEvaluatioOfKnownPages.Value
 
             let newDocFiles = model.DocFiles.set(pageId, pageContext) // Map.add pageId pageContext model.DocFiles
 
-            let newStaticRessources =
-                List.except model.StaticRessources pageContext.StaticRessources
+            // let newStaticRessources =
+            //     List.except model.StaticRessources pageContext.StaticRessources
 
-            let staticRessourcesCmd =
-                if newStaticRessources.IsEmpty then
-                    Cmd.none
-                else
-                    newStaticRessources
-                    |> List.map (fun source ->
-                        let fileName =
-                            Node.Api.path.basename(source)
+            // let staticRessourcesCmd =
+            //     if newStaticRessources.IsEmpty then
+            //         Cmd.none
+            //     else
+            //         newStaticRessources
+            //         |> List.map (fun source ->
+            //             // let fileName =
+            //             //     Node.Api.path.basename(source)
 
-                        let layoutName =
-                            match Map.tryFind pageContext.Attributes.Layout model.Config.LayoutConfig with
-                            | Some layoutInfo ->
-                                Some layoutInfo.LayoutName
+            //             // let layoutName =
+            //             //     match Map.tryFind pageContext.Attributes.Layout model.Config.LayoutConfig with
+            //             //     | Some layoutInfo ->
+            //             //         Some layoutInfo.LayoutName
 
-                            | None ->
-                                Log.errorFn "No layout '%s' found in your config file." pageContext.Attributes.Layout
-                                None
+            //             //     | None ->
+            //             //         Log.errorFn "No layout '%s' found in your config file." pageContext.Attributes.Layout
+            //             //         None
 
-                        match layoutName with
-                        | Some layoutName ->
-                            let destination =
-                                Node.Api.path.join(
-                                    model.WorkingDirectory,
-                                    model.Config.Output,
-                                    "static",
-                                    layoutName
-                                )
+            //             // match layoutName with
+            //             // | Some layoutName ->
+            //             //     let destination =
+            //             //         Node.Api.path.join(
+            //             //             model.WorkingDirectory,
+            //             //             model.Config.Output,
+            //             //             "static",
+            //             //             layoutName
+            //             //         )
 
-                            Cmd.OfPromise.attempt
-                                (fun (source, destinationFolder, fileName) ->
-                                    promise {
-                                        do! Directory.create destinationFolder
+            //             //     Cmd.OfPromise.attempt
+            //             //         (fun (source, destinationFolder, fileName) ->
+            //             //             promise {
+            //             //                 do! Directory.create destinationFolder
 
-                                        let destinationFullPath =
-                                            Node.Api.path.join(destinationFolder, fileName)
+            //             //                 let destinationFullPath =
+            //             //                     Node.Api.path.join(destinationFolder, fileName)
 
-                                        Node.Api.fs.copyFileSync(source, destinationFullPath)
-                                    }
-                                )
-                                (source, destination, fileName)
-                                WriteFileFailed
-                        | None ->
-                            Cmd.none
+            //             //                 Node.Api.fs.copyFileSync(source, destinationFullPath)
+            //             //             }
+            //             //         )
+            //             //         (source, destination, fileName)
+            //             //         WriteFileFailed
+            //             // | None ->
+            //             //     Cmd.none
 
-                    )
-                    |> Cmd.batch
+            //         )
+            //         |> Cmd.batch
 
             let newModel =
                 { model with
                     DocFiles = newDocFiles
-                    StaticRessources = model.StaticRessources @ newStaticRessources
                 }
 
             newModel
             , Cmd.batch [
                 Cmd.OfPromise.either Write.standard (newModel, pageContext) WriteFileSuccess WriteFileFailed
-                staticRessourcesCmd
                 recomputeCmd
             ]
 
@@ -427,17 +458,15 @@ let tryBuildPageContext (path : string) =
         let! fileContent = File.read path
         let fm = FrontMatter.fm.Invoke(fileContent)
 
-        match Decode.fromValue "$" PageAttributes.Decoder fm.attributes with
-        | Error msg ->
-            let errorMsg =
-                sprintf "The attributes of %s are invalid.\n%s" path msg
-            return Error (path, errorMsg)
-        | Ok pageAttributes ->
-            return Ok { Path = path
-                        Attributes = pageAttributes
-                        Content = fm.body
-                        StaticRessources = [ ]
-                         }
+//        match Decode.fromValue "$" PageAttributes.Decoder fm.attributes with
+//        | Error msg ->
+//            let errorMsg =
+//                sprintf "The attributes of %s are invalid.\n%s" path msg
+//            return Error (path, errorMsg)
+//        | Ok pageAttributes ->
+        return Ok { Path = path
+                    Content = fm.body
+                    FrontMatter = fm.attributes }
     }
 
 let checkCliArgs (config: Config) =

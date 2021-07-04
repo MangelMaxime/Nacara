@@ -73,17 +73,8 @@ module.exports = {
             "index"
         ],
         API: [
-            "index copy",
-            {
-                "Getting Started": [
-                    "index copy 2"
-                ],
-                API: [
-                    "index copy 3",
-                    "API/page-attributes",
-                    "API/nacara-config-json",
-                ]
-            }
+            "API/page-attributes",
+            "API/nacara-config-json"
         ]
     },
     lightner: {

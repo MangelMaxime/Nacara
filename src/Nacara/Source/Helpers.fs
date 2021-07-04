@@ -13,9 +13,9 @@ let isNotNull (o : 'T) =
     not (isNull o)
 
 let getFileId (sourceDir : string) (pageContext : Types.PageContext) =
-    match pageContext.Attributes.Id with
-    | Some id -> id
-    | None ->
+//    match pageContext.Id with
+//    | Some id -> id
+//    | None ->
         let extensionPos = pageContext.Path.LastIndexOf('.')
 
         pageContext.Path

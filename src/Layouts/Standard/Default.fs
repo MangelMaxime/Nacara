@@ -12,28 +12,64 @@ module Default =
     open Feliz
     open Feliz.Bulma
     open Fable.Core
+    open Thoth.Json
 
-    let private renderEditButton (config : Config) (pageContext : PageContext) =
-        match config.EditUrl with
-        | Some url ->
-            let filePath =
-                Directory.moveUp pageContext.Path
+    type Attributes =
+        {
+            Title : string
+            Layout : string
+            ExcludeFromNavigation : bool
+            Menu : bool
+            ShowTitle : bool
+            ShowEditButton : bool
+            ShowToc : bool
+            Id : string option
+        }
 
-            Button.a
-                [
-                    Button.CustomClass "is-hidden-touch"
-                    Button.IsOutlined
-                    Button.Color IsPrimary
-                    Button.Modifiers [ Modifier.IsPulledRight ]
-                    Button.Props
-                        [
-                            Target "_blank"
-                            Href (url + "/" + filePath)
-                        ]
-                ]
-                [ str "Edit" ]
+        static member Decoder =
+            Decode.object (fun get ->
+                {
+                    Title = get.Required.Field "title" Decode.string
+                    ExcludeFromNavigation = get.Optional.Field "excludeFromNavigation" Decode.bool
+                                                |> Option.defaultValue false
+                    Layout = get.Optional.Field "layout" Decode.string
+                                |> Option.defaultValue "default"
+                    Menu = get.Optional.Field "menu" Decode.bool
+                                |> Option.defaultValue true
+                    ShowTitle = get.Optional.Field "showTitle" Decode.bool
+                                |> Option.defaultValue true
+                    ShowEditButton = get.Optional.Field "showEditButton" Decode.bool
+                                |> Option.defaultValue true
+                    ShowToc = get.Optional.Field "showToc" Decode.bool
+                                |> Option.defaultValue true
+                    Id = get.Optional.Field "id" Decode.string
+                }
+            )
 
-        | None ->
+    let private renderEditButton (config : Config) (pageAttributes : Attributes) (pageContext : PageContext) =
+        if pageAttributes.ShowEditButton then
+            match config.EditUrl with
+            | Some url ->
+                let filePath =
+                    Directory.moveUp pageContext.Path
+
+                Button.a
+                    [
+                        Button.CustomClass "is-hidden-touch"
+                        Button.IsOutlined
+                        Button.Color IsPrimary
+                        Button.Modifiers [ Modifier.IsPulledRight ]
+                        Button.Props
+                            [
+                                Target "_blank"
+                                Href (url + "/" + filePath)
+                            ]
+                    ]
+                    [ str "Edit" ]
+
+            | None ->
+                nothing
+        else
             nothing
 
     let rec private renderBreadcrumbItem (model : Model) (menuItem : MenuItem) =
@@ -59,12 +95,12 @@ module Default =
 
             first :: tail
 
-    let private renderBreadcrumb (model : Model) (pageContext : PageContext) =
+    let private renderBreadcrumb (model : Model) (pageAttributes : Attributes) (pageContext : PageContext) =
         let getTitle pageId =
             let pageContext = model.DocFiles.get pageId
 
             if box pageContext <> null then
-                pageContext.Attributes.Title
+                pageAttributes.Title
 
             else
                 Log.error "Unable to find the fil2e: %s" pageId
@@ -150,8 +186,7 @@ module Default =
         | None ->
             None
 
-
-    let private renderPage (model : Model) (pageContext : PageContext) (menu : ReactElement option) (breadcrumb : ReactElement option) (editButton : ReactElement) (tocContent : string option) (title : string) (pageContent : string) =
+    let private renderNavigationButtons  (model : Model) (pageContext : PageContext)  =
         let menuList =
             match model.Config.MenuConfig with
             | Some menuConfig ->
@@ -183,202 +218,201 @@ module Default =
             |> List.tryFindIndex (fun pageId ->
                 pageId = currentPageId
             )
-            |> function
-            | Some pageIndex ->
-                pageIndex
-            | None ->
-                failwithf "Page %s not found in the menu" currentPageId
 
-        let previousButton =
-            let emptyPreviousButton =
-                // Empty button to keep the layout working
-                // It ensure that the "Next button" is on the right of the page
-                Bulma.button.button [
-                    prop.className "navigate-to-previous is-invisible"
-                ]
+        match currentPageIndexInTheMenu with
+        | None ->
+            nothing
 
-            if currentPageIndexInTheMenu >= 1 then
-                let previousPageFieldId = menuList.[currentPageIndexInTheMenu - 1]
-                let previousPageContext = model.DocFiles.get previousPageFieldId
+        | Some currentPageIndexInTheMenu ->
 
-                if isNull (box previousPageContext) then
-                    failwithf "Page %s not found in the list of pages" previousPageFieldId
-                else
-                    if previousPageContext.Attributes.ExcludeFromNavigation then
-                        emptyPreviousButton
-                    else
-
-                        Bulma.button.a [
-                            prop.className "navigate-to-previous"
-                            color.isPrimary
-                            button.isOutlined
-                            prop.href (generateUrl model.Config previousPageContext)
-
-                            prop.children [
-                                Bulma.icon [
-                                    Fa.i
-                                        [
-                                            Fa.Solid.ArrowLeft
-                                        ]
-                                        [ ]
-                                ]
-
-                                Bulma.text.span [
-                                    text.isUppercase
-
-                                    prop.text previousPageContext.Attributes.Title
-                                ]
-                            ]
-                        ]
-
-            else
-                emptyPreviousButton
-
-        let nextButton =
-            let emptyNextButton =
-                // Empty button to keep the layout working
-                Bulma.button.button [
-                    prop.className "navigate-to-next is-invisible"
-                ]
-
-            if currentPageIndexInTheMenu < menuList.Length - 1 then
-                let nextPageFieldId = menuList.[currentPageIndexInTheMenu + 1]
-                let nextPageContext = model.DocFiles.get nextPageFieldId
-
-                if isNull (box nextPageContext) then
-                    failwithf "Page %s not found in the list of pages" nextPageFieldId
-                else
-                    if nextPageContext.Attributes.ExcludeFromNavigation then
-                        emptyNextButton
-                    else
-                        Bulma.button.a [
-                            prop.className "navigate-to-next"
-                            color.isPrimary
-                            button.isOutlined
-                            prop.href (generateUrl model.Config nextPageContext)
-
-                            prop.children [
-                                Bulma.text.span [
-                                    text.isUppercase
-
-                                    prop.text nextPageContext.Attributes.Title
-                                ]
-
-                                Bulma.icon [
-                                    Fa.i
-                                        [
-                                            Fa.Solid.ArrowRight
-                                        ]
-                                        [ ]
-                                ]
-                            ]
-                        ]
-            else
-                emptyNextButton
-
-        div [ ]
-            [
-                ofOption breadcrumb
-                Columns.columns
-                    [
-                        Columns.IsGapless
-                        Columns.IsMobile
-                    ]
-                    [
-                        Column.column
-                            [
-                                Column.Width (Screen.Desktop, Column.Is3)
-                                Column.CustomClass "is-menu-column"
-                                Column.Modifiers
-                                    [
-                                        Modifier.IsHidden (Screen.Touch, true)
-                                    ]
-                                Column.Props
-                                    [
-                                        Style [ PaddingLeft "1.5rem !important"]
-                                    ]
-                            ]
-                            [ ofOption menu ]
-
-                        Column.column
-                            [
-                                Column.Width (Screen.Desktop, Column.Is8)
-                                Column.Width (Screen.Touch, Column.IsFull)
-                            ]
-                            [
-                                Section.section [ ]
-                                    [
-                                        Content.content [ ]
-                                            [
-                                                header [ Class "page-header" ]
-                                                    [
-                                                        editButton
-                                                        h1 [ ]
-                                                            [ str title ]
-                                                    ]
-                                                div [ DangerouslySetInnerHTML { __html =  pageContent } ] [ ]
-                                            ]
-                                    ]
-                                div [ Class "navigation-container" ]
-                                    [
-
-                                        previousButton
-
-
-                                        // Button.button
-                                        //     [
-                                        //         Button.CustomClass "navigate-to-previous"
-                                        //         Button.Color IsPrimary
-                                        //         Button.IsOutlined
-                                        //     ]
-                                        //     [
-                                        //         Icon.icon [ ]
-                                        //             [
-                                        //                 Fa.i
-                                        //                     [
-                                        //                         Fa.Solid.ArrowLeft
-                                        //                     ]
-                                        //                     [ ]
-                                        //             ]
-
-                                        //         Text.span
-                                        //             [
-                                        //                 CustomClass "text"
-                                        //                 Modifiers [ Modifier.TextTransform TextTransform.UpperCase ]
-                                        //             ]
-                                        //             [ str "Previous" ]
-                                        //     ]
-
-                                        nextButton
-
-                                        // Button.button
-                                        //     [
-                                        //         Button.CustomClass "navigate-to-next"
-                                        //         Button.Color IsPrimary
-                                        //         Button.IsOutlined
-                                        //     ]
-                                        //     [
-                                        //         Text.span
-                                        //             [
-                                        //                 CustomClass "text"
-                                        //                 Modifiers [ Modifier.TextTransform TextTransform.UpperCase ]
-                                        //             ]
-                                        //             [ str "Next" ]
-
-                                        //         Icon.icon [ ]
-                                        //             [
-                                        //                 Fa.i
-                                        //                     [
-                                        //                         Fa.Solid.ArrowRight
-                                        //                     ]
-                                        //                     [ ]
-                                        //             ]
-                                        //     ]
-                                    ]
-                            ]
+            let previousButton =
+                let emptyPreviousButton =
+                    // Empty button to keep the layout working
+                    // It ensure that the "Next button" is on the right of the page
+                    Bulma.button.button [
+                        prop.className "navigate-to-previous is-invisible"
                     ]
 
+                if currentPageIndexInTheMenu >= 1 then
+                    let previousPageFieldId = menuList.[currentPageIndexInTheMenu - 1]
+                    let previousPageContext = model.DocFiles.get previousPageFieldId
+
+                    if isNull (box previousPageContext) then
+                        failwithf "Page %s not found in the list of pages" previousPageFieldId
+                    else
+                        match Decode.fromValue "$" Attributes.Decoder previousPageContext.FrontMatter with
+                        | Ok previousPageAttributes ->
+                            if previousPageAttributes.ExcludeFromNavigation then
+                                emptyPreviousButton
+                            else
+
+                                Bulma.button.a [
+                                    prop.className "navigate-to-previous"
+                                    color.isPrimary
+                                    button.isOutlined
+                                    prop.href (generateUrl model.Config previousPageContext)
+
+                                    prop.children [
+                                        Bulma.icon [
+                                            Fa.i
+                                                [
+                                                    Fa.Solid.ArrowLeft
+                                                ]
+                                                [ ]
+                                        ]
+
+                                        Bulma.text.span [
+                                            text.isUppercase
+
+                                            prop.text previousPageAttributes.Title
+                                        ]
+                                    ]
+                                ]
+
+                        | Error errorMessage ->
+                            failwith $"Page {previousPageContext.Path} has invalid attributes information. Error:\n{errorMessage}"
+
+                else
+                    emptyPreviousButton
+
+            let nextButton =
+                let emptyNextButton =
+                    // Empty button to keep the layout working
+                    Bulma.button.button [
+                        prop.className "navigate-to-next is-invisible"
+                    ]
+
+                if currentPageIndexInTheMenu < menuList.Length - 1 then
+                    let nextPageFieldId = menuList.[currentPageIndexInTheMenu + 1]
+                    let nextPageContext = model.DocFiles.get nextPageFieldId
+
+                    if isNull (box nextPageContext) then
+                        failwithf "Page %s not found in the list of pages" nextPageFieldId
+                    else
+                        match Decode.fromValue "$" Attributes.Decoder nextPageContext.FrontMatter with
+                        | Ok nextPageAttributes ->
+                            if nextPageAttributes.ExcludeFromNavigation then
+                                emptyNextButton
+                            else
+                                Bulma.button.a [
+                                    prop.className "navigate-to-next"
+                                    color.isPrimary
+                                    button.isOutlined
+                                    prop.href (generateUrl model.Config nextPageContext)
+
+                                    prop.children [
+                                        Bulma.text.span [
+                                            text.isUppercase
+
+                                            prop.text nextPageAttributes.Title
+                                        ]
+
+                                        Bulma.icon [
+                                            Fa.i
+                                                [
+                                                    Fa.Solid.ArrowRight
+                                                ]
+                                                [ ]
+                                        ]
+                                    ]
+                                ]
+                        | Error errorMessage ->
+                            failwith $"Page {nextPageContext.Path} has invalid attributes information. Error:\n{errorMessage}"
+                else
+                    emptyNextButton
+
+            div [ Class "navigation-container" ]
+                [
+
+                    previousButton
+                    nextButton
+                ]
+
+    let private renderMainContent (model : Model) (pageAttributes : Attributes) (pageContext : PageContext) (editButton : ReactElement) (title : string) (pageContent : string) =
+        let pageTitle =
+            if pageAttributes.ShowTitle then
+                Html.h1 title
+            else
+                nothing
+
+        React.fragment [
+            Bulma.section [
+                Bulma.content [
+                    Html.header [
+                        prop.className "page-header"
+                        prop.children [
+                            editButton
+                            pageTitle
+                        ]
+                    ]
+
+                    Html.div [
+                        prop.dangerouslySetInnerHTML pageContent
+                    ]
+                ]
             ]
+
+            renderNavigationButtons model pageContext
+        ]
+
+    let private renderPageWithMenu (model : Model) (pageAttributes : Attributes) (pageContext : PageContext) (menu : ReactElement) (breadcrumb : ReactElement option) (editButton : ReactElement) (title : string) (pageContent : string) =
+
+        let pageTitle =
+            if pageAttributes.ShowTitle then
+                Html.h1 title
+            else
+                nothing
+
+        Bulma.container [
+            ofOption breadcrumb
+
+            Bulma.columns [
+                columns.isGapless
+                columns.isMobile
+
+                prop.children [
+                    Bulma.column [
+                        prop.className "is-menu-column"
+                        column.is3Desktop
+                        helpers.isHiddenTouch
+                        spacing.ml5
+
+                        prop.children [
+                            menu
+                        ]
+                    ]
+
+
+                    Bulma.column [
+                        column.is8Desktop
+                        column.isFullTouch
+
+                        prop.children [
+                            renderMainContent model pageAttributes pageContext editButton title pageContent
+                        ]
+                    ]
+                ]
+            ]
+        ]
+
+
+    let private renderPageWithoutMenu (model : Model) (pageAttributes : Attributes) (pageContext : PageContext) (breadcrumb : ReactElement option) (editButton : ReactElement) (title : string) (pageContent : string) =
+        Bulma.container [
+            ofOption breadcrumb
+
+            Bulma.columns [
+                prop.children [
+                    Bulma.column [
+                        column.is8Desktop
+                        column.isOffset2Desktop
+
+                        prop.children [
+                            renderMainContent model pageAttributes pageContext editButton title pageContent
+                        ]
+                    ]
+                ]
+            ]
+        ]
 
     let renderTopLevelToc (section : TableOfContentParser.Section) =
         Html.li [
@@ -406,7 +440,7 @@ module Default =
                 ]
         ]
 
-    let renderMenuItem (model : Model) (pageContext : PageContext) (tableOfContent : TableOfContentParser.TableOfContent) pageId =
+    let renderMenuItem (model : Model) (pageAttributes : Attributes) (pageContext : PageContext) (tableOfContent : TableOfContentParser.TableOfContent) pageId =
 
         let pageInfo = model.DocFiles.get pageId
 
@@ -442,7 +476,7 @@ module Default =
                                   |> Menu.Item.Href
                                   Menu.Item.IsActive isCurrentPage ]
                         [
-                            str pageInfo.Attributes.Title
+                            str pageAttributes.Title
                         ]
 
                     tableOfContent
@@ -453,21 +487,21 @@ module Default =
             Log.error "Unable to find the file33: %s" pageId
             nothing
 
-    let rec private renderMenu (model : Model) (pageContext : PageContext) (tableOfContent : TableOfContentParser.TableOfContent) (menuItem : MenuItem) =
+    let rec private renderMenu (model : Model) (pageAttributes : Attributes) (pageContext : PageContext) (tableOfContent : TableOfContentParser.TableOfContent) (menuItem : MenuItem) =
         match menuItem with
         | MenuItem pageId ->
-            renderMenuItem model pageContext tableOfContent pageId
+            renderMenuItem model pageAttributes pageContext tableOfContent pageId
 
         | MenuList (label, items) ->
             let subMenu =
                 items
                 |> Array.map (function
                     | MenuItem pageId ->
-                        renderMenuItem model pageContext tableOfContent pageId
+                        renderMenuItem model pageAttributes pageContext tableOfContent pageId
 
                     | MenuList (label, x) ->
 
-                        renderMenu model pageContext tableOfContent (MenuList (label, x))
+                        renderMenu model pageAttributes pageContext tableOfContent (MenuList (label, x))
                         // Log.warn "Nacara only support only 2 level deep menus. The following menu is too deep:\n%A" label
                         // nothing
                 )
@@ -494,7 +528,7 @@ module Default =
                         ]
                 ]
 
-    let private generateMenu (model : Model) (pageContext : PageContext) (tableOfContent : TableOfContentParser.TableOfContent) =
+    let private generateMenu (model : Model) (pageAttributes : Attributes) (pageContext : PageContext) (tableOfContent : TableOfContentParser.TableOfContent) =
         match model.Config.MenuConfig with
         | Some menuConfig ->
             menuConfig
@@ -504,7 +538,7 @@ module Default =
                         Menu.label [ ]
                             [ str category ]
                         menuItems
-                        |> Array.map (renderMenu model pageContext tableOfContent)
+                        |> Array.map (renderMenu model pageAttributes pageContext tableOfContent)
                         |> Array.toList
                         |> Menu.list [ ]
                     ]
@@ -527,30 +561,99 @@ module Default =
                 content
 
                 Html.script [
-                    prop.src "/static/nacara-standard/menu.js"
+                    prop.src "/static/nacara_internals/menu.js"
                 ]
             ]
 
+    let private generateTocOnly (tableOfContent : TableOfContentParser.TableOfContent) =
+        let hasTableOfContent =
+            not tableOfContent.IsEmpty
+
+        if hasTableOfContent then
+            Html.ul [
+                prop.className "table-of-content"
+
+                prop.children [
+                    for tocElement in tableOfContent do
+                        renderTopLevelToc tocElement
+                ]
+            ]
+
+        else
+            nothing
+
+
+    let private generateMenuOrToc (model : Model) (pageAttributes : Attributes) (pageContext : PageContext) =
+        let tocInformation =
+            TableOfContentParser.parse pageContext
+
+        if pageAttributes.Menu then
+            generateMenu model pageAttributes pageContext tocInformation
+        else
+            if pageAttributes.ShowToc then
+                div [ Class "menu-container" ]
+                    [
+                        Bulma.menu [
+                            Bulma.menuList [
+                                Html.li [
+                                    prop.className "has-table-of-content"
+
+                                    prop.children [
+                                        Html.a [
+                                            prop.className "is-active"
+                                            prop.text "Table of content"
+                                        ]
+
+                                        generateTocOnly tocInformation
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                |> Some
+            else
+                None
 
 
     let toHtml (model : Model) (pageContext : PageContext) =
         promise {
-            let! pageContext =
-                pageContext
-                |> PageContext.processMarkdown model
-                // |> Promise.bind Prelude.processTableOfContent
+            match Decode.fromValue "$" Attributes.Decoder pageContext.FrontMatter with
+            | Ok pageAttributes ->
+                let! pageContext =
+                    pageContext
+                    |> PageContext.processMarkdown model
 
-            let tocInformation =
-                TableOfContentParser.parse pageContext
+                let menuOpt =
+                    generateMenuOrToc model pageAttributes pageContext
 
-            return
-                renderPage model pageContext
-                    (generateMenu model pageContext tocInformation)
-                    (renderBreadcrumb model pageContext)
-                    (renderEditButton model.Config pageContext)
-                    None
-                    pageContext.Attributes.Title
-                    pageContext.Content
-                |> addMenuScript
-                |> Prelude.basePage model pageContext.Attributes.Title
+                let page =
+                    match menuOpt with
+                    | Some menu ->
+                        renderPageWithMenu
+                            model
+                            pageAttributes
+                            pageContext
+                            menu
+                            (renderBreadcrumb model pageAttributes pageContext)
+                            (renderEditButton model.Config pageAttributes pageContext)
+                            pageAttributes.Title
+                            pageContext.Content
+
+                    | None ->
+                        renderPageWithoutMenu
+                            model
+                            pageAttributes
+                            pageContext
+                            (renderBreadcrumb model pageAttributes pageContext)
+                            (renderEditButton model.Config pageAttributes pageContext)
+                            pageAttributes.Title
+                            pageContext.Content
+
+                return
+                    page
+                    |> addMenuScript
+                    |> Prelude.basePage model (Some pageAttributes.Title)
+
+            | Error errorMessage ->
+                return failwith errorMessage
         }

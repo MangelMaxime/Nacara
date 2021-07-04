@@ -12,6 +12,22 @@ module Changelog =
     open Thoth.Json
     open Fable.Core
 
+    type Attributes =
+        {
+            Layout : string
+            ChangelogPath : string
+        }
+
+        static member Decoder =
+            Decode.object (fun get ->
+                {
+                    Layout = get.Optional.Field "layout" Decode.string
+                                |> Option.defaultValue "default"
+                    ChangelogPath = get.Required.Field "changelog_path" Decode.string
+                }
+            )
+
+
     let slugify (_s: string): string = importDefault "slugify"
 
     let renderVersion (versionText : string) (date : DateTime option) =
@@ -140,12 +156,9 @@ module Changelog =
 
     let toHtml (model : Model) (pageContext : PageContext) =
         promise {
-            let getChangelogPath =
-                Decode.field "changelog_path" Decode.string
-
-            match Decode.fromValue "$.extra" getChangelogPath pageContext.Attributes.Extra with
-            | Ok relativePath ->
-                let changelogPath = Directory.join pageContext.Path relativePath
+            match Decode.fromValue "$" Attributes.Decoder pageContext.FrontMatter  with
+            | Ok pageAttributes ->
+                let changelogPath = Directory.join pageContext.Path pageAttributes.ChangelogPath
                 let! changelogContent = File.read changelogPath
 
                 match ChangelogParser.parse changelogContent with
@@ -171,7 +184,7 @@ module Changelog =
                                             ]
                                     ]
                             ]
-                        |> Prelude.basePage model pageContext.Attributes.Title
+                        |> Prelude.basePage model None
                 | Error msg ->
                     return failwith msg
             | Error msg ->

@@ -1,5 +1,6 @@
 ---
 title: Page attributes
+layout: default
 ---
 
 [[toc]]

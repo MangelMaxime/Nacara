@@ -28,33 +28,22 @@ open Fable.Core
 
 type LayoutFunc = System.Func<Model, PageContext, JS.Promise<ReactElement>>
 
-[<NoComparison>]
-type LayoutExport =
-    {
-        RenderFunc : LayoutFunc
-        ScriptDependencies : string list
-        LayoutName : string
-    }
+let standard = System.Func<Model, PageContext, JS.Promise<ReactElement>>(fun model pageContext ->
+        Layout.Standard.Default.toHtml model pageContext
+    )
 
-let standard =
-    {
-        RenderFunc =
-            System.Func<Model, PageContext, JS.Promise<ReactElement>>(fun model pageContext ->
-                Layout.Standard.Default.toHtml model pageContext
-            )
-        ScriptDependencies =
-            [
-                Node.Api.path.join(__SOURCE_DIRECTORY__, "scripts/menu.js")
-            ]
-        LayoutName = "nacara-standard"
-    }
+let changelog = System.Func<Model, PageContext, JS.Promise<ReactElement>>(fun model pageContext ->
+        Layout.Standard.Changelog.toHtml model pageContext
+    )
 
-let changelog =
-    {
-        RenderFunc =
-            System.Func<Model, PageContext, JS.Promise<ReactElement>>(fun model pageContext ->
-                Layout.Standard.Changelog.toHtml model pageContext
-            )
-        ScriptDependencies = [ ]
-        LayoutName = "nacara-changelog"
-    }
+let navbarOnly = System.Func<Model, PageContext, JS.Promise<ReactElement>>(fun model pageContext ->
+        Layout.Standard.NavbarOnly.toHtml model pageContext
+    )
+
+let basePage = System.Func<Model, string option, ReactElement, ReactElement>(fun model pageTitle content ->
+        Prelude.basePage model pageTitle content
+    )
+
+let processMarkdown = System.Func<Model, PageContext, JS.Promise<PageContext>>(fun model pageContext ->
+        PageContext.processMarkdown model pageContext
+    )

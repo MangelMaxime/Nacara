@@ -1,5 +1,6 @@
 ---
 title: Getting started
+layout: default
 ---
 
 # Quick start

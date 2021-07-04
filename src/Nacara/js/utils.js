@@ -1,7 +1,7 @@
 // <h2 id="primitives-decoders">
 //     <a class="header-anchor" href="#primitives-decoders" aria-hidden="true">🔗</a> Primitives decoders</h2>
 
-const lightner = require('code-lightner');
+// const lightner = require('code-lightner');
 
 // const md = require('markdown-it')({
 //     html: true

@@ -18,6 +18,7 @@
     <Compile Include="TableOfContentParser.fs" />
     <Compile Include="Changelog.fs" />
     <Compile Include="Default.fs" />
+    <Compile Include="NavbarOnly.fs" />
     <Compile Include="Export.fs" />
   </ItemGroup>
   <ItemGroup>

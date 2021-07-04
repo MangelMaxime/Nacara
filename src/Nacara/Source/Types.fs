@@ -6,36 +6,48 @@ open Fable.React
 open Fable.Core.JsInterop
 
 
-[<NoComparison>]
-type PageAttributes =
-    {
-        Title : string
-        Layout : string
-        ExcludeFromNavigation : bool
-        Id : string option
-        Extra : JsonValue option
-    }
+// [<NoComparison>]
+// type PageAttributes =
+//     {
+//         Title : string
+//         Layout : string
+//         ExcludeFromNavigation : bool
+//         Menu : bool
+//         ShowTitle : bool
+//         ShowEditButton : bool
+//         ShowToc : bool
+//         Id : string option
+//         Extra : JsonValue option
+//     }
 
-    static member Decoder =
-        Decode.object (fun get ->
-            {
-                Title = get.Required.Field "title" Decode.string
-                ExcludeFromNavigation = get.Optional.Field "excludeFromNavigation" Decode.bool
-                                            |> Option.defaultValue false
-                Layout = get.Optional.Field "layout" Decode.string
-                            |> Option.defaultValue "default"
-                Id = get.Optional.Field "id" Decode.string
-                Extra = get.Optional.Field "extra" Decode.value
-            }
-        )
+//     static member Decoder =
+//         Decode.object (fun get ->
+//             {
+//                 Title = get.Required.Field "title" Decode.string
+//                 ExcludeFromNavigation = get.Optional.Field "excludeFromNavigation" Decode.bool
+//                                             |> Option.defaultValue false
+//                 Layout = get.Optional.Field "layout" Decode.string
+//                             |> Option.defaultValue "default"
+//                 Menu = get.Optional.Field "menu" Decode.bool
+//                             |> Option.defaultValue true
+//                 ShowTitle = get.Optional.Field "showTitle" Decode.bool
+//                             |> Option.defaultValue true
+//                 ShowEditButton = get.Optional.Field "showEditButton" Decode.bool
+//                             |> Option.defaultValue true
+//                 ShowToc = get.Optional.Field "showToc" Decode.bool
+//                             |> Option.defaultValue true
+//                 Id = get.Optional.Field "id" Decode.string
+//                 Extra = get.Optional.Field "extra" Decode.value
+//             }
+//         )
 
 [<NoComparison>]
 type PageContext =
     {
         Path : string
-        Attributes : PageAttributes
+        // Attributes : PageAttributes
         Content : string
-        StaticRessources : string list
+        FrontMatter : obj
     }
 
 type RawLink =
@@ -377,15 +389,6 @@ type PluginsConfig =
 
 type LayoutFunc = System.Func<Model, PageContext, JS.Promise<ReactElement>>
 
-[<NoComparison>]
-type LayoutExport =
-    {
-        RenderFunc : LayoutFunc
-        ScriptDependencies : string list
-        LayoutName : string
-    }
-
-
 [<NoComparison; NoEquality>]
 type Config =
     {
@@ -403,7 +406,7 @@ type Config =
         Navbar : NavbarConfig option
         MenuConfig : MenuConfig option
         LightnerConfig : LightnerConfig option
-        LayoutConfig : Map<string, LayoutExport>
+        LayoutConfig : Map<string, LayoutFunc>
         Plugins : PluginsConfig
         IsWatch : bool
         ServerPort : int
@@ -452,6 +455,5 @@ type Model =
         // and so the comparer function or something is broken
         // We need to investigate more later if we want to go back using an immutable map
         DocFiles : JS.Map<string, PageContext>
-        StaticRessources : string list
         LightnerCache : JS.Map<string, CodeLightner.Config>
     }
