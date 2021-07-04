@@ -1,3 +1,5 @@
+$textual-steps-color: $grey-lighter !default;
+
 ul.textual-steps {
     list-style: none;
     padding-left: 0;
@@ -16,7 +18,7 @@ ul.textual-steps {
             position: absolute;
             top: 0;
             left: 0;
-            color: $grey-lighter;
+            color: $textual-steps-color;
             font-size: $size-3;
             font-weight: $weight-bold;
         }
