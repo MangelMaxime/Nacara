@@ -190,8 +190,13 @@ let private navbar (config : Config) =
                 ]
         ]
 
-let basePage (model : Model) (pageTitle : string) (content : ReactElement) =
-    let titleStr = pageTitle + " · " + model.Config.Title
+let basePage (model : Model) (pageTitle : string option) (content : ReactElement) =
+    let titleStr =
+        match pageTitle with
+        | Some title ->
+            model.Config.Title  + " · " + title
+        | None ->
+            model.Config.Title
 
     let toUrl (url : string) =
         model.Config.BaseUrl + url
@@ -241,7 +246,6 @@ let basePage (model : Model) (pageTitle : string) (content : ReactElement) =
             body [ ]
                 [
                     navbar model.Config
-                    Container.container [ ]
-                        [ content ]
+                    content
                 ]
         ]
