@@ -57,8 +57,12 @@ span+.icon {
 }
 
 .page-header {
+    min-height: 1em;
+    margin-bottom: 1em;
+
     h1 {
         margin-top: 0 !important;
+        margin-bottom: 1em;
     }
 }
 
@@ -188,15 +192,16 @@ h2, h3, h4, h5, h6  {
 
 // Customize the menu to have a better display and also support TOC in it
 .menu {
-    .menu-label, a {
-        font-weight: $weight-semibold;
-    }
+    // .menu-label, a {
+    //     font-weight: $weight-semibold;
+    // }
 
     .has-table-of-content {
         background-color: $primary-light;
         border-radius: $menu-item-radius;
+        scroll-margin: 3rem;
 
-        a.is-active {
+        .is-active {
             border-radius: $menu-item-radius 0 0;
         }
     }
@@ -212,6 +217,12 @@ h2, h3, h4, h5, h6  {
             &:hover {
                 color: $primary;
             }
+        }
+
+        // Use the same font size as for the link text for the code block when shown in the table of content
+        // Otherwise, it is too small and the font looks bad
+        code {
+            font-size: 0.825rem;
         }
     }
 
@@ -230,6 +241,18 @@ h2, h3, h4, h5, h6  {
 // Style relative to the snippet and copy button
 pre {
     position: relative; // Make the pre relative so the copy button and positionned themself relative to it
+    padding-top: $size-4 !important; // This padding is to display correctly the button even if the snippet has only 1 line of code
+    padding-bottom: $size-4 !important; // This padding is to display correctly the button even if the snippet has only 1 line of code
+
+    button.is-copy-button {
+        visibility: hidden;
+    }
+
+    &:hover {
+        button.is-copy-button {
+            visibility: visible;
+        }
+    }
 }
 
 button {
@@ -237,5 +260,20 @@ button {
         position: absolute;
         top: 1rem;
         right: 1rem;
+    }
+}
+
+// Fix margin of p element inside of list element
+// Example of markdown related to that
+// - [Fable Gitter](https://gitter.im/fable-compiler/Fable)
+
+//     Fable specific discussion and networking channel <-- This line
+
+// - [Slack](https://fsharp.org/guides/slack/)
+.content {
+    ol, li {
+        p:not(:last-child) {
+            margin-bottom: 0;
+        }
     }
 }
