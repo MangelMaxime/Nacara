@@ -105,7 +105,7 @@ const setupMobileMenu = () => {
                     .toggle("force-show");
 
                 mobileMenuTrigger.classList.toggle("is-active");
-        });
+            });
     }
 
 }
@@ -114,15 +114,23 @@ const setupMobileMenu = () => {
 const setupCopyCode = () => {
     const snippetElements = Array.from(document.querySelectorAll("pre > code"));
 
-    console.log(snippetElements)
-
     snippetElements
         .forEach(codeElement => {
+            // If one of the parent of codeElement has date-disable-copy-button attributes
+            // do not had the copy button
+            // We store this information on a parent because we don't control the `snippet` generation
+            if (codeElement.closest("[date-disable-copy-button]")) {
+                return;
+            }
+
             const copyButton = document.createElement("button");
             copyButton.innerText = "Copy";
-            copyButton.classList.add("button");
-            copyButton.classList.add("is-primary");
-            copyButton.classList.add("is-copy-button");
+            copyButton.classList.add(
+                "button",
+                "is-primary",
+                "is-outlined",
+                "is-copy-button"
+            );
 
             const codeText = codeElement.innerText;
 
@@ -157,5 +165,14 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     setupCopyCode();
+
+    const tableOfContentElement = document.querySelector(".has-table-of-content");
+
+    if (tableOfContentElement !== null) {
+        tableOfContentElement.scrollIntoView({
+            block : "nearest", // Scroll to the nearest parent otherwise it also scroll the main content
+            inline : "nearest" // Scroll to the nearest parent otherwise it also scroll the main content
+        });
+    }
 
 });
