@@ -52,6 +52,10 @@ let private (|Match|_|) pattern input =
 //         |> Some
 //     | _ -> None
 
+
+let private isNotNull (o : 'T) =
+   not (isNull o)
+
 let private (|Header2|_|) (m : Match) : option<Header> =
     if isNotNull m.Groups.[1] then
         {
@@ -72,7 +76,7 @@ let private (|Header3|_|) (m : Match) : option<Header> =
     else
         None
 
-let rec private extractSection (pageContext : PageContext) (acc : Section option) (res : TableOfContent) (matches : Match list) =
+let rec private extractSection (filePath : string) (acc : Section option) (res : TableOfContent) (matches : Match list) =
     match matches with
     | head :: tail ->
         match head with
@@ -87,7 +91,7 @@ let rec private extractSection (pageContext : PageContext) (acc : Section option
                         SubSections = []
                     }
 
-                extractSection pageContext (Some newSection) (res @ [section]) tail
+                extractSection filePath (Some newSection) (res @ [section]) tail
 
             // If this is the first header2 start tracking it
             | None ->
@@ -97,7 +101,7 @@ let rec private extractSection (pageContext : PageContext) (acc : Section option
                         SubSections = []
                     }
 
-                extractSection pageContext (Some newSection) res tail
+                extractSection filePath (Some newSection) res tail
 
         | Header3 header ->
             match acc with
@@ -108,15 +112,15 @@ let rec private extractSection (pageContext : PageContext) (acc : Section option
                         SubSections = section.SubSections @ [ header ]
                     }
 
-                extractSection pageContext (Some section) res tail
+                extractSection filePath (Some section) res tail
 
             // If an header3 is found outside of an header2, print an error as this should not be the case
             | None ->
-                failwithf "Error in the file: %s\nAn h3 element should be the child of an h2 element" pageContext.Path
+                failwithf "Error in the file: %s\nAn h3 element should be the child of an h2 element" filePath
 
         // Not a h2 or h3 continue the parsing
         | _ ->
-            extractSection pageContext acc res tail
+            extractSection filePath acc res tail
 
     // No more line to handle
     | [ ] ->
@@ -129,10 +133,10 @@ let rec private extractSection (pageContext : PageContext) (acc : Section option
             res
 
 // Note: TableOfContent parser only extract information from h2 and h3 elements
-let parse (pageContext : PageContext) =
+let parse (pageContent : string) (filePath : string) =
     let pattern = """(<h2[^>]*>(?<h2_text>((?!<\/h2>).)*)<a\s*href="(?<h2_link>[^"]*)"((?!<\/h2>).)*<\/h2>)|(<h3[^>]*>(?<h3_text>((?!<\/h3>).)*)<a\s*href="(?<h3_link>[^"]*)"((?!<\/h3>).)*<\/h3>)"""
 
-    Regex.Matches(pageContext.Content, pattern, RegexOptions.Singleline)
+    Regex.Matches(pageContent, pattern, RegexOptions.Singleline)
     |> Seq.cast<Match>
     |> Seq.toList
-    |> extractSection pageContext None [ ]
+    |> extractSection filePath None [ ]

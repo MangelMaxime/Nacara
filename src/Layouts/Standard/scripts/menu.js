@@ -155,7 +155,10 @@ const setupCopyCode = () => {
         });
 }
 
-window.addEventListener("DOMContentLoaded", () => {
+
+const setupGlobal = () => {
+
+    // This script should be loaded in a tag with async tag so we can directly apply all the functions
 
     setupNavbarBurger();
     setupMobileMenu();
@@ -166,13 +169,26 @@ window.addEventListener("DOMContentLoaded", () => {
 
     setupCopyCode();
 
-    const tableOfContentElement = document.querySelector(".has-table-of-content");
+    // Make the table of content visible
+    const tableOfContentElement = document.querySelector(".table-of-content");
 
     if (tableOfContentElement !== null) {
-        tableOfContentElement.scrollIntoView({
-            block : "nearest", // Scroll to the nearest parent otherwise it also scroll the main content
-            inline : "nearest" // Scroll to the nearest parent otherwise it also scroll the main content
-        });
+        tableOfContentElement.scrollIntoView();
+        // tableOfContentElement.scrollIntoView({
+        //     block : "nearest", // Scroll to the nearest parent otherwise it also scroll the main content
+        //     inline : "nearest" // Scroll to the nearest parent otherwise it also scroll the main content
+        // })
     }
+}
 
-});
+// The page is ready execute our code
+if (document.readyState === "complete") {
+    setupGlobal();
+// The page is not ready, wait for it to be ready
+} else {
+    document.onreadystatechange = () => {
+        if (document.readyState === "complete") {
+            setupGlobal();
+        }
+    }
+}

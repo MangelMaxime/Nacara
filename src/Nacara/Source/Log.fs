@@ -3,38 +3,17 @@ module Log
 open Fable.Core
 open Glutinum.Chalk
 
-let private _log x = JS.console.log x
-let private _warn x = JS.console.warn x
-let private _error x = JS.console.error x
+let info (text : string) =
+    JS.console.log(chalk.blueBright.Invoke text)
 
-let newLine (msg : string) = msg + "\n"
+let warn (text : string) =
+    JS.console.warn(chalk.yellow.Invoke text)
 
-let warn fmt =
-    Printf.kprintf (chalk.yellow.Invoke >> _warn) fmt
+let success (text : string) =
+    JS.console.log(chalk.green.Invoke text)
 
-let info fmt =
-    Printf.kprintf (chalk.blue.Invoke >> _log) fmt
+let error (text : string) =
+    JS.console.error(chalk.red.Invoke text)
 
-let log fmt =
-    Printf.kprintf (chalk.Invoke >> _log) fmt
-
-let success fmt =
-    Printf.kprintf (chalk.green.Invoke >> _log) fmt
-
-let error fmt =
-    Printf.kprintf (chalk.red.Invoke >> _error) fmt
-
-let warnFn fmt =
-    Printf.kprintf (chalk.yellow.Invoke >> newLine >> _warn) fmt
-
-let infoFn fmt =
-    Printf.kprintf (chalk.blue.Invoke >> newLine >> _log) fmt
-
-let logFn fmt =
-    Printf.kprintf (chalk.Invoke >> newLine >> _log) fmt
-
-let successFn fmt =
-    Printf.kprintf (chalk.green.Invoke >> newLine >> _log) fmt
-
-let errorFn fmt =
-    Printf.kprintf (chalk.red.Invoke >> newLine >> _error) fmt
+let log (text : string) =
+    JS.console.log text

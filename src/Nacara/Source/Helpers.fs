@@ -5,29 +5,50 @@ open Fable.React
 open Fable.React.Props
 open Fable.Core
 open Fable.Core.JsInterop
+open Node
 
-[<Emit("require($0)")>]
-let require<'T> (modulePath : string) : 'T = jsNative
+[<RequireQualifiedAccess>]
+module ExitCode =
+
+    [<Literal>]
+    let OK = 0
+
+    [<Literal>]
+    let MISSING_CONFIG_FILE = 1
+
+    [<Literal>]
+    let INVALID_CONFIG_FILE = 2
+
+    [<Literal>]
+    let INVALID_MARKDOWN_FILE_IN_BUILD_MODE = 3
+
+    [<Literal>]
+    let COMPLETED_WITH_ERROR = 4
+
+
+
+
+//
+//[<Emit("require($0)")>]
+//let require<'T> (modulePath : string) : 'T = jsNative
 
 let isNotNull (o : 'T) =
-    not (isNull o)
+   not (isNull o)
 
-let getFileId (sourceDir : string) (pageContext : Types.PageContext) =
-//    match pageContext.Id with
-//    | Some id -> id
-//    | None ->
-        let extensionPos = pageContext.Path.LastIndexOf('.')
+let getPageId (filePath : string) =
+    let extensionPos = filePath.LastIndexOf('.')
 
-        pageContext.Path
-            .Substring(0, extensionPos) // Remove extension
-            .Substring((sourceDir + Node.Api.path.sep).Length)
-            .Replace("\\", "/") // Remove the source directory info
+    filePath
+        .Substring(0, extensionPos) // Remove extension
+        .Replace("\\", "/") // Normalize segments separator
 
-
-let generateUrl (config : Types.Config) (pageContext : Types.PageContext) =
-    (pageContext.Path.Substring((config.Source + Node.Api.path.sep).Length)
-        |> Directory.join config.BaseUrl
-        |> File.changeExtension "html").Replace("\\", "/")
+let unEscapeHTML (unsafe : string) =
+    unsafe
+        .Replace("&amp;", "&")
+        .Replace("&lt;", "<")
+        .Replace("&gt;", ">")
+        .Replace("&quot;", "\"")
+        .Replace("&#039;", "'")
 
 let highlightCode (lightnerConfig : JS.Map<string, CodeLightner.Config>) (text : string) =
     let codeBlockRegex =
@@ -43,8 +64,8 @@ let highlightCode (lightnerConfig : JS.Map<string, CodeLightner.Config>) (text :
 
                 let codeText =
                     m.Groups.[2].Value
-                    |> Helpers.unEscapeHTML
-                    // Escape single `$` caracter otherwise vscode-textmaste inject
+                    |> unEscapeHTML
+                    // Escape single `$` character otherwise vscode-textmate inject
                     // source code at `$` place.
                     |> (fun (str : string) -> str.Replace("$", "$$"))
 
@@ -55,7 +76,7 @@ let highlightCode (lightnerConfig : JS.Map<string, CodeLightner.Config>) (text :
                     return! text.Replace(wholeText, formattedText)
                             |> apply
                 else
-                    Log.warnFn "No grammar found for language: `%s`" lang
+                    Log.warn $"No grammar found for language: `%s{lang}`"
                     let replacement =
                         wholeText.Replace("<pre", """<pre class="skip-code-lightner-grammar-not-found" """)
 
@@ -69,66 +90,114 @@ let highlightCode (lightnerConfig : JS.Map<string, CodeLightner.Config>) (text :
         return! apply text
     }
 
-module PageContext =
+let markdownToHtml (lightnerConfig : JS.Map<string, CodeLightner.Config>) (markdownText : string) =
+    let md =
+        emitJsExpr ()
+            """require('markdown-it')({
+    html: true
+})
+.use(require('./../js/markdown-it-anchored'))
+            """
 
-    let processCodeHighlights (lightnerConfig : JS.Map<string, CodeLightner.Config>) (pageContext : Types.PageContext) =
-        promise {
-            let! highlightedText = highlightCode lightnerConfig pageContext.Content
-            return
-                { pageContext with
-                    Content = highlightedText
-                }
-        }
+    handle mdMessage tags in markdown
+    
+    promise {
+        let htmlText = md?render(markdownText)
 
-    let processMarkdown (model : Types.Model) (pageContext : Types.PageContext) =
-        { pageContext with
-            Content =
-                Helpers.markdown pageContext.Content model.Config.Plugins.Markdown
-        }
-        |> processCodeHighlights model.LightnerCache
+        return! highlightCode lightnerConfig htmlText
+    }
 
-module Helpers =
+module List =
+    // Copied from F# plus
+    // https://github.com/fsprojects/FSharpPlus/blob/327cdfcff9d7a209bf934218a5067301ef44e35d/src/FSharpPlus/Extensions/List.fs#L133-133
 
-    let markdown (_markdownString : string) (_plugins : Types.MarkdownPlugin array) : string = importMember "./../js/utils.js"
+    /// <summary>
+    /// Creates two lists by applying the mapping function to each element in the list
+    /// and classifying the transformed values depending on whether they were wrapped with Choice1Of2 or Choice2Of2.
+    /// </summary>
+    /// <returns>
+    /// A tuple with both resulting lists.
+    /// </returns>
+    let partitionMap (mapping: 'T -> Choice<'T1,'T2>) (source: list<'T>) =
+        let rec loop ((acc1, acc2) as acc) = function
+            | [] -> acc
+            | x::xs ->
+                match mapping x with
+                | Choice1Of2 x -> loop (x::acc1, acc2) xs
+                | Choice2Of2 x -> loop (acc1, x::acc2) xs
+        loop ([], []) (List.rev source)
 
-    /// Resolves a path to prevent using location of target JS file
-    /// Note the function is inline so `__dirname` will belong to the calling file
-    let inline resolve (path: string) =
-        Node.Api.path.resolve(Node.Api.__dirname, path)
+module Array =
+    // Copied from F# plus
+    //https://github.com/fsprojects/FSharpPlus/blob/327cdfcff9d7a209bf934218a5067301ef44e35d/src/FSharpPlus/Extensions/Array.fs#L100-100
 
-    /// Parses a React element invoking ReactDOMServer.renderToString
-    let parseReact (el: ReactElement) =
-        ReactDomServer.renderToString el
+    /// <summary>
+    /// Creates two arrays by applying the mapper function to each element in the array
+    /// and classifies the transformed values depending on whether they were wrapped with Choice1Of2 or Choice2Of2.
+    /// </summary>
+    /// <returns>
+    /// A tuple with both resulting arrays.
+    /// </returns>
+    let partitionMap (mapper: 'T -> Choice<'T1,'T2>) (source: array<'T>) =
+        let (x, y) = ResizeArray (), ResizeArray ()
+        Array.iter (mapper >> function Choice1Of2 e -> x.Add e | Choice2Of2 e -> y.Add e) source
+        x.ToArray (), y.ToArray ()
 
-    /// Parses a React element invoking ReactDOMServer.renderToStaticMarkup
-    let parseReactStatic (el: ReactElement) =
-        ReactDomServer.renderToStaticMarkup el
+//
+//module PageContext =
+//
+//    let processCodeHighlights (lightnerConfig : JS.Map<string, CodeLightner.Config>) (pageContext : Types.PageContext) =
+//        promise {
+//            let! highlightedText = highlightCode lightnerConfig pageContext.Content
+//            return
+//                { pageContext with
+//                    Content = highlightedText
+//                }
+//        }
+//
+//    let processMarkdown (model : Types.Model) (pageContext : Types.PageContext) =
+//        { pageContext with
+//            Content =
+//                Helpers.markdown pageContext.Content model.Config.Plugins.Markdown
+//        }
+//        |> processCodeHighlights model.LightnerCache
+//
+//module Helpers =
+//
+//    let markdown (_markdownString : string) (_plugins : Types.MarkdownPlugin array) : string = importMember "./../js/utils.js"
+//
+//    /// Resolves a path to prevent using location of target JS file
+//    /// Note the function is inline so `__dirname` will belong to the calling file
+//    let inline resolve (path: string) =
+//        Node.Api.path.resolve(Node.Api.__dirname, path)
+//
+//    /// Parses a React element invoking ReactDOMServer.renderToString
+//    let parseReact (el: ReactElement) =
+//        ReactDomServer.renderToString el
+//
+//    /// Parses a React element invoking ReactDOMServer.renderToStaticMarkup
+//    let parseReactStatic (el: ReactElement) =
+//        ReactDomServer.renderToStaticMarkup el
+//
 
-    let unEscapeHTML (unsafe : string) =
-        unsafe
-            .Replace("&amp;", "&")
-            .Replace("&lt;", "<")
-            .Replace("&gt;", ">")
-            .Replace("&quot;", "\"")
-            .Replace("&#039;", "'")
 
-
-    // type DangerousInnerHtml =
-    //     { __html : string }
-
-    // let htmlFromMarkdown str =
-    //     promise {
-    //         let! html = makeHtml str
-    //         return div [ DangerouslySetInnerHTML { __html = html } ] [ ]
-    //     }
-
-    // let contentFromMarkdown str =
-    //     promise {
-    //         let! html = makeHtml str
-    //         return Content.content [ Content.Props [ DangerouslySetInnerHTML { __html = html } ] ]
-    //             [ ]
-    //     }
-
-    let whitespace =
-        span [ DangerouslySetInnerHTML { __html = " " } ]
-            [ ]
+//
+//    // type DangerousInnerHtml =
+//    //     { __html : string }
+//
+//    // let htmlFromMarkdown str =
+//    //     promise {
+//    //         let! html = makeHtml str
+//    //         return div [ DangerouslySetInnerHTML { __html = html } ] [ ]
+//    //     }
+//
+//    // let contentFromMarkdown str =
+//    //     promise {
+//    //         let! html = makeHtml str
+//    //         return Content.content [ Content.Props [ DangerouslySetInnerHTML { __html = html } ] ]
+//    //             [ ]
+//    //     }
+//
+//    let whitespace =
+//        span [ DangerouslySetInnerHTML { __html = " " } ]
+//            [ ]

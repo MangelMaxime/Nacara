@@ -128,19 +128,6 @@ module Extra =
                     )
             }
 
-        let copy (source: string) (destination: string) =
-            promise {
-                do! destination |> Directory.dirname |> Directory.ensure
-                return!
-                    Promise.create (fun resolve reject ->
-                        Node.Api.fs?copyFile$(source, destination, fun res ->
-                            match res with
-                            | Some res -> reject res
-                            | None -> resolve ()
-                        )
-                    )
-            }
-
         let exist (path : string) =
             Promise.create (fun resolve reject ->
                 Node.Api.fs.exists(U2.Case1 path, (fun res ->

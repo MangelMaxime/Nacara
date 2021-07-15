@@ -120,9 +120,9 @@
       },
       "Thoth.Json": {
         "type": "Direct",
-        "requested": "[6.0.0, )",
-        "resolved": "6.0.0",
-        "contentHash": "fJ9nhZezOyRIsaluEIj5ytCSCbnsvA7ZCa1kY7KkWPqyHtc+SDvjthz5edoFxOAHH44iSmxl6zakapjMSRJbbw==",
+        "requested": "[5.1.0, )",
+        "resolved": "5.1.0",
+        "contentHash": "qE/4oEwH6wfxiK5EUT1RYImILizDVyWVXFJbcRjdd62CycVqd9stAnYQhVrU3Euq1LeC4Xgm58w7zDc+KSglYg==",
         "dependencies": {
           "FSharp.Core": "4.7.2",
           "Fable.Core": "3.1.6"

@@ -6,6 +6,26 @@
     margin-bottom: 0;
 }
 
+$menu-list-link-padding: 0.5em 1.25em;
+.menu-list .menu-list {
+    &:not(.has-menu-group) {
+        padding-left: 1.25em;
+    }
+}
+
+.menu-list:not(:last-child) {
+    margin-bottom: 0.5em;
+}
+
+.menu-list li ul {
+    border-left: unset;
+    margin: 0 $menu-nested-list-margin;
+
+    &.table-of-content {
+        margin: 0;
+    }
+}
+
 // Collapsable / Expandable menu
 .menu-group {
     .icon {
@@ -110,7 +130,7 @@ h2, h3, h4, h5, h6  {
     }
 }
 
-@include desktop-only {
+@include desktop {
     .mobile-menu {
         display: none;
     }
@@ -168,7 +188,6 @@ h2, h3, h4, h5, h6  {
 
     .menu {
         margin-top: $navbar-height;
-        border-right: 1px solid #e0e0e0;
         padding-right: 1rem;
     }
 }
@@ -197,18 +216,19 @@ h2, h3, h4, h5, h6  {
     // }
 
     .has-table-of-content {
-        background-color: $primary-light;
         border-radius: $menu-item-radius;
-        scroll-margin: 3rem;
 
-        .is-active {
+        &.is-active {
             border-radius: $menu-item-radius 0 0;
         }
     }
 
     .table-of-content {
         border-left: unset;
-        margin: 0 $size-small;
+        padding: 0 $size-small;
+        background-color: $primary-light;
+        border-radius: 0 0 $menu-item-radius;
+        scroll-margin: 3rem;
 
         a {
             color: $grey-dark;

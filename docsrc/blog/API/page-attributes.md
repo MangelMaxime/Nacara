@@ -1,6 +1,6 @@
 ---
 title: Page attributes
-layout: default
+layout: nacara-standard
 ---
 
 [[toc]]

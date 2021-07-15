@@ -1,6 +1,6 @@
 ---
 title: nacara.json
-layout: default
+layout: nacara-standard
 ---
 
 [[toc]]

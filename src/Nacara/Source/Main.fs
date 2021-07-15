@@ -4,606 +4,361 @@ open Fable.Import
 
 open Fable.Core
 open Fable.Core.JsInterop
-open Fulma
-open Fable.React
-open Fable.React.Props
 open Thoth.Json
 open Types
-open System
+open Elmish
+open Node
 
 open System.Text.RegularExpressions
 open System.Collections.Generic
 
-// We use importSideEffects so the files are included in the output by fable-splitter
-// importSideEffects "./../js/markdown-it-anchored.js"
-// importSideEffects "./../js/markdown-it-toc.js"
-
-// let processCodeHighlights (lightnerConfig : Map<string, CodeLightner.Config>) (pageContext : PageContext) =
-//     let codeBlockRegex =
-//         // Regex("""<pre\b[^>]*><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", RegexOptions.Multiline ||| RegexOptions.Singleline)
-//         JS.Constructors.RegExp.Create("""<pre\b[^>]*><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", "gms")
-
-//     let rec apply (text : string) =
-//         promise {
-//             let m = codeBlockRegex.Match pageContext.Content
-//             if m.Success then
-//                 let wholeText = m.Groups.[0].Value
-//                 let lang = m.Groups.[1].Value
-//                 let codeText =
-//                     m.Groups.[2].Value
-//                     |> Helpers.unEscapeHTML
-//                     // Escape single `$` caracter otherwise vscode-textmaste inject
-//                     // source code at `$` place.
-//                     |> (fun str -> str.Replace("$", "$$"))
-
-//                 match Map.tryFind lang lightnerConfig with
-//                 | Some config ->
-//                     let! formattedText = CodeLightner.lighten config codeText
-//                     return! text.Replace(wholeText, formattedText)
-//                             |> apply
-//                 | None ->
-//                     Log.warnFn "No grammar found for language: `%s`" lang
-//                     return! pageContext.Content
-//                             |> apply
-//             else
-//                 return text
-//         }
-
-//     promise {
-//         let! processedContent = apply pageContext.Content
-//         return { pageContext with Content = processedContent }
-//     }
-
 let cwd = Node.Api.``process``.cwd()
 
-Log.infoFn "Current directory:\n%s" cwd
+Log.info $"Current directory:\n%s{cwd}"
 
-open Chokidar
+type Model =
+    | Initializing
+    | ServerMode
+    | BuildMode
 
-let (|MarkdownFile|JavaScriptFile|SassFile|UnsupportedFile|) (path : string) =
-    let ext = Node.Api.path.extname(path)
+type Msg =
+    |NoOp
+
+let private init () =
+    Initializing
+    , Cmd.none
+
+let private update (msg : Msg) (model : Model) =
+    match msg with
+    | NoOp ->
+        model
+        , Cmd.none
+
+// This is a console program the view does nothing
+let view _ _ = ()
+
+let private (|MarkdownFile|JavaScriptFile|SassFile|MenuFile|OtherFile|) (filePath : string) =
+    let ext = path.extname(filePath)
 
     match ext.ToLower() with
     | ".md" -> MarkdownFile
     | ".js" -> JavaScriptFile
     | ".scss" | ".sass" -> SassFile
-    | _ -> UnsupportedFile ext
-
-[<NoComparison>]
-type Msg =
-    | ProcessBuildMode
-    | ProcessMarkdown of string
-    | ProcessSass of string
-    | ProcessMarkdownResult of Result<PageContext, string * string>
-    | ProcessFailed of exn
-    | ProcessUnkownFile of string
-    | WriteFileSuccess of string
-    | WriteFileFailed of exn
-    | ProgramExitFailed of exn
-
-let processFile (path : string, model : Model) =
-    promise {
-        let! fileContent = File.read path
-        let fm = FrontMatter.fm.Invoke(fileContent)
-
-        let layoutDecoder =
-            Decode.field "layout" Decode.string
-
-        match Decode.fromValue "$" layoutDecoder fm.attributes with
-        | Error msg ->
-            let errorMsg =
-                sprintf "The attributes of %s are invalid.\n%s" path msg
-            return Error (path, errorMsg)
-
-        | Ok layoutName ->
-            match Map.tryFind layoutName model.Config.LayoutConfig with
-            | Some layoutFunc ->
-                let pageContext =
-                    {
-                        Path = path
-                        Content = fm.body
-                        FrontMatter = fm.attributes
-                    }
-
-                let! layout = layoutFunc.Invoke(model, pageContext)
-
-                let result =
-                    { pageContext with
-                        Content =
-                            Helpers.parseReactStatic layout
-                    }
-
-                return Ok result
-
-            | None ->
-                let errorMsg =
-                    sprintf "No layout '%s' found in your config file." layoutName
-                return Error (path, errorMsg)
-    }
-
-open Elmish
-
-let baseUrlMiddleware (baseUrl : string) : LiveServer.Middleware = import "default" "./../js/base-url-middleware.js"
-
-let private startServerIfNeeded (config : Config) =
-    if config.IsWatch then
-        // Start the LiveServer instance
-        let liveServerOption =
-            jsOptions<LiveServer.Options>(fun o ->
-                o.root <- Node.Api.path.join(cwd, config.Output)
-                o.``open`` <- false
-                o.logLevel <- 0
-                o.port <- config.ServerPort
-                o.host <- "localhost"
-            )
-
-        if config.BaseUrl <> "/" then
-            liveServerOption.middleware <-
-                [|
-                    baseUrlMiddleware config.BaseUrl
-                |]
-
-        let server = LiveServer.liveServer.start(liveServerOption)
-
-        // We need to register in the event in order have access to the server info
-        // Otherwise, the server isn't ready yet
-        server.on("listening", (fun _ _ ->
-            let address = server.address()
-            Log.success "Server started at: http://%s:%i" address?address address?port
-        ))
-        |> ignore
-
-        Some server
-    else
-        None
-
-let startFileWatcherIfNeeded (config : Config) =
-    if config.IsWatch then
-        Some (chokidar.watch(config.Source))
-    else
-        None
-
-let init (config : Config, processQueue : string list, docFiles : JS.Map<string, PageContext>, lightnerCache : JS.Map<string,CodeLightner.Config>) =
-    let buildCmd =
-        if config.IsWatch then
-            Cmd.none
+    | _ ->
+        if path.basename(filePath) = "menu.json" then
+            MenuFile
         else
-            Cmd.ofMsg ProcessBuildMode
+            OtherFile ext
 
-    let copyInternalRessources =
-        let destination =
-            Node.Api.path.join(
-                cwd,
-                config.Output,
-                "static",
-                "nacara_internals"
-            )
-
-        let source =
-            Node.Api.path.join(
-                __SOURCE_DIRECTORY__,
-                "./../../Layouts/Standard/scripts/menu.js"
-            )
-
-        Cmd.OfPromise.attempt
-            (fun (source, destinationFolder, fileName) ->
-                promise {
-                    do! Directory.create destinationFolder
-
-                    let destinationFullPath =
-                        Node.Api.path.join(destinationFolder, fileName)
-
-                    Node.Api.fs.copyFileSync(source, destinationFullPath)
-                }
-            )
-            (source, destination, "menu.js")
-            WriteFileFailed
-
-    {
-        ProcessQueue = processQueue
-        Config = config
-        FileWatcher = startFileWatcherIfNeeded config
-        Server = startServerIfNeeded config
-        WorkingDirectory = cwd
-        IsDebug = config.IsDebug
-        DocFiles = docFiles
-        LightnerCache = lightnerCache
-    }
-    , Cmd.batch [
-        buildCmd
-        copyInternalRessources
-    ]
-
-let update (msg : Msg) (model : Model) =
-    match msg with
-    | ProcessMarkdown filePath ->
-        model
-        , Cmd.OfPromise.either processFile (filePath, model) ProcessMarkdownResult ProcessFailed
-
-    | ProcessFailed error ->
-        Log.error "%s" error.Message
-        model, Cmd.none
-
-    | ProcessSass filePath ->
-        model
-        , Cmd.OfPromise.either Write.sassFile (model, filePath) WriteFileSuccess WriteFileFailed
-
-    | ProcessMarkdownResult result ->
-        match result with
-        | Error (path, msg) ->
-            Log.error "Error when processing file: %s\n%s" path msg
-            model, Cmd.none
-
-        | Ok pageContext ->
-            let pageId = getFileId model.Config.Source pageContext
-            let oldPageContext =
-                model.DocFiles.get(pageId)
-
-            let computeCmdForcingReEvaluatioOfKnownPages =
-                lazy (
-                    model.DocFiles.entries ()
-                    |> Seq.map (fun (currentPageId, currentPageContext) ->
-                        // Don't recompute the page which trigger the recompute
-                        if currentPageId = pageId then
-                            Cmd.none
-                        else
-                            Cmd.ofMsg (ProcessMarkdown currentPageContext.Path)
-                    )
-                    |> Seq.toList
-                    |> Cmd.batch
-                )
-
-            let recomputeCmd =
-                if isNull (box oldPageContext) then
-                    computeCmdForcingReEvaluatioOfKnownPages.Value
-                else
-                    // If the page attributes didn't change do nothing
-                    // if oldPageContext = pageContext then
-                        Cmd.none
-                    // If the page attributes changed recompute all the page
-                    // This is needed to ensure the element using attributes of the pages are up to date every where
-                    // else
-                    //     computeCmdForcingReEvaluatioOfKnownPages.Value
-
-            let newDocFiles = model.DocFiles.set(pageId, pageContext) // Map.add pageId pageContext model.DocFiles
-
-            // let newStaticRessources =
-            //     List.except model.StaticRessources pageContext.StaticRessources
-
-            // let staticRessourcesCmd =
-            //     if newStaticRessources.IsEmpty then
-            //         Cmd.none
-            //     else
-            //         newStaticRessources
-            //         |> List.map (fun source ->
-            //             // let fileName =
-            //             //     Node.Api.path.basename(source)
-
-            //             // let layoutName =
-            //             //     match Map.tryFind pageContext.Attributes.Layout model.Config.LayoutConfig with
-            //             //     | Some layoutInfo ->
-            //             //         Some layoutInfo.LayoutName
-
-            //             //     | None ->
-            //             //         Log.errorFn "No layout '%s' found in your config file." pageContext.Attributes.Layout
-            //             //         None
-
-            //             // match layoutName with
-            //             // | Some layoutName ->
-            //             //     let destination =
-            //             //         Node.Api.path.join(
-            //             //             model.WorkingDirectory,
-            //             //             model.Config.Output,
-            //             //             "static",
-            //             //             layoutName
-            //             //         )
-
-            //             //     Cmd.OfPromise.attempt
-            //             //         (fun (source, destinationFolder, fileName) ->
-            //             //             promise {
-            //             //                 do! Directory.create destinationFolder
-
-            //             //                 let destinationFullPath =
-            //             //                     Node.Api.path.join(destinationFolder, fileName)
-
-            //             //                 Node.Api.fs.copyFileSync(source, destinationFullPath)
-            //             //             }
-            //             //         )
-            //             //         (source, destination, fileName)
-            //             //         WriteFileFailed
-            //             // | None ->
-            //             //     Cmd.none
-
-            //         )
-            //         |> Cmd.batch
-
-            let newModel =
-                { model with
-                    DocFiles = newDocFiles
-                }
-
-            newModel
-            , Cmd.batch [
-                Cmd.OfPromise.either Write.standard (newModel, pageContext) WriteFileSuccess WriteFileFailed
-                recomputeCmd
-            ]
-
-    // Copy unkown file by keeping the folder structure
-    | ProcessUnkownFile source ->
-        let sourcePath = Node.Api.path.dirname source
-        let fileName = Node.Api.path.basename source
-        let docFolder = Node.Api.path.join(model.WorkingDirectory, model.Config.Source)
-        let relativeSourcePath = Node.Api.path.relative(docFolder, sourcePath)
-
-        let destination =
-            Node.Api.path.join(
-                model.WorkingDirectory,
-                model.Config.Output,
-                relativeSourcePath
-            )
-
-        let cmd =
-            Cmd.OfPromise.attempt
-                (fun (source, destinationFolder, fileName) ->
-                    promise {
-                        do! Directory.create destinationFolder
-
-                        let destinationFullPath =
-                            Node.Api.path.join(destinationFolder, fileName)
-
-                        Node.Api.fs.copyFileSync(source, destinationFullPath)
-                    }
-                )
-                (source, destination, fileName)
-                WriteFileFailed
-
-        model
-        , cmd
-
-    | WriteFileSuccess path ->
-        Log.log "Write: %s" path
-
-        let cmd =
-            if model.Config.IsWatch then
-                Cmd.none
-            else
-                Cmd.ofMsg ProcessBuildMode
-
-        model, cmd
-
-    | WriteFileFailed error ->
-        Log.error "Error when writting a file:\n%s" error.Message
-        model, Cmd.none
-
-    | ProcessBuildMode ->
-        match model.ProcessQueue with
-        | filePath::tail ->
-            let cmd =
-                match filePath with
-                | MarkdownFile ->
-                    Cmd.ofMsg (ProcessMarkdown filePath)
-
-                | JavaScriptFile ->
-                    Cmd.ofMsg ProcessBuildMode // TODO: Refresh all the page using this file for post process
-
-                | SassFile ->
-                    Cmd.ofMsg (ProcessSass filePath)
-                | UnsupportedFile _ ->
-                    if model.IsDebug then
-                        Log.warn "Watcher has been triggered on an unsupported file: %s" filePath
-                    Cmd.ofMsg ProcessBuildMode
-
-            { model with
-                ProcessQueue = tail
-            }
-            , cmd
-
-        | [ ] ->
-            // All files has been process, kill the process as it was launch in Build mode
-            let exit () =
-                Node.Api.``process``.exit(0)
-
-            Log.success "Generation done, exiting..."
-            model
-            , Cmd.OfFunc.attempt exit () ProgramExitFailed
-
-    | ProgramExitFailed error ->
-        if model.IsDebug then
-            Log.errorFn "%A" error
-
-        Log.error "Failed to exit the process, please kill it manually using `Ctrl+C`"
-        model, Cmd.none
-
-
-let fileWatcherSubscription (model : Model) =
-    let handler dispatch =
-        // Register behavior when:
-        // - a new file is added to the `Source` directory
-        // - a tracked file change
-        match model.FileWatcher with
-        | Some fileWatcher ->
-            fileWatcher.on(Chokidar.Events.All, (fun event path ->
-                match event with
-                | Chokidar.Events.Add
-                | Chokidar.Events.Change ->
-                    match path with
-                    | MarkdownFile ->
-                        ProcessMarkdown path
-                        |> dispatch
-                    // | JavaScriptFile -> () // TODO: Refresh all the page using this file for post process
-                    | SassFile ->
-                        ProcessSass path
-                        |> dispatch
-                    | JavaScriptFile
-                    | UnsupportedFile _ ->
-                        ProcessUnkownFile path
-                        |> dispatch
-                        // if model.IsDebug then
-                        //     Log.warn "Watcher has been triggered on an unsupported file: %s" path
-                | Chokidar.Events.Unlink
-                | Chokidar.Events.UnlinkDir
-                | Chokidar.Events.Ready
-                | Chokidar.Events.Raw
-                | Chokidar.Events.Error
-                | Chokidar.Events.AddDir
-                | _ -> ()
-            ))
-        | None ->
-            ()
-
-    [ handler ]
-
-let tryBuildPageContext (path : string) =
+let private initMenuFiles (sourceFolder : string) (filePath : string) =
     promise {
-        let! fileContent = File.read path
+        let fullFilePath =
+            path.join(sourceFolder, path.sep, filePath)
+
+        let! fileContent = File.read fullFilePath
+
+        let segments =
+            path.normalize(filePath).Split(char path.sep)
+
+        let section =
+            // Menu.json is at the root level of the sourceFolder let's make its section empty for now
+            if segments.Length = 1 then
+                ""
+            else
+                segments.[0]
+
+        match Decode.fromString Menu.decoder fileContent with
+        | Ok items ->
+
+            return Ok {
+                Section = section
+                Items = items
+            }
+
+        | Error errorMessage ->
+            return Error $"Error while reading %s{filePath}\n%s{errorMessage}"
+    }
+
+let private initPageContext (sourceFolder : string) (filePath : string) =
+    promise {
+        let fullFilePath =
+            path.join(sourceFolder, path.sep, filePath)
+
+        let! fileContent = File.read fullFilePath
         let fm = FrontMatter.fm.Invoke(fileContent)
 
-//        match Decode.fromValue "$" PageAttributes.Decoder fm.attributes with
-//        | Error msg ->
-//            let errorMsg =
-//                sprintf "The attributes of %s are invalid.\n%s" path msg
-//            return Error (path, errorMsg)
-//        | Ok pageAttributes ->
-        return Ok { Path = path
-                    Content = fm.body
-                    FrontMatter = fm.attributes }
+        let segments =
+            path.normalize(filePath).Split(char path.sep)
+
+        let section =
+            // Menu.json is at the root level of the sourceFolder let's make its section empty for now
+            if segments.Length = 1 then
+                ""
+            else
+                segments.[0]
+
+        let commonInfoDecoder =
+            Decode.object (fun get ->
+                {|
+                    Layout = get.Required.Field "layout" Decode.string
+                    Title = get.Optional.Field "title" Decode.string
+                |}
+            )
+
+        match Decode.fromValue "$" commonInfoDecoder fm.attributes with
+        | Ok commonInfo ->
+            return Ok {
+                PageId = getPageId filePath
+                RelativePath = filePath
+                FullPath = fullFilePath
+                Content = fm.body
+                Layout = commonInfo.Layout
+                Title = commonInfo.Title
+                Section = section
+                Attributes = fm.attributes
+            }
+
+        | Error errorMessage ->
+            return Error $"One property is missing from %s{filePath}.\n%s{errorMessage}"
     }
 
-let checkCliArgs (config: Config) =
-    let args =
-        Node.Api.``process``.argv
-        // 0. Is node program
-        // 1. Is the JavaScript file
-        |> Seq.skip 2
-        |> Seq.toList
+let private initLighterCache (config : Config) =
+    match config.LightnerConfig with
+    | Some lightnerConfig ->
+        let lightnerConfig =
+            lightnerConfig.GrammarFiles
+            |> List.map (fun filePath ->
+                if File.existSync filePath then
+                    let grammarText = File.readSync filePath
+                    match Decode.fromString (Decode.field "scopeName" Decode.string) grammarText with
+                    | Ok scopeName ->
+                        Some (scopeName, filePath)
+                    | Error msg ->
+                        Log.error $"Unable to find `scopeName` in `%s{filePath}`.\Sub decoder error:\n%s{msg}"
+                        None
+                else
+                    Log.error $"File not found: %s{filePath}"
+                    None
+            )
+            |> List.filter Option.isSome
+            |> List.map (function
+                | Some (scopeName, grammarPath) ->
+                    let config =
+                        jsOptions<CodeLightner.Config>(fun o ->
+                            o.backgroundColor <- lightnerConfig.BackgroundColor
+                            o.textColor <- lightnerConfig.TextColor
+                            o.themeFile <- lightnerConfig.ThemeFile
+                            o.scopeName <- scopeName
+                            o.grammarFiles <- [| Directory.join cwd grammarPath |]
+                        )
+                    scopeName.Split('.').[1], config
+                | None -> failwith "Should not happen, we filtered the list before"
+            )
+            |> List.toArray
 
-    let onFlag (flags: string list) func (config: Config) =
-        args
-        |> List.exists (fun a ->
-            flags
-            |> List.exists (fun flag -> a = flag)
-        )
-        |> function
-            | true -> func config
-            | false -> config
+        JS.Constructors.Map.Create(lightnerConfig)
 
-    config
-    |> onFlag ["--watch"; "-w"] (fun c -> { c with IsWatch = true })
+    | None ->
+        JS.Constructors.Map.Create()
+
+type FilesAccumulator =
+    {
+        MarkdownFiles : string list
+        MenuFiles : string list
+        SassFiles : string list
+        JavaScriptFile : string list
+        OtherFiles : string list
+    }
+
+    static member Empty =
+        {
+            MarkdownFiles = []
+            MenuFiles = []
+            SassFiles = []
+            JavaScriptFile = []
+            OtherFiles = []
+        }
+
+let private cliArgs =
+    ``process``.argv
+    // 0. Is node program
+    // 1. Is the JavaScript file
+    |> Seq.skip 2
+    |> Seq.toList
+
+let private hasBoolArgs (flags: string list) =
+    cliArgs
+    |> List.exists (fun a ->
+        flags
+        |> List.exists (fun flag -> a = flag)
+    )
+
+let private isWatch =
+    hasBoolArgs ["--watch"; "-w"]
+
+let private isVerbose =
+    hasBoolArgs ["--verbose"; "-V"]
 
 let start () =
     promise {
-        let configPath = Node.Api.path.join(cwd, "nacara.config.js")
+        let configPath = Node.Api.path.join(cwd, "nacara.config.json")
         let! hasDocsConfig = File.exist(configPath)
 
+        // Check if the Nacara config file exist
         if hasDocsConfig then
-            let importedModule : obj = require configPath
-            match Decode.fromValue "$" Config.Decoder importedModule  with
+            let! configJson = File.read configPath
+            // Check if the Nacara config file is valid
+            match Decode.fromString (Config.decoder cwd) configJson with
             | Ok config ->
-                let config = checkCliArgs config
+                // Update the config with the CLI args
+                let config =
+                    { config with
+                        IsVerbose = isVerbose
+                    }
 
-                let! files = Directory.getFiles true config.Source
+                Log.log $"Source folder: %s{config.SourceFolder}"
 
-                let! pageContexts =
+                // The config so now load the files from the source folder
+                let! files = Directory.getFiles true config.SourceFolder
+
+                // For the markdown files, initialize their context
+                let files =
                     files
-                    |> List.map (fun file ->
-                        config.Source + "/" + file
-                    )
-                    |> List.filter (fun path ->
+                    |> List.fold (fun acc path ->
                         match path with
                         | MarkdownFile ->
-                            true
-                        | JavaScriptFile
-                        | SassFile
-                        | UnsupportedFile _ ->
-                            false
-                    )
-                    |> List.map tryBuildPageContext
+                            { acc with
+                                MarkdownFiles = path :: acc.MarkdownFiles
+                            }
+                        | JavaScriptFile ->
+                            { acc with
+                                JavaScriptFile = path :: acc.JavaScriptFile
+                            }
+
+                        | SassFile ->
+                            { acc with
+                                SassFiles = path :: acc.SassFiles
+                            }
+
+                        | MenuFile ->
+                            { acc with
+                                MenuFiles = path :: acc.MenuFiles
+                            }
+
+                        | OtherFile _ ->
+                            { acc with
+                                OtherFiles = path :: acc.OtherFiles
+                            }
+                    ) FilesAccumulator.Empty
+
+                let! pageContextResults =
+                    files.MarkdownFiles
+                    |> List.map (initPageContext config.SourceFolder)
                     |> Promise.all
 
-                let (validContext, erroredContext) =
-                    pageContexts
-                    |> Array.partition (fun result ->
-                        match result with
-                        | Ok _ -> true
-                        | Error _ -> false
+                let (validPageContext, erroredPageContext) =
+                    pageContextResults
+                    |> Array.partitionMap (fun x ->
+                        match x with
+                        | Ok validPageContext ->
+                            Choice1Of2 validPageContext
+
+                        | Error errorMessage ->
+                            Choice2Of2 errorMessage
                     )
 
-                erroredContext
-                |> Array.iter (function
-                    | Error (path, msg) ->
-                        Log.error "Error when processing file: %s\n%s" path msg
-                    | Ok _ -> failwith "Should not happen we filtered them before"
-                )
+                let lightnerCache = initLighterCache config
 
-                let docFiles =
-                    validContext
-                    |> Array.map (function
-                        | Ok pageContext ->
-                            let id = getFileId config.Source pageContext
-                            (id, pageContext)
-                        | Error _ -> failwith "Should not happen we filtered them before"
+                let layouts =
+                    config.Layouts
+                    |> Array.map (fun layoutPath ->
+                        let layout : LayoutInterface =
+                            // The path is relative, so load it relatively from the CWD
+                            if layoutPath.StartsWith("./") then
+                                let newPath =
+                                    path.join(cwd, layoutPath)
+
+                                require.Invoke newPath |> unbox
+                            // The path is not relative, require it as an npm module
+                            else
+                                require.Invoke layoutPath |> unbox
+
+                        layout.``default``
                     )
 
-                let docFiles =
-                    JS.Constructors.Map.Create(docFiles)
+                let! menuFiles =
+                    files.MenuFiles
+                    |> List.map (initMenuFiles config.SourceFolder)
+                    |> Promise.all
 
-                let lightnerCache =
-                    match config.LightnerConfig with
-                    | Some lightnerConfig ->
-                        let lightnerConfig =
-                            lightnerConfig.GrammarFiles
-                            |> List.map (fun filePath ->
-                                if File.existSync filePath then
-                                    let grammarText = File.readSync filePath
-                                    match Decode.fromString (Decode.field "scopeName" Decode.string) grammarText with
-                                    | Ok scopeName ->
-                                        Some (scopeName, filePath)
-                                    | Error msg ->
-                                        Log.error "Unable to find `scopeName` in `%s`.\Sub decoder error:\n%s" filePath msg
-                                        None
-                                else
-                                    Log.error "File not found: %s" filePath
-                                    None
-                            )
-                            |> List.filter Option.isSome
-                            |> List.map (function
-                                | Some (scopeName, grammarPath) ->
-                                    let config =
-                                        jsOptions<CodeLightner.Config>(fun o ->
-                                            o.backgroundColor <- lightnerConfig.BackgroundColor
-                                            o.textColor <- lightnerConfig.TextColor
-                                            o.themeFile <- lightnerConfig.ThemeFile
-                                            o.scopeName <- scopeName
-                                            o.grammarFiles <- [| Directory.join cwd grammarPath |]
-                                        )
-                                    scopeName.Split('.').[1], config
-                                | None -> failwith "Should not happen, we filtered the list before"
-                            )
-                            |> List.toArray
+                let (validMenuFiles, erroredMenuFiles) =
+                    menuFiles
+                    |> Array.partitionMap (fun x ->
+                        match x with
+                        | Ok validMenuFile ->
+                            Choice1Of2 validMenuFile
 
-                        JS.Constructors.Map.Create(lightnerConfig)
+                        | Error errorMessage ->
+                            Choice2Of2 errorMessage
+                    )
 
-                    | None ->
-                        JS.Constructors.Map.Create()
+                let layoutDependencies =
+                    layouts
+                    |> Array.collect (fun layout ->
+                        layout.Dependencies
+                    )
+                    |> Array.toList
 
-                let processQueue =
-                    if config.IsWatch then
-                        [ ]
-                    else
-                        files
-                        |> List.map (fun filePath ->
-                            Directory.join config.Source filePath
-                        )
+//                if isWatch then2
+//                    ()
 
-                Program.mkProgram init update (fun _ _ -> ())
-                |> Program.withSubscription fileWatcherSubscription
-                |> Program.runWith (config, processQueue, docFiles, lightnerCache)
+                // In build mode we are more strict about the initial context because we can't recover from it
+                // All files should be valid otherwise stop the generation and report an error
+                if erroredPageContext.Length > 0 then
+                    for errorMessage in erroredPageContext do
+                        Log.error errorMessage
 
-            | Error msg ->
-                Log.error "Your config file seems invalid."
-                Log.errorFn "%s" msg
+                    ``process``.exit(ExitCode.INVALID_MARKDOWN_FILE_IN_BUILD_MODE)
+
+                else
+
+                    let processQueue =
+                        [
+                            for sassFile in files.SassFiles do
+                                Build.QueueFile.Sass sassFile
+
+                            for javaScriptFile in files.JavaScriptFile do
+                                Build.QueueFile.JavaScript javaScriptFile
+
+                            for otherFile in files.OtherFiles do
+                                Build.QueueFile.Other otherFile
+
+                            for markdownFile in validPageContext do
+                                Build.QueueFile.Markdown markdownFile
+
+                            for layoutDependency in layoutDependencies do
+                                Build.QueueFile.LayoutDependency layoutDependency
+                        ]
+
+                    let elmishArgs : Build.InitArgs =
+                        {
+                            Layouts = layouts
+                            Config = config
+                            ProcessQueue = processQueue
+                            Pages = validPageContext |> Array.toList
+                            Menus = validMenuFiles |> Array.toList
+                            LightnerCache = lightnerCache
+                        }
+
+                    Program.mkProgram Build.init Build.update (fun _ _ -> ())
+                    |> Program.runWith elmishArgs
+
+            | Error errorMessage ->
+                Log.error $"Invalid config file. Error:\n{errorMessage}"
+                ``process``.exit(ExitCode.INVALID_CONFIG_FILE)
         else
-            Log.error "File `nacara.config.js` not found."
-            Node.Api.``process``.exit(1)
+            Log.error "Missing 'nacara.config.json' file"
+            ``process``.exit(ExitCode.MISSING_CONFIG_FILE)
+        return ()
     }
     |> Promise.start

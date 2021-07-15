@@ -14,7 +14,6 @@
     <Compile Include="Types.fs" />
     <Compile Include="Helpers.fs" />
     <Compile Include="Write.fs" />
-    <Compile Include="Build.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
   <ItemGroup>
@@ -28,6 +27,6 @@
     <PackageReference Include="Fable.React" Version="7.4.0" />
     <PackageReference Include="Fulma" Version="2.10.1" />
     <PackageReference Include="Glutinum.Chalk" Version="0.1.0-alpha-001" />
-    <PackageReference Include="Thoth.Json" Version="6.0.0" />
+    <PackageReference Include="Thoth.Json" Version="5.1.0" />
   </ItemGroup>
 </Project>

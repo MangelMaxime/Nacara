@@ -20,5 +20,5 @@
 // });
 
 require = require("esm")(module/*, options*/)
-var nacara = require('./dist/bundle.js');
+var nacara = require('./dist/Main.js');
 nacara.start();
