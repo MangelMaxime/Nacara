@@ -631,6 +631,11 @@ type Config =
         with get () =
             path.join(this.WorkingDirectory, this.Output)
 
+// Minimal binding
+type MarkdownIt =
+    abstract render : string -> string
+
+
 [<NoComparison; NoEquality>]
 type RendererContext =
     {
@@ -639,6 +644,7 @@ type RendererContext =
         Menus : MenuConfig array
         Pages : PageContext array
         MarkdownToHtml : string -> JS.Promise<string>
+        MarkdownToHtmlWithPlugins : (MarkdownIt -> MarkdownIt) -> string -> JS.Promise<string>
     }
 
 type LayoutDependency =

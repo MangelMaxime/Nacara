@@ -107,6 +107,7 @@ let private processMarkdown (pageContext : PageContext, model : Model) =
                         Menus = model.Menus |> List.toArray
                         Pages = model.Pages |> List.toArray
                         MarkdownToHtml = markdownToHtml model.LightnerCache
+                        MarkdownToHtmlWithPlugins = markdownToHtmlWithPlugins model.LightnerCache
                     }
 
                 let! reactContent =

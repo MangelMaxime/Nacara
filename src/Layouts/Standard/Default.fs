@@ -632,10 +632,13 @@ let private renderPage
             pageContext
             pageContent
 
-
-
 let render (rendererContext : RendererContext) (pageContext : PageContext) =
     promise {
+        let rendererContext =
+            { rendererContext with
+                MarkdownToHtml = rendererContext.MarkdownToHtmlWithPlugins Prelude.setupMarkdownRenderer
+            }
+
         let! pageContent =
             pageContext.Content
             |> rendererContext.MarkdownToHtml

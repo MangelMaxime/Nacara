@@ -6,6 +6,7 @@ open Fable.React.Props
 open Fable.Core
 open Fable.Core.JsInterop
 open Node
+open Types
 
 [<RequireQualifiedAccess>]
 module ExitCode =
@@ -99,10 +100,27 @@ let markdownToHtml (lightnerConfig : JS.Map<string, CodeLightner.Config>) (markd
 .use(require('./../js/markdown-it-anchored'))
             """
 
-    handle mdMessage tags in markdown
-    
     promise {
         let htmlText = md?render(markdownText)
+
+        return! highlightCode lightnerConfig htmlText
+    }
+
+let markdownToHtmlWithPlugins (lightnerConfig : JS.Map<string, CodeLightner.Config>) (init : MarkdownIt -> MarkdownIt) (markdownText : string) =
+    let md : MarkdownIt =
+        emitJsExpr ()
+            """require('markdown-it')({
+    html: true
+})
+.use(require('./../js/markdown-it-anchored'))
+            """
+
+    let md = init md
+
+    // handle mdMessage tags in markdown
+
+    promise {
+        let htmlText = md.render(markdownText)
 
         return! highlightCode lightnerConfig htmlText
     }
