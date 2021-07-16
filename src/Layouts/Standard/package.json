@@ -2,7 +2,7 @@
     "name": "nacara-layout-standard",
     "version": "0.0.0",
     "description": "",
-    "main": "dist/export.js",
+    "main": "dist/Export.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
