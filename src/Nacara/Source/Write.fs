@@ -2,6 +2,8 @@ module Write
 
 open Types
 open Fable.Core.JsInterop
+open Fable.Core
+open Fable.React
 
 let sassFile (outputStyle : Sass.OutputStyle, destinationFolder : string, sourceFolder : string, relativeFilePath : string) =
     promise {
@@ -41,23 +43,69 @@ let copyFile (destinationFolder : string, sourceFolder : string, relativeFilePat
         return source
     }
 
-let copyLayoutDependency (destinationFolder : string, layoutDependency : LayoutDependency) =
+let copyFileWithDestination (destinationFolder : string, sourceFileName : string, destinationFileName : string) =
     promise {
         let destination =
-            layoutDependency.Destination
+            destinationFileName
             |> Directory.join destinationFolder
 
-        do! File.copy layoutDependency.Source destination
-        return layoutDependency
+        do! File.copy sourceFileName destination
+        return (sourceFileName, destination)
     }
 
-let markdown (destinationFolder : string, relativeFilePath : string, content : string) =
-    promise {
-        let destination =
-            relativeFilePath
-            |> Directory.join destinationFolder
-            |> File.changeExtension "html"
+[<NoComparison>]
+type ProcessMarkdownArgs =
+    {
+        PageContext : PageContext
+        Layouts : JS.Map<string, LayoutRenderFunc>
+        Menus : MenuConfig list
+        Config : Config
+        Pages : PageContext list
+        LightnerCache : JS.Map<string, CodeLightner.Config>
+    }
 
-        do! File.write destination content
-        return relativeFilePath
+exception ProcessFileErrorException of pageContext : PageContext * errorMessage : string * original : exn
+
+let markdown (args : ProcessMarkdownArgs) =
+    promise {
+        let layoutRenderer =
+            args.Layouts.get(args.PageContext.Layout)
+
+        if isNull (box layoutRenderer) then
+            return raise (ProcessFileErrorException (args.PageContext, $"Layout renderer '%s{args.PageContext.Layout}' is unknown", null))
+        else
+            try
+                let categoryMenu =
+                    args.Menus
+                    |> List.tryFind (fun menuConfig ->
+                        menuConfig.Section = args.PageContext.Section
+                    )
+                    |> Option.map (fun menuConfig -> menuConfig.Items)
+
+                let rendererContext =
+                    {
+                        Config = args.Config
+                        SectionMenu = categoryMenu
+                        Menus = args.Menus |> List.toArray
+                        Pages = args.Pages |> List.toArray
+                        MarkdownToHtml = markdownToHtml args.LightnerCache
+                        MarkdownToHtmlWithPlugins = markdownToHtmlWithPlugins args.LightnerCache
+                    }
+
+                let! reactContent =
+                    layoutRenderer rendererContext args.PageContext
+
+                let fileContent = ReactDomServer.renderToStaticMarkup reactContent
+
+                let destination =
+                    args.PageContext.RelativePath
+                    |> Directory.join args.Config.DestinationFolder
+                    |> File.changeExtension "html"
+
+                do! File.write destination fileContent
+
+                return args.PageContext
+            with
+                | error ->
+                    return raise (ProcessFileErrorException (args.PageContext, error.Message, error))
     }

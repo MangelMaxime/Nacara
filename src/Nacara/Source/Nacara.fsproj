@@ -14,6 +14,7 @@
     <Compile Include="Types.fs" />
     <Compile Include="Helpers.fs" />
     <Compile Include="Write.fs" />
+    <Compile Include="Watch.fs" />
     <Compile Include="Build.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>

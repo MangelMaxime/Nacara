@@ -1,18 +1,10 @@
 [
     {
         "type": "category",
-        "label": "Getting started",
+        "label": "Table of Content",
         "items": [
             "docs/API/nacara-config-json",
             "docs/index"
-        ]
-    },
-    {
-        "type": "category",
-        "label": "Getting started",
-        "items": [
-            "docs/API/page1",
-            "docs/API/page2"
         ]
     }
 ]

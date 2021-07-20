@@ -34,94 +34,6 @@ let private update (msg : Msg) (model : Model) =
         model
         , Cmd.none
 
-// This is a console program the view does nothing
-let view _ _ = ()
-
-let private (|MarkdownFile|JavaScriptFile|SassFile|MenuFile|OtherFile|) (filePath : string) =
-    let ext = path.extname(filePath)
-
-    match ext.ToLower() with
-    | ".md" -> MarkdownFile
-    | ".js" -> JavaScriptFile
-    | ".scss" | ".sass" -> SassFile
-    | _ ->
-        if path.basename(filePath) = "menu.json" then
-            MenuFile
-        else
-            OtherFile ext
-
-let private initMenuFiles (sourceFolder : string) (filePath : string) =
-    promise {
-        let fullFilePath =
-            path.join(sourceFolder, path.sep, filePath)
-
-        let! fileContent = File.read fullFilePath
-
-        let segments =
-            path.normalize(filePath).Split(char path.sep)
-
-        let section =
-            // Menu.json is at the root level of the sourceFolder let's make its section empty for now
-            if segments.Length = 1 then
-                ""
-            else
-                segments.[0]
-
-        match Decode.fromString Menu.decoder fileContent with
-        | Ok items ->
-
-            return Ok {
-                Section = section
-                Items = items
-            }
-
-        | Error errorMessage ->
-            return Error $"Error while reading %s{filePath}\n%s{errorMessage}"
-    }
-
-let private initPageContext (sourceFolder : string) (filePath : string) =
-    promise {
-        let fullFilePath =
-            path.join(sourceFolder, path.sep, filePath)
-
-        let! fileContent = File.read fullFilePath
-        let fm = FrontMatter.fm.Invoke(fileContent)
-
-        let segments =
-            path.normalize(filePath).Split(char path.sep)
-
-        let section =
-            // Menu.json is at the root level of the sourceFolder let's make its section empty for now
-            if segments.Length = 1 then
-                ""
-            else
-                segments.[0]
-
-        let commonInfoDecoder =
-            Decode.object (fun get ->
-                {|
-                    Layout = get.Required.Field "layout" Decode.string
-                    Title = get.Optional.Field "title" Decode.string
-                |}
-            )
-
-        match Decode.fromValue "$" commonInfoDecoder fm.attributes with
-        | Ok commonInfo ->
-            return Ok {
-                PageId = getPageId filePath
-                RelativePath = filePath
-                FullPath = fullFilePath
-                Content = fm.body
-                Layout = commonInfo.Layout
-                Title = commonInfo.Title
-                Section = section
-                Attributes = fm.attributes
-            }
-
-        | Error errorMessage ->
-            return Error $"One property is missing from %s{filePath}.\n%s{errorMessage}"
-    }
-
 let private initLighterCache (config : Config) =
     match config.LightnerConfig with
     | Some lightnerConfig ->
@@ -236,9 +148,16 @@ let start () =
                             }
 
                         | SassFile ->
-                            { acc with
-                                SassFiles = path :: acc.SassFiles
-                            }
+                            // Ignore files under special folders
+                            if path.Replace("\\", "/").StartsWith("scss/")
+                                || path.Replace("\\", "/").StartsWith("sass/") then
+
+                                acc
+
+                            else
+                                { acc with
+                                    SassFiles = path :: acc.SassFiles
+                                }
 
                         | MenuFile ->
                             { acc with
@@ -309,49 +228,63 @@ let start () =
                     )
                     |> Array.toList
 
-//                if isWatch then2
-//                    ()
+                let processQueue =
+                    [
+                        for sassFile in files.SassFiles do
+                            QueueFile.Sass sassFile
 
-                // In build mode we are more strict about the initial context because we can't recover from it
-                // All files should be valid otherwise stop the generation and report an error
-                if erroredPageContext.Length > 0 then
-                    for errorMessage in erroredPageContext do
-                        Log.error errorMessage
+                        for javaScriptFile in files.JavaScriptFile do
+                            QueueFile.JavaScript javaScriptFile
 
-                    ``process``.exit(ExitCode.INVALID_MARKDOWN_FILE_IN_BUILD_MODE)
+                        for otherFile in files.OtherFiles do
+                            QueueFile.Other otherFile
 
-                else
+                        for markdownFile in validPageContext do
+                            QueueFile.Markdown markdownFile
 
-                    let processQueue =
-                        [
-                            for sassFile in files.SassFiles do
-                                Build.QueueFile.Sass sassFile
+                        for layoutDependency in layoutDependencies do
+                            QueueFile.LayoutDependency layoutDependency
+                    ]
 
-                            for javaScriptFile in files.JavaScriptFile do
-                                Build.QueueFile.JavaScript javaScriptFile
-
-                            for otherFile in files.OtherFiles do
-                                Build.QueueFile.Other otherFile
-
-                            for markdownFile in validPageContext do
-                                Build.QueueFile.Markdown markdownFile
-
-                            for layoutDependency in layoutDependencies do
-                                Build.QueueFile.LayoutDependency layoutDependency
-                        ]
-
-                    let elmishArgs : Build.InitArgs =
+                if isWatch then
+                    let elmishArgs : Watch.InitArgs =
                         {
+                            ProcessQueue = processQueue
                             Layouts = layouts
                             Config = config
-                            ProcessQueue = processQueue
                             Pages = validPageContext |> Array.toList
                             Menus = validMenuFiles |> Array.toList
                             LightnerCache = lightnerCache
                         }
 
-                    Program.mkProgram Build.init Build.update (fun _ _ -> ())
+                    Program.mkProgram Watch.init Watch.update (fun _ _ -> ())
+                    |> Program.withSubscription Watch.fileWatcherSubscription
+                    |> Program.withSubscription Watch.layoutDependencyWatcherSubscription
                     |> Program.runWith elmishArgs
+
+                else
+                    // In build mode we are more strict about the initial context because we can't recover from it
+                    // All files should be valid otherwise stop the generation and report an error
+                    if erroredPageContext.Length > 0 then
+                        for errorMessage in erroredPageContext do
+                            Log.error errorMessage
+
+                        ``process``.exit(ExitCode.INVALID_MARKDOWN_FILE_IN_BUILD_MODE)
+
+                    else
+
+                        let elmishArgs : Build.InitArgs =
+                            {
+                                Layouts = layouts
+                                Config = config
+                                ProcessQueue = processQueue
+                                Pages = validPageContext |> Array.toList
+                                Menus = validMenuFiles |> Array.toList
+                                LightnerCache = lightnerCache
+                            }
+
+                        Program.mkProgram Build.init Build.update (fun _ _ -> ())
+                        |> Program.runWith elmishArgs
 
             | Error errorMessage ->
                 Log.error $"Invalid config file. Error:\n{errorMessage}"

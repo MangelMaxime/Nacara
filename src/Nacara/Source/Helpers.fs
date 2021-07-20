@@ -7,6 +7,7 @@ open Fable.Core
 open Fable.Core.JsInterop
 open Node
 open Types
+open Thoth.Json
 
 [<RequireQualifiedAccess>]
 module ExitCode =
@@ -27,7 +28,34 @@ module ExitCode =
     let COMPLETED_WITH_ERROR = 4
 
 
+[<RequireQualifiedAccess>]
+module Cmd =
 
+    open Elmish
+
+    module OfFunc =
+
+        let exec (task: 'a -> _) (arg: 'a) : Cmd<'msg> =
+            let bind dispatch =
+                try
+                    task arg
+                    |> ignore
+                with x ->
+                    ()
+            [ bind ]
+
+    module OfPromise =
+
+        /// Command to dispatch the `promise` result
+        let exec
+            (task: 'a -> Fable.Core.JS.Promise<_>)
+            (arg:'a) =
+
+            let bind dispatch =
+                (task arg)
+                |> Promise.start
+
+            [ bind ]
 
 //
 //[<Emit("require($0)")>]
@@ -53,7 +81,6 @@ let unEscapeHTML (unsafe : string) =
 
 let highlightCode (lightnerConfig : JS.Map<string, CodeLightner.Config>) (text : string) =
     let codeBlockRegex =
-        // Regex("""<pre\b[^>]*><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", RegexOptions.Multiline ||| RegexOptions.Singleline)
         JS.Constructors.RegExp.Create("""<pre\b(?!class="skip-code-lightner-grammar-not-found")><code class="language-([^"]*)">(.*?)<\/code><\/pre>""", "gms")
 
     let rec apply (text : string) =
@@ -116,8 +143,6 @@ let markdownToHtmlWithPlugins (lightnerConfig : JS.Map<string, CodeLightner.Conf
             """
 
     let md = init md
-
-    // handle mdMessage tags in markdown
 
     promise {
         let htmlText = md.render(markdownText)
@@ -219,3 +244,89 @@ module Array =
 //    let whitespace =
 //        span [ DangerouslySetInnerHTML { __html = " " } ]
 //            [ ]
+
+let initPageContext (sourceFolder : string) (filePath : string) =
+    promise {
+        let fullFilePath =
+            path.join(sourceFolder, path.sep, filePath)
+
+        let! fileContent = File.read fullFilePath
+        let fm = FrontMatter.fm.Invoke(fileContent)
+
+        let segments =
+            path.normalize(filePath).Split(char path.sep)
+
+        let section =
+            // Menu.json is at the root level of the sourceFolder let's make its section empty for now
+            if segments.Length = 1 then
+                ""
+            else
+                segments.[0]
+
+        let commonInfoDecoder =
+            Decode.object (fun get ->
+                {|
+                    Layout = get.Required.Field "layout" Decode.string
+                    Title = get.Optional.Field "title" Decode.string
+                |}
+            )
+
+        match Decode.fromValue "$" commonInfoDecoder fm.attributes with
+        | Ok commonInfo ->
+            return Ok {
+                PageId = getPageId filePath
+                RelativePath = filePath
+                FullPath = fullFilePath
+                Content = fm.body
+                Layout = commonInfo.Layout
+                Title = commonInfo.Title
+                Section = section
+                Attributes = fm.attributes
+            }
+
+        | Error errorMessage ->
+            return Error $"One property is missing from %s{filePath}.\n%s{errorMessage}"
+    }
+
+
+let (|MarkdownFile|JavaScriptFile|SassFile|MenuFile|OtherFile|) (filePath : string) =
+    let ext = path.extname(filePath)
+
+    match ext.ToLower() with
+    | ".md" -> MarkdownFile
+    | ".js" -> JavaScriptFile
+    | ".scss" | ".sass" -> SassFile
+    | _ ->
+        if path.basename(filePath) = "menu.json" then
+            MenuFile
+        else
+            OtherFile ext
+
+let initMenuFiles (sourceFolder : string) (filePath : string) =
+    promise {
+        let fullFilePath =
+            path.join(sourceFolder, path.sep, filePath)
+
+        let! fileContent = File.read fullFilePath
+
+        let segments =
+            path.normalize(filePath).Split(char path.sep)
+
+        let section =
+            // Menu.json is at the root level of the sourceFolder let's make its section empty for now
+            if segments.Length = 1 then
+                ""
+            else
+                segments.[0]
+
+        match Decode.fromString Menu.decoder fileContent with
+        | Ok items ->
+
+            return Ok {
+                Section = section
+                Items = items
+            }
+
+        | Error errorMessage ->
+            return Error $"Error while reading %s{filePath}\n%s{errorMessage}"
+    }

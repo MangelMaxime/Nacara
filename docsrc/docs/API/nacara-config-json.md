@@ -5,10 +5,27 @@ layout: nacara-standard
 
 [[toc]]
 
-:::info
+::: warning my super title
 We are working on improving the documentation in order to make it easier to read.
 :::
 
+::: warning
+We are working on improving the documentation in order to make it easier to read.
+:::
+
+::: info
+We are working on improving the documentation in order to make it easier to read.
+:::
+
+:::primary
+We are working on improving the documentation in order to make it easier to read.
+:::
+::: danger
+We are working on improving the documentation in order to make it easier to read.
+:::
+::: success
+We are working on improving the documentation in order to make it easier to read.
+:::
 You can use the file `nacara.json` in order to configure most of Nacara behaviour.
 
 ## Mandatory fields

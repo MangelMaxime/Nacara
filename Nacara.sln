@@ -11,7 +11,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Nacara", "src\Nacara\Source
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Layouts", "Layouts", "{A1194C14-D411-42A2-BFBC-5598DEC56894}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Nacara.Layouts.Standard", "src\Layouts\Standard\Nacara.Layouts.Standard.fsproj", "{0E7B35BB-7BC9-4419-8799-64C4E4514375}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Nacara.Layouts.Standard", "src\Layouts\Standard\Source\Nacara.Layouts.Standard.fsproj", "{0E7B35BB-7BC9-4419-8799-64C4E4514375}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

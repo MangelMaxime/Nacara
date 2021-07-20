@@ -32,27 +32,6 @@ let private (|Match|_|) pattern input =
     else
         None
 
-// let private (|Header2|_|) (input : string) : option<Header> =
-//     match input with
-//     | Match """<h2[^>]*>(((?!<\/h2>).)*)<a((?!<\/h2>).)*<\/h2>""" m ->
-//         {
-//             Title = m.Groups.[1].Value
-//             Link = m.Groups.[2].Value
-//         }
-//         |> Some
-//     | _ -> None
-
-// let private (|Header3|_|) (input : string) : option<Header> =
-//     match input with
-//     | Match """<h3[^>]*>(((?!<\/h3>).)*)<a((?!<\/h3>).)*<\/h3>""" m ->
-//         {
-//             Title = m.Groups.[1].Value
-//             Link = m.Groups.[2].Value
-//         }
-//         |> Some
-//     | _ -> None
-
-
 let private isNotNull (o : 'T) =
    not (isNull o)
 
@@ -67,7 +46,7 @@ let private (|Header2|_|) (m : Match) : option<Header> =
         None
 
 let private (|Header3|_|) (m : Match) : option<Header> =
-    if isNotNull m.Groups.[1] then
+    if isNotNull m.Groups.[6] then
         {
             Title = m.Groups.["h3_text"].Value
             Link = m.Groups.["h3_link"].Value

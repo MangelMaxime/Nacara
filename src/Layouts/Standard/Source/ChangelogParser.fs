@@ -175,8 +175,8 @@ module Transform =
             if String.IsNullOrEmpty changelog.Title then
                 { changelog with Title = title }
             else
-                Log.warnFn "Title has already been filled."
-                Log.warnFn "Discarding: %s" title
+                Log.warn "Title has already been filled."
+                Log.warn $"Discarding: %s{title}"
                 changelog
             |> parse tail
 

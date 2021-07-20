@@ -1,7 +1,7 @@
 {
     "githubURL": "https://github.com/MangelMaxime/Nacara",
     "url": "https://mangelmaxime.github.io",
-    "baseUrl": "/",
+    "baseUrl": "/Nacara/",
     "editUrl" : "https://github.com/MangelMaxime/Nacara/edit/master/docsrc",
     "output": "temp",
     "title": "Nacara",
@@ -17,9 +17,9 @@
                 "icon": "fas fa-book"
             },
             {
-                "category": "changelog",
-                "url": "/Nacara/changelog.html",
-                "label": "Changelog",
+                "category": "changelogs",
+                "url": "/Nacara/changelogs/nacara.html",
+                "label": "Changelogs",
                 "icon": "fas fa-tasks"
             },
             {
@@ -52,13 +52,11 @@
         "themeFile": "./lightner/themes/OneLight.json",
         "grammars": [
             "./lightner/grammars/fsharp.json",
-            "./lightner/grammars/json.json"
+            "./lightner/grammars/json.json",
+            "./lightner/grammars/JavaScript.tmLanguage.json"
         ]
     },
     "layouts": [
         "nacara-layout-standard"
-    ],
-    "plugins": [
-        "./src/Nacara/js/markdown-it-anchored.js"
     ]
 }

@@ -1,7 +1,7 @@
 @import './components/changelog.scss';
 @import './components/textual-steps.scss';
 
-// Remove botton margin of the name of the project in the navbar otherwise a the navbar is distorded
+// Remove bottom margin of the name of the project in the navbar otherwise a the navbar is distorted
 .navbar-item.title.is-4 {
     margin-bottom: 0;
 }
@@ -26,7 +26,7 @@ $menu-list-link-padding: 0.5em 1.25em;
     }
 }
 
-// Collapsable / Expandable menu
+// Collapsible / Expandable menu
 .menu-group {
     .icon {
         float: right;
@@ -86,7 +86,7 @@ span+.icon {
     }
 }
 
-// Anchor behaviour
+// Anchor behavior
 h2, h3, h4, h5, h6  {
     a {
         visibility: hidden;
@@ -109,7 +109,7 @@ h2, h3, h4, h5, h6  {
     }
 }
 
-// On touch screen we need to take into account the navbar and the breadcumb
+// On touch screen we need to take into account the navbar and the breadcrumb
 @include touch {
     .anchor {
         padding: #{$navbar-height * 2} 0 0;
@@ -166,7 +166,7 @@ h2, h3, h4, h5, h6  {
     }
 }
 
-// Ensure mininal size of the doc content
+// Ensure minimal size of the doc content
 // This allows to not have the 'Previous' & 'Next' button in the middle of the screen
 // when their are not a lot of content on the page
 .is-main-content > .section {
@@ -232,7 +232,7 @@ h2, h3, h4, h5, h6  {
 
         a {
             color: $grey-dark;
-            font-size: 0.825rem;
+            font-size: 0.925rem;
 
             &:hover {
                 color: $primary;
@@ -260,7 +260,7 @@ h2, h3, h4, h5, h6  {
 
 // Style relative to the snippet and copy button
 pre {
-    position: relative; // Make the pre relative so the copy button and positionned themself relative to it
+    position: relative; // Make the pre relative so the copy button and positioned itself relative to it
     padding-top: $size-4 !important; // This padding is to display correctly the button even if the snippet has only 1 line of code
     padding-bottom: $size-4 !important; // This padding is to display correctly the button even if the snippet has only 1 line of code
 

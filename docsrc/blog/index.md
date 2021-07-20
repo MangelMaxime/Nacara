@@ -6,7 +6,7 @@ layout: nacara-standard
 # Quick start
 
 :::info
-**Nacara** is a young project but it already make generating documentation easy.
+**Nacara** is a young project but it already make generating documentation easy.2
 
 Here are some example of documentation website created using Nacara:
 

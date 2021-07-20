@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * When Nacara encounter an unknown file in build mode skip it and trigger the next process.
 
-    It was stopping the whole generation causing problem is the user hosted some PNG files in the source folder for example.
+It was stopping the whole generation causing problem is the user hosted some PNG files in the source folder for example.
 
 ### Changed
 
@@ -38,7 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Change the config file name from `nacara.js` is now `nacara.config.js`
 
-    It seems like the new version of `npm exec` and `npx` execute/open `nacara.js` when executing `npx nacara`. Probably because the file as the same name as the package 🤷‍♂️
+It seems like the new version of `npm exec` and `npx` execute/open `nacara.js` when executing `npx nacara`. Probably because the file as the same name as the package 🤷‍♂️
 
 ### Fixed
 
@@ -74,7 +74,7 @@ User can add `layouts` node to `nacara.js`, it takes an object.
 
 Example:
 
-```
+```js
 {
     default: standard.Default,
     changelog: standard.Changelog
@@ -83,13 +83,13 @@ Example:
 
 * Responsive mode is now implemented supported in the standard layout
 
-<img style="width: 75%; margin-left: 12.5%;" src="/Nacara/public/changelog/0_2_0/desktop_preview.png" alt="Desktop preview">
+<img style="width: 75%; margin-left: 12.5%;" src="/Nacara/assets/changelog/0_2_0/desktop_preview.png" alt="Desktop preview">
 <br/>
 <br/>
 <div class="has-text-weight-bold has-text-centered">Desktop preview</div>
 <br/>
 
-<img style="width: 75%; margin-left: 12.5%;" src="/Nacara/public/changelog/0_2_0/touch_preview.gif" alt="Touchscreen preview">
+<img style="width: 75%; margin-left: 12.5%;" src="/Nacara/assets/changelog/0_2_0/touch_preview.gif" alt="Touchscreen preview">
 <br/>
 <br/>
 <div class="has-text-weight-bold has-text-centered">Desktop preview</div>
@@ -99,7 +99,7 @@ Example:
 
 It take an array of object, the properties are:
 
-```
+```js
 {
     // Path to pass to `require` function can be:
     // - a npm module
@@ -115,7 +115,7 @@ It take an array of object, the properties are:
 
 Example:
 
-```
+```js
 plugins: {
     markdown: [
         {
@@ -135,7 +135,7 @@ plugins: {
 * Build mode has been added to Nacara it active by default. You can start in watch mode by adding `--watch` or `-w` to the CLI
 * Port server can be configured via `serverPort` in `nacara.js`
 * Current section is now shown in the Table of Content
-* Previoux and Next navigation button are added at the bottom of the page
+* Previous and Next navigation button are added at the bottom of the page
 * Add a button to scroll to the top, this button is only displayed the page is scrolled
 * Add *material like* menu when displayed on touchscreen (mobile & tablet)
 * Make the anchors elements less visible
