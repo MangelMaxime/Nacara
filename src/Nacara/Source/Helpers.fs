@@ -186,65 +186,6 @@ module Array =
         Array.iter (mapper >> function Choice1Of2 e -> x.Add e | Choice2Of2 e -> y.Add e) source
         x.ToArray (), y.ToArray ()
 
-//
-//module PageContext =
-//
-//    let processCodeHighlights (lightnerConfig : JS.Map<string, CodeLightner.Config>) (pageContext : Types.PageContext) =
-//        promise {
-//            let! highlightedText = highlightCode lightnerConfig pageContext.Content
-//            return
-//                { pageContext with
-//                    Content = highlightedText
-//                }
-//        }
-//
-//    let processMarkdown (model : Types.Model) (pageContext : Types.PageContext) =
-//        { pageContext with
-//            Content =
-//                Helpers.markdown pageContext.Content model.Config.Plugins.Markdown
-//        }
-//        |> processCodeHighlights model.LightnerCache
-//
-//module Helpers =
-//
-//    let markdown (_markdownString : string) (_plugins : Types.MarkdownPlugin array) : string = importMember "./../js/utils.js"
-//
-//    /// Resolves a path to prevent using location of target JS file
-//    /// Note the function is inline so `__dirname` will belong to the calling file
-//    let inline resolve (path: string) =
-//        Node.Api.path.resolve(Node.Api.__dirname, path)
-//
-//    /// Parses a React element invoking ReactDOMServer.renderToString
-//    let parseReact (el: ReactElement) =
-//        ReactDomServer.renderToString el
-//
-//    /// Parses a React element invoking ReactDOMServer.renderToStaticMarkup
-//    let parseReactStatic (el: ReactElement) =
-//        ReactDomServer.renderToStaticMarkup el
-//
-
-
-//
-//    // type DangerousInnerHtml =
-//    //     { __html : string }
-//
-//    // let htmlFromMarkdown str =
-//    //     promise {
-//    //         let! html = makeHtml str
-//    //         return div [ DangerouslySetInnerHTML { __html = html } ] [ ]
-//    //     }
-//
-//    // let contentFromMarkdown str =
-//    //     promise {
-//    //         let! html = makeHtml str
-//    //         return Content.content [ Content.Props [ DangerouslySetInnerHTML { __html = html } ] ]
-//    //             [ ]
-//    //     }
-//
-//    let whitespace =
-//        span [ DangerouslySetInnerHTML { __html = " " } ]
-//            [ ]
-
 let initPageContext (sourceFolder : string) (filePath : string) =
     promise {
         let fullFilePath =

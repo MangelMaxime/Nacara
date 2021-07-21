@@ -110,7 +110,7 @@ let private errorToString (path : string, error) =
         | BadField (msg, value) ->
             genericMsg msg value true
         | BadPath (msg, value, fieldName) ->
-            genericMsg msg value true + ("\nNode `" + fieldName + "` is unkown.")
+            genericMsg msg value true + ("\nNode `" + fieldName + "` is unknown.")
         | TooSmallArray (msg, value) ->
             "Expecting " + msg + ".\n" + (Decode.Helpers.anyToString value)
         | BadOneOf messages ->

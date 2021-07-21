@@ -2,9 +2,6 @@ module Layout.Standard.Export
 
 open Fable.Core.JsInterop
 open Types
-open Fable.React
-open Fable.Core
-
 open Node
 open Feliz
 
