@@ -7,6 +7,12 @@
       "commands": [
         "fable"
       ]
+    },
+    "paket": {
+      "version": "5.258.1",
+      "commands": [
+        "paket"
+      ]
     }
   }
 }

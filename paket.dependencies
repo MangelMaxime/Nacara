@@ -1,0 +1,15 @@
+version 5.258.1
+source https://www.nuget.org/api/v2
+
+nuget FSharp.Core
+nuget Fable.Core
+nuget Fable.Date
+nuget Fable.Elmish
+nuget Fable.FontAwesome
+nuget Fable.FontAwesome.Free
+nuget Fable.Node
+nuget Fable.Promise
+nuget Feliz
+nuget Feliz.Bulma
+nuget Glutinum.Chalk
+nuget Thoth.Json

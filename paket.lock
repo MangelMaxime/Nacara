@@ -1,0 +1,66 @@
+NUGET
+  remote: https://www.nuget.org/api/v2
+    Fable.AST (3.1.1) - restriction: >= netstandard2.0
+    Fable.Browser.Blob (1.1.4) - restriction: >= netstandard2.0
+      Fable.Core (>= 3.0) - restriction: >= netstandard2.0
+      FSharp.Core (>= 4.7.2) - restriction: >= netstandard2.0
+    Fable.Browser.Dom (2.4.4) - restriction: >= netstandard2.0
+      Fable.Browser.Blob (>= 1.1.4) - restriction: >= netstandard2.0
+      Fable.Browser.Event (>= 1.4.4) - restriction: >= netstandard2.0
+      Fable.Browser.WebStorage (>= 1.0.4) - restriction: >= netstandard2.0
+      Fable.Core (>= 3.0) - restriction: >= netstandard2.0
+      FSharp.Core (>= 4.7.2) - restriction: >= netstandard2.0
+    Fable.Browser.Event (1.4.5) - restriction: >= netstandard2.0
+      Fable.Browser.Gamepad (>= 1.0.3) - restriction: >= netstandard2.0
+      Fable.Core (>= 3.0) - restriction: >= netstandard2.0
+      FSharp.Core (>= 4.7.2) - restriction: >= netstandard2.0
+    Fable.Browser.Gamepad (1.0.3) - restriction: >= netstandard2.0
+      Fable.Core (>= 3.0) - restriction: >= netstandard2.0
+      FSharp.Core (>= 4.7.2) - restriction: >= netstandard2.0
+    Fable.Browser.WebStorage (1.0.4) - restriction: >= netstandard2.0
+      Fable.Browser.Event (>= 1.4.4) - restriction: >= netstandard2.0
+      Fable.Core (>= 3.0) - restriction: >= netstandard2.0
+      FSharp.Core (>= 4.7.2) - restriction: >= netstandard2.0
+    Fable.Core (3.2.8)
+      FSharp.Core (>= 4.7.2) - restriction: >= netstandard2.0
+    Fable.Date (1.0)
+      Fable.Core (>= 2.0.2) - restriction: >= netstandard2.0
+      FSharp.Core (>= 4.5.2) - restriction: >= netstandard2.0
+    Fable.Elmish (3.1)
+      Fable.Core (>= 3.0) - restriction: >= netstandard2.0
+      FSharp.Core (>= 4.6.2) - restriction: >= netstandard2.0
+    Fable.FontAwesome (2.0)
+      Fable.Core (>= 3.0) - restriction: >= netstandard2.0
+      Fable.React (>= 5.1) - restriction: >= netstandard2.0
+    Fable.FontAwesome.Free (2.1)
+      Fable.Core (>= 3.0) - restriction: >= netstandard2.0
+      Fable.FontAwesome (>= 2.0) - restriction: >= netstandard2.0
+      Fable.React (>= 5.1) - restriction: >= netstandard2.0
+    Fable.Node (1.2)
+      Fable.Core (>= 3.1.2) - restriction: >= netstandard2.0
+      FSharp.Core (>= 5.0) - restriction: >= netstandard2.0
+    Fable.Promise (2.2.2)
+      Fable.Core (>= 3.1.5) - restriction: >= netstandard2.0
+      FSharp.Core (>= 4.7.2) - restriction: >= netstandard2.0
+    Fable.React (7.4.1) - restriction: >= netstandard2.0
+      Fable.Browser.Dom (>= 2.4.4) - restriction: >= netstandard2.0
+      Fable.Core (>= 3.2.7) - restriction: >= netstandard2.0
+      FSharp.Core (>= 4.7.2) - restriction: >= netstandard2.0
+    Feliz (1.49)
+      Fable.Core (>= 3.1.5) - restriction: >= netstandard2.0
+      Fable.React (>= 7.4) - restriction: >= netstandard2.0
+      Feliz.CompilerPlugins (>= 1.5) - restriction: >= netstandard2.0
+      FSharp.Core (>= 4.7.2) - restriction: >= netstandard2.0
+    Feliz.Bulma (2.16)
+      Feliz (>= 1.32) - restriction: >= netstandard2.0
+      FSharp.Core (>= 5.0) - restriction: >= netstandard2.0
+    Feliz.CompilerPlugins (1.5) - restriction: >= netstandard2.0
+      Fable.AST (>= 3.0) - restriction: >= netstandard2.0
+      FSharp.Core (>= 4.7.2) - restriction: >= netstandard2.0
+    FSharp.Core (5.0.2)
+    Glutinum.Chalk (0.1.0-alpha-001)
+      Fable.Core (>= 3.2.5) - restriction: >= netstandard2.0
+      FSharp.Core (>= 5.0) - restriction: >= netstandard2.0
+    Thoth.Json (6.0)
+      Fable.Core (>= 3.1.6) - restriction: >= netstandard2.0
+      FSharp.Core (>= 4.7.2) - restriction: >= netstandard2.0
