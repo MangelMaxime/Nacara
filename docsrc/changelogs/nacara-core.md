@@ -1,5 +1,5 @@
 ---
 layout: nacara-changelog
-title: Nacara
+title: Nacara.Core
 changelog_path: ./../../src/Nacara.Core/CHANGELOG.md
 ---
