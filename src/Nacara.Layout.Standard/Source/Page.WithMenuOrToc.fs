@@ -1,6 +1,6 @@
 module Page.WithMenuOrToc
 
-open Types
+open Nacara.Core.Types
 open Feliz
 open Feliz.Bulma
 open Fable.FontAwesome

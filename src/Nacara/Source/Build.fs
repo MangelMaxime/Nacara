@@ -1,6 +1,6 @@
 module Build
 
-open Types
+open Nacara.Core.Types
 open Fable.Core
 open Fable.React
 open Elmish
@@ -81,13 +81,13 @@ let update (msg : Msg) (model : Model) =
                         >> Promise.map (fun _ ->
                             Log.log $"Processed: %s{pageContext.RelativePath}"
                         )
-                        >> Promise.catchEnd (fun error ->
+                        >> Promise.catch (fun error ->
                             Log.error $"Error while processing markdown file: %s{pageContext.PageId}"
                             JS.console.error error
                             raise error
                         )
 
-                    Cmd.OfFunc.attempt action args ErrorWhileProcessingAFile
+                    Cmd.OfPromise.either action args (fun _ -> ProcessNextFile) ErrorWhileProcessingAFile
 
                 | QueueFile.Sass filePath ->
                     let args =
@@ -101,13 +101,13 @@ let update (msg : Msg) (model : Model) =
                         >> Promise.map (fun _ ->
                             Log.log $"Processed: %s{filePath}"
                         )
-                        >> Promise.catchEnd (fun error ->
+                        >> Promise.catch (fun error ->
                             Log.error $"Error while processing SASS file: %s{filePath}"
                             JS.console.error error
                             raise error
                         )
 
-                    Cmd.OfFunc.attempt action args ErrorWhileProcessingAFile
+                    Cmd.OfPromise.either action args (fun _ -> ProcessNextFile) ErrorWhileProcessingAFile
 
                 | QueueFile.JavaScript filePath
                 | QueueFile.Other filePath ->
@@ -121,12 +121,12 @@ let update (msg : Msg) (model : Model) =
                         >> Promise.map (fun _ ->
                             Log.log $"Copied: %s{filePath}"
                         )
-                        >> Promise.catchEnd (fun error ->
+                        >> Promise.catch (fun error ->
                             Log.error $"Error while copying %s{filePath}"
                             JS.console.log error
                         )
 
-                    Cmd.OfFunc.attempt action args ErrorWhileProcessingAFile
+                    Cmd.OfPromise.either action args (fun _ -> ProcessNextFile) ErrorWhileProcessingAFile
 
                 | QueueFile.LayoutDependency layoutDependency ->
                     let args =
@@ -136,12 +136,13 @@ let update (msg : Msg) (model : Model) =
 
                     let action args =
                         Write.copyFileWithDestination args
-                        |> Promise.catchEnd (fun error ->
+                        |> Promise.catch (fun error ->
                             Log.error $"Error while copying %s{layoutDependency.Source} to %s{layoutDependency.Destination}"
                             JS.console.log error
+                            raise error
                         )
 
-                    Cmd.OfFunc.attempt action args ErrorWhileProcessingAFile
+                    Cmd.OfPromise.either action args (fun _ -> ProcessNextFile) ErrorWhileProcessingAFile
 
             { model with
                 ProcessQueue = tail

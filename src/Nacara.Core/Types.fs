@@ -1,4 +1,4 @@
-module Types
+module Nacara.Core.Types
 
 open Thoth.Json
 open Fable.Core

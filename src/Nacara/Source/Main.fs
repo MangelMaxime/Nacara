@@ -5,14 +5,11 @@ open Fable.Import
 open Fable.Core
 open Fable.Core.JsInterop
 open Thoth.Json
-open Types
+open Nacara.Core.Types
 open Elmish
 open Node
 
-open System.Text.RegularExpressions
-open System.Collections.Generic
-
-let cwd = Node.Api.``process``.cwd()
+let cwd = ``process``.cwd()
 
 Log.info $"Current directory:\n%s{cwd}"
 

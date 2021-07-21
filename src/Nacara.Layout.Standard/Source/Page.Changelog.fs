@@ -1,6 +1,6 @@
 module Page.Changelog
 
-open Types
+open Nacara.Core.Types
 open System
 open System.Text.RegularExpressions
 open Fable.Core.JsInterop

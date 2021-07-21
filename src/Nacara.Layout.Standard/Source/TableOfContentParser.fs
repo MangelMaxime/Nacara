@@ -1,13 +1,7 @@
 [<RequireQualifiedAccess>]
 module TableOfContentParser
 
-open Fable.Core
-open System
 open System.Text.RegularExpressions
-open Types
-
-// [<Emit("$0.split(/\\r\\n|\\r|\\n/)")>]
-// let splitLines (_text : string) : string array = jsNative
 
 type Header =
     {

@@ -11,7 +11,7 @@ shell.exec("npm link", {
 })
 
 shell.exec("npm link", {
-    cwd: "src/Layouts/Standard"
+    cwd: "src/Nacara.Layout.Standard"
 })
 
 shell.exec("npm link nacara nacara-layout-standard")

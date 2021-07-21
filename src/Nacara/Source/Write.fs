@@ -1,9 +1,10 @@
 module Write
 
-open Types
+open Nacara.Core.Types
 open Fable.Core.JsInterop
 open Fable.Core
 open Fable.React
+open Node
 
 let sassFile (outputStyle : Sass.OutputStyle, destinationFolder : string, sourceFolder : string, relativeFilePath : string) =
     promise {

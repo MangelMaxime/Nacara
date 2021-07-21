@@ -1,6 +1,6 @@
 module Watch
 
-open Types
+open Nacara.Core.Types
 open Fable.Core
 open Fable.Core.JsInterop
 open Fable.React

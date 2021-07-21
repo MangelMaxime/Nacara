@@ -4,29 +4,24 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="../../../Nacara/Source/Types.fs" />
+    <Compile Include="Bindings/FrontMatter.fs" />
+    <Compile Include="Bindings/LiveServer.fs" />
+    <Compile Include="Bindings/Chokidar.fs" />
+    <Compile Include="Bindings/Sass.fs" />
+    <Compile Include="Bindings/CodeLightner.fs" />
+    <Compile Include="Node.Extra.fs" />
     <Compile Include="Log.fs" />
-    <Compile Include="Markdown.fs" />
-    <Compile Include="Helpers.fs" />
-    <Compile Include="Dependencies.fs" />
-    <Compile Include="ChangelogParser.fs" />
-    <Compile Include="TableOfContentParser.fs" />
-    <Compile Include="Page.Minimal.fs" />
-    <Compile Include="Page.WithMenuOrToc.fs" />
-    <Compile Include="Page.Changelog.fs" />
-    <Compile Include="Page.Standard.fs" />
-    <Compile Include="Export.fs" />
+    <Compile Include="Types.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Fable.Core" Version="3.2.7" />
     <PackageReference Include="Fable.Date" Version="1.0.0" />
+    <PackageReference Include="Fable.Elmish" Version="3.1.0" />
     <PackageReference Include="Fable.FontAwesome" Version="2.0.0" />
     <PackageReference Include="Fable.FontAwesome.Free" Version="2.1.0" />
     <PackageReference Include="Fable.Node" Version="1.2.0" />
     <PackageReference Include="Fable.Promise" Version="2.2.0" />
     <PackageReference Include="Fable.React" Version="7.4.0" />
-    <PackageReference Include="Feliz" Version="1.49.0" />
-    <PackageReference Include="Feliz.Bulma" Version="2.15.0" />
     <PackageReference Include="Fulma" Version="2.10.1" />
     <PackageReference Include="Glutinum.Chalk" Version="0.1.0-alpha-001" />
     <PackageReference Include="Thoth.Json" Version="6.0.0" />

@@ -1,6 +1,6 @@
 module Helpers
 
-open Types
+open Nacara.Core.Types
 
 let getMenuLabel (pageContext : PageContext) (itemInfo : MenuItemPage) =
     match pageContext.Title, itemInfo.Label with

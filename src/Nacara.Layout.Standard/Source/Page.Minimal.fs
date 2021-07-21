@@ -1,7 +1,7 @@
 module Page.Minimal
 
 open Fable.FontAwesome
-open Types
+open Nacara.Core.Types
 open Feliz
 open Feliz.Bulma
 

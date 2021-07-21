@@ -1,6 +1,6 @@
 module Markdown
 
-open Types
+open Nacara.Core.Types
 open Fable.Core.JsInterop
 
 let private messageBlock (level : string) =

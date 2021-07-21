@@ -1,7 +1,7 @@
 module Layout.Standard.Export
 
 open Fable.Core.JsInterop
-open Types
+open Nacara.Core.Types
 open Node
 open Feliz
 

@@ -1,5 +1,5 @@
 ---
 layout: nacara-changelog
 title: Nacara Standard Layout
-changelog_path: ./../../src/Layouts/Standard/CHANGELOG.md
+changelog_path: ./../../src/Nacara.Layout.Standard/CHANGELOG.md
 ---

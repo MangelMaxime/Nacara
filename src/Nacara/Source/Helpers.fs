@@ -1,12 +1,10 @@
 [<AutoOpen>]
 module rec Global
 
-open Fable.React
-open Fable.React.Props
 open Fable.Core
 open Fable.Core.JsInterop
 open Node
-open Types
+open Nacara.Core.Types
 open Thoth.Json
 
 [<RequireQualifiedAccess>]
@@ -228,7 +226,6 @@ let initPageContext (sourceFolder : string) (filePath : string) =
         | Error errorMessage ->
             return Error $"One property is missing from %s{filePath}.\n%s{errorMessage}"
     }
-
 
 let (|MarkdownFile|JavaScriptFile|SassFile|MenuFile|OtherFile|) (filePath : string) =
     let ext = path.extname(filePath)
