@@ -173,11 +173,10 @@ const setupGlobal = () => {
     const tableOfContentElement = document.querySelector(".table-of-content");
 
     if (tableOfContentElement !== null) {
-        tableOfContentElement.scrollIntoView();
-        // tableOfContentElement.scrollIntoView({
-        //     block : "nearest", // Scroll to the nearest parent otherwise it also scroll the main content
-        //     inline : "nearest" // Scroll to the nearest parent otherwise it also scroll the main content
-        // })
+        tableOfContentElement.scrollIntoView({
+            block : "nearest", // Scroll to the nearest parent otherwise it also scroll the main content
+            inline : "nearest" // Scroll to the nearest parent otherwise it also scroll the main content
+        })
     }
 }
 
