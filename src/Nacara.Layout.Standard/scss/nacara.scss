@@ -105,14 +105,14 @@ h2, h3, h4, h5, h6  {
 // On desktop and above we only have the navbar to take into account
 @include desktop {
     .anchor {
-        padding: $navbar-height 0 0;
+        padding: #{$navbar-height + 1rem} 0 0;
     }
 }
 
 // On touch screen we need to take into account the navbar and the breadcrumb
 @include touch {
     .anchor {
-        padding: #{$navbar-height * 2} 0 0;
+        padding: #{$navbar-height * 2 + 1rem} 0 0;
     }
 }
 
