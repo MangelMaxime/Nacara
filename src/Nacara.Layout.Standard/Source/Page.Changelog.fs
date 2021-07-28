@@ -81,7 +81,7 @@ type ChangelogParser.Types.CategoryType with
             | ChangelogParser.Types.CategoryType.Removed -> color.isDanger
             | ChangelogParser.Types.CategoryType.Fixed -> color.isInfo
             | ChangelogParser.Types.CategoryType.Security -> color.isInfo
-            | ChangelogParser.Types.CategoryType.Unkown _ -> color.isInfo
+            | ChangelogParser.Types.CategoryType.Unknown _ -> color.isInfo
 
 let private renderCategoryBody
     (markdownToHml : string -> JS.Promise<string>)
@@ -248,5 +248,3 @@ let render (rendererContext : RendererContext) (pageContext : PageContext) =
         | Error errorMessage ->
             return failwith errorMessage
     }
-
-

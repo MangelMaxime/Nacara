@@ -23,7 +23,7 @@ module Types =
         | Removed
         | Fixed
         | Security
-        | Unkown of string
+        | Unknown of string
 
         member this.Text
             with get () =
@@ -34,7 +34,7 @@ module Types =
                 | Removed -> "Removed"
                 | Fixed -> "Fixed"
                 | Security -> "Security"
-                | Unkown tag -> tag
+                | Unknown tag -> tag
 
     type Version =
         { Version : string option
@@ -200,7 +200,7 @@ module Transform =
                 | "removed" -> CategoryType.Removed
                 | "fixed" -> CategoryType.Fixed
                 | "security" -> CategoryType.Security
-                | unkown -> CategoryType.Unkown unkown
+                | unkown -> CategoryType.Unknown unkown
 
             match changelog.Versions with
             | currentVersion::otherVersions ->
