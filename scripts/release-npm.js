@@ -6,7 +6,7 @@ const log = console.log
 
 const release = require("./release-core").release
 
-// Check that we have enought arguments
+// Check that we have enough arguments
 if (process.argv.length < 3) {
     log(chalk.red("Missing the path arguments"))
     process.exit(1)
