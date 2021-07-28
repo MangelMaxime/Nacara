@@ -6,3 +6,4 @@ Fable.Promise
 Glutinum.Chalk
 Thoth.Json
 FSharp.Core
+Microsoft.SourceLink.GitHub

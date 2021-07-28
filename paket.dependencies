@@ -1,6 +1,8 @@
 version 5.258.1
 source https://www.nuget.org/api/v2
 
+storage: none
+
 nuget FSharp.Core
 nuget Fable.Core
 nuget Fable.Date
@@ -13,3 +15,4 @@ nuget Feliz
 nuget Feliz.Bulma
 nuget Glutinum.Chalk
 nuget Thoth.Json
+nuget Microsoft.SourceLink.GitHub copy_local: true

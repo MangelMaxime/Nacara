@@ -1,3 +1,4 @@
+STORAGE: NONE
 NUGET
   remote: https://www.nuget.org/api/v2
     Fable.AST (3.1.1) - restriction: >= netstandard2.0
@@ -58,9 +59,14 @@ NUGET
       Fable.AST (>= 3.0) - restriction: >= netstandard2.0
       FSharp.Core (>= 4.7.2) - restriction: >= netstandard2.0
     FSharp.Core (5.0.2)
-    Glutinum.Chalk (0.1.0-alpha-001)
+    Glutinum.Chalk (1.0)
       Fable.Core (>= 3.2.5) - restriction: >= netstandard2.0
       FSharp.Core (>= 5.0) - restriction: >= netstandard2.0
+    Microsoft.Build.Tasks.Git (1.0) - copy_local: true
+    Microsoft.SourceLink.Common (1.0) - copy_local: true
+    Microsoft.SourceLink.GitHub (1.0) - copy_local: true
+      Microsoft.Build.Tasks.Git (>= 1.0)
+      Microsoft.SourceLink.Common (>= 1.0)
     Thoth.Json (6.0)
       Fable.Core (>= 3.1.6) - restriction: >= netstandard2.0
       FSharp.Core (>= 4.7.2) - restriction: >= netstandard2.0

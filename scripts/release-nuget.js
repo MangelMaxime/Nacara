@@ -9,14 +9,14 @@ const release = require("./release-core").release
 const getEnvVariable = function (varName) {
     const value = process.env[varName];
     if (value === undefined) {
-        log(error(`Missing environnement variable ${varName}`))
+        log(chalk.red(`Missing environnement variable ${varName}`))
         process.exit(1)
     } else {
         return value;
     }
 }
 
-// Check that we have enought arguments
+// Check that we have enough arguments
 if (process.argv.length < 4) {
     log(chalk.red("Missing arguments"))
     process.exit(1)

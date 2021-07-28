@@ -25,11 +25,13 @@
         "pregenerate-docs": "npm run build",
         "generate-docs": "nacara",
         "release-nacara-layout-standard-npm": "node ./scripts/release-npm.js src/Nacara",
+        "release-nacara-core-nuget": "node ./scripts/release-nuget.js src/Nacara.Core Nacara.Core.fsproj",
         "release-nacara-npm": "node ./scripts/release-npm.js src/Nacara.Layout.Standard",
         "prerelease": "npm run build",
-        "release": "npm run release-nacara-npm && npm run release-nacara-layout-standard-npm"
+        "release": "npm run release-nacara-npm && npm run release-nacara-layout-standard-npm && npm run release-nacara-core-nuget"
     },
     "devDependencies": {
+        "changelog-parser": "^2.8.0",
         "concurrently": "^6.1.0",
         "nodemon": "^2.0.7",
         "rollup": "^2.51.1",
