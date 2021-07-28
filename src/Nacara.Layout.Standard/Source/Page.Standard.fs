@@ -18,42 +18,19 @@ let private emptyNextButton =
         prop.className "navigate-to-next is-invisible"
     ]
 
-[<RequireQualifiedAccess>]
-type FlatMenu =
-    | Link of MenuItemLink
-    | Page of MenuItemPage
-
 let private renderNavigationButtons
     (baseUrl : string)
     (allPages : PageContext array)
     (menuOpt : Menu option)
     (pageContext : PageContext) =
 
-    let rec flattenMenu (menu : Menu) =
-        menu
-        |> List.collect (fun menuItem ->
-            match menuItem with
-            | MenuItem.Page _
-            | MenuItem.Link _ -> [ menuItem ]
-            | MenuItem.List info ->
-                flattenMenu info.Items
-        )
-
     match menuOpt with
-    // No menu so can't generate the navigation elements
     | None ->
         null
 
     | Some menu ->
         let flatMenu =
-            flattenMenu menu
-            |> List.map (fun menuItem ->
-                match menuItem with
-                | MenuItem.Page info -> FlatMenu.Page info
-                | MenuItem.Link info -> FlatMenu.Link info
-                | MenuItem.List _ ->
-                    failwith "Should not happen because all the MenuItem.List should have been flattened"
-            )
+            Menu.toFlatMenu menu
 
         let currentPageIndexInTheMenu =
             flatMenu

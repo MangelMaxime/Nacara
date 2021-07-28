@@ -11,8 +11,11 @@
     <Compile Include="Bindings/Sass.fs" />
     <Compile Include="Bindings/CodeLightner.fs" />
     <Compile Include="Node.Extra.fs" />
+    <Compile Include="List.Extensions.fs" />
+    <Compile Include="Array.Extensions.fs" />
     <Compile Include="Log.fs" />
     <Compile Include="Types.fs" />
+    <Compile Include="Menu.fs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="*.fsproj; **\*.fs; **\*.fsi; **\*.css" PackagePath="fable" />

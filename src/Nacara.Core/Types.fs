@@ -129,6 +129,7 @@ let private unwrapWith (errors: ResizeArray<DecoderError>) path (decoder: Decode
     match decoder path value with
     | Ok v -> v
     | Error er -> errors.Add(er); Unchecked.defaultof<'T>
+
 type MenuItemPage =
     {
         Label : string option
@@ -153,6 +154,11 @@ and [<RequireQualifiedAccess>] MenuItem =
     | Link of MenuItemLink
 
 type Menu = MenuItem list
+
+[<RequireQualifiedAccess>]
+type FlatMenu =
+    | Link of MenuItemLink
+    | Page of MenuItemPage
 
 module MenuItem =
 
