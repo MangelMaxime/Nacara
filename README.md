@@ -1,93 +1,62 @@
 # Nacara
 
-Nacara is a static documentation generator.
+Nacara is a simple static documentation generator extensible using F# via [Fable](https://fable.io) or JavaScript.
 
 ## Development
 
-This chapter contains the instructions for building Nacara and generating its documentation.
-
 ### Requirements
-
-> **For Linux**
->
-> If on Linux, you should install the following packages on your system before procedding:
->
-> ```bash
-> # Debian based
-> sudo apt-get install make gcc g++
-> ```
 
 Make sure to have these programs installed before proceeding.
 
 - Node v14+
 - Yarn v1.22+
 - .NET SDK 5.0.202+
+- Make 4.3
 
-### Tools
+If you can't or don't want to install the requirements on your computer, you can use Gitpod which provide a ready to use environment directly in your browser.
 
-- fake-cli
-- paket
+**For Linux**
 
-To have access to tools, you must run this command:
-
-```bash
-dotnet tool restore
-```
-
-Then, the tools can be run with either of these commands:
+If on Linux, you should install the following packages on your system before proceeding:
 
 ```bash
-dotnet fake
-dotnet paket
-
-# or
-dotnet tool run fake
-dotnet tool run paket
+# Debian based
+sudo apt-get install make gcc g++
 ```
 
-### Build
+**For Windows**
 
-Currently there are two ways of building the program to run, with FAKE or with Yarn/NPM.
+You need to have make installed on your system. The easiest way to install make is by using [chocolatey](https://chocolatey.org/).
 
-#### Yarn (Recommended)
+1. Install [chocolatey](https://chocolatey.org/install)
+2. Install `make` via `choco install make`
 
-You will need three terminals open.
+It is planned to add a `make.bat` file in the future but for now it will do.
 
-1. In the first terminal run this command:
+### Makefile
 
-```bash
-yarn nacara-watch
-```
+This project use a Makefile to handle the build automation here are the main targets
 
-2. In the second terminal run this command:
+- `setup-dev`:
 
-```bash
-yarn layouts-standard-watch
-```
+    Install of the dependencies and configure the npm link.
 
-3. When the first two commands have compiled and are waiting for changes, run this command to start the dev server:
+    Useful, when you want to test a local build of Nacara in another project or to develop it.
 
+    <u>Note:</u> You should run this target each time you updates the NPM dependencies
 
-```bash
-yarn nodemon
-```
+- `unsetup-dev`:
 
-#### FAKE (`build.fsx`)
+    Revert the npm link
 
-If this is your first time building Nacara, you need to run this command first:
+- `watch`:
 
-```bash
-yarn build
-```
+    Watch files changes for compilations and run a local version of Nacara for development
 
-Then, you can run this command which will watch for changes and start the dev server:
+- `release`:
 
-```bash
-dotnet fake build -t watch
-```
+    Release the different NPM and NuGet packages
 
-> If you don't run the first command, the second command will complain about `dist/Main.js` missing.
+- `publish`:
 
-*ℹ Nodemon will restart several time while Fable is compiling the files, after the initial compilation it will only restart when you modify your code*
-
-
+    Execute release and publish a new version of the docs site

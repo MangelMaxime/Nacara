@@ -6,7 +6,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## 1.0.0-beta-001 - 2021-07-20
+## 1.0.0-beta-004 - 2021-07-30
+
+### Changed
+
+* Publish `.fable` folder
+
+## 1.0.0-beta-003 - 2021-07-30
+
+### Changed
+
+* Publish `.fable` folder
+
+## 1.0.0-beta-002 - 2021-07-30
+
+### Changed
+
+* Publish `.fable` folder
+
+## 1.0.0-beta-001 - 2021-07-29
 
 ### Added
 

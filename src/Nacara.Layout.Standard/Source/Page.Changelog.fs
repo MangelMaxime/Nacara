@@ -41,15 +41,12 @@ let renderVersion (versionText : string) (date : DateTime option) =
                 prop.href ("#" + slug)
                 prop.children [
                     // This is the element used as an anchor
-                    // We make it appear a bit highter so the tag isn't squash against the navbar
+                    // We make it appear a bit higher so the tag isn't squash against the navbar
                     Html.span [
                         prop.id slug
                         prop.style [
-                            style.visibility.hidden
-                            style.marginTop (length.rem -1)
-                            style.position.absolute
+                            style.paddingTop (length.rem 4.25)
                         ]
-                        prop.text "#"
                     ]
 
                     Bulma.tag [
@@ -96,7 +93,7 @@ let private renderCategoryBody
 
             let textToHtml (text : string) =
                 markdownToHml text
-                |> Promise.map removeParagraphMarkup
+                // |> Promise.map removeParagraphMarkup
 
             match body with
             | ChangelogParser.Types.CategoryBody.ListItem content ->
@@ -125,7 +122,21 @@ let private renderCategoryBody
                 ]
 
             | ChangelogParser.Types.CategoryBody.Text content ->
-                let! htmlText = textToHtml content
+                let! htmlText =
+                    content
+                    |> ChangelogParser.splitLines
+                    // Remove one level of indentation from the content
+                    // This is to make markdown understands that this is not a quoted paragraph as we don't provide it the whole text
+                    // and so it doesn't know that the line is indented under a list item
+                    |> Array.map (fun line ->
+                        if line.StartsWith("    ") then
+                            line.Substring(3)
+                        else
+                            line
+                    )
+                    |> Array.toList
+                    |> String.concat "\n"
+                    |> textToHtml
 
                 return Html.li [
                     prop.className "changelog-list-item"

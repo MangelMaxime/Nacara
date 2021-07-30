@@ -6,17 +6,88 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-### Added
-- Added `.paket/` to `.gitignore`.
-- Added dotnet tools: `paket` and `fake-cli`.
+## 1.0.0-beta-004 - 2021-07-30
 
 ### Changed
-- Changed `version` in `paket.dependencies` to `5.257.0` so that it matches the version in `.config/dotnet-tools.json`. This fixes the issue which required having .NET DSK version `'2.1.0`.
+
+* Publish `.fable` folder
+
+## 1.0.0-beta-003 - 2021-07-30
+
+### Changed
+
+* Publish `.fable` folder
+
+## 1.0.0-beta-002 - 2021-07-30
+
+### Changed
+
+* Publish `.fable` folder
+
+## 1.0.0-beta-001 - 2021-07-29
+
+### Added
+
+* Add `excludeFromNavigation` property to all the layout allowing to opt-out a page from the Next / Previous button generation
+* Recompute the known pages if the attributes of a page change.
+
+This ensure that the information using the attributes like the menu or the next / previous buttons are up to date on all the page
+
+* Add copy button to code blocks
+* Add `$textual-steps-color` color SCSS variable
+* Create a NuGet package `Nacara.Core` which shares the type and some helpers between Nacara and the layouts project
+* Add section support, a section is defined by being a folder under the root folder
+
+    For example, this structure defined 2 sections.
+
+    ```
+    docsrc
+    ├── changelogs
+    │   ├── file.md
+    ├── docs
+    │   ├── file.md
+    ├── index.md
+    ```
+
+* Add support for `menu.json` which allows to configure the menu per section
+
+### Changed
+
+* Change config file back to `nacara.config.json`
+* Generate Next / Previous button on site compilation instead of using JavaScript at runtime
+* Move the TOC inside the menu and remove the need for `[[toc]]` tag
+* Upgrade to Bulma 0.9.3
+* Make the layout as a standalone npm package `nacara-layout-standard`
+* Move the `Changelog.fs` from `Nacara` to the `Layout` project and rename it `ChangelogParser.fs`
+* Upgrade to Fable 3
+
+    Change `Model.DocFiles` to use `JS.Map` instead of `Map` because it seems like Fable 3 does something different and break the `Map` usage from the layout project
+
+* Remove the material like button
+* Unknown files are now copied to the output folder making it easier to add static assets like images
+* Generate compressed CSS from SCSS/SASS files when in build mode
+* Rewrite the base-url-middleware to redirect on exact match and use temporary redirection to avoid caching from the browser
+* Rewrite the base-url-middleware to redirect on exact match and use temporary redirection to avoid caching from the browser
+* Changed `version` in `paket.dependencies` to `5.258.1` so that it matches the version in `.config/dotnet-tools.json`. This fixes the issue which required having .NET DSK version `'2.1.0`.
+* Use paket from CLI tool
+
+### Fixed
+
+* Changelog parser and layout now correctly understand items indeed under a list item
+
+    Before, this text would have been displayed as quoted or you would have had to un-indent to force Nacara to display it "correctly" in the browser.
 
 ### Removed
-- Removed `.paket/` from repository.
-- Removed files `fake.cmd` and `fake.sh` because they are no longer needed.
-- Removed unused code from `build.fsx`.
+
+* Removed files `fake.cmd` and `fake.sh` because they are no longer needed.
+* Removed unused code from `build.fsx`.
+* Remove fake and use a Makefile instead.
+* Remove plugins property from the config file. Now the layouts can extends their own version of markdown-it to meet their needs
+* Remove the `menu` property from the config file
+
+Right now Windows user needs to install make or use Gitpod. In the future, a `make.bat` will be available but I don't have time to add it right now.
+
+
 
 ## 0.4.1 - 2021-05-10
 
@@ -38,7 +109,7 @@ It was stopping the whole generation causing problem is the user hosted some PNG
 
 * Change the config file name from `nacara.js` is now `nacara.config.js`
 
-It seems like the new version of `npm exec` and `npx` execute/open `nacara.js` when executing `npx nacara`. Probably because the file as the same name as the package 🤷‍♂️
+    It seems like the new version of `npm exec` and `npx` execute/open `nacara.js` when executing `npx nacara`. Probably because the file as the same name as the package 🤷‍♂️
 
 ### Fixed
 
@@ -56,7 +127,7 @@ It seems like the new version of `npm exec` and `npx` execute/open `nacara.js` w
 
 * User can now click on the navbar brand to go "index" page.
 
-The "index" page is calculated as follow `config.url + config.baseUrl`
+    The "index" page is calculated as follow `config.url + config.baseUrl`
 
 ### Fixed
 
@@ -70,16 +141,16 @@ The "index" page is calculated as follow `config.url + config.baseUrl`
 
 * Layout system has been added
 
-User can add `layouts` node to `nacara.js`, it takes an object.
+    User can add `layouts` node to `nacara.js`, it takes an object.
 
-Example:
+    Example:
 
-```js
-{
-    default: standard.Default,
-    changelog: standard.Changelog
-}
-```
+    ```js
+    {
+        default: standard.Default,
+        changelog: standard.Changelog
+    }
+    ```
 
 * Responsive mode is now implemented supported in the standard layout
 
@@ -97,40 +168,40 @@ Example:
 
 * Markdown plugins are now configurable via `plugins.markdown` in `nacara.js`
 
-It take an array of object, the properties are:
+    It take an array of object, the properties are:
 
-```js
-{
-    // Path to pass to `require` function can be:
-    // - a npm module
-    // - a file path (local plugin)
-    path: 'markdown-it-container',
-    // Optional array of arguments
-    args: [
-        'warning',
-        mdMessage("warning")
-    ]
-}
-```
+    ```js
+    {
+        // Path to pass to `require` function can be:
+        // - a npm module
+        // - a file path (local plugin)
+        path: 'markdown-it-container',
+        // Optional array of arguments
+        args: [
+            'warning',
+            mdMessage("warning")
+        ]
+    }
+    ```
 
-Example:
+    Example:
 
-```js
-plugins: {
-    markdown: [
-        {
-            path: 'markdown-it-container',
-            args: [
-                'warning',
-                mdMessage("warning")
-            ]
-        },
-        {
-            path: path.join(__dirname, './src/markdown-it-anchored.js')
-        }
-    ]
-}
-```
+    ```js
+    plugins: {
+        markdown: [
+            {
+                path: 'markdown-it-container',
+                args: [
+                    'warning',
+                    mdMessage("warning")
+                ]
+            },
+            {
+                path: path.join(__dirname, './src/markdown-it-anchored.js')
+            }
+        ]
+    }
+    ```
 
 * Build mode has been added to Nacara it active by default. You can start in watch mode by adding `--watch` or `-w` to the CLI
 * Port server can be configured via `serverPort` in `nacara.js`
@@ -141,9 +212,9 @@ plugins: {
 * Make the anchors elements less visible
 * Add possibility to have an **Edit** button at the top of the page
 
-Turn it on, by setting `editUrl` in `nacara.js`. The url should be the start of the url, the file path will be added when generating the page.
+    Turn it on, by setting `editUrl` in `nacara.js`. The url should be the start of the url, the file path will be added when generating the page.
 
-Example: `https://github.com/MangelMaxime/Nacara/edit/master/docsrc`
+    Example: `https://github.com/MangelMaxime/Nacara/edit/master/docsrc`
 
 ### Changed
 
@@ -151,7 +222,7 @@ Example: `https://github.com/MangelMaxime/Nacara/edit/master/docsrc`
 * Improve the navbar responsive support
 * Transform the left menu into a breadcumb when on touchscreen
 
-Items with only icons will stay at the top of the navbar, while items with text (and icon) are displayed under the burger menu.
+    Items with only icons will stay at the top of the navbar, while items with text (and icon) are displayed under the burger menu.
 
 ### Fixed
 
@@ -175,7 +246,7 @@ Items with only icons will stay at the top of the navbar, while items with text 
 
 * Remove `is-primary` class from the navbar.
 
-Please use the variable `$navbar-background-color` in order to customize it
+    Please use the variable `$navbar-background-color` in order to customize it
 
 ## 0.1.3 - 2019-04-18
 

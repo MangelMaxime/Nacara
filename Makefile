@@ -8,11 +8,12 @@ NACARA_CORE_DIR=src/Nacara.Core
 NACARA_LAYOUT_STANDARD_FABLE=dotnet fable $(NACARA_LAYOUT_STANDARD_DIR)/Source --outDir $(NACARA_LAYOUT_STANDARD_DIR)/dist
 NACARA_FABLE=dotnet fable $(NACARA_DIR)/Source --outDir $(NACARA_DIR)/dist
 NODEMON_WATCHER=npx nodemon \
-	--watch src/Nacara/dist \
-	--watch src/Nacara.Layout.Standard/dist \
+	--watch $(NACARA_DIR)/dist \
+	--watch $(NACARA_LAYOUT_STANDARD_DIR)/dist \
 	--watch nacara.config.json \
 	--delay 150ms \
-	--exec \"nacara --watch\"
+	--handle-input \
+	--exec 'nacara --watch'
 
 setup-dev:
 	@$(call log_target_info, "Setting up the npm link for local development")
@@ -33,35 +34,38 @@ unsetup-dev:
 clean:
 	@$(call log_target_info, "Cleaning...")
 # Clean Nacara.Layout.Standard artifacts
-	npx shx rm -rf $(NACARA_LAYOUT_STANDARD_DIR)/dist
-	npx shx rm -rf $(NACARA_LAYOUT_STANDARD_DIR)/Source/bin
-	npx shx rm -rf $(NACARA_LAYOUT_STANDARD_DIR)/Source/obj
+	rm -rf $(NACARA_LAYOUT_STANDARD_DIR)/dist
+	rm -rf $(NACARA_LAYOUT_STANDARD_DIR)/Source/bin
+	rm -rf $(NACARA_LAYOUT_STANDARD_DIR)/Source/obj
 # Clean Nacara artifacts
-	npx shx rm -rf $(NACARA_DIR)/dist
-	npx shx rm -rf $(NACARA_DIR)/Source/bin
-	npx shx rm -rf $(NACARA_DIR)/Source/obj
+	rm -rf $(NACARA_DIR)/dist
+	rm -rf $(NACARA_DIR)/Source/bin
+	rm -rf $(NACARA_DIR)/Source/obj
 # Clean Nacara.Core artifacts
-	npx shx rm -rf $(NACARA_CORE_DIR)/dist
-	npx shx rm -rf $(NACARA_CORE_DIR)/Source/bin
-	npx shx rm -rf $(NACARA_CORE_DIR)/Source/obj
+	rm -rf $(NACARA_CORE_DIR)/dist
+	rm -rf $(NACARA_CORE_DIR)/Source/bin
+	rm -rf $(NACARA_CORE_DIR)/Source/obj
 # Clean generated documentation
-	npx shx rm -rf temp
+	rm -rf temp
 
 watch: clean
 # Make sure that the dist directories exists
 # Otherwise, nodemon cannot listen to them
 	@$(call log_target_info, "Setup directories for the watcher")
-	npx shx rm -rf $(NACARA_LAYOUT_STANDARD_DIR)/dist
-	npx shx rm -rf $(NACARA_DIR)/dist
+	mkdir $(NACARA_LAYOUT_STANDARD_DIR)/dist
+	mkdir $(NACARA_DIR)/dist
 # Start the different watcher
 # 1. Nacara
 # 2. Nacara.Layout.Standard
 # 3. Nodemon to restart nacara on changes
 	@$(call log_target_info, "Watching...")
 	npx concurrently -p none \
-		"$(NACARA_LAYOUT_STANDARD_FABLE) --watch --sourceMaps" \
-		"$(NACARA_FABLE) --watch --sourceMaps" \
-		"$(NODEMON_WATCHER)"
+		"$(NODEMON_WATCHER)" \
+		"$(NACARA_LAYOUT_STANDARD_FABLE) --watch --sourceMaps --run \"make nodemon\"" \
+		"$(NACARA_FABLE) --watch --sourceMaps"
+
+nodemon:
+	$(NODEMON_WATCHER)
 
 build: clean
 	@$(call log_target_info, "Building...")
@@ -74,6 +78,14 @@ generate-docs: build
 
 release: build
 	@$(call log_target_info, "Releasing...")
+	@# Remove .fable/.gitignore files otherwise npm doesn't publish that directory
+	rm -rf $(NACARA_DIR)/dist/.fable/.gitignore
+	rm -rf $(NACARA_LAYOUT_STANDARD_DIR)/dist/.fable/.gitignore
+	@# Publish the packages
 	node ./scripts/release-npm.js $(NACARA_DIR)
 	node ./scripts/release-nuget.js $(NACARA_CORE_DIR) Nacara.Core.fsproj
 	node ./scripts/release-npm.js $(NACARA_LAYOUT_STANDARD_DIR)
+
+publish: release generate-docs
+	@$(call log_target_info, "Publishing...")
+	npx gh-pages --dist temp

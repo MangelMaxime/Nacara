@@ -151,7 +151,7 @@ module Transform =
                     | _ -> false
                 )
 
-            // Regroupe everything into a single string
+            // Regroup everything into a single string
             let content =
                 textLines
                 |> List.map (function
@@ -200,7 +200,7 @@ module Transform =
                 | "removed" -> CategoryType.Removed
                 | "fixed" -> CategoryType.Fixed
                 | "security" -> CategoryType.Security
-                | unkown -> CategoryType.Unknown unkown
+                | unknown -> CategoryType.Unknown unknown
 
             match changelog.Versions with
             | currentVersion::otherVersions ->
@@ -225,7 +225,7 @@ module Transform =
                     | _ -> false
                 )
 
-            // Regroupe everything into a single string
+            // Regroup everything into a single string
             let content =
                 textLines
                 |> List.map (function
@@ -242,7 +242,7 @@ module Transform =
             parse rest { changelog with Description = content }
 
         | Symbols.ListItem text ::_ ->
-            sprintf "A list item should always be under a category. The next list item made the parser failed:\n\n%s\n" text
+            sprintf "A list item should always be under a category. The following list item made the parser failed:\n\n%s\n" text
             |> Error
 
         | [] -> Ok { changelog with Versions = changelog.Versions |> List.rev }
