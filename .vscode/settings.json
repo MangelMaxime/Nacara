@@ -1,27 +1,17 @@
-// Place your settings in this file to overwrite default and user settings.
 {
-    // Configure glob patterns for excluding files and folders.
-    "files.exclude": {
-        "**/.git": true,
-        "**/.DS_Store": true,
-        "**/.fake": true,
-        "**/.paket": true,
-        "**/.vs": true,
-        "**/bin": true,
-        "**/obj": true,
-        "**/packages": true,
-        "**/node_modules": false,
-        "**/dist": false,
-        "**/.fable": false,
-        "**/paket-files": false
-    },
-    "search.exclude": {
-        "**/node_modules": true,
-        "**/bower_components": true,
-        "**/packages": true,
-        "**/paket-files": true,
-        "**/artifacts": true,
-        ".fable": true
-    },
-    "FSharp.fsacRuntime": "netcore"
+    "cSpell.words": [
+        "Elmish",
+        "Feliz",
+        "Mangel",
+        "Maxime",
+        "concat",
+        "defaultof",
+        "docsrc",
+        "extname",
+        "failwith",
+        "lightner",
+        "nowarn",
+        "patreon",
+        "textmate"
+    ]
 }

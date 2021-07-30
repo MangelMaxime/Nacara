@@ -1,0 +1,299 @@
+@import './components/changelog.scss';
+@import './components/textual-steps.scss';
+
+// Remove bottom margin of the name of the project in the navbar otherwise a the navbar is distorted
+.navbar-item.title.is-4 {
+    margin-bottom: 0;
+}
+
+$menu-list-link-padding: 0.5em 1.25em;
+.menu-list .menu-list {
+    &:not(.has-menu-group) {
+        padding-left: 1.25em;
+    }
+}
+
+.menu-list:not(:last-child) {
+    margin-bottom: 0.5em;
+}
+
+.menu-list li ul {
+    border-left: unset;
+    margin: 0 $menu-nested-list-margin;
+
+    &.table-of-content {
+        margin: 0;
+    }
+}
+
+// Collapsible / Expandable menu
+.menu-group {
+    .icon {
+        float: right;
+        &,
+        &.is-small,
+        &.is-medium,
+        &.is-large {
+            height: 1.5em;
+            width: 1.5em;
+        }
+
+        &:first-child:not(:last-child) {
+            margin-left: calc(-0.375em - 1px);
+            margin-right: 0.1875em;
+        }
+
+        &:last-child:not(:first-child) {
+            margin-left: 0.1875em;
+            margin-right: calc(-0.375em - 1px);
+        }
+
+        &:first-child:last-child {
+            margin-left: calc(-0.375em - 1px);
+            margin-right: calc(-0.375em - 1px)
+        }
+    }
+
+    &.is-expanded {
+        .icon {
+            transform: rotate(90deg);
+        }
+    }
+}
+
+// Add a space between an icon and the text
+.icon+span {
+    margin-left: .5rem;
+}
+
+span+.icon {
+    margin-left: .5rem;
+}
+
+// Force the margin-left when using span+.icon in a button element
+// otherwise the margin seems to small to me
+.button span+.icon {
+    margin-left: .5rem !important;
+}
+
+.page-header {
+    min-height: 1em;
+    margin-bottom: 1em;
+
+    h1 {
+        margin-top: 0 !important;
+        margin-bottom: 1em;
+    }
+}
+
+// Anchor behavior
+h2, h3, h4, h5, h6  {
+    a {
+        visibility: hidden;
+    }
+
+    &:hover {
+
+        a {
+            visibility: visible;
+        }
+    }
+}
+
+// Make sure that when jumping to an anchor, that anchor is displayed just below the navbar and visible
+
+// On desktop and above we only have the navbar to take into account
+@include desktop {
+    .anchor {
+        padding: #{$navbar-height + 1rem} 0 0;
+    }
+}
+
+// On touch screen we need to take into account the navbar and the breadcrumb
+@include touch {
+    .anchor {
+        padding: #{$navbar-height * 2 + 1rem} 0 0;
+    }
+}
+
+// Container used for the Next / Previous page buttons
+.navigation-container {
+    padding: 0 2rem 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+@include touch {
+    .navigate-to-next {
+        margin-right: 5rem;
+    }
+}
+
+@include desktop {
+    .mobile-menu {
+        display: none;
+    }
+}
+
+@include touch {
+    .mobile-menu {
+        display: flex;
+        flex-direction: revert;
+        align-items: center;
+        height: $navbar-height;
+        background: $white-ter;
+        position: sticky;
+        top: $navbar-height;
+
+        .menu-trigger {
+            .icon {
+                margin-right: 0;
+            }
+        }
+
+        .breadcrumb>ul>li:last-child {
+            font-weight: $weight-bold;
+        }
+    }
+}
+
+@include touch {
+    .is-main-content {
+        .section {
+            padding-top: 1rem;
+        }
+    }
+}
+
+// Ensure minimal size of the doc content
+// This allows to not have the 'Previous' & 'Next' button in the middle of the screen
+// when their are not a lot of content on the page
+.is-main-content > .section {
+    min-height: calc(
+        100vh - 7.5em
+    ); // 7.5em = 3em (section margin top) - 3em (section margin bottom) - 1.5em (to not stick too low)
+}
+
+.menu-container {
+    // Make the menu container "static" and always displayed at the same place
+    // The menu container has its own scrollbar if needed
+    // 3.25rem is the navbar height but it is not yet available at this point of the SCSS compilation
+    position: sticky;
+    top: $navbar-height;
+    // margin: 3.25rem 0 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    height: calc(100vh - #{$navbar-height});
+
+    .menu {
+        margin-top: $navbar-height;
+        padding-right: 1rem;
+    }
+}
+
+.column.is-menu-column {
+    &.force-show {
+        display: block !important;
+        padding: 0 !important;
+
+        .menu-container {
+            position: fixed;
+            left: 0;
+            background: $white-bis;
+            width: 100%;
+            padding-left: 2rem;
+            z-index: 100;
+            margin-top: $navbar-height;
+        }
+    }
+}
+
+// Customize the menu to have a better display and also support TOC in it
+.menu {
+    // .menu-label, a {
+    //     font-weight: $weight-semibold;
+    // }
+
+    .has-table-of-content {
+        border-radius: $menu-item-radius;
+
+        &.is-active {
+            border-radius: $menu-item-radius 0 0;
+        }
+    }
+
+    .table-of-content {
+        border-left: unset;
+        padding: 0 $size-small;
+        background-color: $primary-light;
+        border-radius: 0 0 $menu-item-radius;
+        scroll-margin: 3rem;
+
+        a {
+            color: $grey-dark;
+            font-size: 0.925rem;
+
+            &:hover {
+                color: $primary;
+            }
+        }
+
+        // Use the same font size as for the link text for the code block when shown in the table of content
+        // Otherwise, it is too small and the font looks bad
+        code {
+            font-size: 0.825rem;
+        }
+    }
+
+}
+
+.menu-trigger {
+    @include hamburger($navbar-height);
+}
+
+.breadcrumb {
+    li {
+        height: $navbar-height;
+    }
+}
+
+// Style relative to the snippet and copy button
+pre {
+    position: relative; // Make the pre relative so the copy button and positioned itself relative to it
+    padding-top: $size-4 !important; // This padding is to display correctly the button even if the snippet has only 1 line of code
+    padding-bottom: $size-4 !important; // This padding is to display correctly the button even if the snippet has only 1 line of code
+
+    button.is-copy-button {
+        visibility: hidden;
+    }
+
+    &:hover {
+        button.is-copy-button {
+            visibility: visible;
+        }
+    }
+}
+
+button {
+    &.is-copy-button {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+    }
+}
+
+// Fix margin of p element inside of list element
+// Example of markdown related to that
+// - [Fable Gitter](https://gitter.im/fable-compiler/Fable)
+
+//     Fable specific discussion and networking channel <-- This line
+
+// - [Slack](https://fsharp.org/guides/slack/)
+.content {
+    ol, li {
+        p:not(:last-child) {
+            margin-bottom: 0;
+        }
+    }
+}

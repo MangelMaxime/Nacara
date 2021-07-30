@@ -1,0 +1,11 @@
+[
+    {
+        "type": "category",
+        "label": "Changelogs",
+        "items": [
+            "changelogs/nacara",
+            "changelogs/nacara-core",
+            "changelogs/nacara-layout-standard"
+        ]
+    }
+]

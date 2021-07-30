@@ -1,0 +1,21 @@
+{
+    "name": "nacara-layout-standard",
+    "version": "1.0.0-beta-004",
+    "description": "",
+    "main": "dist/Export.js",
+    "files": [
+        "dist",
+        "scss",
+        "scripts"
+    ],
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Maxime Mangel <mangel.maxime@protonmail.com>",
+    "license": "Apache-2.0",
+    "peerDependencies": {
+        "bulma": "^0.9.3",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2"
+    }
+}

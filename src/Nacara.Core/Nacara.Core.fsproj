@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Version>1.0.0-beta-001</Version>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Bindings/FrontMatter.fs" />
+    <Compile Include="Bindings/LiveServer.fs" />
+    <Compile Include="Bindings/Chokidar.fs" />
+    <Compile Include="Bindings/Sass.fs" />
+    <Compile Include="Bindings/CodeLightner.fs" />
+    <Compile Include="Node.Extra.fs" />
+    <Compile Include="List.Extensions.fs" />
+    <Compile Include="Array.Extensions.fs" />
+    <Compile Include="Log.fs" />
+    <Compile Include="Types.fs" />
+    <Compile Include="Menu.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="*.fsproj; **\*.fs; **\*.fsi; **\*.css" PackagePath="fable" />
+  </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
+</Project>

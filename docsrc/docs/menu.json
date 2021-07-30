@@ -1,0 +1,10 @@
+[
+    {
+        "type": "category",
+        "label": "Table of Content",
+        "items": [
+            "docs/API/nacara-config-json",
+            "docs/index"
+        ]
+    }
+]
