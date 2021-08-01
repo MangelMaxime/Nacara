@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+
+## 1.0.0-beta-006 - 2021-08-01
+
+### Changed
+
+* Relax Nacara requirements on npm engine from `7.13.0` to `7.0.0`
+
+## 1.0.0-beta-005 - 2021-08-01
+
 ## 1.0.0-beta-004 - 2021-07-30
 
 ### Changed

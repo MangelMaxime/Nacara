@@ -1,6 +1,6 @@
 {
     "name": "nacara",
-    "version": "1.0.0-beta-004",
+    "version": "1.0.0-beta-006",
     "license": "MIT",
     "bin": {
         "nacara": "./cli.js"
@@ -13,7 +13,7 @@
     "devDependencies": {},
     "engines": {
         "node": ">=14.0.0",
-        "npm": ">=7.13.0"
+        "npm": ">=7.0.0"
     },
     "dependencies": {
         "chalk": "^4.1.1",
