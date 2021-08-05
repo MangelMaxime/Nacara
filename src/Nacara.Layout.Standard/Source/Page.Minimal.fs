@@ -192,6 +192,11 @@ let render (args : RenderArgs) =
                     prop.custom ("httpEquiv", "content-type")
 //                    prop.content "text/html; charset=UTF-8"
                 ]
+                
+                Html.meta [
+                    prop.name "viewport"
+                    prop.content "width=device-width, initial-scale=1"
+                ]                
 
                 Html.link [
                     prop.rel "stylesheet"
