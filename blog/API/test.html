@@ -1,0 +1,119 @@
+<html class="has-navbar-fixed-top"><head><title>Nacara · nacara.json</title><meta http-equiv="content-type"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" type="text/css" href="/Nacara/style.css"/><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"/></head><body><nav class="navbar is-fixed-top"><div class="container"><div class="navbar-brand"><a class="navbar-item title is-4" href="https://mangelmaxime.github.io/Nacara/">Nacara</a><a class="navbar-item is-hidden-desktop" href="https://github.com/MangelMaxime/Nacara"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item is-hidden-desktop" href="https://twitter.com/MangelMaxime"><span class="icon" style="color:#55acee"><i class=" fab fa-twitter fa-lg"></i></span></a><a class="navbar-burger" data-target="nav-menu"><span></span><span></span><span></span></a></div><div class="navbar-menu" id="nav-menu"><div class="navbar-start"><a class="navbar-item" href="/Nacara/index.html"><span class="icon"><i class=" fas fa-book fa-lg"></i></span><span>Documentation</span></a><a class="navbar-item" href="/Nacara/changelogs/nacara.html"><span class="icon"><i class=" fas fa-tasks fa-lg"></i></span><span>Changelogs</span></a><a class="navbar-item" href="https://gitter.im/fable-compiler/Fable"><span class="icon"><i class=" fab fa-gitter fa-lg"></i></span><span>Support</span></a><a class="navbar-item" href="https://www.patreon.com/MangelMaxime"><span class="icon" style="color:#ff424b"><i class=" fab fa-patreon fa-lg"></i></span><span>Donate</span></a></div><div class="navbar-end"><a class="navbar-item" href="https://github.com/MangelMaxime/Nacara"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item" href="https://twitter.com/MangelMaxime"><span class="icon" style="color:#55acee"><i class=" fab fa-twitter fa-lg"></i></span></a></div></div></div></nav><div class="container"><div class="columns is-gapless is-mobile"><div class="column is-menu-column is-3-desktop is-hidden-touch ml-5"><div class="menu-container"><aside class="menu"><ul class="menu-list"><li><a class=" is-active has-table-of-content">Table of content</a></li><ul class="table-of-content"><li><a href="#Mandatory-fields" data-toc-element="true">Mandatory fields </a><ul class="table-of-content"><li><a href="#url-string" data-toc-element="true"><code>url</code> - [string] </a></li><li><a href="#baseUrl-string" data-toc-element="true"><code>baseUrl</code> - [string] </a></li><li><a href="#version-string" data-toc-element="true"><code>version</code> - [string] </a></li><li><a href="#title-string" data-toc-element="true"><code>title</code> - [string] </a></li></ul></li><li><a href="#Optional-fields" data-toc-element="true">Optional fields </a><ul class="table-of-content"><li><a href="#source-string" data-toc-element="true"><code>source</code> - [string] </a></li><li><a href="#output-string" data-toc-element="true"><code>output</code> - [string] </a></li><li><a href="#changelog-string" data-toc-element="true"><code>changelog</code> - [string] </a></li><li><a href="#navbar-object" data-toc-element="true"><code>navbar</code> - [object] </a></li><li><a href="#menu-object" data-toc-element="true"><code>menu</code> - [object] </a></li><li><a href="#lightner-object" data-toc-element="true"><code>lightner</code> - [object] </a></li></ul></li></ul></ul></aside></div></div><div class="column is-8-desktop is-full-touch"><section class="section"><div class="content"><header class="page-header"><a class="button is-hidden-touch is-outlined is-primary is-pulled-right" target="_blank" href="https://github.com/MangelMaxime/Nacara/edit/master/docsrc/blog/API/test.md">Edit</a><h1 class="title is-1">nacara.json</h1></header><div><p>[[toc]]</p>
+<article class="message is-info">
+                    <div class="message-body"><p>We are working on improving the documentation in order to make it easier to read.</p>
+</div>
+</article>
+<p>You can use the file <code>nacara.json</code> in order to configure most of Nacara behaviour.</p>
+<h2>Mandatory fields <a href="#Mandatory-fields" aria-hidden="true"><span class="anchor" id="Mandatory-fields"></span>#</a></h2>
+<h3><code>url</code> - [string] <a href="#url-string" aria-hidden="true"><span class="anchor" id="url-string"></span>#</a></h3>
+<p>This is the protocol and host part of your website URL.</p>
+<p>For the website <code>https://mangelmaxime.github.io/Nacara/</code>, it is <code>https://mangelmaxime.github.io</code></p>
+<h3><code>baseUrl</code> - [string] <a href="#baseUrl-string" aria-hidden="true"><span class="anchor" id="baseUrl-string"></span>#</a></h3>
+<p>This is the path after the host part of your website URL.</p>
+<p>For the website <code>https://mangelmaxime.github.io/Nacara/</code>, it is <code>/Nacara/</code>. If you have no path you can set it to <code>/</code>.</p>
+<h3><code>version</code> - [string] <a href="#version-string" aria-hidden="true"><span class="anchor" id="version-string"></span>#</a></h3>
+<p>This is the version of the website. It's used in order to show the version in the navbar if <code>navbar.showVersion</code> is <code>true</code>. It will also be used in order to handle versionning of the documentation.</p>
+<h3><code>title</code> - [string] <a href="#title-string" aria-hidden="true"><span class="anchor" id="title-string"></span>#</a></h3>
+<p>Title for your website.</p>
+<p>It's shown in the navbar and in the <code>title</code> tag of your page.</p>
+<h2>Optional fields <a href="#Optional-fields" aria-hidden="true"><span class="anchor" id="Optional-fields"></span>#</a></h2>
+<h3><code>source</code> - [string] <a href="#source-string" aria-hidden="true"><span class="anchor" id="source-string"></span>#</a></h3>
+<p>Relative path to the folder used as source.</p>
+<p>The default value is <code>docsrc</code>.</p>
+<h3><code>output</code> - [string] <a href="#output-string" aria-hidden="true"><span class="anchor" id="output-string"></span>#</a></h3>
+<p>Relative path to the output folder.</p>
+<p>The default value is <code>docs</code>.</p>
+<h3><code>changelog</code> - [string] <a href="#changelog-string" aria-hidden="true"><span class="anchor" id="changelog-string"></span>#</a></h3>
+<p>Relative path to the file used as a changelog. If you set this value, the changelog will be parsed and you will be able to accessible at the root your website.</p>
+<h3><code>navbar</code> - [object] <a href="#navbar-object" aria-hidden="true"><span class="anchor" id="navbar-object"></span>#</a></h3>
+<p>This property allow you to control the navbar component of your website.</p>
+<ul>
+<li>
+<p><code>showVersion</code> - [bool]</p>
+<p>If <code>true</code>, the <code>version</code> from the config file will be shown in the navbar.</p>
+<p>Later, this &quot;navbar item&quot; will be clickable in order to choose another version of the documentation.</p>
+</li>
+<li>
+<p><code>doc</code> - [string]</p>
+<p>If set then a link <code>Documentation</code> will be added to the navbar. The value provided is the id of the page to link to.</p>
+</li>
+<li>
+<p><code>links</code> - [list]</p>
+<ul>
+<li>Required
+<ul>
+<li><code>href</code> - [string]</li>
+</ul>
+</li>
+<li>Optional
+<ul>
+<li>
+<p><code>label</code> - [string]</p>
+<p>If provided this will be displayed as text in the link</p>
+</li>
+<li>
+<p><code>icon</code> - [string]</p>
+<p>If provided this will be displayed as an icon in the link. It needs to be a FontAwesome5 icon class. Ex: <code>fab fa-twitter</code></p>
+</li>
+<li>
+<p><code>color</code> - [string]</p>
+<p>If provided it will be apply to the CSS property <code>color</code> for the link.</p>
+</li>
+<li>
+<p><code>isExternal</code> - [string]</p>
+<p>If <code>true</code>, then clicking on the link will open a new tab in the browser</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3><code>menu</code> - [object] <a href="#menu-object" aria-hidden="true"><span class="anchor" id="menu-object"></span>#</a></h3>
+<p>This property is used to configure the menu.</p>
+<p>Every property <code>&quot;page-id&quot;</code> means you need to specify the <code>id</code> of the page you want to link to. The title of the page will be used as the label for the menu item.</p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span>{</span>
+<span>    </span><span style="color: #A0A1A7;font-style: italic">//...</span>
+<span>    </span><span style="color: #E45649">&quot;menu&quot;</span><span>: {</span>
+<span>        </span><span style="color: #E45649">&quot;Category 1&quot;</span><span>: </span><span style="color: #383A42">[</span>
+<span>            </span><span style="color: #50A14F">&quot;page-id&quot;</span><span>,</span>
+<span>            </span><span style="color: #50A14F">&quot;page-id&quot;</span>
+<span>        </span><span style="color: #383A42">]</span><span>,</span>
+<span>        </span><span style="color: #E45649">&quot;Category 2&quot;</span><span>: </span><span style="color: #383A42">[</span>
+<span>            </span><span style="color: #50A14F">&quot;page-id&quot;</span><span>,</span>
+<span>        </span><span style="color: #383A42">]</span><span>,</span>
+<span>        </span><span style="color: #E45649">&quot;Category 3&quot;</span><span>: </span><span style="color: #383A42">[</span>
+<span>            </span><span style="color: #50A14F">&quot;page-id&quot;</span><span>,</span>
+<span>            {</span>
+<span>                </span><span style="color: #E45649">&quot;Sub category 3-1&quot;</span><span>: </span><span style="color: #383A42">[</span>
+<span>                    </span><span style="color: #50A14F">&quot;page-id&quot;</span>
+<span>                </span><span style="color: #383A42">]</span><span>,</span>
+<span>                </span><span style="color: #E45649">&quot;Sub category 3-2&quot;</span><span>: </span><span style="color: #383A42">[</span>
+<span>                    </span><span style="color: #50A14F">&quot;page-id&quot;</span>
+<span>                </span><span style="color: #383A42">]</span>
+<span>            }</span>
+<span>        </span><span style="color: #383A42">]</span>
+<span>    }</span>
+<span>    </span><span style="color: #A0A1A7;font-style: italic">//...</span>
+<span>}</span></code></pre>
+<h3><code>lightner</code> - [object] <a href="#lightner-object" aria-hidden="true"><span class="anchor" id="lightner-object"></span>#</a></h3>
+<p>This property is used to configure <a href="https://github.com/MangelMaxime/Code-Lightner">Code-Lightner</a>.</p>
+<p>Code-Lightner is a project which use TextMate grammar in order to highlight the code. This is how highlights is done in VSCode for example so you can have the same result in your website.</p>
+<ul>
+<li>
+<p><code>backgroundColor</code> - [string]</p>
+<p>Set the background color of the pre element</p>
+</li>
+<li>
+<p><code>textColor</code> - [string]</p>
+<p>Set the color of the text</p>
+</li>
+<li>
+<p><code>themeFile</code> - [string]</p>
+<p>Relative path to the theme file</p>
+</li>
+<li>
+<p><code>grammars</code> - [list]</p>
+<p>List of the grammar file to load</p>
+</li>
+</ul>
+</div></div></section></div></div></div><script async="" src="/Nacara/resources/nacara-standard-layouts/scripts/menu.js"></script></body></html>
