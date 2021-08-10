@@ -1,6 +1,6 @@
 ---
-title: Getting started
-layout: nacara-standard
+title: Introduction
+layout: nacara-standard 
 ---
 
 # Quick start

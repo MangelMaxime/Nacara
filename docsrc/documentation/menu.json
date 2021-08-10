@@ -1,0 +1,28 @@
+[
+    {
+        "type": "category",
+        "label": "Nacara",
+        "items": [
+            "documentation/nacara/introduction",
+            {
+                "type": "category",
+                "label": "Guides",
+                "collapsible": true,
+                "collapsed": false,
+                "items": [
+                    "documentation/nacara/guides/create-a-page",
+                    "documentation/nacara/guides/create-a-page",
+                    "documentation/nacara/guides/markdown-features"
+                ]
+            }
+        ]
+    },
+    {
+        "type": "category",
+        "label": "Nacara layout",
+        "items": [
+            "documentation/layout/introduction",
+            "documentation/layout/standard"
+        ]
+    }
+]

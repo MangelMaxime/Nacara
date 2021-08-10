@@ -190,6 +190,7 @@ let init (args : InitArgs) : Model * Cmd<Msg> =
     let chokidarOptions =
         jsOptions<Chokidar.IOptions>(fun o ->
             o.ignoreInitial <- true
+            o.awaitWriteFinish <- U2.Case2 true
             // o.ignored <- [|
             //     $"%s{args.Config.SourceFolder}/scss/*"
             //     $"%s{args.Config.SourceFolder}/sass/*"
@@ -240,19 +241,24 @@ let private updatePagesCache (cache : PageContext list) (newPageContext : PageCo
         (oldCache : PageContext list)
         (newPageContext : PageContext)
         (newCache : PageContext list)
-        (attributesChanged : bool) =
+        (attributesChanged : bool)
+        (found : bool) =
 
         match oldCache with
         | head :: tail ->
             if head.PageId = newPageContext.PageId then
-                apply tail newPageContext (newPageContext :: newCache) (head.Attributes <> newPageContext.Attributes)
+                apply tail newPageContext (newPageContext :: newCache) (head.Attributes <> newPageContext.Attributes) true
             else
-                apply tail newPageContext (head :: newCache) attributesChanged
+                apply tail newPageContext (head :: newCache) attributesChanged false
 
         | [] ->
-            newCache, attributesChanged
+            if found then
+                newCache, attributesChanged
+            // If the page is not found, we add it to the cache
+            else
+                newPageContext :: newCache, attributesChanged
 
-    apply cache newPageContext [] false
+    apply cache newPageContext [] false false
 
 let update (msg : Msg) (model : Model) =
     match msg with
@@ -462,7 +468,11 @@ let update (msg : Msg) (model : Model) =
             )
             |> Promise.catchEnd (fun error ->
                 Log.error $"Error while processing markdown file: %s{pageContext.PageId}"
-                JS.console.error error
+                match error with
+                | :? Write.ProcessFileErrorException as error ->
+                    Log.error error.errorMessage
+                | _ ->
+                    Log.error error.Message
             )
 
         { model with

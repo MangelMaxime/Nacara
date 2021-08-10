@@ -13,6 +13,12 @@ module Events =
     let [<Literal>] Error = "error"
     let [<Literal>] All = "all"
 
+type [<AllowNullLiteral>] AwaitWriteFinishOptions =
+    /// Amount of time in milliseconds for a file size to remain constant before emitting its event.
+    abstract stabilityThreshold: float with get, set
+    /// File size polling interval.
+    abstract pollInterval: float with get, set
+
 type [<AllowNullLiteral>] IOptions =
     /// (regexp or function) files to be ignored. This function or regexp is tested against the whole path, not just filename.
     /// If it is a function with two arguments, it gets called twice per path - once with a single argument (the path), second time with two arguments (the path and the fs.Stats object of that path).
@@ -35,6 +41,8 @@ type [<AllowNullLiteral>] IOptions =
     abstract followSymlinks: bool with get, set
     /// (default: false). If set to true then the strings passed to .watch() and .add() are treated as literal path names, even if they look like globs.
     abstract disableGlobbing: bool with get, set
+    /// can be set to an object in order to adjust timing params:
+    abstract awaitWriteFinish: U2<AwaitWriteFinishOptions, bool> with get, set
 
 type [<AllowNullLiteral>] FSWatcher =
     abstract add: fileDirOrGlob: string -> unit

@@ -12,9 +12,15 @@
         "start": [
             {
                 "category": "docs",
-                "url": "/Nacara/index.html",
+                "url": "/Nacara/documentation/index.html",
                 "label": "Documentation",
                 "icon": "fas fa-book"
+            },
+            {
+                "category": "docs",
+                "url": "/Nacara/showcase.html",
+                "label": "Showcase",
+                "icon": "fas fa-laptop-code"
             },
             {
                 "category": "changelogs",

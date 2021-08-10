@@ -65,7 +65,7 @@ type ProcessMarkdownArgs =
         LightnerCache : JS.Map<string, CodeLightner.Config>
     }
 
-exception ProcessFileErrorException of pageContext : PageContext * errorMessage : string * original : exn
+exception ProcessFileErrorException of pageContext : PageContext * errorMessage : string
 
 let markdown (args : ProcessMarkdownArgs) =
     promise {
@@ -73,7 +73,7 @@ let markdown (args : ProcessMarkdownArgs) =
             args.Layouts.get(args.PageContext.Layout)
 
         if isNull (box layoutRenderer) then
-            return raise (ProcessFileErrorException (args.PageContext, $"Layout renderer '%s{args.PageContext.Layout}' is unknown", null))
+            return raise (ProcessFileErrorException (args.PageContext, $"Layout renderer '%s{args.PageContext.Layout}' is unknown"))
         else
             try
                 let categoryMenu =
@@ -108,5 +108,5 @@ let markdown (args : ProcessMarkdownArgs) =
                 return args.PageContext
             with
                 | error ->
-                    return raise (ProcessFileErrorException (args.PageContext, error.Message, error))
+                    return raise (ProcessFileErrorException (args.PageContext, error.Message))
     }

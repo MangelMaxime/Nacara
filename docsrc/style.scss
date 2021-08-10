@@ -1,6 +1,9 @@
 @import "./../node_modules/bulma/sass/utilities/initial-variables";
 
-$primary: #bb3c8c;
+// Color palette
+// https://lospec.com/palette-list/fluffy8
+
+$primary: #7679db; 
 $text: #2b2b2b;
 
 @import "./../node_modules/bulma/sass/utilities/derived-variables";

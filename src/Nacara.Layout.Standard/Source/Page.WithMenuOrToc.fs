@@ -124,20 +124,32 @@ let rec private renderSubMenu
             renderMenuItemPage config pages info currentPageId tocInformation
 
         | MenuItem.List info ->
+            let defaultState =
+                if info.Collapsed then
+                    "collapsed"
+                else
+                    "expanded"
             Bulma.menuList [
                 prop.className "has-menu-group"
 
                 prop.children [
                     Html.li [
                         Html.a [
-                            prop.className "menu-group"
+                            prop.classes [
+                                "menu-group"
+                                if not info.Collapsed then
+                                    "is-expanded"
+                            ]
+                            prop.custom("data-default-state", defaultState)
+                            prop.custom("data-collapsible", info.Collapsible)
                             prop.children [
                                 Html.span info.Label
 
-                                Bulma.icon [
-                                    Fa.i [ Fa.Solid.AngleRight; Fa.Size Fa.FaLarge ]
-                                        [  ]
-                                ]
+                                if info.Collapsible then
+                                    Bulma.icon [
+                                        Fa.i [ Fa.Solid.AngleRight; Fa.Size Fa.FaLarge ]
+                                            [  ]
+                                    ]
                             ]
                         ]
 

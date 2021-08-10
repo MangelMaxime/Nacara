@@ -245,14 +245,6 @@ let render (rendererContext : RendererContext) (pageContext : PageContext) =
                             }
                     }
 
-                // return Prelude.basePage
-                //     {
-                //         Config = rendererContext.Config
-                //         Section = pageContext.Section
-                //         TitleOpt = pageContext.Title
-                //         Content = changelogContainer changelogItems
-                //     }
-
             | Error errorMessage ->
                 return failwith errorMessage
 

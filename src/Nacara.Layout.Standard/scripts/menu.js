@@ -5,7 +5,7 @@ const setupMenuNavigation = () => {
 
     // Collapse menu-group which doesn't concerns the current page
     document
-        .querySelectorAll(`.menu .menu-group`)
+        .querySelectorAll(`.menu .menu-group[data-collapsible=true][data-default-state=collapsed]`)
         .forEach(function (menuGroup) {
             var parentChildren = Array.from(menuGroup.parentElement.children);
 
@@ -30,7 +30,7 @@ const setupMenuNavigation = () => {
 
     // Register listener to handle menu-group
     document
-        .querySelectorAll(`.menu .menu-group`)
+        .querySelectorAll(`.menu .menu-group[data-collapsible=true]`)
         .forEach(function (menuGroup) {
             menuGroup.addEventListener("click", function (ev) {
                 // All the menu "calculation" are done relative to the .menu-group element
