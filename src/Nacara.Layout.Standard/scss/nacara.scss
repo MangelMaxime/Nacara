@@ -1,20 +1,17 @@
 @import './components/changelog.scss';
 @import './components/textual-steps.scss';
 
+$menu-list-spacing: 0.5rem !default;
+
 // Remove bottom margin of the name of the project in the navbar otherwise a the navbar is distorted
 .navbar-item.title.is-4 {
     margin-bottom: 0;
 }
 
-$menu-list-link-padding: 0.5em 1.25em;
 .menu-list .menu-list {
     &:not(.has-menu-group) {
-        padding-left: 1.25em;
+        padding-left: $menu-nested-list-margin;
     }
-}
-
-.menu-list:not(:last-child) {
-    margin-bottom: 0.5em;
 }
 
 .menu-list li ul {
@@ -214,6 +211,14 @@ h2, h3, h4, h5, h6  {
     // .menu-label, a {
     //     font-weight: $weight-semibold;
     // }
+
+    .menu-list:not(:last-child) {
+        margin-bottom: $menu-list-spacing;
+    }
+
+    > .menu-list > li + .menu-list {
+        margin-top: $menu-list-spacing;
+    }
 
     .has-table-of-content {
         border-radius: $menu-item-radius;
