@@ -191,10 +191,6 @@ let init (args : InitArgs) : Model * Cmd<Msg> =
         jsOptions<Chokidar.IOptions>(fun o ->
             o.ignoreInitial <- true
             o.awaitWriteFinish <- U2.Case2 true
-            // o.ignored <- [|
-            //     $"%s{args.Config.SourceFolder}/scss/*"
-            //     $"%s{args.Config.SourceFolder}/sass/*"
-            // |]
         )
 
     // Start the watcher empty because we don't know yet where the dependency files are
