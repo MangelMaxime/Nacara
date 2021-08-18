@@ -5,7 +5,7 @@ const setupMenuNavigation = () => {
 
     // Collapse menu-group which doesn't concerns the current page
     document
-        .querySelectorAll(`.menu .menu-group`)
+        .querySelectorAll(`.menu .menu-group[data-collapsible=true][data-default-state=collapsed]`)
         .forEach(function (menuGroup) {
             var parentChildren = Array.from(menuGroup.parentElement.children);
 
@@ -30,7 +30,7 @@ const setupMenuNavigation = () => {
 
     // Register listener to handle menu-group
     document
-        .querySelectorAll(`.menu .menu-group`)
+        .querySelectorAll(`.menu .menu-group[data-collapsible=true]`)
         .forEach(function (menuGroup) {
             menuGroup.addEventListener("click", function (ev) {
                 // All the menu "calculation" are done relative to the .menu-group element
@@ -155,7 +155,6 @@ const setupCopyCode = () => {
         });
 }
 
-
 const setupGlobal = () => {
 
     // This script should be loaded in a tag with async tag so we can directly apply all the functions
@@ -174,8 +173,8 @@ const setupGlobal = () => {
 
     if (tableOfContentElement !== null) {
         tableOfContentElement.scrollIntoView({
-            block : "nearest", // Scroll to the nearest parent otherwise it also scroll the main content
-            inline : "nearest" // Scroll to the nearest parent otherwise it also scroll the main content
+            block: "nearest", // Scroll to the nearest parent otherwise it also scroll the main content
+            inline: "nearest" // Scroll to the nearest parent otherwise it also scroll the main content
         })
     }
 }
@@ -183,7 +182,7 @@ const setupGlobal = () => {
 // The page is ready execute our code
 if (document.readyState === "complete") {
     setupGlobal();
-// The page is not ready, wait for it to be ready
+    // The page is not ready, wait for it to be ready
 } else {
     document.onreadystatechange = () => {
         if (document.readyState === "complete") {
