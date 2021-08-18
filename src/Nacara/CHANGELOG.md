@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-008 - 2021-08-18
+
+### Fixed
+
+* Include the `scripts` folder into the published package
+
 ## 1.0.0-beta-007 - 2021-08-18
 
 ### Added

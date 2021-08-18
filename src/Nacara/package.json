@@ -1,13 +1,14 @@
 {
     "name": "nacara",
-    "version": "1.0.0-beta-007",
+    "version": "1.0.0-beta-008",
     "license": "MIT",
     "bin": {
         "nacara": "./cli.js"
     },
     "files": [
         "dist",
-        "js"
+        "js",
+        "scripts"
     ],
     "scripts": {},
     "engines": {
