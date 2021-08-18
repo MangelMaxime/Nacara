@@ -2,7 +2,7 @@
 layout: nacara-navbar-only
 ---
 
-<section class="hero is-medium is-primary-light"> 
+<section class="hero is-medium is-primary-light">
     <div class="hero-body">
         <div class="container">
             <div class="has-text-centered">
@@ -37,7 +37,7 @@ layout: nacara-navbar-only
                     </p>
                     <a href="">
                         How Nacara handle files? →
-                    </a>            
+                    </a>
                 </div>
                 <div class="column is-4">
                     <p class="title">

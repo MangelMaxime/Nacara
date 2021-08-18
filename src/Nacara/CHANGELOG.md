@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-007 - 2021-08-18
+
+### Added
+
+* Add `$menu-list-spacing` SCSS variable
+
+### Changed
+
+* Make chokidar wait for stable file before notifying a change
+* Fix #53: Remove live-server dependency instead use express and a custom implementation
+
+### Fixed
+
+* Fix #62: Rework menu alignment and margin to have a better display
 
 ## 1.0.0-beta-006 - 2021-08-01
 

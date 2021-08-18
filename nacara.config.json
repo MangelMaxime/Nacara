@@ -12,7 +12,7 @@
         "start": [
             {
                 "category": "docs",
-                "url": "/Nacara/documentation/index.html",
+                "url": "/Nacara/documentation/nacara/introduction.html",
                 "label": "Documentation",
                 "icon": "fas fa-book"
             },
