@@ -5,5 +5,6 @@ Fable.FontAwesome.Free
 Fable.Node
 Fable.Promise
 Glutinum.Chalk
+Glutinum.Express
 Thoth.Json
 FSharp.Core

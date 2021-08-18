@@ -59,9 +59,45 @@ NUGET
       Fable.AST (>= 3.0) - restriction: >= netstandard2.0
       FSharp.Core (>= 4.7.2) - restriction: >= netstandard2.0
     FSharp.Core (5.0.2)
+    Glutinum.BodyParser (1.0) - restriction: >= netstandard2.0
+      Fable.Core (>= 3.1.2) - restriction: >= netstandard2.0
+      Fable.Node (>= 1.2) - restriction: >= netstandard2.0
+      FSharp.Core (>= 5.0) - restriction: >= netstandard2.0
     Glutinum.Chalk (1.0)
       Fable.Core (>= 3.2.5) - restriction: >= netstandard2.0
       FSharp.Core (>= 5.0) - restriction: >= netstandard2.0
+    Glutinum.Connect (0.1.0-alpha-002) - restriction: >= netstandard2.0
+      Fable.Core (>= 3.1.2) - restriction: >= netstandard2.0
+      Fable.Node (>= 1.2) - restriction: >= netstandard2.0
+      FSharp.Core (>= 5.0) - restriction: >= netstandard2.0
+    Glutinum.Express (0.1.0-alpha-002)
+      Fable.Core (>= 3.1.2) - restriction: >= netstandard2.0
+      Fable.Node (>= 1.2) - restriction: >= netstandard2.0
+      FSharp.Core (>= 5.0) - restriction: >= netstandard2.0
+      Glutinum.BodyParser (>= 0.1.0-alpha-002) - restriction: >= netstandard2.0
+      Glutinum.ExpressServeStaticCore (>= 0.1.0-alpha-002) - restriction: >= netstandard2.0
+      Glutinum.Qs (>= 0.1.0-alpha-002) - restriction: >= netstandard2.0
+      Glutinum.ServeStatic (>= 0.1.0-alpha-001) - restriction: >= netstandard2.0
+    Glutinum.ExpressServeStaticCore (0.1.0-alpha-002) - restriction: >= netstandard2.0
+      Fable.Core (>= 3.1.2) - restriction: >= netstandard2.0
+      Fable.Node (>= 1.2) - restriction: >= netstandard2.0
+      FSharp.Core (>= 5.0) - restriction: >= netstandard2.0
+      Glutinum.Qs (>= 0.1.0-alpha-002) - restriction: >= netstandard2.0
+      Glutinum.RangeParser (>= 0.1.0-alpha-002) - restriction: >= netstandard2.0
+    Glutinum.Mime (1.0) - restriction: >= netstandard2.0
+      Fable.Core (>= 3.1.2) - restriction: >= netstandard2.0
+      FSharp.Core (>= 5.0) - restriction: >= netstandard2.0
+    Glutinum.Qs (1.0) - restriction: >= netstandard2.0
+      Fable.Core (>= 3.1.2) - restriction: >= netstandard2.0
+      FSharp.Core (>= 5.0) - restriction: >= netstandard2.0
+    Glutinum.RangeParser (1.0.1) - restriction: >= netstandard2.0
+      Fable.Core (>= 3.1.2) - restriction: >= netstandard2.0
+      FSharp.Core (>= 5.0) - restriction: >= netstandard2.0
+    Glutinum.ServeStatic (1.0) - restriction: >= netstandard2.0
+      Fable.Core (>= 3.1.2) - restriction: >= netstandard2.0
+      FSharp.Core (>= 5.0) - restriction: >= netstandard2.0
+      Glutinum.Connect (>= 0.1.0-alpha-002) - restriction: >= netstandard2.0
+      Glutinum.Mime (>= 1.0) - restriction: >= netstandard2.0
     Microsoft.Build.Tasks.Git (1.0) - copy_local: true
     Microsoft.SourceLink.Common (1.0) - copy_local: true
     Microsoft.SourceLink.GitHub (1.0) - copy_local: true

@@ -117,7 +117,7 @@ let start () =
         if hasDocsConfig then
             let! configJson = File.read configPath
             // Check if the Nacara config file is valid
-            match Decode.fromString (Config.decoder cwd) configJson with
+            match Decode.fromString (Config.decoder cwd isWatch) configJson with
             | Ok config ->
                 // Update the config with the CLI args
                 let config =

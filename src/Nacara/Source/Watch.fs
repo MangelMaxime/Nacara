@@ -3,10 +3,11 @@ module Watch
 open Nacara.Core.Types
 open Fable.Core
 open Fable.Core.JsInterop
-open Fable.React
 open Elmish
 open Node
 open Chokidar
+open Glutinum.Express
+open Glutinum.ExpressServeStaticCore
 
 exception InitMarkdownFileErrorException of filePath : string * original : exn
 
@@ -19,7 +20,6 @@ type Msg =
     | LoadMenuFile of filePath : string
     | MenuFiledLoaded of filePath : string * menuConfig : MenuConfig
     | ProcessSass of filePath: string
-    | CopyFile of source : string
     | CopyFileWithDestination of source : string * destination : string
     | DependencyFileChanged of filePath : string
 
@@ -28,7 +28,8 @@ type Model =
     {
         FileWatcher : Chokidar.FSWatcher
         LayoutDependencyWatcher : Chokidar.FSWatcher
-        Server : Http.Server
+        HttpServer : Http.Server
+        WssServer : Ws.WebSocket.Server
         Config : Config
         LayoutRenderer : JS.Map<string, LayoutRenderFunc>
         LayoutDependencies : LayoutDependency list
@@ -139,6 +140,12 @@ let layoutDependencyWatcherSubscription (model : Model) =
 
 let private baseUrlMiddleware (baseUrl : string) : LiveServer.Middleware = import "default" "./../js/base-url-middleware.js"
 
+// Extends Http binding to accept variant with an express application
+type Http.IExports with
+    [<Emit("$0.createServer($1,$2)")>]
+
+    member __.createServer (expressApp : Express.Express) : Http.Server = jsNative
+
 let private startServer (config : Config) =
     // Start the LiveServer instance
     let liveServerOption =
@@ -156,16 +163,51 @@ let private startServer (config : Config) =
                 baseUrlMiddleware config.BaseUrl
             |]
 
-    let server = LiveServer.liveServer.start(liveServerOption)
+    // let server = LiveServer.liveServer.start(liveServerOption)
 
-    // We need to register in the event in order have access to the server info
-    // Otherwise, the server isn't ready yet
-    server.on("listening", (fun _ _ ->
+    // // We need to register in the event in order have access to the server info
+    // // Otherwise, the server isn't ready yet
+    // server.on("listening", (fun _ _ ->
+    //     Log.success $"Server started at: http://localhost:%i{config.ServerPort}"
+    // ))
+    // |> ignore
+
+    let app = express.express()
+
+    if config.BaseUrl <> "/" then
+        app.``use``(fun (req : Request) (res : Response) (next : NextFunction) ->
+            let segments = req.url.Split('/').[1..]
+            let sanitizeBaseUrl = config.BaseUrl.Replace("/", "")
+            if segments.Length > 1 && segments.[0] = sanitizeBaseUrl then
+                let newUrl = System.String.Join("/", segments.[1..])
+                res.writeHead(
+                    307,
+                    {| Location = "http://" + req.headers?host + "/" + newUrl |}
+                )
+                res.``end``()
+            else
+                next.Invoke()
+        )
+
+    let serveStaticRouter = express.``static``.Invoke(path.join(config.WorkingDirectory, config.Output)) :?> Router
+
+    app.``use``(serveStaticRouter)
+
+    let server = http.createServer(app)
+
+    server.listen(config.ServerPort, fun () ->
         Log.success $"Server started at: http://localhost:%i{config.ServerPort}"
-    ))
+    )
     |> ignore
 
-    server
+    let wss = Ws.webSocket.Server.Create(jsOptions<Ws.WebSocket.ServerOptions>(fun o ->
+        o.server <- !^server
+    ))
+
+    wss.on("connection", ignore)
+    |> ignore
+
+    server, wss
 
 let init (args : InitArgs) : Model * Cmd<Msg> =
     let layoutCache =
@@ -180,12 +222,19 @@ let init (args : InitArgs) : Model * Cmd<Msg> =
 
         JS.Constructors.Map.Create(keyValues)
 
+    let liveReloadDependency =
+        {
+            Source = path.join(__dirname, "../scripts/live-reload.js")
+            Destination = "resources/nacara/scripts/live-reload.js"
+        }
+
     let layoutDependencies =
         args.Layouts
         |> Array.collect (fun info ->
             info.Dependencies
         )
         |> Array.toList
+        |> List.append [ liveReloadDependency ]
 
     let chokidarOptions =
         jsOptions<Chokidar.IOptions>(fun o ->
@@ -195,9 +244,11 @@ let init (args : InitArgs) : Model * Cmd<Msg> =
 
     // Start the watcher empty because we don't know yet where the dependency files are
     let layoutDependencyWatcher =
-        chokidar.watch([||])
+        chokidar.watch([|
+            liveReloadDependency.Source
+        |])
 
-    let cmd =
+    let processQueueCmd =
         args.ProcessQueue
         |> List.map (
             function
@@ -219,10 +270,13 @@ let init (args : InitArgs) : Model * Cmd<Msg> =
         )
         |> Cmd.batch
 
+    let httpServer, wssServer = startServer args.Config
+
     {
         FileWatcher = chokidar.watch(args.Config.SourceFolder, chokidarOptions)
         LayoutDependencyWatcher = layoutDependencyWatcher
-        Server = startServer args.Config
+        HttpServer = httpServer
+        WssServer = wssServer
         LayoutRenderer = layoutCache
         LayoutDependencies = layoutDependencies
         Config = args.Config
@@ -230,7 +284,11 @@ let init (args : InitArgs) : Model * Cmd<Msg> =
         Menus = args.Menus
         LightnerCache = args.LightnerCache
     }
-    , cmd
+    , Cmd.batch [
+        processQueueCmd
+        // Manually trigger the copy of the live-reload.js file
+        Cmd.ofMsg (CopyFileWithDestination (liveReloadDependency.Source, liveReloadDependency.Destination))
+    ]
 
 let private updatePagesCache (cache : PageContext list) (newPageContext : PageContext) =
     let rec apply
@@ -255,6 +313,16 @@ let private updatePagesCache (cache : PageContext list) (newPageContext : PageCo
                 newPageContext :: newCache, attributesChanged
 
     apply cache newPageContext [] false false
+
+let private sendReload (model : Model) =
+    model.WssServer.clients.forEach(fun client key _ ->
+        client.send("reload")
+    )
+
+let private sendRefreshCSS (model : Model) =
+    model.WssServer.clients.forEach(fun client key _ ->
+        client.send("refreshCSS")
+    )
 
 let update (msg : Msg) (model : Model) =
     match msg with
@@ -297,12 +365,6 @@ let update (msg : Msg) (model : Model) =
         model
         , cmd
 
-    | CopyFile _ ->
-        Log.log "todo copyfile"
-
-        model
-        , Cmd.none
-
     | CopyFileWithDestination (source, destination) ->
         let args =
             model.Config.DestinationFolder
@@ -313,6 +375,7 @@ let update (msg : Msg) (model : Model) =
             Write.copyFileWithDestination args
             |> Promise.map( fun _ ->
                 Log.log $"Dependency file %s{source} copied to %s{destination}"
+                sendReload model
             )
             |> Promise.catchEnd (fun error ->
                 Log.error $"Error while copying %s{source} to %s{destination}\n%A{error}"
@@ -422,7 +485,7 @@ let update (msg : Msg) (model : Model) =
                 )
                 // Remove duplicates
                 |> List.distinct
-                // Remove the page which trigger the change from the re-processing it will alrady happen
+                // Remove the page which trigger the change from the re-processing it will already happen
                 |> List.filter (fun pageId ->
                     pageId <> pageContext.PageId
                 )
@@ -445,8 +508,6 @@ let update (msg : Msg) (model : Model) =
             else
                 []
 
-
-
         let args =
             {
                 PageContext = pageContext
@@ -461,6 +522,7 @@ let update (msg : Msg) (model : Model) =
             Write.markdown args
             |> Promise.map (fun _ ->
                 Log.log $"Processed: %s{pageContext.RelativePath}"
+                sendReload model
             )
             |> Promise.catchEnd (fun error ->
                 Log.error $"Error while processing markdown file: %s{pageContext.PageId}"
@@ -489,6 +551,7 @@ let update (msg : Msg) (model : Model) =
             Write.copyFile
             >> Promise.map (fun _ ->
                 Log.log $"Copied: %s{filePath}"
+                sendReload model
             )
             >> Promise.catchEnd (fun error ->
                 Log.error $"Error while copying %s{filePath}"
@@ -509,6 +572,7 @@ let update (msg : Msg) (model : Model) =
             Write.sassFile
             >> Promise.map (fun _ ->
                 Log.log $"Processed: %s{filePath}"
+                sendRefreshCSS model
             )
             >> Promise.catchEnd (fun error ->
                 Log.error $"Error while processing SASS file: %s{filePath}"

@@ -14,5 +14,6 @@ nuget Fable.Promise
 nuget Feliz
 nuget Feliz.Bulma
 nuget Glutinum.Chalk
+nuget Glutinum.Express
 nuget Thoth.Json
 nuget Microsoft.SourceLink.GitHub copy_local: true

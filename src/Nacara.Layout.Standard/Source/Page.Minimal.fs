@@ -192,11 +192,11 @@ let render (args : RenderArgs) =
                     prop.custom ("httpEquiv", "content-type")
 //                    prop.content "text/html; charset=UTF-8"
                 ]
-                
+
                 Html.meta [
                     prop.name "viewport"
                     prop.content "width=device-width, initial-scale=1"
-                ]                
+                ]
 
                 Html.link [
                     prop.rel "stylesheet"
@@ -221,6 +221,12 @@ let render (args : RenderArgs) =
                     prop.async true
                     prop.src (args.Config.BaseUrl + Dependencies.menu)
                 ]
+
+                if args.Config.IsWatch then
+                    Html.script [
+                        prop.async true
+                        prop.src (args.Config.BaseUrl + "resources/nacara/scripts/live-reload.js")
+                    ]
             ]
         ]
 

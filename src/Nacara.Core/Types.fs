@@ -240,6 +240,7 @@ type Config =
         LightnerConfig : LightnerConfig option
         Layouts : string array
         ServerPort : int
+        IsWatch : bool
     }
 
     member this.DestinationFolder
@@ -289,7 +290,7 @@ type LayoutInterface =
 
 module Config =
 
-    let decoder (cwd : string) : Decoder<Config> =
+    let decoder (cwd : string) (isWatch : bool) : Decoder<Config> =
         Decode.object (fun get ->
             {
                 WorkingDirectory = cwd
@@ -309,6 +310,7 @@ module Config =
                 Layouts = get.Required.Field "layouts" (Decode.array Decode.string)
                 ServerPort = get.Optional.Field "serverPort" Decode.int
                                 |> Option.defaultValue 8080
+                IsWatch = isWatch
             }
         )
 
