@@ -105,9 +105,6 @@ let private hasBoolArgs (flags: string list) =
 let private isWatch =
     hasBoolArgs ["--watch"; "-w"]
 
-let private isVerbose =
-    hasBoolArgs ["--verbose"; "-V"]
-
 let start () =
     promise {
         let configPath = Node.Api.path.join(cwd, "nacara.config.json")
@@ -119,12 +116,6 @@ let start () =
             // Check if the Nacara config file is valid
             match Decode.fromString (Config.decoder cwd isWatch) configJson with
             | Ok config ->
-                // Update the config with the CLI args
-                let config =
-                    { config with
-                        IsVerbose = isVerbose
-                    }
-
                 Log.log $"Source folder: %s{config.SourceFolder}"
 
                 // The config so now load the files from the source folder
