@@ -239,7 +239,12 @@ let init (args : InitArgs) : Model * Cmd<Msg> =
     let chokidarOptions =
         jsOptions<Chokidar.IOptions>(fun o ->
             o.ignoreInitial <- true
-            o.awaitWriteFinish <- U2.Case2 true
+            o.awaitWriteFinish <- U2.Case1 (
+                jsOptions<Chokidar.AwaitWriteFinishOptions> (fun o ->
+                    o.stabilityThreshold <- 250.
+                    o.pollInterval <- 100.
+                )
+            )
         )
 
     // Start the watcher empty because we don't know yet where the dependency files are
