@@ -1,6 +1,22 @@
 $changelog-tag-width: 102px;
 
 .changelog {
+
+    // Fix margin of p element inside of list element
+    // Example of markdown related to that
+    // - [Fable Gitter](https://gitter.im/fable-compiler/Fable)
+
+    //     Fable specific discussion and networking channel <-- This line
+
+    // - [Slack](https://fsharp.org/guides/slack/)
+    .content {
+        ol, li {
+            p:not(:last-child) {
+                margin-bottom: 0;
+            }
+        }
+    }
+
     ul.changelog-list {
         list-style-type: none;
         padding: 0;
