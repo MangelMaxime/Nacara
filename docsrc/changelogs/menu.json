@@ -1,6 +1,6 @@
 [
     {
-        "type": "category",
+        "type": "section",
         "label": "Changelogs",
         "items": [
             "changelogs/nacara",

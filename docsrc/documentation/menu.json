@@ -1,11 +1,11 @@
 [
     {
-        "type": "category",
+        "type": "section",
         "label": "Nacara",
         "items": [
             "documentation/nacara/introduction",
             {
-                "type": "category",
+                "type": "section",
                 "label": "Guides",
                 "collapsible": true,
                 "collapsed": false,
@@ -18,7 +18,7 @@
         ]
     },
     {
-        "type": "category",
+        "type": "section",
         "label": "Nacara layout",
         "items": [
             "documentation/layout/introduction",

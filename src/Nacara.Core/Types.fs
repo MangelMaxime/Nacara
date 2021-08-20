@@ -186,7 +186,7 @@ module MenuItem =
                     )
                     |> Decode.map MenuItem.Page
 
-                | "category" ->
+                | "section" ->
                     Decode.object (fun get ->
                         {
                             Label = get.Required.Field "label" Decode.string
@@ -209,7 +209,7 @@ module MenuItem =
                     |> Decode.map MenuItem.Link
 
                 | invalidType ->
-                    Decode.fail $"`%s{invalidType}` is not a valid type for a menu Item. Supported types are:\n- page\n- category\n- link"
+                    Decode.fail $"`%s{invalidType}` is not a valid type for a menu Item. Supported types are:\n- page\n- section\n- link"
             )
         ]
 
@@ -227,15 +227,12 @@ type MenuConfig =
 type Config =
     {
         WorkingDirectory : string
-        GithubURL : string option
         Url : string
         SourceFolder : string
         BaseUrl : string
         Title : string
         EditUrl : string option
         Output : string
-        IsVerbose : bool
-        Changelog : string option
         Navbar : NavbarConfig option
         LightnerConfig : LightnerConfig option
         Layouts : string array
@@ -294,7 +291,6 @@ module Config =
         Decode.object (fun get ->
             {
                 WorkingDirectory = cwd
-                GithubURL = get.Optional.Field "githubURL" Decode.string
                 Url = get.Required.Field "url" Decode.string
                 BaseUrl = get.Required.Field "baseUrl" Decode.string
                 Title = get.Required.Field "title" Decode.string
@@ -303,8 +299,6 @@ module Config =
                 EditUrl = get.Optional.Field "editUrl" Decode.string
                 Output = get.Optional.Field "output" Decode.string
                             |> Option.defaultValue "docs"
-                IsVerbose = false
-                Changelog = get.Optional.Field "changelog" Decode.string
                 Navbar = get.Optional.Field "navbar" NavbarConfig.decoder
                 LightnerConfig = get.Optional.Field "lightner" LightnerConfig.decoder
                 Layouts = get.Required.Field "layouts" (Decode.array Decode.string)
