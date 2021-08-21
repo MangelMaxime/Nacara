@@ -217,3 +217,38 @@ let initMenuFiles (sourceFolder : string) (filePath : string) =
         | Error errorMessage ->
             return Error $"Error while reading %s{filePath}\n%s{errorMessage}"
     }
+
+module Server =
+
+    open Glutinum.Express
+    open Glutinum.ExpressServeStaticCore
+
+    // Extends Http binding to accept variant with an express application
+    type Http.IExports with
+        [<Emit("$0.createServer($1,$2)")>]
+
+        member __.createServer (expressApp : Express.Express) : Http.Server = jsNative
+
+    let create (config : Config) =
+        let app = express.express()
+
+        if config.BaseUrl <> "/" then
+            app.``use``(fun (req : Request) (res : Response) (next : NextFunction) ->
+                let segments = req.url.Split('/').[1..]
+                let sanitizeBaseUrl = config.BaseUrl.Replace("/", "")
+                if segments.Length > 1 && segments.[0] = sanitizeBaseUrl then
+                    let newUrl = System.String.Join("/", segments.[1..])
+                    res.writeHead(
+                        307,
+                        {| Location = "http://" + req.headers?host + "/" + newUrl |}
+                    )
+                    res.``end``()
+                else
+                    next.Invoke()
+            )
+
+        let serveStaticRouter = express.``static``.Invoke(path.join(config.WorkingDirectory, config.Output)) :?> Router
+
+        app.``use``(serveStaticRouter)
+
+        http.createServer(app)

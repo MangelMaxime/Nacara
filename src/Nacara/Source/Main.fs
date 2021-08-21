@@ -11,8 +11,6 @@ open Node
 
 let cwd = ``process``.cwd()
 
-Log.info $"Current directory:\n%s{cwd}"
-
 type Model =
     | Initializing
     | ServerMode
@@ -95,203 +93,231 @@ let private cliArgs =
     |> Seq.skip 2
     |> Seq.toList
 
-let private hasBoolArgs (flags: string list) =
+let private hasCommand (command: string) =
     cliArgs
     |> List.exists (fun a ->
-        flags
-        |> List.exists (fun flag -> a = flag)
+        a = command
     )
 
 let private isWatch =
-    hasBoolArgs ["--watch"; "-w"]
+    hasCommand "watch"
 
-let start () =
+let private isServe =
+    hasCommand "serve"
+
+let private isVersion =
+    hasCommand "--version"
+
+let private setupBabelIfNeeded () =
     promise {
-        let nacaraConfigPath = path.join(cwd, "nacara.config.json")
-        let! hasDocsConfig = File.exist(nacaraConfigPath)
-
         // Load babel if the config file is found
         let babelConfigPath = path.join(cwd, "babel.config.json")
         let! hasBabelConfig = File.exist(babelConfigPath)
 
         if hasBabelConfig then
+            Log.info "'babel.config.json' file found, loading Babel..."
             try
                 emitJsExpr () """require("@babel/register")"""
             with
                 | ex ->
                     Log.error $"A 'babel.config.json' file was found, please install '@babel/register' package."
                     ``process``.exit ExitCode.FAILED_TO_LOAD_BABEL
+    }
 
-        // Check if the Nacara config file exist
-        if hasDocsConfig then
-            let! configJson = File.read nacaraConfigPath
-            // Check if the Nacara config file is valid
-            match Decode.fromString (Config.decoder cwd isWatch) configJson with
-            | Ok config ->
-                Log.log $"Source folder: %s{config.SourceFolder}"
+let private buildOrWatch (config : Config) =
+    promise {
+        Log.log $"Source folder: %s{config.SourceFolder}"
 
-                // The config so now load the files from the source folder
-                let! files = Directory.getFiles true config.SourceFolder
+        do! setupBabelIfNeeded ()
 
-                // For the markdown files, initialize their context
-                let files =
-                    files
-                    |> List.fold (fun acc path ->
-                        match path with
-                        | MarkdownFile ->
-                            { acc with
-                                MarkdownFiles = path :: acc.MarkdownFiles
-                            }
-                        | JavaScriptFile ->
-                            { acc with
-                                JavaScriptFile = path :: acc.JavaScriptFile
-                            }
+        // The config so now load the files from the source folder
+        let! files = Directory.getFiles true config.SourceFolder
 
-                        | SassFile ->
-                            // Ignore files under special folders
-                            if path.Replace("\\", "/").StartsWith("scss/")
-                                || path.Replace("\\", "/").StartsWith("sass/") then
+        // For the markdown files, initialize their context
+        let files =
+            files
+            |> List.fold (fun acc path ->
+                match path with
+                | MarkdownFile ->
+                    { acc with
+                        MarkdownFiles = path :: acc.MarkdownFiles
+                    }
+                | JavaScriptFile ->
+                    { acc with
+                        JavaScriptFile = path :: acc.JavaScriptFile
+                    }
 
-                                acc
+                | SassFile ->
+                    // Ignore files under special folders
+                    if path.Replace("\\", "/").StartsWith("scss/")
+                        || path.Replace("\\", "/").StartsWith("sass/") then
 
-                            else
-                                { acc with
-                                    SassFiles = path :: acc.SassFiles
-                                }
-
-                        | MenuFile ->
-                            { acc with
-                                MenuFiles = path :: acc.MenuFiles
-                            }
-
-                        | OtherFile _ ->
-                            { acc with
-                                OtherFiles = path :: acc.OtherFiles
-                            }
-                    ) FilesAccumulator.Empty
-
-                let! pageContextResults =
-                    files.MarkdownFiles
-                    |> List.map (initPageContext config.SourceFolder)
-                    |> Promise.all
-
-                let (validPageContext, erroredPageContext) =
-                    pageContextResults
-                    |> Array.partitionMap (fun x ->
-                        match x with
-                        | Ok validPageContext ->
-                            Choice1Of2 validPageContext
-
-                        | Error errorMessage ->
-                            Choice2Of2 errorMessage
-                    )
-
-                let lightnerCache = initLighterCache config
-
-                let layouts =
-                    config.Layouts
-                    |> Array.map (fun layoutPath ->
-                        let layout : LayoutInterface =
-                            // The path is relative, so load it relatively from the CWD
-                            if layoutPath.StartsWith("./") then
-                                let newPath =
-                                    path.join(cwd, layoutPath)
-
-                                require.Invoke newPath |> unbox
-                            // The path is not relative, require it as an npm module
-                            else
-                                require.Invoke layoutPath |> unbox
-
-                        layout.``default``
-                    )
-
-                let! menuFiles =
-                    files.MenuFiles
-                    |> List.map (initMenuFiles config.SourceFolder)
-                    |> Promise.all
-
-                let (validMenuFiles, erroredMenuFiles) =
-                    menuFiles
-                    |> Array.partitionMap (fun x ->
-                        match x with
-                        | Ok validMenuFile ->
-                            Choice1Of2 validMenuFile
-
-                        | Error errorMessage ->
-                            Choice2Of2 errorMessage
-                    )
-
-                let layoutDependencies =
-                    layouts
-                    |> Array.collect (fun layout ->
-                        layout.Dependencies
-                    )
-                    |> Array.toList
-
-                let processQueue =
-                    [
-                        for sassFile in files.SassFiles do
-                            QueueFile.Sass sassFile
-
-                        for javaScriptFile in files.JavaScriptFile do
-                            QueueFile.JavaScript javaScriptFile
-
-                        for otherFile in files.OtherFiles do
-                            QueueFile.Other otherFile
-
-                        for markdownFile in validPageContext do
-                            QueueFile.Markdown markdownFile
-
-                        for layoutDependency in layoutDependencies do
-                            QueueFile.LayoutDependency layoutDependency
-                    ]
-
-                if isWatch then
-                    let elmishArgs : Watch.InitArgs =
-                        {
-                            ProcessQueue = processQueue
-                            Layouts = layouts
-                            Config = config
-                            Pages = validPageContext |> Array.toList
-                            Menus = validMenuFiles |> Array.toList
-                            LightnerCache = lightnerCache
-                        }
-
-                    Program.mkProgram Watch.init Watch.update (fun _ _ -> ())
-                    |> Program.withSubscription Watch.fileWatcherSubscription
-                    |> Program.withSubscription Watch.layoutDependencyWatcherSubscription
-                    |> Program.runWith elmishArgs
-
-                else
-                    // In build mode we are more strict about the initial context because we can't recover from it
-                    // All files should be valid otherwise stop the generation and report an error
-                    if erroredPageContext.Length > 0 then
-                        for errorMessage in erroredPageContext do
-                            Log.error errorMessage
-
-                        ``process``.exit(ExitCode.INVALID_MARKDOWN_FILE_IN_BUILD_MODE)
+                        acc
 
                     else
+                        { acc with
+                            SassFiles = path :: acc.SassFiles
+                        }
 
-                        let elmishArgs : Build.InitArgs =
-                            {
-                                Layouts = layouts
-                                Config = config
-                                ProcessQueue = processQueue
-                                Pages = validPageContext |> Array.toList
-                                Menus = validMenuFiles |> Array.toList
-                                LightnerCache = lightnerCache
-                            }
+                | MenuFile ->
+                    { acc with
+                        MenuFiles = path :: acc.MenuFiles
+                    }
 
-                        Program.mkProgram Build.init Build.update (fun _ _ -> ())
-                        |> Program.runWith elmishArgs
+                | OtherFile _ ->
+                    { acc with
+                        OtherFiles = path :: acc.OtherFiles
+                    }
+            ) FilesAccumulator.Empty
 
-            | Error errorMessage ->
-                Log.error $"Invalid config file. Error:\n{errorMessage}"
-                ``process``.exit(ExitCode.INVALID_CONFIG_FILE)
+        let! pageContextResults =
+            files.MarkdownFiles
+            |> List.map (initPageContext config.SourceFolder)
+            |> Promise.all
+
+        let (validPageContext, erroredPageContext) =
+            pageContextResults
+            |> Array.partitionMap (fun x ->
+                match x with
+                | Ok validPageContext ->
+                    Choice1Of2 validPageContext
+
+                | Error errorMessage ->
+                    Choice2Of2 errorMessage
+            )
+
+        let lightnerCache = initLighterCache config
+
+        let layouts =
+            config.Layouts
+            |> Array.map (fun layoutPath ->
+                let layout : LayoutInterface =
+                    // The path is relative, so load it relatively from the CWD
+                    if layoutPath.StartsWith("./") then
+                        let newPath =
+                            path.join(cwd, layoutPath)
+
+                        require.Invoke newPath |> unbox
+                    // The path is not relative, require it as an npm module
+                    else
+                        require.Invoke layoutPath |> unbox
+
+                layout.``default``
+            )
+
+        let! menuFiles =
+            files.MenuFiles
+            |> List.map (initMenuFiles config.SourceFolder)
+            |> Promise.all
+
+        let (validMenuFiles, erroredMenuFiles) =
+            menuFiles
+            |> Array.partitionMap (fun x ->
+                match x with
+                | Ok validMenuFile ->
+                    Choice1Of2 validMenuFile
+
+                | Error errorMessage ->
+                    Choice2Of2 errorMessage
+            )
+
+        let layoutDependencies =
+            layouts
+            |> Array.collect (fun layout ->
+                layout.Dependencies
+            )
+            |> Array.toList
+
+        let processQueue =
+            [
+                for sassFile in files.SassFiles do
+                    QueueFile.Sass sassFile
+
+                for javaScriptFile in files.JavaScriptFile do
+                    QueueFile.JavaScript javaScriptFile
+
+                for otherFile in files.OtherFiles do
+                    QueueFile.Other otherFile
+
+                for markdownFile in validPageContext do
+                    QueueFile.Markdown markdownFile
+
+                for layoutDependency in layoutDependencies do
+                    QueueFile.LayoutDependency layoutDependency
+            ]
+
+        if isWatch then
+            let elmishArgs : Watch.InitArgs =
+                {
+                    ProcessQueue = processQueue
+                    Layouts = layouts
+                    Config = config
+                    Pages = validPageContext |> Array.toList
+                    Menus = validMenuFiles |> Array.toList
+                    LightnerCache = lightnerCache
+                }
+
+            Program.mkProgram Watch.init Watch.update (fun _ _ -> ())
+            |> Program.withSubscription Watch.fileWatcherSubscription
+            |> Program.withSubscription Watch.layoutDependencyWatcherSubscription
+            |> Program.runWith elmishArgs
+
         else
-            Log.error "Missing 'nacara.config.json' file"
-            ``process``.exit(ExitCode.MISSING_CONFIG_FILE)
-        return ()
+            // In build mode we are more strict about the initial context because we can't recover from it
+            // All files should be valid otherwise stop the generation and report an error
+            if erroredPageContext.Length > 0 then
+                for errorMessage in erroredPageContext do
+                    Log.error errorMessage
+
+                ``process``.exit(ExitCode.INVALID_MARKDOWN_FILE_IN_BUILD_MODE)
+
+            else
+
+                let elmishArgs : Build.InitArgs =
+                    {
+                        Layouts = layouts
+                        Config = config
+                        ProcessQueue = processQueue
+                        Pages = validPageContext |> Array.toList
+                        Menus = validMenuFiles |> Array.toList
+                        LightnerCache = lightnerCache
+                    }
+
+                Program.mkProgram Build.init Build.update (fun _ _ -> ())
+                |> Program.runWith elmishArgs
+    }
+
+let start () =
+    promise {
+        if isVersion then
+            Version.version()
+            ``process``.exit(ExitCode.OK)
+
+        else
+            Log.info $"Current directory:\n%s{cwd}"
+
+            let nacaraConfigPath = path.join(cwd, "nacara.config.json")
+            let! hasDocsConfig = File.exist(nacaraConfigPath)
+
+            // Check if the Nacara config file exist
+            if hasDocsConfig then
+                let! configJson = File.read nacaraConfigPath
+
+                // Check if the Nacara config file is valid
+                match Decode.fromString (Config.decoder cwd isWatch) configJson with
+                | Ok config ->
+                    if isServe then
+                        Serve.serve config
+
+                    else
+                        do! buildOrWatch config
+
+                | Error errorMessage ->
+                    Log.error $"Invalid config file. Error:\n{errorMessage}"
+                    ``process``.exit(ExitCode.INVALID_CONFIG_FILE)
+            else
+                Log.error "Missing 'nacara.config.json' file"
+                ``process``.exit(ExitCode.MISSING_CONFIG_FILE)
+            return ()
     }
     |> Promise.start
