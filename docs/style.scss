@@ -3,15 +3,17 @@
 // Color palette
 // https://lospec.com/palette-list/fluffy8
 
-$primary: #7679db; 
+$primary: #7679db;
 $text: #2b2b2b;
 
 @import "./../node_modules/bulma/sass/utilities/derived-variables";
 
 $navbar-item-color: $white;
 $navbar-background-color: $primary;
+$navbar-item-active-color: $white;
+$navbar-item-active-background-color: lighten($primary, 4%);
 $navbar-item-hover-color: $white;
-$navbar-item-hover-background-color: lighten($primary, 8%);
+$navbar-item-hover-background-color: lighten($primary, 4%);
 
 $menu-item-active-background-color: $primary;
 $menu-item-active-color: $white;
