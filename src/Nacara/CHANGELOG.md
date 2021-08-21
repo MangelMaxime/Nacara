@@ -6,6 +6,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-012 - 2021-08-21
+
+### Added
+
+* Fix #68: Add `serve` command
+* Add `--version` argument
+
+### Changed
+
+* Fix #69: Change the default source folder from `docsrc` to `docs`
+* Fix #71: Change the default output folder from `docs` to `docs_deploy`
+* Change `--watch` argument to `watch` command
+
+## 1.0.0-beta-011 - 2021-08-21
+
+### Added
+
+* Load `@babel/register` if a `babel.config.json` is found.
+
+    It is up to you to install `@babel/register` and the required presets.
+
+### Changed
+
+* Start WebServer after setting up the websocket
+
 ## 1.0.0-beta-010 - 2021-08-19
 
 ### Fixed
