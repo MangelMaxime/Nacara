@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-007 - 2021-08-19
+
+### Changed
+
+* Move the fix "margin of p element inside of list element" to the changelog layout only
+
 ## 1.0.0-beta-006 - 2021-08-18
 
 ### Changed

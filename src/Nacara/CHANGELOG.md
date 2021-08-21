@@ -6,6 +6,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-010 - 2021-08-19
+
+### Fixed
+
+* Answer on websocket connection, because it was causing the websocket to be really slow to connect
+
+## 1.0.0-beta-009 - 2021-08-19
+
+### Changed
+
+* Reword category to section to have it consistent everywhere.
+
+    You need to replace `category` with `section` in both `menu.json` and `nacara.config.json`
+
+* Wait only `200ms` instead of `2s` before considering a file stable. This makes Nacara detect changes faster and improve responsivenes
+
+### Removed
+
+* Remove `--verbose` option
+
 ## 1.0.0-beta-008 - 2021-08-18
 
 ### Fixed
