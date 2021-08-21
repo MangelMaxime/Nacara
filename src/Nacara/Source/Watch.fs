@@ -168,16 +168,18 @@ let private startServer (config : Config) =
 
     let server = http.createServer(app)
 
-    server.listen(config.ServerPort, fun () ->
-        Log.success $"Server started at: http://localhost:%i{config.ServerPort}"
-    )
-    |> ignore
-
     let wss = Ws.webSocket.Server.Create(jsOptions<Ws.WebSocket.ServerOptions>(fun o ->
         o.server <- !^server
     ))
 
-    wss.on("connection", ignore)
+    wss.on("connection", fun (client : Ws.WebSocket) _ ->
+        client.send("Connected")
+    )
+    |> ignore
+
+    server.listen(config.ServerPort, fun () ->
+        Log.success $"Server started at: http://localhost:%i{config.ServerPort}"
+    )
     |> ignore
 
     server, wss
