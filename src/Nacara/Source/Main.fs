@@ -107,12 +107,24 @@ let private isWatch =
 
 let start () =
     promise {
-        let configPath = Node.Api.path.join(cwd, "nacara.config.json")
-        let! hasDocsConfig = File.exist(configPath)
+        let nacaraConfigPath = path.join(cwd, "nacara.config.json")
+        let! hasDocsConfig = File.exist(nacaraConfigPath)
+
+        // Load babel if the config file is found
+        let babelConfigPath = path.join(cwd, "babel.config.json")
+        let! hasBabelConfig = File.exist(babelConfigPath)
+
+        if hasBabelConfig then
+            try
+                emitJsExpr () """require("@babel/register")"""
+            with
+                | ex ->
+                    Log.error $"A 'babel.config.json' file was found, please install '@babel/register' package."
+                    ``process``.exit ExitCode.FAILED_TO_LOAD_BABEL
 
         // Check if the Nacara config file exist
         if hasDocsConfig then
-            let! configJson = File.read configPath
+            let! configJson = File.read nacaraConfigPath
             // Check if the Nacara config file is valid
             match Decode.fromString (Config.decoder cwd isWatch) configJson with
             | Ok config ->
