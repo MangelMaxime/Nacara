@@ -295,10 +295,10 @@ module Config =
                 BaseUrl = get.Required.Field "baseUrl" Decode.string
                 Title = get.Required.Field "title" Decode.string
                 SourceFolder = get.Optional.Field "source" Decode.string
-                                |> Option.defaultValue "docsrc"
+                                |> Option.defaultValue "docs"
                 EditUrl = get.Optional.Field "editUrl" Decode.string
                 Output = get.Optional.Field "output" Decode.string
-                            |> Option.defaultValue "docs"
+                            |> Option.defaultValue "docs_deploy"
                 Navbar = get.Optional.Field "navbar" NavbarConfig.decoder
                 LightnerConfig = get.Optional.Field "lightner" LightnerConfig.decoder
                 Layouts = get.Required.Field "layouts" (Decode.array Decode.string)

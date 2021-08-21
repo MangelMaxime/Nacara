@@ -1,36 +1,39 @@
 ---
-title: Introduction
-layout: nacara-standard 
+title: Get up and running
+layout: nacara-standard
 ---
 
 # Quick start
 
-:::info
-**Nacara** is a young project but it already make generating documentation easy.
-
-Here are some example of documentation website created using Nacara:
-
-- [Nacara documentation](https://mangelmaxime.github.io/Nacara)
-:::
-
 <ul class="textual-steps">
 <li>
 
-Ensure you have the latest version of Node installed. We also recommend you install Yarn as well.
+Ensure you have the latest version of Node installed.
+
+<br/>
 
 :::warning
-You have to be on Node >= 8.x and Yarn >= 1.5.
+You have to be on Node >= 8.x.
 :::
 </li>
 
 <li>
 
-Add Nacara to your project by running `yarn add -D nacara`
+Add Nacara and the default layout package to your project by running
+
+<br />
+
+```
+npm --save-dev nacara nacara nacara-layout-standard
+```
+
 </li>
 
 <li>
 
-Create a file `doc.json` at the root of your project copy this json in it:
+Create a file `nacara.config.json` at the root of your project and copy this json in it:
+
+<br />
 
 ```json
 {
@@ -47,10 +50,10 @@ Create a file `doc.json` at the root of your project copy this json in it:
 
 <li>
 
-Create a folder `docsrc` it will host the source of your documenation.
+Create a folder `docsrc` it will host the source of your documentation.
 
-Create to file under this folder:
-- `index.md` - it will be the main page of your documenation website
+Create the following files under this folder:
+- `index.md` - it will be the main page of your documentation website
 - `style.scss` - you will use it to load Nacara styles and customize it
     - By default, you need to add this lines in it:
         ```

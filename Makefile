@@ -13,7 +13,7 @@ NODEMON_WATCHER=npx nodemon \
 	--watch nacara.config.json \
 	--delay 150ms \
 	--handle-input \
-	--exec 'nacara --watch'
+	--exec 'nacara watch'
 
 setup-dev:
 	@$(call log_target_info, "Setting up the npm link for local development")
@@ -46,7 +46,7 @@ clean:
 	rm -rf $(NACARA_CORE_DIR)/Source/bin
 	rm -rf $(NACARA_CORE_DIR)/Source/obj
 # Clean generated documentation
-	rm -rf temp
+	rm -rf docs_deploy
 
 watch: clean
 # Make sure that the dist directories exists
@@ -88,4 +88,4 @@ release: build
 
 publish: release generate-docs
 	@$(call log_target_info, "Publishing...")
-	npx gh-pages --dist temp
+	npx gh-pages --dist docs_deploy
