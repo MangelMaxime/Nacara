@@ -24,15 +24,15 @@ let private renderIconFromClass (iconClass : string) (colorOpt :string option) =
         ]
     ]
 
-let private navbarItemIsFromCategory (item : NavbarLink) (pageCategory : string) =
+let private navbarItemIsFromSection (item : NavbarLink) (pageSection : string) =
     match item.Section with
-    | Some itemCategory ->
-        itemCategory = pageCategory
+    | Some itemSection ->
+        itemSection = pageSection
 
     | None ->
         false
 
-let private renderNavbarContainer container (pageCategory : string) (items : NavbarLink list) =
+let private renderNavbarContainer container (pageSection : string) (items : NavbarLink list) =
     container [
         for item in items do
 
@@ -42,7 +42,7 @@ let private renderNavbarContainer container (pageCategory : string) (items : Nav
                 Bulma.navbarItem.a [
                     prop.href item.Url
                     prop.text label
-                    if navbarItemIsFromCategory item pageCategory then
+                    if navbarItemIsFromSection item pageSection then
                         navbarItem.isActive
 
                     match item.IconColor with
@@ -59,7 +59,7 @@ let private renderNavbarContainer container (pageCategory : string) (items : Nav
             | { Label = Some label; Icon = Some icon } ->
                 Bulma.navbarItem.a [
                     prop.href item.Url
-                    if navbarItemIsFromCategory item pageCategory then
+                    if navbarItemIsFromSection item pageSection then
                         navbarItem.isActive
 
                     prop.children [
@@ -72,7 +72,7 @@ let private renderNavbarContainer container (pageCategory : string) (items : Nav
             | { Label = None; Icon = Some icon } ->
                 Bulma.navbarItem.a [
                     prop.href item.Url
-                    if navbarItemIsFromCategory item pageCategory then
+                    if navbarItemIsFromSection item pageSection then
                         navbarItem.isActive
 
                     prop.children [
@@ -111,7 +111,7 @@ let private renderMobileNavbarItems (items : NavbarLink list) =
                 ()
     ]
 
-let private navbar (config : Config) (pageCategory : string) =
+let private navbar (config : Config) (pageSection : string) =
     Bulma.navbar [
         navbar.isFixedTop
 
@@ -149,8 +149,8 @@ let private navbar (config : Config) (pageCategory : string) =
                         prop.id "nav-menu"
 
                         prop.children [
-                            renderNavbarContainer Bulma.navbarStart.div pageCategory navbarConfig.Start
-                            renderNavbarContainer Bulma.navbarEnd.div pageCategory navbarConfig.End
+                            renderNavbarContainer Bulma.navbarStart.div pageSection navbarConfig.Start
+                            renderNavbarContainer Bulma.navbarEnd.div pageSection navbarConfig.End
                         ]
                     ]
 
