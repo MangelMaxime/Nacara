@@ -6,7 +6,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Bindings/FrontMatter.fs" />
-    <Compile Include="Bindings/LiveServer.fs" />
     <Compile Include="Bindings/Chokidar.fs" />
     <Compile Include="Bindings/Sass.fs" />
     <Compile Include="Bindings/CodeLightner.fs" />

@@ -138,8 +138,6 @@ let layoutDependencyWatcherSubscription (model : Model) =
 
     [ handler ]
 
-let private baseUrlMiddleware (baseUrl : string) : LiveServer.Middleware = import "default" "./../js/base-url-middleware.js"
-
 // Extends Http binding to accept variant with an express application
 type Http.IExports with
     [<Emit("$0.createServer($1,$2)")>]
@@ -147,31 +145,6 @@ type Http.IExports with
     member __.createServer (expressApp : Express.Express) : Http.Server = jsNative
 
 let private startServer (config : Config) =
-    // Start the LiveServer instance
-    let liveServerOption =
-        jsOptions<LiveServer.Options>(fun o ->
-            o.root <- path.join(config.WorkingDirectory, config.Output)
-            o.``open`` <- false
-            o.logLevel <- 0
-            o.port <- config.ServerPort
-            o.host <- "localhost"
-        )
-
-    if config.BaseUrl <> "/" then
-        liveServerOption.middleware <-
-            [|
-                baseUrlMiddleware config.BaseUrl
-            |]
-
-    // let server = LiveServer.liveServer.start(liveServerOption)
-
-    // // We need to register in the event in order have access to the server info
-    // // Otherwise, the server isn't ready yet
-    // server.on("listening", (fun _ _ ->
-    //     Log.success $"Server started at: http://localhost:%i{config.ServerPort}"
-    // ))
-    // |> ignore
-
     let app = express.express()
 
     if config.BaseUrl <> "/" then
