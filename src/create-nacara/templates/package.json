@@ -1,0 +1,12 @@
+{
+    "name": "{{REPLACE_WITH_SITE_TITLE}}",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "build": "nacara build",
+        "clean": "nacara clean",
+        "watch": "nacara watch",
+        "serve": "nacara serve"
+    },
+    "dependencies": {}
+}

@@ -1,0 +1,14 @@
+[
+    "documentation/introduction",
+    {
+        "type": "section",
+        "label": "Guides",
+        "items": [
+            "documentation/guides/create-a-page",
+            "documentation/guides/customize-the-style",
+            "documentation/guides/create-a-section",
+            "documentation/guides/custom-layout",
+            "documentation/guides/deploy-your-site"
+        ]
+    }
+]
