@@ -8,13 +8,13 @@
     "navbar": {
         "start": [
             {
-                "section": "docs",
+                "section": "documentation",
                 "url": "/Nacara/documentation/nacara/introduction.html",
                 "label": "Documentation",
                 "icon": "fas fa-book"
             },
             {
-                "section": "docs",
+                "section": "showcase",
                 "url": "/Nacara/showcase.html",
                 "label": "Showcase",
                 "icon": "fas fa-laptop-code"
