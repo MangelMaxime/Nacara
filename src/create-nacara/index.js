@@ -117,6 +117,7 @@ const run = async () => {
     }
     shell.cp('-R', resolve('./templates/lightner'), 'lightner');
     shell.cp(resolve('./templates/.gitignore'), '.gitignore');
+    shell.cp(resolve('./templates/package.json'), './package.json');
 
     const styleExtension = (response.styleProcessor === 'scss') ? 'scss' : 'sass';
 
@@ -126,14 +127,17 @@ const run = async () => {
         'docs/**/*.md',
         'package.json'
     ]).forEach(function (file) {
-        shell.sed('-i', '{{REPLACE_WITH_MY_SITE}}', response.title, file);
-        shell.sed('-i', '{{REPLACE_WITH_BASE_URL}}', response.baseUrl, file);
-        shell.sed('-i', '{{REPLACE_WITH_STYLE_EXTENSION}}', styleExtension, file);
-        shell.sed('-i', '{{REPLACE_WITH_SITE_TITLE}}', response.title, file);
+        shell.sed('-i', /{{REPLACE_WITH_MY_SITE}}/g, response.title, file);
+        shell.sed('-i', /{{REPLACE_WITH_BASE_URL}}/g, response.baseUrl, file);
+        shell.sed('-i', /{{REPLACE_WITH_STYLE_EXTENSION}}/g, styleExtension, file);
+        shell.sed('-i', /{{REPLACE_WITH_SITE_TITLE}}/g, response.title, file);
     });
 
+    // {{BEGIN_KEEP_IF_SCSS}}(?<text_to_keep>((?!{{END_KEEP_IF_SCSS}}).)*){{END_KEEP_IF_SCSS}}
+    // If SCSS replace with text_to_keep
+    // If not, replace the whole regex with nothing
+
     console.log('Installing NPM dependencies...');
-    await fs.copyFile(resolve('./templates/package.json'), './package.json');
     execSync('npm install --save-dev nacara nacara-layout-standard', { cwd: '.', stdio: 'inherit' });
 
     console.log('Configuring Babel and React for JSX support');
