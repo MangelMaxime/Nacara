@@ -59,7 +59,7 @@ Because default layout of Nacara use Bulma, you have access to [Bulma variables]
 
 <li>
 
-Include your file in `style.{{REPLACE_WITH_REPLACE_WITH_STYLE_EXTENSION}}`
+Include your file in `style.{{REPLACE_WITH_STYLE_EXTENSION}}`
 
 ```
 @import './scss/my-style.scss';
