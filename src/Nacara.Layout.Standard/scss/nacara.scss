@@ -1,6 +1,5 @@
 @import './components/changelog.scss';
 @import './components/textual-steps.scss';
-@import './components/navigation-button.scss';
 
 $menu-list-spacing: 0.5rem !default;
 
@@ -9,20 +8,43 @@ $menu-list-spacing: 0.5rem !default;
     margin-bottom: 0;
 }
 
-.menu-list .menu-list {
-    &:not(.has-menu-group) {
-        padding-left: $menu-nested-list-margin;
+.navbar-burger-dots {
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    svg {
+        fill: #ffffff
     }
 }
 
-.menu-list li ul {
-    border-left: unset;
-    margin: 0 $menu-nested-list-margin;
+.container .wrapper {
+    margin-top: $navbar-height;
+}
 
-    &.table-of-content {
-        margin: 0;
+.icon.icon-no-margin-left + span {
+    margin-left: 0;
+}
+
+@include desktop {
+    .container .wrapper {
+        margin-top: calc(#{$navbar-height} + 2rem);
     }
 }
+
+.navbar-menu {
+    padding: 0;
+}
+
+// .menu-list li ul {
+//     border-left: unset;
+//     margin: 0 $menu-nested-list-margin;
+
+//     &.table-of-content {
+//         margin: 0;
+//     }
+// }
 
 // Collapsible / Expandable menu
 .menu-group {
@@ -129,6 +151,7 @@ h2, h3, h4, h5, h6  {
         background: $white-ter;
         position: sticky;
         top: $navbar-height;
+        z-index: 1;
 
         .menu-trigger {
             .icon {
@@ -163,16 +186,81 @@ h2, h3, h4, h5, h6  {
     // Make the menu container "static" and always displayed at the same place
     // The menu container has its own scrollbar if needed
     // 3.25rem is the navbar height but it is not yet available at this point of the SCSS compilation
-    position: sticky;
-    top: $navbar-height;
-    // margin: 3.25rem 0 0;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    height: calc(100vh - #{$navbar-height});
+    // position: sticky;
+    // top: $navbar-height;
+    // // margin: 3.25rem 0 0;
+    // overflow-y: auto;
+    // overscroll-behavior: contain;
+    // height: calc(100vh - #{$navbar-height});
 
     .menu {
-        margin-top: $navbar-height;
+        margin-top: calc(#{$navbar-height} + 1rem);
         padding-right: 1rem;
+        padding-left: 1rem;
+    }
+}
+
+.content {
+    .breadcrumb > ul > li:last-child {
+        font-weight: $weight-bold;
+    }
+
+    & li + li {
+        margin-top: 0;
+    }
+
+    word-break: break-all;
+
+    .changelog > ul {
+        margin: 0;
+    }
+}
+
+.bd-docs-pagination.bd-pagination-links {
+    border-top: 2px solid #f5f5f5;
+    margin-top: 3rem;
+    display: flex;
+    flex-wrap: wrap;
+
+    .bd-fat-button {
+        font-size: 1.25em;
+        font-weight: 600;
+        height: auto;
+        padding: .75em 1.25em;
+
+        @media screen and (max-width: 1023px) {
+            & {
+                font-size: 1rem;
+            }
+        }
+
+        &.bd-pagination-next {
+            margin-left: auto;
+
+            span {
+                margin-right: 1em;
+            }
+        }
+
+        &.bd-pagination-prev {
+            span {
+                margin-left: 1em;
+            }
+        }
+
+        span {
+            text-align: left;
+            line-height: 1.25;
+
+            em {
+                display: block;
+                font-size: .75em;
+                font-style: normal;
+                font-weight: 400;
+                opacity: .5;
+                text-transform: capitalize;
+            }
+        }
     }
 }
 
@@ -186,9 +274,8 @@ h2, h3, h4, h5, h6  {
             left: 0;
             background: $white-bis;
             width: 100%;
-            padding-left: 2rem;
-            z-index: 100;
-            margin-top: $navbar-height;
+            z-index: 1;
+            // margin-top: $navbar-height;
         }
     }
 }
@@ -212,19 +299,19 @@ h2, h3, h4, h5, h6  {
         margin-top: $menu-list-spacing;
     }
 
-    .has-table-of-content {
-        border-radius: $menu-item-radius;
+    // .has-table-of-content {
+    //     border-radius: $menu-item-radius;
 
-        &.is-active {
-            border-radius: $menu-item-radius 0 0;
-        }
-    }
+    //     &.is-active {
+    //         border-radius: $menu-item-radius 0 0;
+    //     }
+    // }
 
     .table-of-content {
-        border-left: unset;
-        padding: 0 $size-small;
-        background-color: $primary-light;
-        border-radius: 0 0 $menu-item-radius;
+        // border-left: unset;
+        // padding: 0 $size-small;
+        // background-color: $primary-light;
+        // border-radius: 0 0 $menu-item-radius;
         scroll-margin: 3rem;
 
         a {
@@ -250,6 +337,10 @@ h2, h3, h4, h5, h6  {
 }
 
 .breadcrumb {
+    ul {
+        margin-left: 0;
+    }
+
     li {
         height: $navbar-height;
     }

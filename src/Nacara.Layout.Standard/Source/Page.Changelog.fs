@@ -190,14 +190,15 @@ let renderChangelogItems
     )
 
 let private changelogContainer (changelogItems : ReactElement array) =
-
-    Bulma.content [
-        Html.section [
-            prop.className "changelog"
-            prop.children [
-                Html.ul [
-                    prop.className "changelog-list"
-                    prop.children changelogItems
+    Bulma.section [
+        Bulma.content [
+            Html.section [
+                prop.className "changelog"
+                prop.children [
+                    Html.ul [
+                        prop.className "changelog-list"
+                        prop.children changelogItems
+                    ]
                 ]
             ]
         ]

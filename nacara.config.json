@@ -8,43 +8,38 @@
         "start": [
             {
                 "section": "documentation",
-                "url": "/Nacara/documentation/nacara/introduction.html",
-                "label": "Documentation",
-                "icon": "fas fa-book"
+                "url": "/Nacara/documentation/overview/introduction.html",
+                "label": "Docs"
             },
             {
                 "section": "showcase",
                 "url": "/Nacara/showcase.html",
-                "label": "Showcase",
-                "icon": "fas fa-laptop-code"
+                "label": "Showcase"
             },
             {
                 "section": "changelogs",
                 "url": "/Nacara/changelogs/nacara.html",
-                "label": "Changelogs",
-                "icon": "fas fa-tasks"
+                "label": "Changelogs"
             },
             {
                 "url": "https://gitter.im/fable-compiler/Fable",
-                "label": "Support",
-                "icon": "fab fa-gitter"
+                "label": "Support"
             },
             {
                 "url": "https://www.patreon.com/MangelMaxime",
-                "icon": "fab fa-patreon",
-                "label": "Donate",
-                "iconColor": "#ff424b"
+                "label": "Donate"
             }
         ],
         "end": [
             {
                 "url": "https://github.com/MangelMaxime/Nacara",
-                "icon": "fab fa-github"
+                "icon": "fab fa-github",
+                "label": "GitHub"
             },
             {
                 "url": "https://twitter.com/MangelMaxime",
                 "icon": "fab fa-twitter",
-                "iconColor": "#55acee"
+                "label": "Twitter"
             }
         ]
     },

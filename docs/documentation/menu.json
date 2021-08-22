@@ -1,37 +1,32 @@
 [
-    "documentation/nacara/introduction",
     {
         "type": "section",
-        "label": "Nacara",
+        "label": "Overview",
         "items": [
-            {
-                "type": "section",
-                "label": "Guides",
-                "collapsible": true,
-                "collapsed": false,
-                "items": [
-                    "documentation/nacara/guides/create-a-page",
-                    "documentation/nacara/guides/customize-the-style",
-                    "documentation/nacara/guides/create-a-section",
-                    "documentation/nacara/guides/section-menu",
-                    "documentation/nacara/guides/custom-layout",
-                    "documentation/nacara/guides/deploy-your-site",
-                    "documentation/nacara/guides/markdown-features"
-                ]
-            }
+            "documentation/overview/introduction",
+            "documentation/overview/configuration",
+            "documentation/overview/page-attributes"
         ]
     },
     {
         "type": "section",
-        "label": "Nacara layout",
+        "label": "Guides",
+        "items": [
+            "documentation/guides/create-a-page",
+            "documentation/guides/customize-the-style",
+            "documentation/guides/create-a-section",
+            "documentation/guides/section-menu",
+            "documentation/guides/custom-layout",
+            "documentation/guides/deploy-your-site",
+            "documentation/guides/markdown-features"
+        ]
+    },
+    {
+        "type": "section",
+        "label": "Layouts",
         "items": [
             "documentation/layout/introduction",
             "documentation/layout/standard"
         ]
-    },
-    {
-        "type": "link",
-        "label": "Nacara API222",
-        "href": "http://perdu.com"
     }
 ]

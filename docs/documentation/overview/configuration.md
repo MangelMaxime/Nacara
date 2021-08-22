@@ -1,5 +1,5 @@
 ---
-title: nacara.config.json
+title: Configuration
 layout: nacara-standard
 ---
 

@@ -7,6 +7,9 @@ open Feliz.Bulma
 
 let private renderIconFromClass (iconClass : string) (colorOpt :string option) =
     Bulma.icon [
+        helpers.isHiddenTouch
+        prop.className "icon-no-margin-left"
+
 
         match colorOpt with
         | Some color ->
@@ -64,7 +67,10 @@ let private renderNavbarContainer container (pageSection : string) (items : Navb
 
                     prop.children [
                         renderIconFromClass icon item.IconColor
-                        Html.span label
+                        Html.span [
+                            helpers.isHiddenDesktop
+                            prop.text label
+                        ]
                     ]
                 ]
 
@@ -72,6 +78,8 @@ let private renderNavbarContainer container (pageSection : string) (items : Navb
             | { Label = None; Icon = Some icon } ->
                 Bulma.navbarItem.a [
                     prop.href item.Url
+                    helpers.isHiddenMobile
+
                     if navbarItemIsFromSection item pageSection then
                         navbarItem.isActive
 
@@ -91,29 +99,10 @@ A NavbarLink either have:
 
     ]
 
-let private renderMobileNavbarItems (items : NavbarLink list) =
-    [
-        for item in items do
-
-            match item with
-            // Only render
-            | { Label = None; Icon = Some icon } ->
-                Bulma.navbarItem.a [
-                    prop.href item.Url
-                    helpers.isHiddenDesktop
-
-                    prop.children [
-                        renderIconFromClass icon item.IconColor
-                    ]
-                ]
-
-            | _ ->
-                ()
-    ]
-
 let private navbar (config : Config) (pageSection : string) =
     Bulma.navbar [
         navbar.isFixedTop
+        prop.className "is-spaced"
 
         prop.children [
             Bulma.container [
@@ -124,24 +113,44 @@ let private navbar (config : Config) (pageSection : string) =
                         prop.text config.Title
                     ]
 
-                    match config.Navbar with
-                    | Some navbarConfig ->
-                        // On mobile, only the items in the end of the navbar
-                        // have a chance to be rendered
-                        yield! renderMobileNavbarItems navbarConfig.End
-
-                    | None ->
-                        ()
-
                     Bulma.navbarBurger [
                         prop.custom ("data-target", "nav-menu")
+                        prop.className "navbar-burger-dots"
+                        helpers.isHiddenDesktop
                         prop.children [
-                            Html.span [ ]
-                            Html.span [ ]
-                            Html.span [ ]
+                            Svg.svg [
+                                svg.height 4
+                                svg.stroke "none"
+                                svg.viewBox(0, 0, 22, 4)
+                                svg.width 22
+                                svg.children [
+                                    Svg.circle [
+                                        svg.cx 2
+                                        svg.cy 2
+                                        svg.r 2
+                                    ]
+                                    Svg.circle [
+                                        svg.cx 2
+                                        svg.cy 2
+                                        svg.r 2
+                                        svg.transform [
+                                            transform.translate(9, 0)
+                                        ]
+                                    ]
+                                    Svg.circle [
+                                        svg.cx 2
+                                        svg.cy 2
+                                        svg.r 2
+                                        svg.transform [
+                                            transform.translate(18, 0)
+                                        ]
+                                    ]
+                                ]
+                            ]
                         ]
                     ]
                 ]
+
 
                 match config.Navbar with
                 | Some navbarConfig ->
@@ -181,16 +190,13 @@ let render (args : RenderArgs) =
         args.Config.BaseUrl + url
 
     Html.html [
-        prop.className "has-navbar-fixed-top"
-
+        prop.custom ("lang", "en")
         prop.children [
             Html.head [
                 Html.title titleStr
 
                 Html.meta [
-                    prop.httpEquiv.contentType
-                    prop.custom ("httpEquiv", "content-type")
-//                    prop.content "text/html; charset=UTF-8"
+                    prop.custom ("charSet", "utf-8")
                 ]
 
                 Html.meta [
@@ -219,7 +225,6 @@ let render (args : RenderArgs) =
                     prop.href "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
                     prop.integrity "sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
                     prop.crossOrigin.anonymous
-//                    prop.custom ("crossOrigin", "anonymous")
                 ]
             ]
 
