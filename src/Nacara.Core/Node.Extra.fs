@@ -9,6 +9,7 @@ type Node.Fs.IExports with
     member __.copyFileSync (src: string, dest : string, ?mode : int) =
         jsNative
 
+[<RequireQualifiedAccess>]
 module Directory =
 
     let moveUp (path : string) =
@@ -83,9 +84,12 @@ module Directory =
                     )
                     |> Promise.all
                     |> Promise.map (fun directories ->
-                        Array.reduce (fun a b ->
-                            a @ b
-                        ) directories
+                        if Array.isEmpty directories then
+                            [ ]
+                        else
+                            Array.reduce (fun a b ->
+                                a @ b
+                            ) directories
                     )
                     |> Promise.map (fun files ->
                         resolve files
@@ -107,6 +111,7 @@ module Directory =
             ))
         )
 
+[<RequireQualifiedAccess>]
 module File =
     let changeExtension (extention : string) (path : string) =
         let extensionPos = path.LastIndexOf('.')
