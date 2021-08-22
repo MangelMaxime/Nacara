@@ -1,0 +1,320 @@
+<html class="has-navbar-fixed-top"><head><title>Nacara · Custom layout</title><meta http-equiv="content-type"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" type="text/css" href="/Nacara/style.css"/><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"/></head><body><nav class="navbar is-fixed-top"><div class="container"><div class="navbar-brand"><a class="navbar-item title is-4" href="https://mangelmaxime.github.io/Nacara/">Nacara</a><a class="navbar-item is-hidden-desktop" href="https://github.com/MangelMaxime/Nacara"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item is-hidden-desktop" href="https://twitter.com/MangelMaxime"><span class="icon" style="color:#55acee"><i class=" fab fa-twitter fa-lg"></i></span></a><a class="navbar-burger" data-target="nav-menu"><span></span><span></span><span></span></a></div><div class="navbar-menu" id="nav-menu"><div class="navbar-start"><a class="navbar-item is-active" href="/Nacara/documentation/nacara/introduction.html"><span class="icon"><i class=" fas fa-book fa-lg"></i></span><span>Documentation</span></a><a class="navbar-item" href="/Nacara/showcase.html"><span class="icon"><i class=" fas fa-laptop-code fa-lg"></i></span><span>Showcase</span></a><a class="navbar-item" href="/Nacara/changelogs/nacara.html"><span class="icon"><i class=" fas fa-tasks fa-lg"></i></span><span>Changelogs</span></a><a class="navbar-item" href="https://gitter.im/fable-compiler/Fable"><span class="icon"><i class=" fab fa-gitter fa-lg"></i></span><span>Support</span></a><a class="navbar-item" href="https://www.patreon.com/MangelMaxime"><span class="icon" style="color:#ff424b"><i class=" fab fa-patreon fa-lg"></i></span><span>Donate</span></a></div><div class="navbar-end"><a class="navbar-item" href="https://github.com/MangelMaxime/Nacara"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item" href="https://twitter.com/MangelMaxime"><span class="icon" style="color:#55acee"><i class=" fab fa-twitter fa-lg"></i></span></a></div></div></div></nav><div class="container"><div class="mobile-menu"><nav class="breadcrumb"><ul><li><a class="menu-trigger"><span></span><span></span><span></span></a></li><li class="is-active"><a>Nacara</a></li><li class="is-active"><a>Guides</a></li><li class="is-active"><a>Custom layout</a></li></ul></nav></div><div class="columns is-gapless is-mobile"><div class="column is-menu-column is-3-desktop is-hidden-touch ml-5"><div class="menu-container"><aside class="menu"><ul class="menu-list"><li><a class=" " href="/Nacara/documentation/nacara/introduction.html">Introduction</a></li><ul class="menu-list"><p class="menu-label">Nacara</p><ul class="menu-list has-menu-group"><li><a class="menu-group is-expanded" data-default-state="expanded" data-collapsible="true"><span>Guides</span><span class="icon"><i class=" fas fa-angle-right fa-lg"></i></span></a><ul><li><a class=" " href="/Nacara/documentation/nacara/guides/create-a-page.html">Create a page</a></li><li><a class=" " href="/Nacara/documentation/nacara/guides/customize-the-style.html">Style your application</a></li><li><a class=" " href="/Nacara/documentation/nacara/guides/create-a-section.html">Create a Section</a></li><li><a class=" " href="/Nacara/documentation/nacara/guides/section-menu.html">Section menu</a></li><li><a class=" is-active has-table-of-content" href="/Nacara/documentation/nacara/guides/custom-layout.html">Custom layout</a></li><ul class="table-of-content"><li><a href="#Setup-Babel-for-JSX-support" data-toc-element="true">Setup Babel for JSX support </a></li><li><a href="#Blog-page-layout" data-toc-element="true">Blog page layout </a></li><li><a href="#Blog-index" data-toc-element="true">Blog index </a></li></ul><li><a class=" " href="/Nacara/documentation/nacara/guides/deploy-your-site.html">Deploy your site</a></li><li><a class=" " href="/Nacara/documentation/nacara/guides/markdown-features.html">Markdown features</a></li></ul></li></ul></ul><ul class="menu-list"><p class="menu-label">Nacara layout</p><li><a class=" " href="/Nacara/documentation/layout/introduction.html">Introduction</a></li><li><a class=" " href="/Nacara/documentation/layout/standard.html">Standard layout</a></li></ul><li><a class="" href="http://perdu.com">Nacara API222</a></li></ul></aside></div></div><div class="column is-8-desktop is-full-touch"><section class="section"><div class="content"><header class="page-header"><a class="button is-hidden-touch is-outlined is-primary is-pulled-right" target="_blank" href="https://github.com/MangelMaxime/Nacara/edit/master/docsrc/documentation/nacara/guides/custom-layout.md">Edit</a><h1 class="title is-1">Custom layout</h1></header><div><p>Nacara is extensible, you can write your own layout or re-use existing layout to adapt them to your needs.</p>
+<p>In the previous chapter, we created our blog section but it is pretty bad looking and each time you write a blog post you have to manually add it to the index page.</p>
+<p>We are going to auto-generate the index page and also make a blog specific layout.</p>
+<h2>Setup Babel for JSX support <a href="#Setup-Babel-for-JSX-support" aria-hidden="true"><span class="anchor" id="Setup-Babel-for-JSX-support"></span>#</a></h2>
+<article class="message is-info">
+                    <div class="message-body"><p>If when setting up Nacara, you answer <strong>Yes</strong> to the question 'Do you want to setup Babel and react?' you can skip this step and go to <a href="#Blog-page-layout">Blog page layout</a></p>
+</div>
+</article>
+<ul class="textual-steps">
+<li>
+<p>Create the file <code>babel.config.json</code></p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span>{</span>
+<span>    </span><span style="color: #E45649">&quot;presets&quot;</span><span>: </span><span style="color: #383A42">[</span>
+<span>        </span><span style="color: #50A14F">&quot;@babel/preset-react&quot;</span>
+<span>    </span><span style="color: #383A42">]</span>
+<span>}</span></code></pre>
+</li>
+<li>
+<p>Install the Babel dependencies:</p>
+<pre><code>npm install --save-dev @babel/register @babel/preset-react
+</code></pre>
+</li>
+</ul>
+<h2>Blog page layout <a href="#Blog-page-layout" aria-hidden="true"><span class="anchor" id="Blog-page-layout"></span>#</a></h2>
+<article class="message is-info">
+                    <div class="message-body"><p>We are going to use JavaScript to write our layout but you can also write them using F#.</p>
+<p>For the tutorial, it is easier to use JavaScript as no setup is required</p>
+</div>
+</article>
+<ul class="textual-steps">
+<li>
+<p>Create a file <code>layouts/blog-page.jsx</code> at the root of your repository</p>
+<pre><code>├── docs
+├── docsrc
+├── layouts
+    └── blog-page.jsx
+├── lightner
+└── node_modules
+</code></pre>
+<p>Add this to the file:</p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span style="color: #A0A1A7;font-style: italic">// Nacara is using React for generating the HTML</span>
+<span style="color: #A626A4">const</span><span> </span><span style="color: #986801">React</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #0184BC">require</span><span style="color: #383A42">(</span><span style="color: #50A14F">&quot;react&quot;</span><span style="color: #383A42">);</span>
+<span style="color: #A0A1A7;font-style: italic">// We can reuse existing layouts function</span>
+<span style="color: #A0A1A7;font-style: italic">// Here, we want to re-use the minimal page which generates only the navbar for us</span>
+<span style="color: #A626A4">const</span><span> </span><span style="color: #986801">pageMinimal</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #0184BC">require</span><span style="color: #383A42">(</span><span style="color: #50A14F">&quot;nacara-layout-standard/dist/Page.Minimal&quot;</span><span style="color: #383A42">);</span>
+
+<span style="color: #A0A1A7;font-style: italic">// Main render function which glue the helpers together</span>
+<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">render</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #A626A4">async</span><span> </span><span style="color: #383A42">(rendererContext,</span><span> </span><span style="color: #383A42">pageContext)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
+
+<span>    </span><span style="color: #A0A1A7;font-style: italic">// Render the blog content using our helpers</span>
+<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">content</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #50A14F">&quot;Blog page&quot;</span><span style="color: #383A42">;</span>
+
+<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #E45649">pageMinimal</span><span style="color: #383A42">.</span><span style="color: #4078F2">render</span><span style="color: #383A42">(</span><span style="color: #A626A4">new</span><span> </span><span style="color: #50A14F">pageMinimal</span><span style="color: #383A42">.</span><span style="color: #C18401">RenderArgs</span><span style="color: #383A42">(</span>
+<span>        </span><span style="color: #E45649">rendererContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Config</span><span style="color: #383A42">,</span><span> </span><span style="color: #A0A1A7;font-style: italic">// Forward the config information</span>
+<span>        </span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Section</span><span style="color: #383A42">,</span><span> </span><span style="color: #A0A1A7;font-style: italic">// Tell which section we are in</span>
+<span>        </span><span style="color: #383A42">title,</span><span> </span><span style="color: #A0A1A7;font-style: italic">// Pass the blog title to use in the page title</span>
+<span>        </span><span style="color: #383A42">content</span><span> </span><span style="color: #A0A1A7;font-style: italic">// Pass the blog content to render below the navbar</span>
+<span>    </span><span style="color: #383A42">));</span>
+
+<span style="color: #383A42">}</span>
+
+<span style="color: #A0A1A7;font-style: italic">// Each layout needs to export this object</span>
+<span style="color: #A626A4">export</span><span> </span><span style="color: #E45649">default</span><span> </span><span style="color: #383A42">{</span>
+<span>    </span><span style="color: #A0A1A7;font-style: italic">// We can have several renderer, it is useful when publishing to npm</span>
+<span>    Renderers</span><span style="color: #0184BC">:</span><span> </span><span style="color: #383A42">[</span>
+<span>        </span><span style="color: #383A42">{</span>
+<span>            </span><span style="color: #A0A1A7;font-style: italic">// Unique name of the layout used by Nacara to know how to render your page</span>
+<span>            Name</span><span style="color: #0184BC">:</span><span> </span><span style="color: #50A14F">&quot;blog-page&quot;</span><span style="color: #383A42">,</span>
+<span>            </span><span style="color: #A0A1A7;font-style: italic">// render function</span>
+<span>            Func</span><span style="color: #0184BC">:</span><span> </span><span style="color: #E45649">render</span>
+<span>        </span><span style="color: #383A42">}</span>
+<span>    </span><span style="color: #383A42">],</span>
+<span>    </span><span style="color: #A0A1A7;font-style: italic">// An array of external dependencies</span>
+<span>    </span><span style="color: #A0A1A7;font-style: italic">// For example, if your layouts need to include some external</span>
+<span>    </span><span style="color: #A0A1A7;font-style: italic">// JavaScript file you specify them here so Nacara know that it</span>
+<span>    </span><span style="color: #A0A1A7;font-style: italic">// has to copy them into the destination directory</span>
+<span>    Dependencies</span><span style="color: #0184BC">:</span><span> </span><span style="color: #383A42">[]</span>
+<span style="color: #383A42">}</span></code></pre>
+</li>
+<li>
+<p>We need to decide what information are specific to a blog post and add them to the front matter.</p>
+<p>A blog page has:</p>
+<ul>
+<li>an author</li>
+<li>a title</li>
+<li>a date</li>
+</ul>
+<p>We will add these information via the front-matter.</p>
+<p>Update the front-matter of <code>docsrc/blog/2021/welcome.md</code> with</p>
+<pre><code>---
+title: Welcome
+layout: blog-page
+author: Kira Nacara
+date: 2021-08-20
+---
+</code></pre>
+<article class="message is-info">
+                    <div class="message-body"><p>Note how we also set the layout property to <code>blog-page</code> (our layout name)</p>
+</div>
+</article>
+</li>
+<li>
+<p>We now need to update our <code>blog-page.jsx</code> script to use the new information.</p>
+<p>Replace your <code>render</code> function with this code:</p>
+<article class="message is-info">
+                    <div class="message-body"><p>We are adding a lot of code at once, take the time to read the comments</p>
+</div>
+</article>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span style="color: #A0A1A7;font-style: italic">// This render a stylized title for our blog page</span>
+<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">BlogTitle</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #383A42">(</span><span>{ </span><span style="color: #383A42">title</span><span> }</span><span style="color: #383A42">)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
+<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #383A42">&lt;</span><span style="color: #E45649">h2</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;title is-size-3 has-text-primary has-text-weight-normal has-text-centered blog-title&quot;</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">        {title}</span>
+<span style="color: #383A42">    &lt;/</span><span style="color: #E45649">h2</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">}</span>
+
+<span style="color: #A0A1A7;font-style: italic">// A helper function to render the author and date of our blog post</span>
+<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">AuthorAndDate</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #383A42">(</span><span>{ </span><span style="color: #383A42">authorName,</span><span> </span><span style="color: #383A42">date</span><span> }</span><span style="color: #383A42">)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
+<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">dateFormat</span><span> </span><span style="color: #0184BC">=</span>
+<span>        </span><span style="color: #A626A4">new</span><span> </span><span style="color: #50A14F">Intl</span><span style="color: #383A42">.</span><span style="color: #C18401">DateTimeFormat</span><span style="color: #383A42">(</span>
+<span>            </span><span style="color: #50A14F">&quot;en&quot;</span><span style="color: #383A42">,</span>
+<span>            </span><span style="color: #383A42">{</span>
+<span>                dateStyle</span><span style="color: #0184BC">:</span><span> </span><span style="color: #50A14F">&quot;long&quot;</span>
+<span>            </span><span style="color: #383A42">}</span>
+<span>        </span><span style="color: #383A42">);</span>
+
+<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #383A42">&lt;</span><span style="color: #E45649">div</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;tags has-addons is-justify-content-center&quot;</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">        &lt;</span><span style="color: #E45649">span</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;tag is-rounded is-medium is-primary&quot;</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">            {authorName}</span>
+<span style="color: #383A42">        &lt;/</span><span style="color: #E45649">span</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">        &lt;</span><span style="color: #E45649">span</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;tag is-rounded is-medium&quot;</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">            {</span><span style="color: #E45649">dateFormat</span><span style="color: #383A42">.</span><span style="color: #4078F2">format</span><span style="color: #383A42">(date)}</span>
+<span style="color: #383A42">        &lt;/</span><span style="color: #E45649">span</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">    &lt;/</span><span style="color: #E45649">div</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">}</span>
+
+<span style="color: #A0A1A7;font-style: italic">// A helper function to render the blog container,</span>
+<span style="color: #A0A1A7;font-style: italic">// it will makes our blog centered on the page on desktop</span>
+<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">BlogContainer</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #383A42">(</span><span>{ </span><span style="color: #383A42">children</span><span> }</span><span style="color: #383A42">)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
+<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #383A42">&lt;</span><span style="color: #E45649">section</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;section container&quot;</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">        &lt;</span><span style="color: #E45649">div</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;columns&quot;</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">            &lt;</span><span style="color: #E45649">div</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;column is-8-desktop is-offset-2-desktop&quot;</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">                {children}</span>
+<span style="color: #383A42">            &lt;/</span><span style="color: #E45649">div</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">        &lt;/</span><span style="color: #E45649">div</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">    &lt;/</span><span style="color: #E45649">section</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">}</span>
+
+<span style="color: #A0A1A7;font-style: italic">// Main render function which glue the helpers together</span>
+<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">render</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #A626A4">async</span><span> </span><span style="color: #383A42">(rendererContext,</span><span> </span><span style="color: #383A42">pageContext)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
+<span>    </span><span style="color: #A0A1A7;font-style: italic">// Access the front matter information</span>
+<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">title</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">title</span><span style="color: #383A42">;</span>
+<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">author</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">author</span><span style="color: #383A42">;</span>
+<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">date</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">date</span><span style="color: #383A42">;</span>
+
+<span>    </span><span style="color: #A0A1A7;font-style: italic">// Transform the page content from Markdown to HTML</span>
+<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">pageContent</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #A626A4">await</span><span> </span><span style="color: #E45649">rendererContext</span><span style="color: #383A42">.</span><span style="color: #4078F2">MarkdownToHtml</span><span style="color: #383A42">(</span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Content</span><span style="color: #383A42">)</span>
+
+<span>    </span><span style="color: #A0A1A7;font-style: italic">// Render the blog content using our helpers</span>
+<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">content</span><span> </span><span style="color: #0184BC">=</span>
+<span>        </span><span style="color: #383A42">&lt;</span><span style="color: #C18401">BlogContainer</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">            &lt;</span><span style="color: #C18401">BlogTitle</span><span style="color: #383A42"> </span><span style="color: #986801">title</span><span style="color: #383A42">={title} /&gt;</span>
+<span style="color: #383A42">            &lt;</span><span style="color: #C18401">AuthorAndDate</span><span style="color: #383A42"> </span><span style="color: #986801">authorName</span><span style="color: #383A42">={author} </span><span style="color: #986801">date</span><span style="color: #383A42">={date} /&gt;</span>
+<span style="color: #383A42">            &lt;</span><span style="color: #E45649">div</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;content&quot;</span><span style="color: #383A42"> </span><span style="color: #986801">dangerouslySetInnerHTML</span><span style="color: #383A42">={{ __html</span><span style="color: #0184BC">:</span><span style="color: #383A42"> pageContent }} /&gt;</span>
+<span style="color: #383A42">        &lt;/</span><span style="color: #C18401">BlogContainer</span><span style="color: #383A42">&gt;</span>
+
+<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #E45649">pageMinimal</span><span style="color: #383A42">.</span><span style="color: #4078F2">render</span><span style="color: #383A42">(</span><span style="color: #A626A4">new</span><span> </span><span style="color: #50A14F">pageMinimal</span><span style="color: #383A42">.</span><span style="color: #C18401">RenderArgs</span><span style="color: #383A42">(</span>
+<span>        </span><span style="color: #E45649">rendererContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Config</span><span style="color: #383A42">,</span><span> </span><span style="color: #A0A1A7;font-style: italic">// Forward the config information</span>
+<span>        </span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Section</span><span style="color: #383A42">,</span><span> </span><span style="color: #A0A1A7;font-style: italic">// Tell which section we are in</span>
+<span>        </span><span style="color: #383A42">title,</span><span> </span><span style="color: #A0A1A7;font-style: italic">// Pass the blog title to use in the page title</span>
+<span>        </span><span style="color: #383A42">content</span><span> </span><span style="color: #A0A1A7;font-style: italic">// Pass the blog content to render below the navbar</span>
+<span>    </span><span style="color: #383A42">));</span>
+
+<span style="color: #383A42">}</span></code></pre>
+</li>
+</ul>
+<h2>Blog index <a href="#Blog-index" aria-hidden="true"><span class="anchor" id="Blog-index"></span>#</a></h2>
+<p>We are going to auto-generate the blog index page, so we can focus on writing our blog post instead of duplicating information.</p>
+<ul class="textual-steps">
+<li>
+<p>Create a file <code>layouts/blog-index.jsx</code> at the root of your repository</p>
+<pre><code>├── docs
+├── docsrc
+├── layouts
+    └── blog-page.jsx
+    └── blog-index.jsx
+├── lightner
+└── node_modules
+</code></pre>
+<p>Add this to the file:</p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span style="color: #A0A1A7;font-style: italic">// Nacara is using React for generating the HTML</span>
+<span style="color: #A626A4">const</span><span> </span><span style="color: #986801">React</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #0184BC">require</span><span style="color: #383A42">(</span><span style="color: #50A14F">&quot;react&quot;</span><span style="color: #383A42">);</span>
+<span style="color: #A0A1A7;font-style: italic">// We can reuse existing layouts function</span>
+<span style="color: #A0A1A7;font-style: italic">// Here, we want to re-use the minimal page which generates only the navbar for us</span>
+<span style="color: #A626A4">const</span><span> </span><span style="color: #986801">pageMinimal</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #0184BC">require</span><span style="color: #383A42">(</span><span style="color: #50A14F">&quot;nacara-layout-standard/dist/Page.Minimal&quot;</span><span style="color: #383A42">);</span>
+
+<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">render</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #A626A4">async</span><span> </span><span style="color: #383A42">(rendererContext,</span><span> </span><span style="color: #383A42">pageContext)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
+
+<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #E45649">pageMinimal</span><span style="color: #383A42">.</span><span style="color: #4078F2">render</span><span style="color: #383A42">(</span><span style="color: #A626A4">new</span><span> </span><span style="color: #50A14F">pageMinimal</span><span style="color: #383A42">.</span><span style="color: #C18401">RenderArgs</span><span style="color: #383A42">(</span>
+<span>        </span><span style="color: #E45649">rendererContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Config</span><span style="color: #383A42">,</span>
+<span>        </span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Section</span><span style="color: #383A42">,</span>
+<span>        </span><span style="color: #986801">undefined</span><span style="color: #383A42">,</span>
+<span>        </span><span style="color: #50A14F">&quot;Blog index&quot;</span>
+<span>    </span><span style="color: #383A42">));</span>
+
+<span style="color: #383A42">}</span>
+
+<span style="color: #A0A1A7;font-style: italic">// Each layout needs to export this object</span>
+<span style="color: #A626A4">export</span><span> </span><span style="color: #E45649">default</span><span> </span><span style="color: #383A42">{</span>
+<span>    </span><span style="color: #A0A1A7;font-style: italic">// We can have several renderer, it is useful when publishing to npm</span>
+<span>    Renderers</span><span style="color: #0184BC">:</span><span> </span><span style="color: #383A42">[</span>
+<span>        </span><span style="color: #383A42">{</span>
+<span>            </span><span style="color: #A0A1A7;font-style: italic">// Unique name of the layout used by Nacara to know how to render your page</span>
+<span>            Name</span><span style="color: #0184BC">:</span><span> </span><span style="color: #50A14F">&quot;blog-index&quot;</span><span style="color: #383A42">,</span>
+<span>            </span><span style="color: #A0A1A7;font-style: italic">// render function</span>
+<span>            Func</span><span style="color: #0184BC">:</span><span> </span><span style="color: #E45649">render</span>
+<span>        </span><span style="color: #383A42">}</span>
+<span>    </span><span style="color: #383A42">],</span>
+<span>    </span><span style="color: #A0A1A7;font-style: italic">// An array of external dependencies</span>
+<span>    </span><span style="color: #A0A1A7;font-style: italic">// For example, if your layouts need to include some external</span>
+<span>    </span><span style="color: #A0A1A7;font-style: italic">// JavaScript file you specify them here so Nacara know that it</span>
+<span>    </span><span style="color: #A0A1A7;font-style: italic">// has to copy them into the destination directory</span>
+<span>    Dependencies</span><span style="color: #0184BC">:</span><span> </span><span style="color: #383A42">[]</span>
+<span style="color: #383A42">}</span></code></pre>
+</li>
+<li>
+<p>Change the <code>docsrc/blog/index.md</code> content to</p>
+<pre><code>---
+layout: blog-index
+---
+</code></pre>
+<p>As you can see, we are only specifying the layout to use because this page page will be fully generated.</p>
+</li>
+<li>
+<p>Now, we want to modify our render function to generate the index page.</p>
+<p>To do that, we are going to:</p>
+<ol>
+<li>To retrieve the list of <code>blog-page</code></li>
+<li>Sort the page per date</li>
+<li>Extract the information we want from the page information, for example the title, date</li>
+<li>Render the list of blog pages</li>
+</ol>
+<p>Replace the <code>render</code> function with this code:</p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span style="color: #A0A1A7;font-style: italic">// This render a stylized title for our blog page</span>
+<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">PageTitle</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #383A42">(</span><span>{</span><span style="color: #383A42">title</span><span>}</span><span style="color: #383A42">)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
+<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #383A42">&lt;</span><span style="color: #E45649">h2</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;title is-size-3 has-text-primary has-text-weight-normal has-text-centered blog-title&quot;</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">        {title}</span>
+<span style="color: #383A42">    &lt;/</span><span style="color: #E45649">h2</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">}</span>
+
+<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">BlogPost</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #383A42">(</span><span>{</span><span style="color: #383A42">blogPage</span><span>}</span><span style="color: #383A42">)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
+<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">dateFormat</span><span> </span><span style="color: #0184BC">=</span>
+<span>        </span><span style="color: #A626A4">new</span><span> </span><span style="color: #50A14F">Intl</span><span style="color: #383A42">.</span><span style="color: #C18401">DateTimeFormat</span><span style="color: #383A42">(</span>
+<span>            </span><span style="color: #50A14F">&quot;en&quot;</span><span style="color: #383A42">,</span>
+<span>            </span><span style="color: #383A42">{</span>
+<span>                dateStyle</span><span style="color: #0184BC">:</span><span> </span><span style="color: #50A14F">&quot;short&quot;</span>
+<span>            </span><span style="color: #383A42">}</span>
+<span>        </span><span style="color: #383A42">);</span>
+
+<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">dateStr</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #E45649">dateFormat</span><span style="color: #383A42">.</span><span style="color: #4078F2">format</span><span style="color: #383A42">(</span><span style="color: #E45649">blogPage</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">date</span><span style="color: #383A42">);</span>
+
+<span>    </span><span style="color: #A0A1A7;font-style: italic">// Add baseUrl + change file extension</span>
+<span>    </span><span style="color: #A626A4">let</span><span> </span><span style="color: #383A42">internalLink</span><span> </span><span style="color: #0184BC">=</span>
+<span>        </span><span style="color: #50A14F">&#039;{{REPLACE_WITH_BASE_URL}}&#039;</span><span> </span><span style="color: #0184BC">+</span><span> </span><span style="color: #E45649">blogPage</span><span style="color: #383A42">.</span><span style="color: #E45649">RelativePath</span><span style="color: #383A42">.</span><span style="color: #4078F2">substring</span><span style="color: #383A42">(</span><span style="color: #986801">0</span><span style="color: #383A42">,</span><span> </span><span style="color: #E45649">blogPage</span><span style="color: #383A42">.</span><span style="color: #E45649">RelativePath</span><span style="color: #383A42">.</span><span style="color: #4078F2">lastIndexOf</span><span style="color: #383A42">(</span><span style="color: #50A14F">&#039;.&#039;</span><span style="color: #383A42">)</span><span> </span><span style="color: #0184BC">+</span><span> </span><span style="color: #986801">1</span><span style="color: #383A42">)</span><span> </span><span style="color: #0184BC">+</span><span> </span><span style="color: #50A14F">&quot;html&quot;</span>
+
+<span>    </span><span style="color: #A0A1A7;font-style: italic">// Use / for the URL and not \ needed when generating the blog from Windows</span>
+<span>    </span><span style="color: #383A42">internalLink</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #E45649">internalLink</span><span style="color: #383A42">.</span><span style="color: #4078F2">replace</span><span style="color: #383A42">(</span><span style="color: #0184BC">/\\/</span><span style="color: #A626A4">g</span><span style="color: #383A42">,</span><span> </span><span style="color: #50A14F">&quot;/&quot;</span><span style="color: #383A42">);</span>
+
+<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #383A42">&lt;</span><span style="color: #E45649">li</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">        </span><span style="color: #CA1243">{</span><span style="color: #383A42">dateStr </span><span style="color: #0184BC">+</span><span style="color: #383A42"> </span><span style="color: #50A14F">&quot;: &quot;</span><span style="color: #CA1243">}</span>
+<span style="color: #383A42">        &lt;</span><span style="color: #E45649">a</span><span style="color: #383A42"> </span><span style="color: #986801">href</span><span style="color: #383A42">={internalLink}&gt;</span>
+<span style="color: #383A42">            {</span><span style="color: #E45649">blogPage</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">title</span><span style="color: #383A42">}</span>
+<span style="color: #383A42">        &lt;/</span><span style="color: #E45649">a</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">        , by </span><span style="color: #CA1243">{</span><span style="color: #E45649">blogPage</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">author</span><span style="color: #CA1243">}</span>
+<span style="color: #383A42">    &lt;/</span><span style="color: #E45649">li</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">}</span>
+
+<span style="color: #A0A1A7;font-style: italic">// A helper function to render the blog container,</span>
+<span style="color: #A0A1A7;font-style: italic">// it will makes our blog centered on the page on desktop</span>
+<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">PageContainer</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #383A42">(</span><span>{</span><span style="color: #383A42">blogPages</span><span>}</span><span style="color: #383A42">)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
+<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #383A42">&lt;</span><span style="color: #E45649">section</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;section container&quot;</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">        &lt;</span><span style="color: #E45649">div</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;columns&quot;</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">            &lt;</span><span style="color: #E45649">div</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;column is-8-desktop is-offset-2-desktop&quot;</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">                &lt;</span><span style="color: #E45649">div</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;content&quot;</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">                    &lt;</span><span style="color: #C18401">PageTitle</span><span style="color: #383A42"> </span><span style="color: #986801">title</span><span style="color: #383A42">={</span><span style="color: #50A14F">&quot;Blog posts&quot;</span><span style="color: #383A42">}/&gt;</span>
+<span style="color: #383A42">                    &lt;</span><span style="color: #E45649">ul</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">                        {</span><span style="color: #E45649">blogPages</span><span style="color: #383A42">.</span><span style="color: #4078F2">map</span><span style="color: #383A42">((blogPage, index) </span><span style="color: #A626A4">=&gt;</span><span style="color: #383A42"> {</span>
+<span style="color: #383A42">                            </span><span style="color: #A626A4">return</span><span style="color: #383A42"> &lt;</span><span style="color: #C18401">BlogPost</span><span style="color: #383A42"> </span><span style="color: #986801">key</span><span style="color: #383A42">={index} </span><span style="color: #986801">blogPage</span><span style="color: #383A42">={blogPage}/&gt;</span>
+<span style="color: #383A42">                        })}</span>
+<span style="color: #383A42">                    &lt;/</span><span style="color: #E45649">ul</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">                &lt;/</span><span style="color: #E45649">div</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">            &lt;/</span><span style="color: #E45649">div</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">        &lt;/</span><span style="color: #E45649">div</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">    &lt;/</span><span style="color: #E45649">section</span><span style="color: #383A42">&gt;</span>
+<span style="color: #383A42">}</span>
+
+<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">render</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #A626A4">async</span><span> </span><span style="color: #383A42">(rendererContext,</span><span> </span><span style="color: #383A42">pageContext)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
+
+<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">blogPages</span><span> </span><span style="color: #0184BC">=</span>
+<span>        </span><span style="color: #A0A1A7;font-style: italic">// In the rendererContext we have access to all Pages of our website</span>
+<span>        </span><span style="color: #E45649">rendererContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Pages</span>
+<span>            </span><span style="color: #A0A1A7;font-style: italic">// Filter out the blog-page files</span>
+<span>            </span><span style="color: #383A42">.</span><span style="color: #4078F2">filter</span><span style="color: #383A42">((pageContext)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
+<span>                </span><span style="color: #A626A4">return</span><span> </span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Layout</span><span> </span><span style="color: #0184BC">===</span><span> </span><span style="color: #50A14F">&quot;blog-page&quot;</span>
+<span>            </span><span style="color: #383A42">})</span>
+<span>            </span><span style="color: #A0A1A7;font-style: italic">// Sort the blog-page files by date (newest first)</span>
+<span>            </span><span style="color: #383A42">.</span><span style="color: #4078F2">sort</span><span style="color: #383A42">((pageContext1,</span><span> </span><span style="color: #383A42">pageContext2</span><span> </span><span style="color: #383A42">)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
+<span>                </span><span style="color: #A626A4">return</span><span> </span><span style="color: #E45649">pageContext2</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">date</span><span> </span><span style="color: #0184BC">-</span><span> </span><span style="color: #E45649">pageContext1</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">date</span>
+<span>            </span><span style="color: #383A42">});</span>
+
+<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #E45649">pageMinimal</span><span style="color: #383A42">.</span><span style="color: #4078F2">render</span><span style="color: #383A42">(</span><span style="color: #A626A4">new</span><span> </span><span style="color: #50A14F">pageMinimal</span><span style="color: #383A42">.</span><span style="color: #C18401">RenderArgs</span><span style="color: #383A42">(</span>
+<span>        </span><span style="color: #E45649">rendererContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Config</span><span style="color: #383A42">,</span>
+<span>        </span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Section</span><span style="color: #383A42">,</span>
+<span>        </span><span style="color: #986801">undefined</span><span style="color: #383A42">,</span>
+<span>        </span><span style="color: #383A42">&lt;</span><span style="color: #C18401">PageContainer</span><span style="color: #383A42"> </span><span style="color: #986801">blogPages</span><span style="color: #383A42">={blogPages}/&gt;</span>
+<span>    </span><span style="color: #383A42">));</span>
+
+<span style="color: #383A42">}</span></code></pre>
+</li>
+</ul>
+</div></div></section><div class="navigation-container"><a class="button navigate-to-previous is-primary is-outlined" href="/Nacara/documentation/nacara/guides/section-menu.html"><span class="icon"><i class=" fas fa-arrow-left"></i></span><span class=" is-uppercase">Section menu</span></a><br class="is-hidden-tablet"/><a class="button navigate-to-next is-primary is-outlined" href="/Nacara/documentation/nacara/guides/deploy-your-site.html"><span class=" is-uppercase">Deploy your site</span><span class="icon"><i class=" fas fa-arrow-right"></i></span></a></div></div></div></div><script async="" src="/Nacara/resources/nacara-standard-layouts/scripts/menu.js"></script></body></html>

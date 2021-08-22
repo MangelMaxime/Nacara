@@ -1,0 +1,152 @@
+<html class="has-navbar-fixed-top"><head><title>Nacara · Section menu</title><meta http-equiv="content-type"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" type="text/css" href="/Nacara/style.css"/><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"/></head><body><nav class="navbar is-fixed-top"><div class="container"><div class="navbar-brand"><a class="navbar-item title is-4" href="https://mangelmaxime.github.io/Nacara/">Nacara</a><a class="navbar-item is-hidden-desktop" href="https://github.com/MangelMaxime/Nacara"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item is-hidden-desktop" href="https://twitter.com/MangelMaxime"><span class="icon" style="color:#55acee"><i class=" fab fa-twitter fa-lg"></i></span></a><a class="navbar-burger" data-target="nav-menu"><span></span><span></span><span></span></a></div><div class="navbar-menu" id="nav-menu"><div class="navbar-start"><a class="navbar-item is-active" href="/Nacara/documentation/nacara/introduction.html"><span class="icon"><i class=" fas fa-book fa-lg"></i></span><span>Documentation</span></a><a class="navbar-item" href="/Nacara/showcase.html"><span class="icon"><i class=" fas fa-laptop-code fa-lg"></i></span><span>Showcase</span></a><a class="navbar-item" href="/Nacara/changelogs/nacara.html"><span class="icon"><i class=" fas fa-tasks fa-lg"></i></span><span>Changelogs</span></a><a class="navbar-item" href="https://gitter.im/fable-compiler/Fable"><span class="icon"><i class=" fab fa-gitter fa-lg"></i></span><span>Support</span></a><a class="navbar-item" href="https://www.patreon.com/MangelMaxime"><span class="icon" style="color:#ff424b"><i class=" fab fa-patreon fa-lg"></i></span><span>Donate</span></a></div><div class="navbar-end"><a class="navbar-item" href="https://github.com/MangelMaxime/Nacara"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item" href="https://twitter.com/MangelMaxime"><span class="icon" style="color:#55acee"><i class=" fab fa-twitter fa-lg"></i></span></a></div></div></div></nav><div class="container"><div class="mobile-menu"><nav class="breadcrumb"><ul><li><a class="menu-trigger"><span></span><span></span><span></span></a></li><li class="is-active"><a>Nacara</a></li><li class="is-active"><a>Guides</a></li><li class="is-active"><a>Section menu</a></li></ul></nav></div><div class="columns is-gapless is-mobile"><div class="column is-menu-column is-3-desktop is-hidden-touch ml-5"><div class="menu-container"><aside class="menu"><ul class="menu-list"><li><a class=" " href="/Nacara/documentation/nacara/introduction.html">Introduction</a></li><ul class="menu-list"><p class="menu-label">Nacara</p><ul class="menu-list has-menu-group"><li><a class="menu-group is-expanded" data-default-state="expanded" data-collapsible="true"><span>Guides</span><span class="icon"><i class=" fas fa-angle-right fa-lg"></i></span></a><ul><li><a class=" " href="/Nacara/documentation/nacara/guides/create-a-page.html">Create a page</a></li><li><a class=" " href="/Nacara/documentation/nacara/guides/customize-the-style.html">Style your application</a></li><li><a class=" " href="/Nacara/documentation/nacara/guides/create-a-section.html">Create a Section</a></li><li><a class=" is-active has-table-of-content" href="/Nacara/documentation/nacara/guides/section-menu.html">Section menu</a></li><ul class="table-of-content"><li><a href="#Define-a-menu" data-toc-element="true">Define a menu </a></li><li><a href="#menu.json" data-toc-element="true"><code>menu.json</code> </a></li><li><a href="#Mastering-your-menu.json" data-toc-element="true">Mastering your menu.json </a><ul class="table-of-content"><li><a href="#Page:-Link-to-a-page" data-toc-element="true">Page: Link to a page </a></li><li><a href="#Link:-link-to-any-page" data-toc-element="true">Link: link to any page </a></li><li><a href="#Section:-organize-your-menu" data-toc-element="true">Section: organize your menu </a></li></ul></li></ul><li><a class=" " href="/Nacara/documentation/nacara/guides/custom-layout.html">Custom layout</a></li><li><a class=" " href="/Nacara/documentation/nacara/guides/deploy-your-site.html">Deploy your site</a></li><li><a class=" " href="/Nacara/documentation/nacara/guides/markdown-features.html">Markdown features</a></li></ul></li></ul></ul><ul class="menu-list"><p class="menu-label">Nacara layout</p><li><a class=" " href="/Nacara/documentation/layout/introduction.html">Introduction</a></li><li><a class=" " href="/Nacara/documentation/layout/standard.html">Standard layout</a></li></ul><li><a class="" href="http://perdu.com">Nacara API222</a></li></ul></aside></div></div><div class="column is-8-desktop is-full-touch"><section class="section"><div class="content"><header class="page-header"><a class="button is-hidden-touch is-outlined is-primary is-pulled-right" target="_blank" href="https://github.com/MangelMaxime/Nacara/edit/master/docsrc/documentation/nacara/guides/section-menu.md">Edit</a><h1 class="title is-1">Section menu</h1></header><div><p>A menu is specific to a <a href="/Nacara/documentation/nacara/guides/create-a-section.html">section</a>.</p>
+<p>The menu is optional but it helps you:</p>
+<ul>
+<li>Group your content</li>
+<li>Display a menu when visiting a page on the related section</li>
+<li>Optionally: Provide navigation buttons</li>
+</ul>
+<h2>Define a menu <a href="#Define-a-menu" aria-hidden="true"><span class="anchor" id="Define-a-menu"></span>#</a></h2>
+<p>The menu of a section is defined by creating a <code>menu.json</code> file at the top level of your section.</p>
+<pre><code>docsrc
+├── blog
+└── documentation
+    └── menu.json
+</code></pre>
+<p>Here you have <strong>2</strong> sections but only <code>documentation</code> has a menu.</p>
+<h2><code>menu.json</code> <a href="#menu.json" aria-hidden="true"><span class="anchor" id="menu.json"></span>#</a></h2>
+<p>The <code>menu.json</code> consist in a list of <code>MenuItem</code> which can be a <code>string</code> or an <code>object</code>.</p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span style="color: #A626A4">type</span><span> </span><span style="color: #C18401">MenuItem</span><span> </span><span style="color: #A626A4">=</span>
+<span>    </span><span style="color: #A626A4">|</span><span> Page </span><span style="color: #A626A4">of</span><span> </span><span style="color: #C18401">MenuItemPage</span>
+<span>    </span><span style="color: #A626A4">|</span><span> List </span><span style="color: #A626A4">of</span><span> </span><span style="color: #C18401">MenuItemList</span>
+<span>    </span><span style="color: #A626A4">|</span><span> Link </span><span style="color: #A626A4">of</span><span> </span><span style="color: #C18401">MenuItemLink</span>
+
+<span style="color: #A626A4">type</span><span> </span><span style="color: #C18401">Menu</span><span> </span><span style="color: #A626A4">=</span><span> MenuItem list</span></code></pre>
+<h2>Mastering your menu.json <a href="#Mastering-your-menu.json" aria-hidden="true"><span class="anchor" id="Mastering-your-menu.json"></span>#</a></h2>
+<p>Your <code>menu.json</code> supports different items:</p>
+<ul>
+<li><a href="#Page:-Link-to-a-page">Page</a>: link to a page hosted on your site</li>
+<li><a href="#Link:-link-to-any-page">Link</a>: link to an arbitrary URL</li>
+<li><a href="#Section:-organize-your-menu">Section</a>: group several <code>MenuItem</code></li>
+</ul>
+<h3>Page: Link to a page <a href="#Page:-Link-to-a-page" aria-hidden="true"><span class="anchor" id="Page:-Link-to-a-page"></span>#</a></h3>
+<p><strong>Page</strong>, allows you to link to a page from your <code>source</code> folder.</p>
+<p>You need to provide the relative path from the <code>source</code> folder.</p>
+<p><strong>Example:</strong></p>
+<pre><code>docsrc
+├── blog
+└── documentation
+    └── page1.md
+    └── page2.md
+    └── menu.json
+</code></pre>
+<p>File: <code>docs/documentation/menu.json</code></p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span style="color: #383A42">[</span>
+<span>    </span><span style="color: #50A14F">&quot;documentation/page1&quot;</span><span>,</span>
+<span>    </span><span style="color: #50A14F">&quot;documentation/page2&quot;</span><span>,</span>
+<span style="color: #383A42">]</span></code></pre>
+<p>The <code>title</code> front-matter will be used has the text to display in the menu.</p>
+<h3>Link: link to any page <a href="#Link:-link-to-any-page" aria-hidden="true"><span class="anchor" id="Link:-link-to-any-page"></span>#</a></h3>
+<p><strong>Link</strong>, allows you to link to any page (internal or external) to your website.</p>
+<p><strong>Properties</strong></p>
+<table class="table is-narrow is-bordered">
+    <thead>
+        <tr>
+            <th class="has-text-centered">Name</th>
+            <th class="has-text-centered">Required</th>
+            <th class="has-text-centered">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="has-text-centered" style="vertical-align: middle"><code>type</code></td>
+            <td class="has-text-centered" style="vertical-align: middle">X</td>
+            <td>Always set to <code>link</code></td>
+        </tr>
+        <tr>
+            <td class="has-text-centered" style="vertical-align: middle"><code>label</code></td>
+            <td class="has-text-centered" style="vertical-align: middle">X</td>
+            <td>Text to display in the menu</td>
+        </tr>
+        <tr>
+            <td class="has-text-centered" style="vertical-align: middle"><code>href</code></td>
+            <td class="has-text-centered" style="vertical-align: middle">X</td>
+            <td>URL to link to</td>
+        </tr>
+    </tbody>
+</table>
+<p><strong>Example:</strong></p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span style="color: #383A42">[</span>
+<span>    {</span>
+<span>        </span><span style="color: #E45649">&quot;type&quot;</span><span>: </span><span style="color: #50A14F">&quot;link&quot;</span><span>,</span>
+<span>        </span><span style="color: #E45649">&quot;label&quot;</span><span>: </span><span style="color: #50A14F">&quot;Fable&quot;</span><span>,</span>
+<span>        </span><span style="color: #E45649">&quot;href&quot;</span><span>: </span><span style="color: #50A14F">&quot;http://fable.io&quot;</span>
+<span>    }</span>
+<span style="color: #383A42">]</span></code></pre>
+<h3>Section: organize your menu <a href="#Section:-organize-your-menu" aria-hidden="true"><span class="anchor" id="Section:-organize-your-menu"></span>#</a></h3>
+<p><strong>Section</strong>, allows you to organize your menu in different sections.</p>
+<p><strong>Properties</strong></p>
+<table class="table is-narrow is-bordered">
+    <thead>
+        <tr>
+            <th class="has-text-centered">Name</th>
+            <th class="has-text-centered">Required</th>
+            <th class="has-text-centered">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="has-text-centered" style="vertical-align: middle"><code>type</code></td>
+            <td class="has-text-centered" style="vertical-align: middle">X</td>
+            <td>Always set to <code>section</code></td>
+        </tr>
+        <tr>
+            <td class="has-text-centered" style="vertical-align: middle"><code>label</code></td>
+            <td class="has-text-centered" style="vertical-align: middle">X</td>
+            <td>Text to display in the menu</td>
+        </tr>
+        <tr>
+            <td class="has-text-centered" style="vertical-align: middle"><code>items</code></td>
+            <td class="has-text-centered" style="vertical-align: middle">X</td>
+            <td>List of <a href="#menu.json">MenuItems</a></td>
+        </tr>
+        <tr>
+            <td class="has-text-centered" style="vertical-align: middle"><code>collapsible</code></td>
+            <td class="has-text-centered" style="vertical-align: middle"></td>
+            <td>
+                True, if the section can be collapse
+                <br/>
+                Default: <code>true</code>
+            </td>
+        </tr>
+        <tr>
+            <td class="has-text-centered" style="vertical-align: middle"><code>collapsed</code></td>
+            <td class="has-text-centered" style="vertical-align: middle"></td>
+            <td>
+                True, if the section is collapse by default
+                <br/>
+                Default: <code>false</code>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<p><strong>Example:</strong></p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span style="color: #383A42">[</span>
+<span>    </span><span style="color: #50A14F">&quot;documentation/page-1&quot;</span><span>,</span>
+<span>    {</span>
+<span>        </span><span style="color: #E45649">&quot;type&quot;</span><span>: </span><span style="color: #50A14F">&quot;section&quot;</span><span>,</span>
+<span>        </span><span style="color: #E45649">&quot;label&quot;</span><span>: </span><span style="color: #50A14F">&quot;Guides&quot;</span><span>,</span>
+<span>        </span><span style="color: #E45649">&quot;items&quot;</span><span>: </span><span style="color: #383A42">[</span>
+<span>            </span><span style="color: #50A14F">&quot;documentation/guides/guide-1&quot;</span><span>,</span>
+<span>            {</span>
+<span>                </span><span style="color: #E45649">&quot;type&quot;</span><span>: </span><span style="color: #50A14F">&quot;section&quot;</span><span>,</span>
+<span>                </span><span style="color: #E45649">&quot;label&quot;</span><span>: </span><span style="color: #50A14F">&quot;Advanced&quot;</span><span>,</span>
+<span>                </span><span style="color: #E45649">&quot;collapsible&quot;</span><span>: </span><span style="color: #0184BC">true</span><span>,</span>
+<span>                </span><span style="color: #E45649">&quot;collapsed&quot;</span><span>: </span><span style="color: #0184BC">true</span><span>,</span>
+<span>                </span><span style="color: #E45649">&quot;items&quot;</span><span>: </span><span style="color: #383A42">[</span>
+<span>                    </span><span style="color: #50A14F">&quot;documentation/guides/advanced/guide-1&quot;</span>
+<span>                </span><span style="color: #383A42">]</span>
+<span>            }</span>
+<span>        </span><span style="color: #383A42">]</span>
+<span>    }</span>
+<span style="color: #383A42">]</span></code></pre>
+</div></div></section><div class="navigation-container"><a class="button navigate-to-previous is-primary is-outlined" href="/Nacara/documentation/nacara/guides/create-a-section.html"><span class="icon"><i class=" fas fa-arrow-left"></i></span><span class=" is-uppercase">Create a Section</span></a><br class="is-hidden-tablet"/><a class="button navigate-to-next is-primary is-outlined" href="/Nacara/documentation/nacara/guides/custom-layout.html"><span class=" is-uppercase">Custom layout</span><span class="icon"><i class=" fas fa-arrow-right"></i></span></a></div></div></div></div><script async="" src="/Nacara/resources/nacara-standard-layouts/scripts/menu.js"></script></body></html>
