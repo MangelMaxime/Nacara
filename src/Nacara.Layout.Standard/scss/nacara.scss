@@ -1,5 +1,6 @@
 @import './components/changelog.scss';
 @import './components/textual-steps.scss';
+@import './components/navigation-button.scss';
 
 $menu-list-spacing: 0.5rem !default;
 
@@ -110,20 +111,6 @@ h2, h3, h4, h5, h6  {
 @include touch {
     .anchor {
         padding: #{$navbar-height * 2 + 1rem} 0 0;
-    }
-}
-
-// Container used for the Next / Previous page buttons
-.navigation-container {
-    padding: 0 2rem 1rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-@include touch {
-    .navigate-to-next {
-        margin-right: 5rem;
     }
 }
 

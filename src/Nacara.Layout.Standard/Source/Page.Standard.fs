@@ -154,6 +154,11 @@ let private renderNavigationButtons
                 prop.className "navigation-container"
                 prop.children [
                     previousButton
+                    // The br is only active on mobile
+                    // and force the button to display on 2 lines instead of 1
+                    Html.br [
+                        prop.className "is-hidden-tablet"
+                    ]
                     nextButton
                 ]
             ]
