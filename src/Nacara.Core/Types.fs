@@ -226,6 +226,7 @@ type MenuConfig =
 
 type Config =
     {
+        FavIcon : string option
         WorkingDirectory : string
         Url : string
         SourceFolder : string
@@ -290,6 +291,7 @@ module Config =
     let decoder (cwd : string) (isWatch : bool) : Decoder<Config> =
         Decode.object (fun get ->
             {
+                FavIcon = get.Optional.Field "favIcon" Decode.string
                 WorkingDirectory = cwd
                 Url = get.Required.Field "url" Decode.string
                 BaseUrl = get.Required.Field "baseUrl" Decode.string

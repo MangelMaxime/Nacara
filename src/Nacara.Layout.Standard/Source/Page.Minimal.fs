@@ -198,6 +198,16 @@ let render (args : RenderArgs) =
                     prop.content "width=device-width, initial-scale=1"
                 ]
 
+                match args.Config.FavIcon with
+                | Some favIcon ->
+                    Html.link [
+                        prop.rel "shortcut icon"
+                        prop.href (args.Config.BaseUrl + favIcon)
+                    ]
+
+                | None ->
+                    null
+
                 Html.link [
                     prop.rel "stylesheet"
                     prop.type' "text/css"
