@@ -108,6 +108,9 @@ let private isServe =
 let private isVersion =
     hasCommand "--version"
 
+let private isClean =
+    hasCommand "clean"
+
 let private setupBabelIfNeeded () =
     promise {
         // Load babel if the config file is found
@@ -115,7 +118,7 @@ let private setupBabelIfNeeded () =
         let! hasBabelConfig = File.exist(babelConfigPath)
 
         if hasBabelConfig then
-            Log.info "'babel.config.json' file found, loading Babel..."
+            Log.log "'babel.config.json' file found, loading Babel..."
             try
                 emitJsExpr () """require("@babel/register")"""
             with
@@ -127,6 +130,9 @@ let private setupBabelIfNeeded () =
 let private buildOrWatch (config : Config) =
     promise {
         Log.log $"Source folder: %s{config.SourceFolder}"
+
+        // Clean the output folder
+        do! Clean.clean config
 
         do! setupBabelIfNeeded ()
 
@@ -308,6 +314,11 @@ let start () =
                 | Ok config ->
                     if isServe then
                         Serve.serve config
+
+                    else if isClean then
+                        do! Clean.clean config
+                        Log.success $"Successfully removed {config.DestinationFolder}"
+                        ``process``.exit ExitCode.OK
 
                     else
                         do! buildOrWatch config

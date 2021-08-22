@@ -8,6 +8,7 @@
     <Compile Include="Write.fs" />
     <Compile Include="Version.fs" />
     <Compile Include="Watch.fs" />
+    <Compile Include="Clean.fs" />
     <Compile Include="Serve.fs" />
     <Compile Include="Build.fs" />
     <Compile Include="Main.fs" />

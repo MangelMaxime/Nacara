@@ -2,6 +2,7 @@ module rec Node
 
 open Fable.Core
 open Fable.Core.JsInterop
+open Node
 
 type Node.Fs.IExports with
     [<Emit("$0.copyFileSync($1...)")>]
@@ -16,11 +17,11 @@ module Directory =
         |> String.concat Node.Api.path.sep
 
     let join (pathA : string) (pathB : string) =
-        Node.Api.path.join(pathA, pathB)
+        path.join(pathA, pathB)
 
     let exists (dir : string) =
         Promise.create (fun resolve reject ->
-            Node.Api.fs.exists((U2.Case1 dir), (fun res ->
+            fs.exists((U2.Case1 dir), (fun res ->
                 resolve res
             ))
         )
@@ -31,7 +32,7 @@ module Directory =
         ]
 
         Promise.create (fun resolve reject ->
-            Node.Api.fs?mkdir(dir, options, (fun (err : Node.Base.ErrnoException option) ->
+            fs?mkdir(dir, options, (fun (err : Node.Base.ErrnoException option) ->
                 match err with
                 | Some err -> reject (err :?> System.Exception)
                 | None -> resolve ()
@@ -47,11 +48,11 @@ module Directory =
         }
 
     let dirname (dir : string) =
-        Node.Api.path.dirname(dir)
+        path.dirname(dir)
 
     let getFiles (isRecursive : bool) (dir : string) =
         Promise.create (fun resolve reject ->
-            Node.Api.fs.readdir(U2.Case1 dir, (fun (err: Node.Base.ErrnoException option) (files : ResizeArray<string>) ->
+            fs.readdir(U2.Case1 dir, (fun (err: Node.Base.ErrnoException option) (files : ResizeArray<string>) ->
                 match err with
                 | Some err ->
                     reject (err :?> System.Exception)
@@ -93,6 +94,19 @@ module Directory =
             ))
         )
 
+    let rmdir (dir : string) =
+        let options = createObj [
+            "recursive" ==> true
+        ]
+
+        Promise.create (fun resolve reject ->
+            fs?rmdir(dir, options, (fun (err : Base.ErrnoException option) ->
+                match err with
+                | Some err -> reject (err :?> System.Exception)
+                | None -> resolve ()
+            ))
+        )
+
 module File =
     let changeExtension (extention : string) (path : string) =
         let extensionPos = path.LastIndexOf('.')
@@ -100,7 +114,7 @@ module File =
 
     let read (path: string) =
         Promise.create (fun resolve reject ->
-            Node.Api.fs.readFile(path, (fun err buffer ->
+            fs.readFile(path, (fun err buffer ->
                 match err with
                 | Some err -> reject (err :?> System.Exception)
                 | None -> resolve (buffer.ToString())
@@ -108,14 +122,14 @@ module File =
         )
 
     let readSync (path: string) =
-        Node.Api.fs.readFileSync(path).ToString()
+        fs.readFileSync(path).ToString()
 
     let write (path: string) (content: string) =
         promise {
             do! path |> Directory.dirname |> Directory.ensure
             return!
                 Promise.create (fun resolve reject ->
-                    Node.Api.fs.writeFile(path, content, (fun res ->
+                    fs.writeFile(path, content, (fun res ->
                         match res with
                         | Some res -> reject (res :?> System.Exception)
                         | None -> resolve ()
@@ -128,7 +142,7 @@ module File =
             do! destination |> Directory.dirname |> Directory.ensure
             return!
                 Promise.create (fun resolve reject ->
-                    Node.Api.fs?copyFile$(source, destination, fun res ->
+                    fs?copyFile$(source, destination, fun res ->
                         match res with
                         | Some res -> reject res
                         | None -> resolve ()
@@ -138,20 +152,20 @@ module File =
 
     let exist (path : string) =
         Promise.create (fun resolve reject ->
-            Node.Api.fs.exists(U2.Case1 path, (fun res ->
+            fs.exists(U2.Case1 path, (fun res ->
                 resolve res
             ))
         )
 
     let existSync (path : string) =
-        Node.Api.fs.existsSync(U2.Case1 path)
+        fs.existsSync(U2.Case1 path)
 
     let absolutePath (dir : string) =
-        Node.Api.path.resolve(dir)
+        path.resolve(dir)
 
     let stats (path : string) =
         Promise.create (fun resolve reject ->
-            Node.Api.fs.stat(U2.Case1 path, (fun (err: Node.Base.ErrnoException option) (stats : Node.Fs.Stats) ->
+            fs.stat(U2.Case1 path, (fun (err: Node.Base.ErrnoException option) (stats : Node.Fs.Stats) ->
                 match err with
                 | Some err ->
                     reject (err :?> System.Exception)
@@ -163,4 +177,4 @@ module File =
         )
 
     let statsSync (path : string) : Node.Fs.Stats =
-        Node.Api.fs.statSync(U2.Case1 path)
+        fs.statSync(U2.Case1 path)
