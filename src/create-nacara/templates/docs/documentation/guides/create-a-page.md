@@ -3,7 +3,7 @@ title: Create a Page
 layout: nacara-standard
 ---
 
-A page in Nacara is a **Markdown** file composed of:
+A page in Nacara is a **Markdown** file composed of two things:
 
 - **Front Matter**: configure how the page should rendered, for example it is here that you specify which layout to applied
 - **Content**: The markdown content to include in the page
@@ -39,8 +39,6 @@ The file should looks like:
     {
         "type": "category",
         "label": "API",
-        "collapsible": true,
-        "collapsed": false,
         "items": [
             "documentation/guides/create-a-page",
             "documentation/guides/create-a-section",
