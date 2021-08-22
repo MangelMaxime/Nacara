@@ -10,6 +10,7 @@ open Node
 type Msg =
     | ProcessNextFile
     | ErrorWhileProcessingAFile of exn
+    | GenerateNoJekyllFile
 
 [<NoComparison>]
 type Model =
@@ -56,10 +57,22 @@ let init (args : InitArgs) =
         ProcessQueue = args.ProcessQueue
         LightnerCache = args.LightnerCache
     }
-    , Cmd.ofMsg ProcessNextFile
+    , Cmd.batch [
+        Cmd.ofMsg ProcessNextFile
+        Cmd.ofMsg GenerateNoJekyllFile
+    ]
 
 let update (msg : Msg) (model : Model) =
     match msg with
+    | GenerateNoJekyllFile ->
+        let action () =
+            File.write
+                (model.Config.DestinationFolder + "/" + ".nojekyll")
+                ""
+
+        model
+        , Cmd.OfPromise.attempt action () ErrorWhileProcessingAFile
+
     | ProcessNextFile ->
         match model.ProcessQueue with
         | file :: tail ->
