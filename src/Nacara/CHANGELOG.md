@@ -6,6 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-013 - 2021-08-21
+
+### Added
+
+* Add `clean` command
+* Fix #8: Add `favIcon` property to `nacara.config.json`
+* Fix #70: Generate a .nojekyll file on production build
+
+### Changed
+
+* Clean the output folder before `build` and `watch`
+
+### Fixed
+
+* Fix #22: Make navigation buttons display on top of each other when on mobile display
+* Fix #67: Nacara crash if a folder under the source folder is empty
+
 ## 1.0.0-beta-012 - 2021-08-21
 
 ### Added

@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-008 - 2021-08-21
+
+### Added
+
+* Fix #8: Generate a `favIcon` tag if the property is set in `nacara.config.json`
+
+### Fixed
+
+* Fix #62: Improve menu display when using a combination of item/section
+
 ## 1.0.0-beta-007 - 2021-08-19
 
 ### Changed
