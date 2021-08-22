@@ -199,11 +199,16 @@ h2, h3, h4, h5, h6  {
     //     font-weight: $weight-semibold;
     // }
 
+    .menu-label:not(:last-child),
     .menu-list:not(:last-child) {
         margin-bottom: $menu-list-spacing;
     }
 
-    > .menu-list > li + .menu-list {
+    // Fix https://github.com/MangelMaxime/Nacara/issues/62
+    // Strange margin in the menu when using a combination of item/category
+    // The problem only happens on the top level of the menu so we use direct child selector
+    > .menu-list > li + .menu-list,
+    > .menu-list > .table-of-content + .menu-list {
         margin-top: $menu-list-spacing;
     }
 
