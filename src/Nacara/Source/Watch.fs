@@ -445,7 +445,7 @@ let update (msg : Msg) (model : Model) =
                 // Generate the list of command to re-process the pages
                 |> List.map (fun pageId ->
                     let pageContextToReProcess =
-                        model.Pages
+                        newPagesCache
                         |> List.tryFind (fun page ->
                             page.PageId = pageId
                         )
