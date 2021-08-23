@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-014 - 2021-08-23
+
+### Fixed
+
+* Fix #80: Fix pages cache update, depending on the pages order, it could erase the "found" boolean
+
 ## 1.0.0-beta-013 - 2021-08-21
 
 ### Added
