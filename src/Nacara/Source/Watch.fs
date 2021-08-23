@@ -256,7 +256,7 @@ let private updatePagesCache (cache : PageContext list) (newPageContext : PageCo
             if head.PageId = newPageContext.PageId then
                 apply tail newPageContext (newPageContext :: newCache) (head.Attributes <> newPageContext.Attributes) true
             else
-                apply tail newPageContext (head :: newCache) attributesChanged false
+                apply tail newPageContext (head :: newCache) attributesChanged found
 
         | [] ->
             if found then
