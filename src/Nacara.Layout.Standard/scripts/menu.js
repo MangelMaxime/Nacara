@@ -116,10 +116,10 @@ const setupCopyCode = () => {
 
     snippetElements
         .forEach(codeElement => {
-            // If one of the parent of codeElement has date-disable-copy-button attributes
+            // If one of the parent of codeElement has data-disable-copy-button attributes
             // do not had the copy button
             // We store this information on a parent because we don't control the `snippet` generation
-            if (codeElement.closest("[date-disable-copy-button]")) {
+            if (codeElement.closest("[data-disable-copy-button]")) {
                 return;
             }
 
