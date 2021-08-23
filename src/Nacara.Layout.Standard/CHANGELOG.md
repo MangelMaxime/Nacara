@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-009 - 2021-08-23
+
+### Changed
+
+* Fix typo in `date-disable-copy-button` attributes. It has been renamed to `data-disable-copy-button="true"`
+
 ## 1.0.0-beta-008 - 2021-08-21
 
 ### Added
