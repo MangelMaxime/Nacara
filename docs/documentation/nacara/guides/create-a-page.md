@@ -50,3 +50,34 @@ The file should looks like:
 ```
 
 You should now see `My page` in the menu.
+
+## Front matter
+
+<table class="table is-narrow is-bordered">
+    <thead>
+        <tr>
+            <th class="has-text-centered">Name</th>
+            <th class="has-text-centered">Required</th>
+            <th class="has-text-centered">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="has-text-centered" style="vertical-align: middle">
+                <code>layout</code>
+            </td>
+            <td class="has-text-centered" style="vertical-align: middle">
+                X
+            </td>
+            <td>Name of the layout used to render the page</td>
+        </tr>
+        <tr>
+            <td class="has-text-centered" style="vertical-align: middle">
+                <code>title</code>
+            </td>
+            <td class="has-text-centered" style="vertical-align: middle">
+            </td>
+            <td>Optional, title of the page</td>
+        </tr>
+    </tbody>
+</table>

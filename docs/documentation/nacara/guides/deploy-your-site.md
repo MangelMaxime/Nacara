@@ -10,7 +10,7 @@ Nacara is a static site generator, meaning that your website is only static HTML
 You can build your side for **production** by running:
 
 ```
-npm run build
+npx nacara build
 ```
 
 The static files generated are located in the `build` folder.
@@ -20,7 +20,7 @@ The static files generated are located in the `build` folder.
 You can test your production website locally by running:
 
 ```
-npm run serve
+npx nacara serve
 ```
 
 You can now deploy the `docs` folder almost anywhere.

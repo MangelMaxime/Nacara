@@ -1,6 +1,4 @@
 ---
-title: Introduction
+title: Configuration
 layout: nacara-standard
 ---
-
-dzdzs

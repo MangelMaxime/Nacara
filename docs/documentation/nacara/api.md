@@ -1,6 +1,4 @@
 ---
-title: Standard layout
+title: API
 layout: nacara-standard
 ---
-
-dzdzdz

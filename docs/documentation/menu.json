@@ -1,37 +1,38 @@
 [
-    "documentation/nacara/introduction",
     {
         "type": "section",
-        "label": "Nacara",
+        "label": "Overview",
+        "collapsible": true,
+        "collapsed": false,
         "items": [
-            {
-                "type": "section",
-                "label": "Guides",
-                "collapsible": true,
-                "collapsed": false,
-                "items": [
-                    "documentation/nacara/guides/create-a-page",
-                    "documentation/nacara/guides/customize-the-style",
-                    "documentation/nacara/guides/create-a-section",
-                    "documentation/nacara/guides/section-menu",
-                    "documentation/nacara/guides/custom-layout",
-                    "documentation/nacara/guides/deploy-your-site",
-                    "documentation/nacara/guides/markdown-features"
-                ]
-            }
+            "documentation/nacara/introduction",
+            "documentation/nacara/configuration",
+            "documentation/nacara/api"
         ]
     },
     {
         "type": "section",
-        "label": "Nacara layout",
+        "label": "Guides",
+        "collapsible": true,
+        "collapsed": false,
         "items": [
-            "documentation/layout/introduction",
-            "documentation/layout/standard"
+            "documentation/nacara/guides/create-a-page",
+            "documentation/nacara/guides/customize-the-style",
+            "documentation/nacara/guides/create-a-section",
+            "documentation/nacara/guides/section-menu",
+            "documentation/nacara/guides/custom-layout-js",
+            "documentation/nacara/guides/custom-layout-fsharp",
+            "documentation/nacara/guides/deploy-your-site"
         ]
     },
     {
-        "type": "link",
-        "label": "Nacara API222",
-        "href": "http://perdu.com"
+        "type": "section",
+        "label": "Nacara-layout-standard",
+        "items": [
+            "documentation/nacara-layout-standard/introduction",
+            "documentation/nacara-layout-standard/layouts",
+            "documentation/nacara-layout-standard/markdown-features",
+            "documentation/nacara-layout-standard/scss-sass-variables"
+        ]
     }
 ]

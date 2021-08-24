@@ -49,7 +49,7 @@ npm init nacara
 Run your site
 
 ```
-npm run watch
+npx nacara watch
 ```
 
 </li>

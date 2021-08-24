@@ -1,13 +1,15 @@
 ---
-title: Custom layout
+title: Custom layout with JS
 layout: nacara-standard
 ---
 
 Nacara is extensible, you can write your own layout or re-use existing layout to adapt them to your needs.
 
-In the previous chapter, we created our blog section but it is pretty bad looking and each time you write a blog post you have to manually add it to the index page.
+::: primary Note
+Creating a layout via JavaScript is the quickest way to extends Nacara because you just need a `.js` or `.jsx` file.
 
-We are going to auto-generate the index page and also make a blog specific layout.
+However, for complex layout, using F# is a safer choice because you will have full type inference and the compiler to checks your code.
+:::
 
 ## Setup Babel for JSX support
 
@@ -392,3 +394,81 @@ const render = async (rendererContext, pageContext) => {
 </li>
 
 </ul>
+
+## Working with async functions
+
+Because, the markdown parser use an `async` function it can happens that you end up with this scenario.
+
+```js
+const Abstract = async ({rendererContext, blogPage}) => {
+    const abstractText = rendererContext.MarkdownToHtml(blogPage.Attributes.abstract)
+    return <div class="abstract">
+        {abstractText}
+    </div>
+}
+```
+
+Unfortunately, this is not a valid JSX code.
+
+The cleanest way to deal with this case is to pre-process the markdown code directly into the main `render` function.
+
+```js
+const render = async (rendererContext, pageContext) => {
+    let blogPages =
+        rendererContext.Pages
+            //...
+
+    // Pre-process the blog-page files here, so we can use standard JSX afterwards
+    for (const blogPage of blogPages) {
+        const abstractText = await rendererContext.MarkdownToHtml(blogPage.Attributes.abstract);
+        // Store the text representation into the blogPage information
+        blogPage.Attributes.abstractText = abstractText;
+    }
+
+    return pageMinimal.render(new pageMinimal.RenderArgs(
+        rendererContext.Config,
+        pageContext.Section,
+        undefined,
+        <PageContainer blogPages={blogPages} />
+    ));
+}
+
+const Abstract = ({rendererContext, blogPage}) => {
+    return <div class="abstract">
+        {/* Use the pre-processed text */}
+        {blogPage.Attributes.abstractText}
+    </div>
+}
+```
+
+## Minimal layout file
+
+If you want to write your own layout, here is a minimal file to start from.
+
+```js
+const React = require("react");
+
+// Your render function, this is where you will write all of your code
+const render = async (rendererContext, pageContext) => {
+    return <div>Hello, this page use my own layout</div>
+}
+
+export default {
+    // List of the renderers
+    // For now, we will have only one renderer
+    Renderers: [
+        {
+            // Name of your layout, this is what you write in the front-matter
+            // Example:
+            // ---
+            // layout: my-layout
+            // ---
+            Name: "my-layout",
+            Func: render
+        }
+    ],
+    // List of the static file to copy into the build directory
+    // For example, if your layout need a `menu.js`
+    Dependencies: []
+}
+```
