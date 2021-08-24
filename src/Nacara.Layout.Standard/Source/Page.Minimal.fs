@@ -182,6 +182,7 @@ let render (args : RenderArgs) =
 
     Html.html [
         prop.className "has-navbar-fixed-top"
+        prop.custom ("lang", "en")
 
         prop.children [
             Html.head [
@@ -189,8 +190,9 @@ let render (args : RenderArgs) =
 
                 Html.meta [
                     prop.httpEquiv.contentType
-                    prop.custom ("httpEquiv", "content-type")
-//                    prop.content "text/html; charset=UTF-8"
+                    prop.content "text/html; charset=UTF-8"
+                    // prop.charset "UTF-8"
+                    prop.custom ("charSet", "UTF-8")
                 ]
 
                 Html.meta [
@@ -219,7 +221,6 @@ let render (args : RenderArgs) =
                     prop.href "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
                     prop.integrity "sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
                     prop.crossOrigin.anonymous
-//                    prop.custom ("crossOrigin", "anonymous")
                 ]
             ]
 
