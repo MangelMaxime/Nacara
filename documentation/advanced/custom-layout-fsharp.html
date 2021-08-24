@@ -1,0 +1,79 @@
+<html class="has-navbar-fixed-top"><head><title>Nacara · With FSharp</title><meta http-equiv="content-type"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" type="text/css" href="/Nacara/style.css"/><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"/></head><body><nav class="navbar is-fixed-top"><div class="container"><div class="navbar-brand"><a class="navbar-item title is-4" href="https://mangelmaxime.github.io/Nacara/">Nacara</a><a class="navbar-item is-hidden-desktop" href="https://github.com/MangelMaxime/Nacara"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item is-hidden-desktop" href="https://twitter.com/MangelMaxime"><span class="icon" style="color:#55acee"><i class=" fab fa-twitter fa-lg"></i></span></a><a class="navbar-burger" data-target="nav-menu"><span></span><span></span><span></span></a></div><div class="navbar-menu" id="nav-menu"><div class="navbar-start"><a class="navbar-item is-active" href="/Nacara/documentation/nacara/introduction.html"><span class="icon"><i class=" fas fa-book fa-lg"></i></span><span>Documentation</span></a><a class="navbar-item" href="/Nacara/showcase.html"><span class="icon"><i class=" fas fa-laptop-code fa-lg"></i></span><span>Showcase</span></a><a class="navbar-item" href="/Nacara/changelogs/nacara.html"><span class="icon"><i class=" fas fa-tasks fa-lg"></i></span><span>Changelogs</span></a><a class="navbar-item" href="https://gitter.im/fable-compiler/Fable"><span class="icon"><i class=" fab fa-gitter fa-lg"></i></span><span>Support</span></a><a class="navbar-item" href="https://www.patreon.com/MangelMaxime"><span class="icon" style="color:#ff424b"><i class=" fab fa-patreon fa-lg"></i></span><span>Donate</span></a></div><div class="navbar-end"><a class="navbar-item" href="https://github.com/MangelMaxime/Nacara"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item" href="https://twitter.com/MangelMaxime"><span class="icon" style="color:#55acee"><i class=" fab fa-twitter fa-lg"></i></span></a></div></div></div></nav><div class="container"><div class="mobile-menu"><nav class="breadcrumb"><ul><li><a class="menu-trigger"><span></span><span></span><span></span></a></li><li class="is-active"><a>Custom Layouts</a></li><li class="is-active"><a>With FSharp</a></li></ul></nav></div><div class="columns is-gapless is-mobile"><div class="column is-menu-column is-3-desktop is-hidden-touch ml-5"><div class="menu-container"><aside class="menu"><ul class="menu-list"><ul class="menu-list"><p class="menu-label">Overview</p><li><a class=" " href="/Nacara/documentation/introduction.html">Introduction</a></li><li><a class=" " href="/Nacara/documentation/configuration.html">Configuration</a></li><li><a class=" " href="/Nacara/documentation/api.html">API</a></li></ul><ul class="menu-list"><p class="menu-label">Guides</p><li><a class=" " href="/Nacara/documentation/guides/create-a-page.html">Create a page</a></li><li><a class=" " href="/Nacara/documentation/guides/customize-the-style.html">Style your application</a></li><li><a class=" " href="/Nacara/documentation/guides/create-a-section.html">Create a Section</a></li><li><a class=" " href="/Nacara/documentation/guides/section-menu.html">Section menu</a></li><li><a class=" " href="/Nacara/documentation/guides/deploy-your-site.html">Deploy your site</a></li></ul><ul class="menu-list"><p class="menu-label">Custom Layouts</p><li><a class=" " href="/Nacara/documentation/advanced/layout-from-scratch.html">Overview</a></li><li><a class=" " href="/Nacara/documentation/advanced/custom-layout-js.html">With JavaScript</a></li><li><a class=" is-active" href="/Nacara/documentation/advanced/custom-layout-fsharp.html">With FSharp</a></li></ul><ul class="menu-list"><p class="menu-label">Nacara-layout-standard</p><li><a class=" " href="/Nacara/documentation/nacara-layout-standard/introduction.html">Introduction</a></li><li><a class=" " href="/Nacara/documentation/nacara-layout-standard/layouts.html">Layouts</a></li><li><a class=" " href="/Nacara/documentation/nacara-layout-standard/markdown-features.html">Markdown features</a></li><li><a class=" " href="/Nacara/documentation/nacara-layout-standard/scss-sass-variables.html">SCSS/SASS variables</a></li></ul></ul></aside></div></div><div class="column is-8-desktop is-full-touch"><section class="section"><div class="content"><header class="page-header"><a class="button is-hidden-touch is-outlined is-primary is-pulled-right" target="_blank" href="https://github.com/MangelMaxime/Nacara/edit/master/docsrc/documentation/advanced/custom-layout-fsharp.md">Edit</a><h1 class="title is-1">With FSharp</h1></header><div><article class="message is-primary">
+                    <div class="message-header">
+                        <p> Note</p>
+                    </div>
+                    <div class="message-body"><p>Creating a layout via F#, is the recommended way when working on complex layout or releasing it as an NPM package.</p>
+</div>
+</article>
+<ul class="textual-steps">
+<li>
+<p>Create a folder to host your code <code>Nacara.Layout.Custom</code>.</p>
+<pre><code>mkdir Nacara.Layout.Custom &amp;&amp; cd Nacara.Layout.Custom
+</code></pre>
+</li>
+<li>
+<p>Create an FSharp project <code>Nacara.Layout.Custom.fsproj</code></p>
+<pre><code>dotnet new library -lang f#
+</code></pre>
+</li>
+<li>
+<p>Add <code>Nacara.Core</code> to your project</p>
+<pre><code>dotnet add package Nacara.Core
+</code></pre>
+<p>By default you have access to <code>Fable.React</code>, if you prefer <code>Feliz</code> you can add it</p>
+<pre><code>dotnet add package Feliz
+</code></pre>
+</li>
+<li>
+<p>Change <code>Library.fs</code> content to:</p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span style="color: #A626A4">module</span><span style="color: #4078F2"> Layout</span>
+
+<span style="color: #A626A4">open</span><span> </span><span style="color: #4078F2">Fable.Core.JsInterop</span>
+<span style="color: #A626A4">open</span><span> </span><span style="color: #4078F2">Nacara.Core.Types</span>
+<span style="color: #A626A4">open</span><span> </span><span style="color: #4078F2">Fable.React</span>
+<span style="color: #A626A4">open</span><span> </span><span style="color: #4078F2">Fable.React.Props</span>
+
+<span style="color: #A0A1A7;font-style: italic">// Your render function, it is responsible to transform a page into HTML</span>
+<span style="color: #A626A4">let</span><span> </span><span style="color: #E45649">render</span><span style="color: #383A42"> </span><span style="color: #A626A4">(</span><span style="color: #383A42">rendererContext </span><span style="color: #A626A4">:</span><span> </span><span style="color: #C18401">RendererContext</span><span style="color: #A626A4">)</span><span> </span><span style="color: #A626A4">(</span><span style="color: #383A42">pageContext </span><span style="color: #A626A4">:</span><span> </span><span style="color: #C18401">PageContext</span><span style="color: #A626A4">)</span><span> </span><span style="color: #A626A4">=</span>
+<span>    </span><span style="color: #A626A4">promise {</span>
+<span>        </span><span style="color: #A626A4">let!</span><span> </span><span style="color: #E45649">pageContent</span><span> </span><span style="color: #A626A4">=</span>
+<span>            rendererContext.MarkdownToHtml pageContext.Content</span>
+
+<span>        </span><span style="color: #A626A4">return</span><span> div </span><span style="color: #A626A4">[</span><span> </span><span style="color: #A626A4">]</span>
+<span>            </span><span style="color: #A626A4">[</span>
+<span>                str </span><span style="color: #50A14F">&quot;Hello, from your custom layout&quot;</span>
+<span>                br </span><span style="color: #A626A4">[</span><span> </span><span style="color: #A626A4">]</span>
+<span>                div </span><span style="color: #A626A4">[</span><span> DangerouslySetInnerHTML </span><span style="color: #A626A4">{</span><span> </span><span style="color: #A626A4">__</span><span>html </span><span style="color: #A626A4">=</span><span> pageContent</span><span style="color: #A626A4">}</span><span> </span><span style="color: #A626A4">]</span>
+<span>                    </span><span style="color: #A626A4">[</span><span> </span><span style="color: #A626A4">]</span>
+<span>            </span><span style="color: #A626A4">]</span>
+<span>    </span><span style="color: #A626A4">}</span>
+
+<span style="color: #A0A1A7;font-style: italic">// This is how we expose layouts to Nacara</span>
+<span>exportDefault</span>
+<span>    </span><span style="color: #A626A4">{</span>
+<span>        Renderers </span><span style="color: #A626A4">=</span><span> </span><span style="color: #A626A4">[|</span>
+<span>            </span><span style="color: #A626A4">{</span>
+<span>                Name </span><span style="color: #A626A4">=</span><span> </span><span style="color: #50A14F">&quot;my-layout&quot;</span>
+<span>                Func </span><span style="color: #A626A4">=</span><span> render</span>
+<span>            </span><span style="color: #A626A4">}</span>
+<span>        </span><span style="color: #A626A4">|]</span>
+<span>        Dependencies </span><span style="color: #A626A4">=</span><span> </span><span style="color: #A626A4">[|</span><span> </span><span style="color: #A626A4">|]</span>
+<span>    </span><span style="color: #A626A4">}</span></code></pre>
+</li>
+<li>
+<p>Compile you project to JavaScript using Fable</p>
+<pre><code>dotnet fable --watch
+</code></pre>
+</li>
+<li>
+<p>Register your layout in the <code>nacara.config.json</code></p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span>{</span>
+<span>    </span><span>...,</span>
+<span>    </span><span style="color: #E45649">&quot;layouts&quot;</span><span>: </span><span style="color: #383A42">[</span>
+<span>        </span><span style="color: #50A14F">&quot;nacara-layout-standard&quot;</span><span>,</span>
+<span>        </span><span style="color: #50A14F">&quot;./Nacara.Layout.Custom/Library.js&quot;</span>
+<span>    </span><span style="color: #383A42">]</span>
+<span>}</span></code></pre>
+</li>
+</ul>
+</div></div></section><div class="navigation-container"><a class="button navigate-to-previous is-primary is-outlined" href="/Nacara/documentation/advanced/custom-layout-js.html"><span class="icon"><i class=" fas fa-arrow-left"></i></span><span class=" is-uppercase">With JavaScript</span></a><br class="is-hidden-tablet"/><a class="button navigate-to-next is-primary is-outlined" href="/Nacara/documentation/nacara-layout-standard/introduction.html"><span class=" is-uppercase">Introduction</span><span class="icon"><i class=" fas fa-arrow-right"></i></span></a></div></div></div></div><script async="" src="/Nacara/resources/nacara-standard-layouts/scripts/menu.js"></script></body></html>
