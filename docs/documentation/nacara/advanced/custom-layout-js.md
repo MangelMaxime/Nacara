@@ -1,14 +1,12 @@
 ---
-title: Custom layout with JS
+title: With JavaScript
 layout: nacara-standard
 ---
-
-Nacara is extensible, you can write your own layout or re-use existing layout to adapt them to your needs.
 
 ::: primary Note
 Creating a layout via JavaScript is the quickest way to extends Nacara because you just need a `.js` or `.jsx` file.
 
-However, for complex layout, using F# is a safer choice because you will have full type inference and the compiler to checks your code.
+However, for complex layout or creating a layout package, you should prefer F# because it will have all the types definition and helpers available for you via the nuget `Nacara.Core`
 :::
 
 ## Setup Babel for JSX support

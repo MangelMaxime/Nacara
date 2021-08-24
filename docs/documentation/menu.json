@@ -2,8 +2,6 @@
     {
         "type": "section",
         "label": "Overview",
-        "collapsible": true,
-        "collapsed": false,
         "items": [
             "documentation/nacara/introduction",
             "documentation/nacara/configuration",
@@ -13,16 +11,21 @@
     {
         "type": "section",
         "label": "Guides",
-        "collapsible": true,
-        "collapsed": false,
         "items": [
             "documentation/nacara/guides/create-a-page",
             "documentation/nacara/guides/customize-the-style",
             "documentation/nacara/guides/create-a-section",
             "documentation/nacara/guides/section-menu",
-            "documentation/nacara/guides/custom-layout-js",
-            "documentation/nacara/guides/custom-layout-fsharp",
             "documentation/nacara/guides/deploy-your-site"
+        ]
+    },
+    {
+        "type": "section",
+        "label": "Custom Layouts",
+        "items": [
+            "documentation/nacara/advanced/layout-from-scratch",
+            "documentation/nacara/advanced/custom-layout-js",
+            "documentation/nacara/advanced/custom-layout-fsharp"
         ]
     },
     {
