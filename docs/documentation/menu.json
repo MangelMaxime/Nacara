@@ -5,6 +5,7 @@
         "items": [
             "documentation/introduction",
             "documentation/configuration",
+            "documentation/directory-structure",
             "documentation/api"
         ]
     },
