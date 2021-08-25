@@ -5,14 +5,25 @@
     flex-wrap: wrap;
 
     .bd-fat-button {
-        font-size: 1.25em;
         font-weight: 600;
         height: auto;
         padding: .75em 1.25em;
 
-        @media screen and (max-width: 1023px) {
+        @include mobile {
+            & {
+                font-size: 1.5rem;
+            }
+        }
+
+        @include tablet {
             & {
                 font-size: 1rem;
+            }
+        }
+
+        @include desktop {
+            & {
+                font-size: 1.25em;
             }
         }
 
