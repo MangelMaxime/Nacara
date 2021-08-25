@@ -37,3 +37,26 @@ let toFlatMenu (menu : Menu) =
         | MenuItem.List _ ->
             failwith "Should not happen because all the MenuItem.List should have been flattened"
     )
+
+/// <summary>
+/// It returns a MenuItem.List if it finds a page with the given pageId under a MenuItem.List.
+///
+/// Used for obtaining the section name for navigation buttons.
+/// </summary>
+/// <param name="menu">Menu where to look for a page ID.</param>
+/// <param name="pageId">ID of the page to look for.</param>
+/// <returns>MenuItem.List or MenuItem.Page or None.</returns>
+let rec tryFindSection (menu : Menu) pageId =
+    menu
+    |> List.tryFind (fun menuItem ->
+        match menuItem with
+        | MenuItem.Page page -> page.PageId = pageId
+        | MenuItem.Link _ -> false
+        | MenuItem.List list ->
+            match list.Items with
+            | [] -> false
+            | items ->
+                match tryFindSection items pageId with
+                | None -> false
+                | Some _ -> true
+    )
