@@ -129,6 +129,7 @@ h2, h3, h4, h5, h6  {
         background: $white-ter;
         position: sticky;
         top: $navbar-height;
+        z-index: 1;
 
         .menu-trigger {
             .icon {
@@ -173,6 +174,7 @@ h2, h3, h4, h5, h6  {
     .menu {
         margin-top: $navbar-height;
         padding-right: 1rem;
+        padding-left: 1rem;
     }
 }
 
@@ -186,8 +188,7 @@ h2, h3, h4, h5, h6  {
             left: 0;
             background: $white-bis;
             width: 100%;
-            padding-left: 2rem;
-            z-index: 100;
+            z-index: 2;
             margin-top: $navbar-height;
         }
     }
