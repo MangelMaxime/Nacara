@@ -281,7 +281,7 @@ let private renderTableOfContentOnly
         ]
     ]
 
-let rec private tryFindTitlePathToCurrentPage
+let rec tryFindTitlePathToCurrentPage
     (pageContext : PageContext)
     (acc : string list)
     (menu : Menu) =
@@ -313,7 +313,7 @@ let rec private tryFindTitlePathToCurrentPage
     | [ ] ->
         None
 
-let private renderBreadcrumbItems (items : string list) =
+let renderBreadcrumbItems (items : string list) =
     items
     |> List.map (fun item ->
         Html.li [
