@@ -3,6 +3,7 @@ log_target_info = (echo "\e[34m================\n $1\n================\e[39m")
 NACARA_LAYOUT_STANDARD_DIR=src/Nacara.Layout.Standard
 NACARA_DIR=src/Nacara
 NACARA_CORE_DIR=src/Nacara.Core
+NACARA_CREATE_DIR=src/Nacara.Create
 
 # Base of the Fable commands
 NACARA_LAYOUT_STANDARD_FABLE=dotnet fable $(NACARA_LAYOUT_STANDARD_DIR)/Source --outDir $(NACARA_LAYOUT_STANDARD_DIR)/dist
@@ -85,6 +86,7 @@ release: build
 	node ./scripts/release-npm.js $(NACARA_DIR)
 	node ./scripts/release-nuget.js $(NACARA_CORE_DIR) Nacara.Core.fsproj
 	node ./scripts/release-npm.js $(NACARA_LAYOUT_STANDARD_DIR)
+	node ./scripts/release-npm.js $(NACARA_CREATE_DIR)
 
 publish: release generate-docs
 	@$(call log_target_info, "Publishing...")
