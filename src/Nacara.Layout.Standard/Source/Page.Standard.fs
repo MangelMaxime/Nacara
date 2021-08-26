@@ -4,6 +4,7 @@ open Nacara.Core.Types
 open Feliz
 open Feliz.Bulma
 open Fable.FontAwesome
+open Page.WithMenuOrToc
 
 let private emptyPreviousButton =
     // Empty button to keep the layout working
@@ -77,24 +78,30 @@ let private renderNavigationButtons
                         let previousButtonText =
                             Helpers.getMenuLabel previousPageContext itemInfo
 
+                        let previousButtonSectionText =
+                            match Menu.tryFindSection menu previousPageContext.PageId with
+                            | None -> null
+                            | Some menuItem ->
+                                match menuItem with
+                                | MenuItem.List list -> list.Label
+                                | _ -> null
+
                         Bulma.button.a [
-                            prop.className "navigate-to-previous"
-                            color.isPrimary
-                            button.isOutlined
+                            prop.className "bd-fat-button is-primary is-light bd-pagination-prev"
                             prop.href (baseUrl + previousPageContext.PageId + ".html")
 
                             prop.children [
-                                Bulma.icon [
-                                    Fa.i
-                                        [
-                                            Fa.Solid.ArrowLeft
+                                Html.i "←"
+                                Html.span [
+                                    helpers.isHiddenMobile
+                                    prop.children [
+                                        Html.em [
+                                            prop.text previousButtonSectionText
                                         ]
-                                        [ ]
-                                ]
-
-                                Bulma.text.span [
-                                    text.isUppercase
-                                    prop.text previousButtonText
+                                        Html.strong [
+                                            prop.text previousButtonText
+                                        ]
+                                    ]
                                 ]
                             ]
                         ]
@@ -127,31 +134,36 @@ let private renderNavigationButtons
                         let nextButtonText =
                             Helpers.getMenuLabel nextPageContext itemInfo
 
+                        let nextButtonSectionText =
+                            match Menu.tryFindSection menu nextPageContext.PageId with
+                            | None -> null
+                            | Some menuItem ->
+                                match menuItem with
+                                | MenuItem.List list -> list.Label
+                                | _ -> null
+
                         Bulma.button.a [
-                            prop.className "navigate-to-next"
-                            color.isPrimary
-                            button.isOutlined
+                            prop.className "bd-fat-button is-primary is-light bd-pagination-next"
                             prop.href (baseUrl + nextPageContext.PageId + ".html")
 
                             prop.children [
-                                Bulma.text.span [
-                                    text.isUppercase
-                                    prop.text nextButtonText
-                                ]
-
-                                Bulma.icon [
-                                    Fa.i
-                                        [
-                                            Fa.Solid.ArrowRight
+                                Html.span [
+                                    helpers.isHiddenMobile
+                                    prop.children [
+                                        Html.em [
+                                            prop.text nextButtonSectionText
                                         ]
-                                        [ ]
+                                        Html.strong [
+                                            prop.text nextButtonText
+                                        ]
+                                    ]
                                 ]
+                                Html.i "→"
                             ]
                         ]
 
-
             Html.div [
-                prop.className "navigation-container"
+                prop.className "section bd-docs-pagination bd-pagination-links"
                 prop.children [
                     previousButton
                     // The br is only active on mobile
@@ -168,8 +180,7 @@ let private renderEditButton (config : Config) (pageContext : PageContext) =
     | Some url ->
         Bulma.button.a [
             helpers.isHiddenTouch
-            button.isOutlined
-            color.isPrimary
+            prop.className "is-ghost"
             helpers.isPulledRight
             prop.target.blank
             prop.href (url + "/" + pageContext.RelativePath)
@@ -179,11 +190,31 @@ let private renderEditButton (config : Config) (pageContext : PageContext) =
     | None ->
         null
 
+let private renderBreadcrumb
+    (pageContext : PageContext)
+    (menu : Menu) =
+
+    match tryFindTitlePathToCurrentPage pageContext [ ] menu with
+    | None ->
+        null
+
+    | Some titlePath ->
+        Bulma.breadcrumb [
+            helpers.isHiddenTouch
+            prop.children [
+                Html.ul [
+                    yield! renderBreadcrumbItems titlePath
+                ]
+            ]
+        ]
+
 let private renderPageContent
         (titleOpt : string option)
         (editButton : ReactElement)
         (navigationButtons : ReactElement)
-        (markdownContent : string) =
+        (markdownContent : string)
+        (pageContext : PageContext)
+        (sectionMenu : Menu option) =
 
     React.fragment [
         Bulma.section [
@@ -192,6 +223,11 @@ let private renderPageContent
                     prop.className "page-header"
                     prop.children [
                         editButton
+
+                        match sectionMenu with
+                        | Some sectionMenu ->
+                            (renderBreadcrumb pageContext sectionMenu)
+                        | None -> ()
 
                         match titleOpt with
                         | Some title ->
@@ -240,6 +276,8 @@ let render (rendererContext : RendererContext) (pageContext : PageContext) =
                                 (renderEditButton rendererContext.Config pageContext)
                                 (renderNavigationButtons rendererContext.Config.BaseUrl rendererContext.Pages rendererContext.SectionMenu pageContext)
                                 pageContent
+                                pageContext
+                                rendererContext.SectionMenu
                     }
 
             }
