@@ -9,6 +9,15 @@ $menu-list-spacing: 0.5rem !default;
     margin-bottom: 0;
 }
 
+// Allow to add `is-active` class to navbar div item
+div.navbar-item {
+    cursor: default;
+    &.is-active {
+        background-color: $navbar-item-hover-background-color;
+        color: $navbar-item-hover-color;
+    }
+}
+
 .menu-list .menu-list {
     &:not(.has-menu-group) {
         padding-left: $menu-nested-list-margin;

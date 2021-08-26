@@ -91,9 +91,39 @@ A NavbarLink either have:
 
     ]
 
-let private renderMobileNavbarItems (items : NavbarLink list) =
+let private renderMobileNavbarItems (pageSection : string) (navbarConfig : NavbarConfig) =
+
+    let sectionLabelOpt =
+        navbarConfig.Start @ navbarConfig.End
+        |> List.tryFind (fun navbarLink ->
+            match navbarLink.Section with
+            | Some section ->
+                section = pageSection
+
+            | None ->
+                false
+        )
+        |> Option.map (fun navbarLink ->
+            navbarLink.Label
+        )
+
     [
-        for item in items do
+        // If we found a navbar link with the name of the page section
+        // Display it in the navbar for mobile render
+        // So people know where they are in the webiste
+        match sectionLabelOpt with
+        | Some (Some sectionLabel) ->
+            Bulma.navbarItem.a [
+                helpers.isHiddenDesktop
+                navbarItem.isActive
+                prop.text sectionLabel
+            ]
+
+        | Some None
+        | None ->
+            null
+
+        for item in navbarConfig.End do
 
             match item with
             // Only render
@@ -128,7 +158,7 @@ let private navbar (config : Config) (pageSection : string) =
                     | Some navbarConfig ->
                         // On mobile, only the items in the end of the navbar
                         // have a chance to be rendered
-                        yield! renderMobileNavbarItems navbarConfig.End
+                        yield! renderMobileNavbarItems pageSection navbarConfig
 
                     | None ->
                         ()
