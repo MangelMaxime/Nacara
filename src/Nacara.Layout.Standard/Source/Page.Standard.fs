@@ -190,8 +190,6 @@ let private renderBreadcrumb
 
     | Some titlePath ->
         Bulma.breadcrumb [
-            prop.className "is-small"
-
             helpers.isHiddenTouch
             prop.children [
                 Html.ul [
