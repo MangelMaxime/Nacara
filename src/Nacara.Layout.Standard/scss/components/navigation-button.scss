@@ -1,20 +1,45 @@
-// Container used for the Next / Previous page buttons
-.navigation-container {
-    padding: 0 2rem 1rem;
+.bd-docs-pagination.bd-pagination-links {
+    border-top: 2px solid #f5f5f5;
+    margin-top: 3rem;
+    display: flex;
+    flex-wrap: wrap;
 
-    .button {
-        @include block;
-    }
-}
+    .bd-fat-button {
+        font-weight: $weight-medium;
+        height: auto;
+        padding: .75em 1.25em;
+        font-size: $size-5;
 
-@include mobile {
-    .navigation-container {
-        text-align: center;
-    }
-}
+        &.bd-pagination-next {
+            margin-left: auto;
 
-@include tablet {
-    .navigate-to-next {
-        float: right;
+            span {
+                margin-right: 1em;
+            }
+        }
+
+        &.bd-pagination-prev {
+            span {
+                margin-left: 1em;
+            }
+        }
+
+        span {
+            text-align: left;
+            line-height: 1.25;
+
+            em {
+                display: block;
+                font-size: $size-6;
+                font-style: normal;
+                font-weight: $weight-normal;
+                opacity: .5;
+                text-transform: capitalize;
+            }
+
+            strong {
+                font-weight: $weight-medium;
+            }
+        }
     }
 }
