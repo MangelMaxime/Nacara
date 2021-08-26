@@ -6,10 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## Added
+### Added
 
 * PR #87: Add breadcrumb on desktop
 * PR #87: Add current section name in the navbar on mobile too
+
+### Changed
+
+* PR #86: Make the Edit button a bit more discrete
 
 ## 1.0.0-beta-009 - 2021-08-23
 
