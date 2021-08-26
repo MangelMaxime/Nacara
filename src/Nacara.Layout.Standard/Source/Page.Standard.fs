@@ -169,8 +169,7 @@ let private renderEditButton (config : Config) (pageContext : PageContext) =
     | Some url ->
         Bulma.button.a [
             helpers.isHiddenTouch
-            button.isOutlined
-            color.isPrimary
+            prop.className "is-ghost"
             helpers.isPulledRight
             prop.target.blank
             prop.href (url + "/" + pageContext.RelativePath)
