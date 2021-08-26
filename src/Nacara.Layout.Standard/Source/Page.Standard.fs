@@ -4,6 +4,7 @@ open Nacara.Core.Types
 open Feliz
 open Feliz.Bulma
 open Fable.FontAwesome
+open Page.WithMenuOrToc
 
 let private emptyPreviousButton =
     // Empty button to keep the layout working
@@ -179,11 +180,33 @@ let private renderEditButton (config : Config) (pageContext : PageContext) =
     | None ->
         null
 
+let private renderBreadcrumb
+    (pageContext : PageContext)
+    (menu : Menu) =
+
+    match tryFindTitlePathToCurrentPage pageContext [ ] menu with
+    | None ->
+        null
+
+    | Some titlePath ->
+        Bulma.breadcrumb [
+            prop.className "is-small"
+
+            helpers.isHiddenTouch
+            prop.children [
+                Html.ul [
+                    yield! renderBreadcrumbItems titlePath
+                ]
+            ]
+        ]
+
 let private renderPageContent
         (titleOpt : string option)
         (editButton : ReactElement)
         (navigationButtons : ReactElement)
-        (markdownContent : string) =
+        (markdownContent : string)
+        (pageContext : PageContext)
+        (sectionMenu : Menu option) =
 
     React.fragment [
         Bulma.section [
@@ -192,6 +215,11 @@ let private renderPageContent
                     prop.className "page-header"
                     prop.children [
                         editButton
+
+                        match sectionMenu with
+                        | Some sectionMenu ->
+                            (renderBreadcrumb pageContext sectionMenu)
+                        | None -> ()
 
                         match titleOpt with
                         | Some title ->
@@ -240,6 +268,8 @@ let render (rendererContext : RendererContext) (pageContext : PageContext) =
                                 (renderEditButton rendererContext.Config pageContext)
                                 (renderNavigationButtons rendererContext.Config.BaseUrl rendererContext.Pages rendererContext.SectionMenu pageContext)
                                 pageContent
+                                pageContext
+                                rendererContext.SectionMenu
                     }
 
             }

@@ -9,6 +9,15 @@ $menu-list-spacing: 0.5rem !default;
     margin-bottom: 0;
 }
 
+// Allow to add `is-active` class to navbar div item
+div.navbar-item {
+    cursor: default;
+    &.is-active {
+        background-color: $navbar-item-hover-background-color;
+        color: $navbar-item-hover-color;
+    }
+}
+
 .menu-list .menu-list {
     &:not(.has-menu-group) {
         padding-left: $menu-nested-list-margin;
@@ -193,6 +202,16 @@ h2, h3, h4, h5, h6  {
     }
 }
 
+.content {
+    .breadcrumb > ul > li:last-child {
+        font-weight: $weight-bold;
+    }
+
+    & li + li {
+        margin-top: 0;
+    }
+}
+
 // Customize the menu to have a better display and also support TOC in it
 .menu {
     // .menu-label, a {
@@ -250,6 +269,11 @@ h2, h3, h4, h5, h6  {
 }
 
 .breadcrumb {
+    ul {
+        margin-left: 0;
+        margin-top: 0;
+    }
+
     li {
         height: $navbar-height;
     }
