@@ -3,7 +3,6 @@ module Page.Standard
 open Nacara.Core.Types
 open Feliz
 open Feliz.Bulma
-open Fable.FontAwesome
 open Page.WithMenuOrToc
 
 let private emptyPreviousButton =
@@ -166,11 +165,6 @@ let private renderNavigationButtons
                 prop.className "section bd-docs-pagination bd-pagination-links"
                 prop.children [
                     previousButton
-                    // The br is only active on mobile
-                    // and force the button to display on 2 lines instead of 1
-                    Html.br [
-                        prop.className "is-hidden-tablet"
-                    ]
                     nextButton
                 ]
             ]
@@ -181,7 +175,6 @@ let private renderEditButton (config : Config) (pageContext : PageContext) =
         Bulma.button.a [
             helpers.isHiddenTouch
             prop.className "is-ghost"
-            helpers.isPulledRight
             prop.target.blank
             prop.href (url + "/" + pageContext.RelativePath)
             prop.text "Edit"
@@ -222,12 +215,23 @@ let private renderPageContent
                 Html.header [
                     prop.className "page-header"
                     prop.children [
-                        editButton
-
-                        match sectionMenu with
-                        | Some sectionMenu ->
-                            (renderBreadcrumb pageContext sectionMenu)
-                        | None -> ()
+                        Bulma.columns [
+                            columns.isVCentered
+                            prop.children [
+                                Bulma.column [
+                                    match sectionMenu with
+                                    | Some sectionMenu ->
+                                        (renderBreadcrumb pageContext sectionMenu)
+                                    | None -> ()
+                                ]
+                                Bulma.column [
+                                    column.isNarrow
+                                    prop.children [
+                                        editButton
+                                    ]
+                                ]
+                            ]
+                        ]
 
                         match titleOpt with
                         | Some title ->
