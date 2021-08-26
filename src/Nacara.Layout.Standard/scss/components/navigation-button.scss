@@ -5,27 +5,10 @@
     flex-wrap: wrap;
 
     .bd-fat-button {
-        font-weight: 600;
+        font-weight: $weight-medium;
         height: auto;
         padding: .75em 1.25em;
-
-        @include mobile {
-            & {
-                font-size: 1.5rem;
-            }
-        }
-
-        @include tablet {
-            & {
-                font-size: 1rem;
-            }
-        }
-
-        @include desktop {
-            & {
-                font-size: 1.25em;
-            }
-        }
+        font-size: $size-5;
 
         &.bd-pagination-next {
             margin-left: auto;
@@ -47,11 +30,15 @@
 
             em {
                 display: block;
-                font-size: .75em;
+                font-size: $size-6;
                 font-style: normal;
-                font-weight: 400;
+                font-weight: $weight-normal;
                 opacity: .5;
                 text-transform: capitalize;
+            }
+
+            strong {
+                font-weight: $weight-medium;
             }
         }
     }
