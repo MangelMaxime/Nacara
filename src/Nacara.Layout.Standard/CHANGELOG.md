@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 * PR #86: Make the Edit button a bit more discrete (by @mabasic)
+* PR #85: Change the Navigation buttons, to be styled as "Fat buttons" now (by @mabasic)
 
 ## 1.0.0-beta-009 - 2021-08-23
 
