@@ -2,8 +2,6 @@
 @import './components/textual-steps.scss';
 @import './components/navigation-button.scss';
 
-$menu-list-spacing: 0.5rem !default;
-
 // Remove bottom margin of the name of the project in the navbar otherwise a the navbar is distorted
 .navbar-item.title.is-4 {
     margin-bottom: 0;
@@ -15,21 +13,6 @@ div.navbar-item {
     &.is-active {
         background-color: $navbar-item-hover-background-color;
         color: $navbar-item-hover-color;
-    }
-}
-
-.menu-list .menu-list {
-    &:not(.has-menu-group) {
-        padding-left: $menu-nested-list-margin;
-    }
-}
-
-.menu-list li ul {
-    border-left: unset;
-    margin: 0 $menu-nested-list-margin;
-
-    &.table-of-content {
-        margin: 0;
     }
 }
 
@@ -211,59 +194,12 @@ h2, h3, h4, h5, h6  {
     & li + li {
         margin-top: 0;
     }
+
+    // Prevents long words from breaking the layout.
+    word-break: break-all;
 }
 
 // Customize the menu to have a better display and also support TOC in it
-.menu {
-    // .menu-label, a {
-    //     font-weight: $weight-semibold;
-    // }
-
-    .menu-label:not(:last-child),
-    .menu-list:not(:last-child) {
-        margin-bottom: $menu-list-spacing;
-    }
-
-    // Fix https://github.com/MangelMaxime/Nacara/issues/62
-    // Strange margin in the menu when using a combination of item/category
-    // The problem only happens on the top level of the menu so we use direct child selector
-    > .menu-list > li + .menu-list,
-    > .menu-list > .table-of-content + .menu-list {
-        margin-top: $menu-list-spacing;
-    }
-
-    .has-table-of-content {
-        border-radius: $menu-item-radius;
-
-        &.is-active {
-            border-radius: $menu-item-radius 0 0;
-        }
-    }
-
-    .table-of-content {
-        border-left: unset;
-        padding: 0 $size-small;
-        background-color: $primary-light;
-        border-radius: 0 0 $menu-item-radius;
-        scroll-margin: 3rem;
-
-        a {
-            color: $grey-dark;
-            font-size: 0.925rem;
-
-            &:hover {
-                color: $primary;
-            }
-        }
-
-        // Use the same font size as for the link text for the code block when shown in the table of content
-        // Otherwise, it is too small and the font looks bad
-        code {
-            font-size: 0.825rem;
-        }
-    }
-
-}
 
 .menu-trigger {
     @include hamburger($navbar-height);
