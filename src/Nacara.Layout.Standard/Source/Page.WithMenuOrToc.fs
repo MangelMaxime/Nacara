@@ -33,13 +33,15 @@ let private renderTopLevelToc (section : TableOfContentParser.Section) =
 
 let private renderTableOfContents (tableOfContent : TableOfContentParser.Section list) =
     if tableOfContent.Length > 0 then
-       Html.ul [
-           prop.className "table-of-content"
+        Html.li [
+            Html.ul [
+                prop.className "table-of-content"
 
-           prop.children [
-               for tocElement in tableOfContent do
-                   renderTopLevelToc tocElement
-           ]
+                prop.children [
+                    for tocElement in tableOfContent do
+                        renderTopLevelToc tocElement
+                ]
+            ]
         ]
     else
         null
@@ -87,10 +89,6 @@ let private renderMenuItemPage
             prop.classes [
                 if isCurrentPage then
                     "is-active"
-
-                    if hasTableOfContent then
-                        "has-table-of-content"
-
             ]
 
             prop.href (config.BaseUrl + info.PageId + ".html")
@@ -129,36 +127,31 @@ let rec private renderSubMenu
                     "collapsed"
                 else
                     "expanded"
-            Bulma.menuList [
-                prop.className "has-menu-group"
+            Html.li [
+                Html.a [
+                    prop.classes [
+                        "menu-group"
+                        if not info.Collapsed then
+                            "is-expanded"
+                    ]
+                    prop.custom("data-default-state", defaultState)
+                    prop.custom("data-collapsible", info.Collapsible)
+                    prop.children [
+                        Html.span info.Label
 
-                prop.children [
-                    Html.li [
-                        Html.a [
-                            prop.classes [
-                                "menu-group"
-                                if not info.Collapsed then
-                                    "is-expanded"
+                        if info.Collapsible then
+                            Bulma.icon [
+                                Fa.i [ Fa.Solid.AngleRight; Fa.Size Fa.FaLarge ]
+                                    [  ]
                             ]
-                            prop.custom("data-default-state", defaultState)
-                            prop.custom("data-collapsible", info.Collapsible)
-                            prop.children [
-                                Html.span info.Label
-
-                                if info.Collapsible then
-                                    Bulma.icon [
-                                        Fa.i [ Fa.Solid.AngleRight; Fa.Size Fa.FaLarge ]
-                                            [  ]
-                                    ]
-                            ]
-                        ]
-
-                        Html.ul [
-                            yield! renderSubMenu config pages info.Items currentPageId tocInformation
-                        ]
                     ]
                 ]
+
+                Html.ul [
+                    yield! renderSubMenu config pages info.Items currentPageId tocInformation
+                ]
             ]
+
     )
 
 /// <summary>
@@ -185,10 +178,12 @@ let rec private renderMenu
                 renderMenuItemPage config pages info currentPageId tocInformation
 
             | MenuItem.List info ->
-                Bulma.menuList [
+                React.fragment [
                     Bulma.menuLabel info.Label
 
-                    yield! renderSubMenu config pages info.Items currentPageId tocInformation
+                    Bulma.menuList [
+                        yield! renderSubMenu config pages info.Items currentPageId tocInformation
+                    ]
                 ]
         )
 
@@ -197,12 +192,11 @@ let rec private renderMenu
 
         prop.children [
             Bulma.menu [
-                Bulma.menuList [
-                    prop.children menuContent
-                ]
+                prop.children menuContent
             ]
         ]
     ]
+
 
 let private renderPageWithMenuOrTableOfContent
     (breadcrumbElement : ReactElement)
@@ -221,7 +215,6 @@ let private renderPageWithMenuOrTableOfContent
                     prop.className "is-menu-column"
                     column.is3Desktop
                     helpers.isHiddenTouch
-                    spacing.ml5
 
                     prop.children [
                         menuElement
@@ -271,7 +264,7 @@ let private renderTableOfContentOnly
                 Bulma.menuList [
 
                     Bulma.menuItem.a [
-                        prop.className "is-active has-table-of-content"
+                        prop.className "is-active"
                         prop.text "Table of content"
                     ]
 

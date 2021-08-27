@@ -252,6 +252,10 @@ let render (args : RenderArgs) =
                     prop.integrity "sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
                     prop.crossOrigin.anonymous
                 ]
+
+                Html.script [
+                    prop.src "https://unpkg.com/scroll-into-view-if-needed@2.2.28/umd/scroll-into-view-if-needed.min.js"
+                ]
             ]
 
             Html.body [
