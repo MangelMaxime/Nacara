@@ -172,10 +172,20 @@ const setupGlobal = () => {
     const tableOfContentElement = document.querySelector(".table-of-content");
 
     if (tableOfContentElement !== null) {
-        tableOfContentElement.scrollIntoView({
-            block: "nearest", // Scroll to the nearest parent otherwise it also scroll the main content
-            inline: "nearest" // Scroll to the nearest parent otherwise it also scroll the main content
-        })
+        scrollIntoView(tableOfContentElement, {
+            scrollMode: "if-needed",
+            block: 'nearest',
+            inline: 'nearest',
+            boundary: document.querySelector(".menu-container")
+        });
+    } else {
+        const activeMenuItemElement = document.querySelector(".menu .is-active");
+        scrollIntoView(activeMenuItemElement, {
+            scrollMode: "if-needed",
+            block: 'nearest',
+            inline: 'nearest',
+            boundary: document.querySelector(".menu-container")
+        });
     }
 }
 
