@@ -89,10 +89,6 @@ let private renderMenuItemPage
             prop.classes [
                 if isCurrentPage then
                     "is-active"
-
-                    if hasTableOfContent then
-                        "has-table-of-content"
-
             ]
 
             prop.href (config.BaseUrl + info.PageId + ".html")
@@ -268,7 +264,7 @@ let private renderTableOfContentOnly
                 Bulma.menuList [
 
                     Bulma.menuItem.a [
-                        prop.className "is-active has-table-of-content"
+                        prop.className "is-active"
                         prop.text "Table of content"
                     ]
 
