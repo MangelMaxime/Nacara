@@ -67,6 +67,7 @@ let private renderNacaraNavbarDropdown (dropdown : DropdownInfo) =
                         | DropdownItem.Link linkInfo ->
                             Html.a [
                                 prop.className "nacara-dropdown-item"
+                                prop.href linkInfo.Url
                                 prop.children [
                                     Html.div [
                                         Html.div [
