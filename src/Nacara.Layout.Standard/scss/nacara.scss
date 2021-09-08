@@ -167,6 +167,25 @@ h2, h3, h4, h5, h6  {
         margin-top: $navbar-height;
         padding-right: 1rem;
         padding-left: 1rem;
+
+        @include desktop {
+            margin-bottom: $navbar-height;
+        }
+
+        @include touch {
+            margin-bottom: 10rem;
+        }
+
+        .menu-external-link {
+            position: relative;
+
+            &::after {
+                content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
+                position: absolute;
+                top: calc(50% - 5px);
+                padding-left: 0.325rem;
+            }
+        }
     }
 }
 

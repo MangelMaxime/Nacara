@@ -3,35 +3,8 @@ module Page.WithMenuOrToc
 open Nacara.Core.Types
 open Feliz
 open Feliz.Bulma
-open Fable.FontAwesome
 
-let private renderTopLevelToc (section : TableOfContentParser.Section) =
-    Html.li [
-        Html.a [
-            prop.dangerouslySetInnerHTML section.Header.Title
-            prop.href section.Header.Link
-            prop.custom("data-toc-element", true)
-        ]
-
-        if not section.SubSections.IsEmpty then
-
-            Html.ul [
-                prop.className "table-of-content"
-
-                prop.children [
-                    for subSection in section.SubSections do
-                        Html.li [
-                            Html.a [
-                                prop.dangerouslySetInnerHTML subSection.Title
-                                prop.href subSection.Link
-                                prop.custom("data-toc-element", true)
-                            ]
-                        ]
-                ]
-            ]
-    ]
-
-let private renderTableOfContents (tableOfContent : TableOfContentParser.Section list) =
+let private renderTableOfContents (tableOfContent : TableOfContentParser.Header list) =
     if tableOfContent.Length > 0 then
         Html.li [
             Html.ul [
@@ -39,7 +12,13 @@ let private renderTableOfContents (tableOfContent : TableOfContentParser.Section
 
                 prop.children [
                     for tocElement in tableOfContent do
-                        renderTopLevelToc tocElement
+                        Html.li [
+                            Html.a [
+                                prop.dangerouslySetInnerHTML tocElement.Title
+                                prop.href tocElement.Link
+                                prop.custom("data-toc-element", true)
+                            ]
+                        ]
                 ]
             ]
         ]
@@ -51,7 +30,7 @@ let private renderMenuItemPage
     (pages : PageContext array)
     (info : MenuItemPage)
     (currentPageId : string)
-    (tocInformation : TableOfContentParser.Section list) =
+    (tocInformation : TableOfContentParser.Header list) =
 
     let labelText =
         match info.Label with
@@ -81,9 +60,6 @@ let private renderMenuItemPage
     let isCurrentPage =
         info.PageId = currentPageId
 
-    let hasTableOfContent =
-        not tocInformation.IsEmpty
-
     React.fragment [
         Bulma.menuItem.a [
             prop.classes [
@@ -107,51 +83,23 @@ let rec private renderSubMenu
     (pages : PageContext array)
     (menu : Menu)
     (currentPageId : string)
-    (tocInformation : TableOfContentParser.Section list) =
+    (tocInformation : TableOfContentParser.Header list) =
 
     menu
     |> List.map (
         function
         | MenuItem.Link info ->
             Bulma.menuItem.a [
+                prop.className "menu-external-link"
                 prop.href info.Href
                 prop.text info.Label
+                prop.target.blank
             ]
 
         | MenuItem.Page info ->
             renderMenuItemPage config pages info currentPageId tocInformation
 
-        | MenuItem.List info ->
-            let defaultState =
-                if info.Collapsed then
-                    "collapsed"
-                else
-                    "expanded"
-            Html.li [
-                Html.a [
-                    prop.classes [
-                        "menu-group"
-                        if not info.Collapsed then
-                            "is-expanded"
-                    ]
-                    prop.custom("data-default-state", defaultState)
-                    prop.custom("data-collapsible", info.Collapsible)
-                    prop.children [
-                        Html.span info.Label
-
-                        if info.Collapsible then
-                            Bulma.icon [
-                                Fa.i [ Fa.Solid.AngleRight; Fa.Size Fa.FaLarge ]
-                                    [  ]
-                            ]
-                    ]
-                ]
-
-                Html.ul [
-                    yield! renderSubMenu config pages info.Items currentPageId tocInformation
-                ]
-            ]
-
+        | _ -> Html.none
     )
 
 /// <summary>
@@ -162,20 +110,27 @@ let rec private renderMenu
     (pages : PageContext array)
     (menu : Menu)
     (currentPageId : string)
-    (tocInformation : TableOfContentParser.Section list) =
+    (tocInformation : TableOfContentParser.Header list) =
 
     let menuContent =
         menu
         |> List.map (
             function
             | MenuItem.Link info ->
-                Bulma.menuItem.a [
-                    prop.href info.Href
-                    prop.text info.Label
+                Bulma.menuList [
+                    Bulma.menuItem.a [
+                        prop.href info.Href
+                        prop.text info.Label
+                        prop.target.blank
+                    ]
                 ]
 
             | MenuItem.Page info ->
-                renderMenuItemPage config pages info currentPageId tocInformation
+                Bulma.menuList [
+                    Html.li [
+                        renderMenuItemPage config pages info currentPageId tocInformation
+                    ]
+                ]
 
             | MenuItem.List info ->
                 React.fragment [
@@ -254,7 +209,7 @@ let private renderPageWithoutMenuOrTableOfContent (pageContent : ReactElement) =
     ]
 
 let private renderTableOfContentOnly
-    (tocInformation : TableOfContentParser.Section list) =
+    (tocInformation : TableOfContentParser.Header list) =
 
     Html.div [
         prop.className "menu-container"
@@ -370,7 +325,7 @@ type RenderArgs =
 let render (args : RenderArgs) =
 
     let tocInformation =
-        TableOfContentParser.parse args.PageHtml args.PageContext.RelativePath
+        TableOfContentParser.parse args.PageHtml
 
     if args.RenderMenu then
         match args.SectionMenu, tocInformation.IsEmpty with
