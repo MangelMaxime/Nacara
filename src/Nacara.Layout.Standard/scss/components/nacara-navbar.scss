@@ -122,7 +122,6 @@ $nacara-navbar-menu-border: 1px solid $navbar-item-active-background-color !defa
             // item description by adding `\n` in the JSON text
             white-space: pre;
             padding: 0.375rem 3rem 0.375rem 1rem;
-            border-radius: $radius;
 
             &:hover {
                 background-color: $navbar-item-hover-background-color;
