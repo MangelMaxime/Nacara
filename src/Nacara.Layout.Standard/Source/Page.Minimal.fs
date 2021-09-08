@@ -64,7 +64,7 @@ let private renderNacaraNavbarDropdown (dropdown : DropdownInfo) =
                 prop.children [
                     for items in dropdown.Items do
                         match items with
-                        | DropdownItem.Spacer ->
+                        | DropdownItem.Divider ->
                             Bulma.navbarDivider [ ]
 
                         | DropdownItem.Link linkInfo ->
@@ -232,7 +232,7 @@ let private renderNacaraNavbarMenu (navbarConfig : NavbarConfig) =
                                             ]
                                         ]
 
-                                    | DropdownItem.Spacer ->
+                                    | DropdownItem.Divider ->
                                         null
                             ]
                         ]

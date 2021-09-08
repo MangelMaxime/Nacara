@@ -84,7 +84,7 @@ module DropdownLink =
 
 [<RequireQualifiedAccess>]
 type DropdownItem =
-    | Spacer
+    | Divider
     | Link of DropdownLink
 
 module DropdownItem =
@@ -93,8 +93,8 @@ module DropdownItem =
         Decode.oneOf [
             Decode.string
             |> Decode.andThen (function
-                | "spacer" ->
-                    Decode.succeed DropdownItem.Spacer
+                | "divider" ->
+                    Decode.succeed DropdownItem.Divider
 
                 | invalid ->
                     Decode.fail $"`{invalid}` is not a valid DropdownItem value. Did you mean 'spacer'?"
