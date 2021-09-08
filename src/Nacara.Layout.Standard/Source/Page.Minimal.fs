@@ -72,17 +72,23 @@ let private renderNacaraNavbarDropdown (dropdown : DropdownInfo) =
                                 prop.className "nacara-dropdown-item"
                                 prop.href linkInfo.Url
                                 prop.children [
-                                    Html.div [
+                                    match linkInfo.Description with
+                                    | Some description ->
                                         Html.div [
-                                            Html.strong linkInfo.Label
-                                        ]
+                                            Html.div [
+                                                Html.strong linkInfo.Label
+                                            ]
 
-                                        if linkInfo.Description.IsSome then
                                             Html.div [
                                                 prop.className "nacara-dropdown-item-description"
-                                                prop.text linkInfo.Description.Value
+                                                prop.text description
                                             ]
-                                    ]
+                                        ]
+
+                                    | None ->
+                                        Html.div [
+                                            prop.text linkInfo.Label
+                                        ]
                                 ]
                             ]
                 ]
