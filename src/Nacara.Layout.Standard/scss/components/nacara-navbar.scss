@@ -41,9 +41,7 @@ $nacara-navbar-menu-border: 1px solid $navbar-item-active-background-color !defa
                 .nacara-dropdown-link {
                     background-color: $navbar-item-active-background-color;
                 }
-            }
 
-            &.is-active {
                 .nacara-dropdown {
                     // From tablet screen and bigger, the dropdown
                     // follows the style declared in the configuration (floating or fullwidth)
