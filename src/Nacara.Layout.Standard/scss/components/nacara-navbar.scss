@@ -76,8 +76,7 @@ $nacara-navbar-menu-border: 1px solid $navbar-item-active-background-color !defa
         // It make the dropdown "float" bellow the navbar item and centered on it
         &.is-floating {
             position: absolute;
-            transform: translateX(-50%);
-            left: 50%;
+            left: 0;
             border-radius: 8px;
             top: 100%;
         }
