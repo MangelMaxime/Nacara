@@ -277,6 +277,7 @@ let renderBreadcrumbItems (items : string list) =
     )
 
 let private renderBreadcrumb
+    (navbar : NavbarConfig)
     (pageContext : PageContext)
     (menu : Menu) =
 
@@ -285,6 +286,14 @@ let private renderBreadcrumb
         null
 
     | Some titlePath ->
+        let titlePath =
+            match Navbar.tryFindWebsiteSectionLabelForPage navbar pageContext with
+            | Some sectionLabel ->
+                sectionLabel :: titlePath
+
+            | None ->
+                titlePath
+
         Html.div [
             prop.className "mobile-menu"
 
@@ -334,7 +343,7 @@ let render (args : RenderArgs) =
         | Some sectionMenu, false
         | Some sectionMenu, true ->
             renderPageWithMenuOrTableOfContent
-                (renderBreadcrumb args.PageContext sectionMenu)
+                (renderBreadcrumb args.Config.Navbar args.PageContext sectionMenu)
                 (renderMenu args.Config args.Pages sectionMenu args.PageContext.PageId tocInformation)
                 args.PageContent
 

@@ -68,25 +68,17 @@ const setupNavbarBurger = () => {
     // Code copied from Bulma documentation
     // https://bulma.io/documentation/components/navbar/#navbar-menu
 
-    // Get all "navbar-burger" elements
-    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
 
-    // Check if there are any navbar burgers
-    if ($navbarBurgers.length > 0) {
+    const $navbarBurgerDots = document.querySelector(".navbar-burger-dots");
 
-        // Add a click event on each of them
-        $navbarBurgers.forEach(el => {
-            el.addEventListener('click', () => {
+    if ($navbarBurgerDots !== null) {
+        $navbarBurgerDots.addEventListener("click", (ev) => {
+            const $nacaraNavbarMenu = document.querySelector(".nacara-navbar-menu");
 
-                // Get the target from the "data-target" attribute
-                const target = el.dataset.target;
-                const $target = document.getElementById(target);
-
-                // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-                el.classList.toggle('is-active');
-                $target.classList.toggle('is-active');
-
-            });
+            if ($nacaraNavbarMenu !== null) {
+                $nacaraNavbarMenu.classList.toggle("is-active");
+                $navbarBurgerDots.classList.toggle("is-active");
+            }
         });
     }
 
@@ -155,32 +147,57 @@ const setupCopyCode = () => {
         });
 }
 
-const setupGlobal = () => {
+const setupNavbarDropdown = () => {
+    document
+        .querySelectorAll(".navbar-item.has-nacara-dropdown")
+        .forEach(function (navbarItem) {
+            navbarItem.addEventListener("click", (ev) => {
+                // Click is inside the dropdown element, nothing to do
+                if (ev.target.closest(".nacara-dropdown")) {
+                    return;
+                }
 
-    // This script should be loaded in a tag with async tag so we can directly apply all the functions
+                const $greyOverlay = document.querySelector(".grey-overlay");
+                const $dropdown = ev.target.parentElement.querySelector(".nacara-dropdown");
 
-    setupNavbarBurger();
-    setupMobileMenu();
+                // Show the overlay
+                $greyOverlay.classList.toggle("is-active");
+                // Show the dropdown
+                $dropdown.classList.toggle("is-active");
+                // Show which dropdown is active
+                navbarItem.classList.toggle("is-active");
 
-    if (document.querySelector(".menu") !== null) {
-        setupMenuNavigation();
-    }
+                $greyOverlay
+                    .addEventListener("click", (ev) => {
+                        if (!ev.target.closest(".navbar-item.has-nacara-dropdown")) {
+                            // Remove the overlay
+                            $greyOverlay.classList.toggle("is-active");
+                            // Close the dropdown
+                            $dropdown.classList.toggle("is-active");
+                            // Stop showing which dropdown is active
+                            navbarItem.classList.toggle("is-active");
+                        }
+                        // The event should occur once only
+                    }, { once: true });
+            });
+        })
+}
 
-    setupCopyCode();
+const scrollMenuOrTableOfContentIfNeeded = () => {
 
     // Make the table of content visible
-    const tableOfContentElement = document.querySelector(".table-of-content");
+    const $tableOfContentElement = document.querySelector(".table-of-content");
+    const $activeMenuItemElement = document.querySelector(".menu .is-active");
 
-    if (tableOfContentElement !== null) {
-        scrollIntoView(tableOfContentElement, {
+    if ($tableOfContentElement !== null) {
+        scrollIntoView($tableOfContentElement, {
             scrollMode: "if-needed",
             block: 'nearest',
             inline: 'nearest',
             boundary: document.querySelector(".menu-container")
         });
-    } else {
-        const activeMenuItemElement = document.querySelector(".menu .is-active");
-        scrollIntoView(activeMenuItemElement, {
+    } else if ($activeMenuItemElement !== null) {
+        scrollIntoView($activeMenuItemElement, {
             scrollMode: "if-needed",
             block: 'nearest',
             inline: 'nearest',
@@ -189,7 +206,23 @@ const setupGlobal = () => {
     }
 }
 
-// The page is ready execute our code
+const setupGlobal = () => {
+
+    // This script should be loaded in a tag with async tag so we can directly apply all the functions
+
+    setupNavbarBurger();
+    setupNavbarDropdown();
+    setupMobileMenu();
+
+    if (document.querySelector(".menu") !== null) {
+        setupMenuNavigation();
+    }
+
+    setupCopyCode();
+    scrollMenuOrTableOfContentIfNeeded();
+}
+
+// The page is ready to execute our code
 if (document.readyState === "complete") {
     setupGlobal();
     // The page is not ready, wait for it to be ready

@@ -16,6 +16,7 @@
     <Compile Include="Log.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Menu.fs" />
+    <Compile Include="Navbar.fs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="*.fsproj; **\*.fs; **\*.fsi; **\*.css" PackagePath="fable" />

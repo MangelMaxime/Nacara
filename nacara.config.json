@@ -9,12 +9,14 @@
             {
                 "section": "documentation",
                 "url": "/Nacara/documentation/introduction.html",
-                "label": "Docs"
+                "label": "Docs",
+                "pinned": true
             },
             {
                 "section": "showcase",
                 "url": "/Nacara/showcase/index.html",
-                "label": "Showcase"
+                "label": "Showcase",
+                "pinned": true
             },
             {
                 "section": "changelogs",
@@ -35,12 +37,13 @@
         "end": [
             {
                 "url": "https://github.com/MangelMaxime/Nacara",
-                "icon": "fab fa-github"
+                "icon": "fab fa-github",
+                "label": "GitHub"
             },
             {
                 "url": "https://twitter.com/MangelMaxime",
                 "icon": "fab fa-twitter",
-                "iconColor": "#55acee"
+                "label": "Twitter"
             }
         ]
     },

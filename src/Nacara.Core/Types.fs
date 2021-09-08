@@ -24,32 +24,129 @@ type PageContext =
         Attributes : FrontMatterAttributes
     }
 
-type NavbarLink =
+type LabelLink =
     {
         Section : string option
         Url : string
-        Label : string option
-        Icon : string option
-        IconColor : string option
+        IsPinned : bool
+        Label : string
     }
 
-module NavbarLink =
+module LabelLink =
 
-    let decoder : Decoder<NavbarLink> =
+    let decoder : Decoder<LabelLink> =
             Decode.object (fun get ->
                 {
                     Section = get.Optional.Field "section" Decode.string
                     Url = get.Required.Field "url" Decode.string
-                    Label = get.Optional.Field "label" Decode.string
-                    Icon = get.Optional.Field "icon" Decode.string
-                    IconColor = get.Optional.Field "iconColor" Decode.string
+                    Label = get.Required.Field "label" Decode.string
+                    IsPinned = get.Optional.Field "pinned" Decode.bool
+                            |> Option.defaultValue false
                 }
             )
 
+
+type IconLink =
+    {
+        Url : string
+        Label : string
+        Icon : string
+    }
+
+module IconLink =
+
+    let decoder : Decoder<IconLink> =
+            Decode.object (fun get ->
+                {
+                    Url = get.Required.Field "url" Decode.string
+                    Label = get.Required.Field "label" Decode.string
+                    Icon = get.Required.Field "icon" Decode.string
+                }
+            )
+
+type DropdownLink =
+    {
+        Url : string
+        Label : string
+        Description : string option
+    }
+
+module DropdownLink =
+
+    let decoder : Decoder<DropdownLink> =
+        Decode.object (fun get ->
+            {
+                Url = get.Required.Field "url" Decode.string
+                Label = get.Required.Field "label" Decode.string
+                Description = get.Optional.Field "description" Decode.string
+            }
+        )
+
+[<RequireQualifiedAccess>]
+type DropdownItem =
+    | Spacer
+    | Link of DropdownLink
+
+module DropdownItem =
+
+    let decoder : Decoder<DropdownItem> =
+        Decode.oneOf [
+            Decode.string
+            |> Decode.andThen (function
+                | "spacer" ->
+                    Decode.succeed DropdownItem.Spacer
+
+                | invalid ->
+                    Decode.fail $"`{invalid}` is not a valid DropdownItem value. Did you mean 'spacer'?"
+            )
+
+            DropdownLink.decoder
+            |> Decode.map DropdownItem.Link
+        ]
+
+type DropdownInfo =
+    {
+        Label : string
+        Items : DropdownItem list
+        IsPinned : bool
+        IsFullWidth : bool
+    }
+
+module DropdownInfo =
+
+    let decoder : Decoder<DropdownInfo> =
+        Decode.object (fun get ->
+            {
+                Label = get.Required.Field "label" Decode.string
+                Items = get.Required.Field "items" (Decode.list DropdownItem.decoder)
+                IsPinned = get.Optional.Field "pinned" Decode.bool
+                            |> Option.defaultValue false
+                IsFullWidth = get.Optional.Field "fullwidth" Decode.bool
+                            |> Option.defaultValue false
+            }
+        )
+
+[<RequireQualifiedAccess>]
+type StartNavbarItem =
+    | LabelLink of LabelLink
+    | Dropdown of DropdownInfo
+
+module StartNavbarItem =
+
+    let decoder : Decoder<StartNavbarItem> =
+        Decode.oneOf [
+            LabelLink.decoder
+            |> Decode.map StartNavbarItem.LabelLink
+
+
+            DropdownInfo.decoder
+            |> Decode.map StartNavbarItem.Dropdown
+        ]
+
 type NavbarConfig =
     {
-        Start : NavbarLink list
-        End : NavbarLink list
+        Start : StartNavbarItem list
+        End : IconLink list
     }
 
 module NavbarConfig =
@@ -57,12 +154,18 @@ module NavbarConfig =
     let decoder : Decoder<NavbarConfig> =
         Decode.object (fun get ->
             {
-                Start = get.Optional.Field "start" (Decode.list NavbarLink.decoder)
+                Start = get.Optional.Field "start" (Decode.list StartNavbarItem.decoder)
                             |> Option.defaultValue []
-                End = get.Optional.Field "end" (Decode.list NavbarLink.decoder)
+                End = get.Optional.Field "end" (Decode.list IconLink.decoder)
                         |> Option.defaultValue []
             }
         )
+
+    let empty : NavbarConfig =
+        {
+            Start = []
+            End = []
+        }
 
 type LightnerConfig =
     {
@@ -234,7 +337,7 @@ type Config =
         Title : string
         EditUrl : string option
         Output : string
-        Navbar : NavbarConfig option
+        Navbar : NavbarConfig
         LightnerConfig : LightnerConfig option
         Layouts : string array
         ServerPort : int
@@ -302,6 +405,7 @@ module Config =
                 Output = get.Optional.Field "output" Decode.string
                             |> Option.defaultValue "docs_deploy"
                 Navbar = get.Optional.Field "navbar" NavbarConfig.decoder
+                            |> Option.defaultValue NavbarConfig.empty
                 LightnerConfig = get.Optional.Field "lightner" LightnerConfig.decoder
                 Layouts = get.Required.Field "layouts" (Decode.array Decode.string)
                 ServerPort = get.Optional.Field "serverPort" Decode.int
