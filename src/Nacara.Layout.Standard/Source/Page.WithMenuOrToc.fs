@@ -90,6 +90,7 @@ let rec private renderSubMenu
         function
         | MenuItem.Link info ->
             Bulma.menuItem.a [
+                prop.className "menu-external-link"
                 prop.href info.Href
                 prop.text info.Label
                 prop.target.blank
@@ -362,4 +363,3 @@ let render (args : RenderArgs) =
                 null // No breadcrumb because there is no menu
                 (renderTableOfContentOnly tocInformation)
                 args.PageContent
-
