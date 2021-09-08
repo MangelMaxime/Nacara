@@ -42,6 +42,27 @@ $nacara-navbar-menu-border: 1px solid $navbar-item-active-background-color !defa
                     background-color: $navbar-item-active-background-color;
                 }
             }
+
+            &.is-active {
+                .nacara-dropdown {
+                    // From tablet screen and bigger, the dropdown
+                    // follows the style declared in the configuration (floating or fullwidth)
+                    @include tablet {
+                        display: block;
+                    }
+
+                    // On mobile screen, the dropdown take the full width of the screen
+                    @include mobile {
+                        display: block;
+                        width: 100%;
+                        position: fixed;
+                        left: 0;
+                        top: $computed-navbar-height;
+                        transform: unset;
+                        border-radius: 0 0 8px 8px;
+                    }
+                }
+            }
         }
 
         .nacara-dropdown-link {
@@ -89,27 +110,6 @@ $nacara-navbar-menu-border: 1px solid $navbar-item-active-background-color !defa
             left: 0;
             transform: unset;
             border-radius: 0 0 8px 8px;
-        }
-
-        // From tablet screen and bigger, the dropdown
-        // follows the style declared in the configuration (floating or fullwidth)
-        @include tablet {
-            &.is-active {
-                display: block;
-            }
-        }
-
-        // On mobile screen, the dropdown take the full width of the screen
-        @include mobile {
-            &.is-active {
-                display: block;
-                width: 100%;
-                position: fixed;
-                left: 0;
-                top: $computed-navbar-height;
-                transform: unset;
-                border-radius: 0 0 8px 8px;
-            }
         }
 
         // Mimic .navbar-item from Bulma
