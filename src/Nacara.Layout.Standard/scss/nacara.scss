@@ -241,8 +241,11 @@ h2, h3, h4, h5, h6  {
         margin-top: 0;
     }
 
-    // Prevents long words from breaking the layout.
-    word-break: break-all;
+    // Use the same font-size for the table font as for the rest
+    // I don't know if it is a bug from Bulma or Firefox
+    .table {
+        font-size: $body-size;
+    }
 }
 
 // Customize the menu to have a better display and also support TOC in it

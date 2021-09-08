@@ -26,13 +26,13 @@ Overview, of what each of those does:
 <table class="table is-narrow is-bordered">
     <thead>
         <tr>
-            <th class="has-text-centered">File / Directory</th>
-            <th class="has-text-centered">Description</th>
+            <th class="label-cell">File / Directory</th>
+            <th class="label-cell">Description</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td class="has-text-centered" style="vertical-align: middle">
+            <td class="label-cell">
                 <code>docs</code>
             </td>
             <td style="vertical-align: middle">
@@ -45,7 +45,7 @@ Overview, of what each of those does:
             </td>
         </tr>
         <tr>
-            <td class="has-text-centered" style="vertical-align: middle">
+            <td class="label-cell">
                 <code>docs/style.scss</code>
                 <div class="is-size-7 my-2">or</div>
                 <code>docs/style.sass</code>
@@ -60,7 +60,7 @@ Overview, of what each of those does:
             </td>
         </tr>
         <tr>
-            <td class="has-text-centered" style="vertical-align: middle">
+            <td class="label-cell">
                 <code>docs/scss</code>
                 <div class="is-size-7 my-2">or</div>
                 <code>docs/sass</code>
@@ -70,7 +70,7 @@ Overview, of what each of those does:
             </td>
         </tr>
         <tr>
-            <td class="has-text-centered" style="vertical-align: middle">
+            <td class="label-cell">
                 <code>docs_deploy</code>
             </td>
             <td style="vertical-align: middle">
@@ -79,7 +79,7 @@ Overview, of what each of those does:
             </td>
         </tr>
         <tr>
-            <td class="has-text-centered" style="vertical-align: middle">
+            <td class="label-cell">
                 <code>lightner/themes</code>
             </td>
             <td style="vertical-align: middle">
@@ -90,7 +90,7 @@ Recommended place to place your theme file user by [Code-lightner](https://githu
             </td>
         </tr>
         <tr>
-            <td class="has-text-centered" style="vertical-align: middle">
+            <td class="label-cell">
                 <code>lightner/grammars</code>
             </td>
             <td style="vertical-align: middle">
@@ -101,7 +101,7 @@ Recommended place to place your grammars files user by [Code-lightner](https://g
             </td>
         </tr>
         <tr>
-            <td class="has-text-centered" style="vertical-align: middle">
+            <td class="label-cell">
                 <code>nacara.config.json</code>
             </td>
             <td style="vertical-align: middle">
@@ -109,7 +109,7 @@ Recommended place to place your grammars files user by [Code-lightner](https://g
             </td>
         </tr>
         <tr>
-            <td class="has-text-centered" style="vertical-align: middle">
+            <td class="label-cell">
                 <code>package.json</code>
             </td>
             <td style="vertical-align: middle">
@@ -117,7 +117,7 @@ Recommended place to place your grammars files user by [Code-lightner](https://g
             </td>
         </tr>
         <tr>
-            <td class="has-text-centered" style="vertical-align: middle">
+            <td class="label-cell">
                 <code>docs/index.md</code>
                 <div class="is-size-7 my-2">or</div>
                 <code>docs/\*\*/\*.md</code>
@@ -127,7 +127,7 @@ Recommended place to place your grammars files user by [Code-lightner](https://g
             </td>
         </tr>
         <tr>
-            <td class="has-text-centered" style="vertical-align: middle">
+            <td class="label-cell">
                 <code>docs/\*\*/\*.md</code>
             </td>
             <td style="vertical-align: middle">
@@ -135,7 +135,7 @@ Recommended place to place your grammars files user by [Code-lightner](https://g
             </td>
         </tr>
         <tr>
-            <td class="has-text-centered" style="vertical-align: middle">
+            <td class="label-cell">
                 <code>docs/\*\*/menu.json</code>
             </td>
             <td style="vertical-align: middle">
@@ -143,8 +143,10 @@ Recommended place to place your grammars files user by [Code-lightner](https://g
             </td>
         </tr>
         <tr>
-            <td class="has-text-centered" style="vertical-align: middle">
-                <code>Other Files / Folders</code>
+            <td class="label-cell">
+                <code>Other files</code>
+                <div class="is-size-7 my-2">or</div>
+                <code>folders</code>
             </td>
             <td style="vertical-align: middle">
                 Except for the special cases listed above, all the other file and folder will be copied into the destination folder.
