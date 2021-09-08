@@ -157,30 +157,46 @@ const setupNavbarDropdown = () => {
                     return;
                 }
 
-                const $greyOverlay = document.querySelector(".grey-overlay");
-                const $dropdown = ev.target.parentElement.querySelector(".nacara-dropdown");
+                const $activeDropdownItem = document.querySelector(".navbar-item.has-nacara-dropdown.is-active");
 
-                // Show the overlay
-                $greyOverlay.classList.toggle("is-active");
-                // Show the dropdown
-                $dropdown.classList.toggle("is-active");
-                // Show which dropdown is active
-                navbarItem.classList.toggle("is-active");
+                // If we clicked on the active dropdown close it
+                if ($activeDropdownItem) {
+                    const activeItemGuid = $activeDropdownItem.attributes.getNamedItem("data-guid").value;
+                    const clickedItemGuid = navbarItem.attributes.getNamedItem("data-guid").value;
 
-                $greyOverlay
-                    .addEventListener("click", (ev) => {
-                        if (!ev.target.closest(".navbar-item.has-nacara-dropdown")) {
-                            // Remove the overlay
-                            $greyOverlay.classList.toggle("is-active");
-                            // Close the dropdown
-                            $dropdown.classList.toggle("is-active");
-                            // Stop showing which dropdown is active
-                            navbarItem.classList.toggle("is-active");
-                        }
-                        // The event should occur once only
-                    }, { once: true });
+                    // If user clicked on the active dropdown item, close everything
+                    if (activeItemGuid === clickedItemGuid) {
+                        // Close the dropdown
+                        $activeDropdownItem.classList.remove("is-active");
+                        // Remove the overlay
+                        $greyOverlay.classList.remove("is-active");
+                    } else {
+                        // The user clicked on another dropdown item, close the active one
+                        $activeDropdownItem.classList.remove("is-active");
+                        // Show the new dropdown as active
+                        navbarItem.classList.add("is-active");
+                    }
+                } else {
+                    // Show the overlay
+                    $greyOverlay.classList.add("is-active");
+                    // Show which dropdown is active
+                    navbarItem.classList.add("is-active");
+                }
             });
         })
+
+    const $greyOverlay = document.querySelector(".grey-overlay");
+
+    if ($greyOverlay !== null) {
+        $greyOverlay.addEventListener("click", (ev) => {
+            const $activeDropdownItem = document.querySelector(".navbar-item.has-nacara-dropdown.is-active");
+
+            if ($activeDropdownItem) {
+                $activeDropdownItem.classList.remove("is-active");
+                $greyOverlay.classList.remove("is-active");
+            }
+        });
+    }
 }
 
 const scrollMenuOrTableOfContentIfNeeded = () => {

@@ -33,8 +33,11 @@ let private navbarItemIsFromSection (itemSectionOpt : string option) (pageSectio
         false
 
 let private renderNacaraNavbarDropdown (dropdown : DropdownInfo) =
+    let guid = System.Guid.NewGuid()
+
     Bulma.navbarItem.div [
         prop.className "has-nacara-dropdown"
+        prop.custom("data-guid", guid.ToString())
 
         // Non-pinned dropdown are not rendered when on mobile
         // They will be included in the navbar menu
