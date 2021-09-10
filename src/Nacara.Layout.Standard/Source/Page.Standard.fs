@@ -198,7 +198,7 @@ let private renderBreadcrumb
         let titlePath =
             match Navbar.tryFindWebsiteSectionLabelForPage navbar pageContext with
             | Some sectionLabel ->
-                sectionLabel :: titlePath
+                sectionLabel @ titlePath
 
             | None ->
                 titlePath

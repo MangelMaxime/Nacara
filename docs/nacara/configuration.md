@@ -245,16 +245,6 @@ Default: `false`
     <tbody>
         <tr>
             <td class="label-cell">
-                <code>section</code>
-            </td>
-            <td class="label-cell">X</td>
-            <td class="fullwidth-cell">
-
-Section of the website associated to this navbar item
-            </td>
-        </tr>
-        <tr>
-            <td class="label-cell">
                 <code>label</code>
             </td>
             <td class="label-cell">X</td>
@@ -338,6 +328,15 @@ Optional description
 You can use `\n` into the string in order to force a new line
             </td>
         </tr>
+        <tr>
+            <td class="label-cell">
+                <code>section</code>
+            </td>
+            <td class="label-cell"></td>
+            <td class="fullwidth-cell">
+                Section of the website associated to this navbar item
+            </td>
+        </tr>
     </tbody>
 </table>
 
@@ -348,11 +347,11 @@ You can use `\n` into the string in order to force a new line
     "navbar": {
         "start": [
             {
-                "section": "documentation",
                 "pinned": true,
                 "label": "Docs",
                 "items": [
                     {
+                        "section": "nacara",
                         "label": "Nacara",
                         "description": "Description line1\nline2 start here",
                         "url": "/Nacara/documentation/introduction.html"

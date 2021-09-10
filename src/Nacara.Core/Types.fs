@@ -66,6 +66,7 @@ module IconLink =
 
 type DropdownLink =
     {
+        Section : string option
         Url : string
         Label : string
         Description : string option
@@ -76,6 +77,7 @@ module DropdownLink =
     let decoder : Decoder<DropdownLink> =
         Decode.object (fun get ->
             {
+                Section = get.Optional.Field "section" Decode.string
                 Url = get.Required.Field "url" Decode.string
                 Label = get.Required.Field "label" Decode.string
                 Description = get.Optional.Field "description" Decode.string
@@ -106,7 +108,6 @@ module DropdownItem =
 
 type DropdownInfo =
     {
-        Section : string option
         Label : string
         Items : DropdownItem list
         IsPinned : bool
@@ -118,7 +119,6 @@ module DropdownInfo =
     let decoder : Decoder<DropdownInfo> =
         Decode.object (fun get ->
             {
-                Section = get.Optional.Field "section" Decode.string
                 Label = get.Required.Field "label" Decode.string
                 Items = get.Required.Field "items" (Decode.list DropdownItem.decoder)
                 IsPinned = get.Optional.Field "pinned" Decode.bool
