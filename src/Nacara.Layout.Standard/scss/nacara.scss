@@ -3,7 +3,7 @@ $computed-navbar-height: $navbar-height + $navbar-padding-vertical * 2;
 @import './components/changelog.scss';
 @import './components/textual-steps.scss';
 @import './components/navigation-button.scss';
-@import './components//nacara-navbar.scss';
+@import './components/nacara-navbar.scss';
 
 // Fix bug: On some browser the body is not placed at the right place
 // This code should fix the issue
