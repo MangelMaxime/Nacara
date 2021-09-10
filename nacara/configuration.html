@@ -1,0 +1,427 @@
+<html class="has-navbar-fixed-top" lang="en"><head><title>Nacara · Configuration</title><meta http-equiv="content-type" content="text/html; charset=UTF-8" charSet="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" type="text/css" href="/Nacara/style.css"/><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"/><script src="https://unpkg.com/scroll-into-view-if-needed@2.2.28/umd/scroll-into-view-if-needed.min.js"></script></head><body><nav class="navbar is-fixed-top is-spaced"><div class="container"><div class="navbar-brand"><a class="navbar-item title is-4" href="https://mangelmaxime.github.io/Nacara/">Nacara</a></div><div class="navbar-menu"><div class="navbar-start"><div class="navbar-item has-nacara-dropdown" data-guid="d2027cda-9ce6-4620-ab8a-9a8c78dd70de"><div class="nacara-dropdown-link">Docs</div><div class="nacara-dropdown is-floating"><a class="nacara-dropdown-item" href="/Nacara/nacara/introduction.html"><div><div><strong>Nacara</strong></div><div class="nacara-dropdown-item-description">Learn more about how Nacara works,
+and how to setup it in your project</div></div></a><hr class="navbar-divider"/><a class="nacara-dropdown-item" href="/Nacara/nacara-layout-standard/introduction.html"><div><div><strong>Nacara.Layout.Standard</strong></div><div class="nacara-dropdown-item-description">Default layout used by Nacara</div></div></a></div></div><a class="navbar-item" href="/Nacara/showcase/index.html">Showcase</a><div class="navbar-item has-nacara-dropdown is-hidden-mobile" data-guid="bfa33b8d-217e-407a-9913-48129ae06f75"><div class="nacara-dropdown-link">Changelogs</div><div class="nacara-dropdown is-floating"><a class="nacara-dropdown-item" href="/Nacara/changelogs/nacara.html"><div>Nacara</div></a><a class="nacara-dropdown-item" href="/Nacara/changelogs/nacara-core.html"><div>Nacara.Core</div></a><a class="nacara-dropdown-item" href="/Nacara/changelogs/nacara-layout-standard.html"><div>Nacara.Standard.Layout</div></a></div></div><a class="navbar-item is-hidden-mobile" href="https://gitter.im/fable-compiler/Fable">Support</a><a class="navbar-item is-hidden-mobile" href="https://www.patreon.com/MangelMaxime">Donate</a><div class="navbar-item navbar-burger-dots is-hidden-tablet"><svg height="4" stroke="none" viewBox="0 0 22 4" width="22"><circle cx="2" cy="2" r="2"></circle><circle cx="2" cy="2" r="2" transform="translate(9,0)"></circle><circle cx="2" cy="2" r="2" transform="translate(18,0)"></circle></svg></div></div><div class="navbar-end is-hidden-mobile"><a class="navbar-item" href="https://github.com/MangelMaxime/Nacara"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item" href="https://twitter.com/MangelMaxime"><span class="icon"><i class=" fab fa-twitter fa-lg"></i></span></a></div></div><div class="nacara-navbar-menu"><ul class="nacara-navbar-menu-dropdown"><li class="nacara-navbar-menu-dropdown-label">Changelogs</li><li class="nacara-navbar-menu-dropdown-link"><a href="/Nacara/changelogs/nacara.html">Nacara</a></li><li class="nacara-navbar-menu-dropdown-link"><a href="/Nacara/changelogs/nacara-core.html">Nacara.Core</a></li><li class="nacara-navbar-menu-dropdown-link"><a href="/Nacara/changelogs/nacara-layout-standard.html">Nacara.Standard.Layout</a></li></ul><a class="nacara-navbar-menu-item" href="https://gitter.im/fable-compiler/Fable">Support</a><a class="nacara-navbar-menu-item" href="https://www.patreon.com/MangelMaxime">Donate</a><a class="nacara-navbar-menu-item" href="https://github.com/MangelMaxime/Nacara">GitHub</a><a class="nacara-navbar-menu-item" href="https://twitter.com/MangelMaxime">Twitter</a></div></div></nav><div class="grey-overlay"></div><div class="container"><div class="mobile-menu"><nav class="breadcrumb"><ul><li><a class="menu-trigger"><span></span><span></span><span></span></a></li><li class="is-active"><a>Docs</a></li><li class="is-active"><a>Nacara</a></li><li class="is-active"><a>Overview</a></li><li class="is-active"><a>Configuration</a></li></ul></nav></div><div class="columns is-gapless is-mobile"><div class="column is-menu-column is-3-desktop is-hidden-touch"><div class="menu-container"><aside class="menu"><p class="menu-label">Overview</p><ul class="menu-list"><li><a class=" " href="/Nacara/nacara/introduction.html">Introduction</a></li><li><a class=" is-active" href="/Nacara/nacara/configuration.html">Configuration</a></li><li><ul class="table-of-content"><li><a href="#Initial-set-up" data-toc-element="true">Initial set up </a></li><li><a href="#Configuration-options" data-toc-element="true">Configuration options </a></li><li><a href="#siteMetadata" data-toc-element="true">siteMetadata </a></li><li><a href="#navbar" data-toc-element="true">navbar </a></li><li><a href="#lightner" data-toc-element="true">lightner </a></li><li><a href="#layouts" data-toc-element="true">layouts </a></li><li><a href="#serverPort" data-toc-element="true">serverPort </a></li><li><a href="#source" data-toc-element="true">source </a></li><li><a href="#output" data-toc-element="true">output </a></li></ul></li><li><a class=" " href="/Nacara/nacara/directory-structure.html">Directory structure</a></li><li><a class=" " href="/Nacara/nacara/api.html">API</a></li></ul><p class="menu-label">Guides</p><ul class="menu-list"><li><a class=" " href="/Nacara/nacara/guides/create-a-page.html">Create a page</a></li><li><a class=" " href="/Nacara/nacara/guides/customize-the-style.html">Style your application</a></li><li><a class=" " href="/Nacara/nacara/guides/create-a-section.html">Create a Section</a></li><li><a class=" " href="/Nacara/nacara/guides/section-menu.html">Section menu</a></li><li><a class=" " href="/Nacara/nacara/guides/deploy-your-site.html">Deploy your site</a></li></ul><p class="menu-label">Custom Layouts</p><ul class="menu-list"><li><a class=" " href="/Nacara/nacara/advanced/layout-from-scratch.html">Overview</a></li><li><a class=" " href="/Nacara/nacara/advanced/custom-layout-js.html">With JavaScript</a></li><li><a class=" " href="/Nacara/nacara/advanced/custom-layout-fsharp.html">With FSharp</a></li></ul></aside></div></div><div class="column is-8-desktop is-full-touch"><section class="section"><div class="content"><header class="page-header"><div class="columns is-vcentered"><div class="column"><nav class="breadcrumb is-hidden-touch"><ul><li class="is-active"><a>Docs</a></li><li class="is-active"><a>Nacara</a></li><li class="is-active"><a>Overview</a></li><li class="is-active"><a>Configuration</a></li></ul></nav></div><div class="column is-narrow"><a class="button is-hidden-touch is-ghost" target="_blank" href="https://github.com/MangelMaxime/Nacara/edit/master/docs/nacara/configuration.md">Edit</a></div></div><h1 class="title is-1">Configuration</h1></header><div><p>The file <code>nacara.config.json</code> defines your site's metadata, navbar and other general configuration. This file is located at the root of your Nacara site.</p>
+<h2>Initial set up <a href="#Initial-set-up" aria-hidden="true"><span class="anchor" id="Initial-set-up"></span>#</a></h2>
+<p>If you used <code>npm init nacara</code> to create your site, there should already be a basic configuration file.</p>
+<p>It not here is a minimal configuration file:</p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span>{</span>
+<span>    </span><span style="color: #E45649">&quot;url&quot;</span><span>: </span><span style="color: #50A14F">&quot;https://mangelmaxime.github.io&quot;</span><span>,</span>
+<span>    </span><span style="color: #E45649">&quot;baseUrl&quot;</span><span>: </span><span style="color: #50A14F">&quot;/Nacara/&quot;</span><span>,</span>
+<span>    </span><span style="color: #E45649">&quot;editUrl&quot;</span><span> : </span><span style="color: #50A14F">&quot;https://github.com/MangelMaxime/Nacara/edit/master/docsrc&quot;</span><span>,</span>
+<span>    </span><span style="color: #E45649">&quot;title&quot;</span><span>: </span><span style="color: #50A14F">&quot;Nacara&quot;</span><span>,</span>
+<span>    </span><span style="color: #E45649">&quot;serverPort&quot;</span><span>: </span><span style="color: #986801">8081</span><span>,</span>
+<span>    </span><span style="color: #E45649">&quot;navbar&quot;</span><span>: {</span>
+<span>        </span><span style="color: #E45649">&quot;start&quot;</span><span>: </span><span style="color: #383A42">[</span>
+<span>            {</span>
+<span>                </span><span style="color: #E45649">&quot;section&quot;</span><span>: </span><span style="color: #50A14F">&quot;documentation&quot;</span><span>,</span>
+<span>                </span><span style="color: #E45649">&quot;url&quot;</span><span>: </span><span style="color: #50A14F">&quot;/Nacara/documentation/index.html&quot;</span><span>,</span>
+<span>                </span><span style="color: #E45649">&quot;label&quot;</span><span>: </span><span style="color: #50A14F">&quot;Documentation&quot;</span><span>,</span>
+<span>                </span><span style="color: #E45649">&quot;pinned&quot;</span><span>: </span><span style="color: #0184BC">true</span>
+<span>            }</span>
+<span>        </span><span style="color: #383A42">]</span><span>,</span>
+<span>        </span><span style="color: #E45649">&quot;end&quot;</span><span>: </span><span style="color: #383A42">[</span>
+<span>            {</span>
+<span>                </span><span style="color: #E45649">&quot;url&quot;</span><span>: </span><span style="color: #50A14F">&quot;https://github.com/MangelMaxime/Nacara&quot;</span><span>,</span>
+<span>                </span><span style="color: #E45649">&quot;icon&quot;</span><span>: </span><span style="color: #50A14F">&quot;fab fa-github&quot;</span><span>,</span>
+<span>                </span><span style="color: #E45649">&quot;label&quot;</span><span>: </span><span style="color: #50A14F">&quot;GitHub&quot;</span>
+<span>            }</span>
+<span>        </span><span style="color: #383A42">]</span>
+<span>    },</span>
+<span>    </span><span style="color: #E45649">&quot;layouts&quot;</span><span>: </span><span style="color: #383A42">[</span>
+<span>        </span><span style="color: #50A14F">&quot;nacara-layout-standard&quot;</span>
+<span>    </span><span style="color: #383A42">]</span>
+<span>}</span></code></pre>
+<h2>Configuration options <a href="#Configuration-options" aria-hidden="true"><span class="anchor" id="Configuration-options"></span>#</a></h2>
+<p>Here is a list of the main category of option your can set within your <code>nacara.config.json</code> file:</p>
+<ol>
+<li><a href="#siteMetadata">siteMetadata</a> (object)</li>
+<li><a href="#navbar">navbar</a> (object)</li>
+<li><a href="#lightner">lightner</a> (object)</li>
+<li><a href="#layouts">layouts</a> (array)</li>
+<li><a href="#serverPort">serverPort</a> (int)</li>
+<li><a href="#source">source</a> (string)</li>
+<li><a href="#output">output</a> (string)</li>
+</ol>
+<h2>siteMetadata <a href="#siteMetadata" aria-hidden="true"><span class="anchor" id="siteMetadata"></span>#</a></h2>
+<p>The <code>siteMetadata</code> contains configuration common data related to you site like (for example, your site title, favIcon, etc).</p>
+<table class="table is-narrow is-bordered is-vcentered">
+    <thead>
+        <tr>
+            <th class="label-cell">Property</th>
+            <th class="label-cell">Required</th>
+            <th class="label-cell">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="label-cell">
+                <code>title</code>
+            </td>
+            <td class="label-cell">X</td>
+            <td class="fullwidth-cell">
+                Title of your website
+            </td>
+        </tr>
+        <tr>
+            <td class="label-cell">
+                <code>url</code>
+            </td>
+            <td class="label-cell">X</td>
+            <td class="fullwidth-cell">
+<p>URL for your website. This is the domain part of your URL.</p>
+<p>For example, <code>https://mangelmaxime.github.io</code> is the URL of <code>https://mangelmaxime.github.io/Nacara/</code>
+</td>
+</tr>
+<tr>
+<td class="label-cell">
+<code>baseUrl</code>
+</td>
+<td class="label-cell">X</td>
+<td class="fullwidth-cell">
+Base URL for your site. This is the path after the domain.</p>
+<p>For example, <code>/Nacara/</code> is the baseUrl of <code>https://mangelmaxime.github.io/Nacara/</code>.</p>
+<p>For URLs that have no path, the baseUrl should be set to <code>/</code>.
+</td>
+</tr>
+<tr>
+<td class="label-cell">
+<code>favIcon</code>
+</td>
+<td class="label-cell"></td>
+<td class="fullwidth-cell">
+Path to your site favIcon</p>
+<p>If this field is omitted, not <code>favIcon</code> tag will be added to your website and the browser will use it's default behavior.
+</td>
+</tr>
+<tr>
+<td class="label-cell">
+<code>editUrl</code>
+</td>
+<td class="label-cell"></td>
+<td class="fullwidth-cell">
+URL for editing your documentation.</p>
+<p>Example: <code>editUrl + 'docs/introduction.md'</code>. If this field is omitted, there will be no &quot;Edit&quot; button generated.
+</td>
+</tr>
+</tbody></p>
+</table>
+<p><strong>Example</strong></p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span>{</span>
+<span>    </span><span style="color: #E45649">&quot;siteMetadata&quot;</span><span>: {</span>
+<span>        </span><span style="color: #E45649">&quot;title&quot;</span><span>: </span><span style="color: #50A14F">&quot;Nacara&quot;</span><span>,</span>
+<span>        </span><span style="color: #E45649">&quot;url&quot;</span><span>: </span><span style="color: #50A14F">&quot;https://mangelmaxime.github.io&quot;</span><span>,</span>
+<span>        </span><span style="color: #E45649">&quot;baseUrl&quot;</span><span>: </span><span style="color: #50A14F">&quot;/Nacara/&quot;</span><span>,</span>
+<span>        </span><span style="color: #E45649">&quot;editUrl&quot;</span><span> : </span><span style="color: #50A14F">&quot;https://github.com/MangelMaxime/Nacara/edit/master/docsrc&quot;</span><span>,</span>
+<span>        </span><span style="color: #E45649">&quot;favIcon&quot;</span><span> : </span><span style="color: #50A14F">&quot;/static/favIcon.ico&quot;</span>
+<span>    }</span>
+<span>}</span></code></pre>
+<h2>navbar <a href="#navbar" aria-hidden="true"><span class="anchor" id="navbar"></span>#</a></h2>
+<p>All configuration related to the navbar goes here.</p>
+<p>The navbar is split in 2 sections:</p>
+<ul>
+<li>start: the <strong>left part</strong> of the navbar which appears next to your site title and can contains <strong>textual links</strong> or <strong>dropdowns</strong></li>
+<li>end: the <strong>right part</strong> of the navbar which appears at the end of it</li>
+</ul>
+<h3>start <a href="#start" aria-hidden="true"><span class="anchor" id="start"></span>#</a></h3>
+<p>The <code>start</code> of the navbar consist of a list of objects of 2 types:</p>
+<ul>
+<li><code>LabelLink</code>: Render a link consisting in just a label</li>
+<li><code>Dropdown</code>: Render a dropdown, where you place a list of link</li>
+</ul>
+<!-- or fully customize its content -->
+<h4>LabelLink <a href="#LabelLink" aria-hidden="true"><span class="anchor" id="LabelLink"></span>#</a></h4>
+<table class="table is-narrow is-bordered is-vcentered">
+    <thead>
+        <tr>
+            <th class="label-cell">Property</th>
+            <th class="label-cell">Required</th>
+            <th class="label-cell">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="label-cell">
+                <code>section</code>
+            </td>
+            <td class="label-cell">X</td>
+            <td class="fullwidth-cell">
+<p>Section of the website associated to this navbar item</p>
+<p><em>The default layout will highlight the navbar item if the visited page is inside of the associated section</em>
+</td>
+</tr>
+<tr>
+<td class="label-cell">
+<code>label</code>
+</td>
+<td class="label-cell">X</td>
+<td class="fullwidth-cell">
+Text to display
+</td>
+</tr>
+<tr>
+<td class="label-cell">
+<code>url</code>
+</td>
+<td class="label-cell">X</td>
+<td class="fullwidth-cell">
+URL to redirect to
+</td>
+</tr>
+<tr>
+<td class="label-cell">
+<code>pinned</code>
+</td>
+<td class="label-cell"></td>
+<td class="fullwidth-cell">
+If <code>true</code>, the link will be displayed on mobile display too</p>
+<p>Default: <code>false</code>
+</td>
+</tr>
+</tbody></p>
+</table>
+<p><strong>Example</strong></p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span>{</span>
+<span>    </span><span style="color: #E45649">&quot;navbar&quot;</span><span>: {</span>
+<span>    </span><span style="color: #E45649">&quot;start&quot;</span><span>: </span><span style="color: #383A42">[</span>
+<span>        {</span>
+<span>            </span><span style="color: #E45649">&quot;section&quot;</span><span>: </span><span style="color: #50A14F">&quot;documentation&quot;</span><span>,</span>
+<span>            </span><span style="color: #E45649">&quot;url&quot;</span><span>: </span><span style="color: #50A14F">&quot;/Nacara/documentation/index.html&quot;</span><span>,</span>
+<span>            </span><span style="color: #E45649">&quot;label&quot;</span><span>: </span><span style="color: #50A14F">&quot;Docs&quot;</span><span>,</span>
+<span>            </span><span style="color: #E45649">&quot;pinned&quot;</span><span>: </span><span style="color: #0184BC">true</span>
+<span>        },</span>
+<span>        {</span>
+<span>            </span><span style="color: #E45649">&quot;section&quot;</span><span>: </span><span style="color: #50A14F">&quot;showcase&quot;</span><span>,</span>
+<span>            </span><span style="color: #E45649">&quot;url&quot;</span><span>: </span><span style="color: #50A14F">&quot;/Nacara/showcase/index.html&quot;</span><span>,</span>
+<span>            </span><span style="color: #E45649">&quot;label&quot;</span><span>: </span><span style="color: #50A14F">&quot;Showcase&quot;</span>
+<span>        }</span>
+<span>    </span><span style="color: #383A42">]</span>
+<span>}</span></code></pre>
+<h4>Dropdown <a href="#Dropdown" aria-hidden="true"><span class="anchor" id="Dropdown"></span>#</a></h4>
+<table class="table is-narrow is-bordered is-vcentered">
+    <thead>
+        <tr>
+            <th class="label-cell">Property</th>
+            <th class="label-cell">Required</th>
+            <th class="label-cell">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="label-cell">
+                <code>label</code>
+            </td>
+            <td class="label-cell">X</td>
+            <td class="fullwidth-cell">
+                Text to display
+            </td>
+        </tr>
+        <tr>
+            <td class="label-cell">
+                <code>items</code>
+            </td>
+            <td class="label-cell">X</td>
+            <td class="fullwidth-cell">
+List of items displayed in the dropdown
+<p>It can be a string of value <code>divider</code> or an object of type <a href="#DropdownLink">DropdownLink</a>
+</td>
+</tr>
+<tr>
+<td class="label-cell">
+<code>fullwidth</code>
+</td>
+<td class="label-cell"></td>
+<td class="fullwidth-cell">
+If <code>true</code>, the dropdown will also take the full width of the screen</p>
+<p>Default: <code>false</code>
+</td>
+</tr>
+<tr>
+<td class="label-cell">
+<code>pinned</code>
+</td>
+<td class="label-cell"></td>
+<td class="fullwidth-cell">
+If <code>true</code>, the link will be displayed on mobile display too</p>
+<p>Default: <code>false</code>
+</td>
+</tr>
+</tbody></p>
+</table>
+<h5>DropdownLink <a href="#DropdownLink" aria-hidden="true"><span class="anchor" id="DropdownLink"></span>#</a></h5>
+<table class="table is-narrow is-bordered is-vcentered">
+    <thead>
+        <tr>
+            <th class="label-cell">Property</th>
+            <th class="label-cell">Required</th>
+            <th class="label-cell">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="label-cell">
+                <code>label</code>
+            </td>
+            <td class="label-cell">X</td>
+            <td class="fullwidth-cell">
+                Text to display
+            </td>
+        </tr>
+        <tr>
+            <td class="label-cell">
+                <code>url</code>
+            </td>
+            <td class="label-cell">X</td>
+            <td class="fullwidth-cell">
+                URL to redirect to
+            </td>
+        </tr>
+        <tr>
+            <td class="label-cell">
+                <code>Description</code>
+            </td>
+            <td class="label-cell"></td>
+            <td class="fullwidth-cell">
+Optional description
+<p>You can use <code>\n</code> into the string in order to force a new line
+</td>
+</tr>
+<tr>
+<td class="label-cell">
+<code>section</code>
+</td>
+<td class="label-cell"></td>
+<td class="fullwidth-cell">
+Section of the website associated to this navbar item
+</td>
+</tr>
+</tbody></p>
+</table>
+<p><strong>Example</strong></p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span>{</span>
+<span>    </span><span style="color: #E45649">&quot;navbar&quot;</span><span>: {</span>
+<span>        </span><span style="color: #E45649">&quot;start&quot;</span><span>: </span><span style="color: #383A42">[</span>
+<span>            {</span>
+<span>                </span><span style="color: #E45649">&quot;pinned&quot;</span><span>: </span><span style="color: #0184BC">true</span><span>,</span>
+<span>                </span><span style="color: #E45649">&quot;label&quot;</span><span>: </span><span style="color: #50A14F">&quot;Docs&quot;</span><span>,</span>
+<span>                </span><span style="color: #E45649">&quot;items&quot;</span><span>: </span><span style="color: #383A42">[</span>
+<span>                    {</span>
+<span>                        </span><span style="color: #E45649">&quot;section&quot;</span><span>: </span><span style="color: #50A14F">&quot;nacara&quot;</span><span>,</span>
+<span>                        </span><span style="color: #E45649">&quot;label&quot;</span><span>: </span><span style="color: #50A14F">&quot;Nacara&quot;</span><span>,</span>
+<span>                        </span><span style="color: #E45649">&quot;description&quot;</span><span>: </span><span style="color: #50A14F">&quot;Description line1</span><span style="color: #0184BC">\n</span><span style="color: #50A14F">line2 start here&quot;</span><span>,</span>
+<span>                        </span><span style="color: #E45649">&quot;url&quot;</span><span>: </span><span style="color: #50A14F">&quot;/Nacara/documentation/introduction.html&quot;</span>
+<span>                    },</span>
+<span>                    </span><span style="color: #50A14F">&quot;divider&quot;</span><span>,</span>
+<span>                    {</span>
+<span>                        </span><span style="color: #E45649">&quot;label&quot;</span><span>: </span><span style="color: #50A14F">&quot;Nacara.Layout.Standard&quot;</span><span>,</span>
+<span>                        </span><span style="color: #E45649">&quot;url&quot;</span><span>: </span><span style="color: #50A14F">&quot;/Nacara/documentation/layout/introduction.html&quot;</span>
+<span>                    }</span>
+<span>                </span><span style="color: #383A42">]</span>
+<span>            }</span>
+<span>        </span><span style="color: #383A42">]</span>
+<span>    }</span>
+<span>}</span></code></pre>
+<h3>end <a href="#end" aria-hidden="true"><span class="anchor" id="end"></span>#</a></h3>
+<p>List of <code>IconLink</code></p>
+<table class="table is-narrow is-bordered is-vcentered">
+    <thead>
+        <tr>
+            <th class="label-cell">Property</th>
+            <th class="label-cell">Required</th>
+            <th class="label-cell">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="label-cell">
+                <code>label</code>
+            </td>
+            <td class="label-cell">X</td>
+            <td class="fullwidth-cell">
+<p>Label of the link to display</p>
+<p><em>The default layout use it when on mobile screen</em>
+</td>
+</tr>
+<tr>
+<td class="label-cell">
+<code>icon</code>
+</td>
+<td class="label-cell">X</td>
+<td class="fullwidth-cell">
+FontAwesome class icons part of the <a href="https://fontawesome.com/icons?d=gallery&amp;p=2&amp;m=free">free pack</a></p>
+<p>Example: <code>fab fa-twitter</code></p>
+<p><em>The default layout use it on tablet and desktop screen</em>
+</td>
+</tr>
+<tr>
+<td class="label-cell">
+<code>url</code>
+</td>
+<td class="label-cell">X</td>
+<td class="fullwidth-cell">
+URL to link to
+</td>
+</tr>
+</tbody></p>
+</table>
+<p><strong>Example</strong></p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span>{</span>
+<span>    </span><span style="color: #E45649">&quot;navbar&quot;</span><span>: {</span>
+<span>        </span><span style="color: #E45649">&quot;end&quot;</span><span>: </span><span style="color: #383A42">[</span>
+<span>            {</span>
+<span>                </span><span style="color: #E45649">&quot;url&quot;</span><span>: </span><span style="color: #50A14F">&quot;https://github.com/MangelMaxime/Nacara&quot;</span><span>,</span>
+<span>                </span><span style="color: #E45649">&quot;icon&quot;</span><span>: </span><span style="color: #50A14F">&quot;fab fa-github&quot;</span><span>,</span>
+<span>                </span><span style="color: #E45649">&quot;label&quot;</span><span>: </span><span style="color: #50A14F">&quot;GitHub&quot;</span>
+<span>            },</span>
+<span>            {</span>
+<span>                </span><span style="color: #E45649">&quot;url&quot;</span><span>: </span><span style="color: #50A14F">&quot;https://twitter.com/MangelMaxime&quot;</span><span>,</span>
+<span>                </span><span style="color: #E45649">&quot;icon&quot;</span><span>: </span><span style="color: #50A14F">&quot;fab fa-twitter&quot;</span><span>,</span>
+<span>                </span><span style="color: #E45649">&quot;label&quot;</span><span>: </span><span style="color: #50A14F">&quot;Twitter&quot;</span>
+<span>            }</span>
+<span>        </span><span style="color: #383A42">]</span>
+<span>    }</span>
+<span>}</span></code></pre>
+<h2>lightner <a href="#lightner" aria-hidden="true"><span class="anchor" id="lightner"></span>#</a></h2>
+<h2>layouts <a href="#layouts" aria-hidden="true"><span class="anchor" id="layouts"></span>#</a></h2>
+<p>This is where you register the different layouts supported by your website.</p>
+<p>It consists on a list of <code>string</code> which can be:</p>
+<ul>
+<li>
+<p>The name of an npm package</p>
+<p>You need to have it installed in your project <br/><br/></p>
+</li>
+<li>
+<p>A relative path to a <code>.js</code> or <code>.jsx</code> file.</p>
+<p>Learn more about custom layout <a href="/Nacara/documentation/advanced/layout-from-scratch.html">here</a></p>
+</li>
+</ul>
+<p><strong>Example</strong></p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span>{</span>
+<span>    </span><span style="color: #E45649">&quot;layouts&quot;</span><span>: </span><span style="color: #383A42">[</span>
+<span>        </span><span style="color: #50A14F">&quot;nacara-layout-standard&quot;</span><span>,</span>
+<span>        </span><span style="color: #50A14F">&quot;./scripts/blog-page.jsx&quot;</span>
+<span>    </span><span style="color: #383A42">]</span>
+<span>}</span></code></pre>
+<h2>serverPort <a href="#serverPort" aria-hidden="true"><span class="anchor" id="serverPort"></span>#</a></h2>
+<p><strong>Optional</strong></p>
+<p>Configure on which port Nacara should start the watch server.</p>
+<p>Default is <code>8080</code>.</p>
+<p><strong>Example</strong></p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span>{</span>
+<span>    </span><span style="color: #E45649">&quot;serverPort&quot;</span><span>: </span><span style="color: #986801">8000</span>
+<span>}</span></code></pre>
+<h2>source <a href="#source" aria-hidden="true"><span class="anchor" id="source"></span>#</a></h2>
+<p><strong>Optional</strong></p>
+<p>Configure where the source folder is.</p>
+<p>Default is <code>docs</code></p>
+<p><strong>Example</strong></p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span>{</span>
+<span>    </span><span style="color: #E45649">&quot;source&quot;</span><span>: </span><span style="color: #50A14F">&quot;docsrc&quot;</span>
+<span>}</span></code></pre>
+<h2>output <a href="#output" aria-hidden="true"><span class="anchor" id="output"></span>#</a></h2>
+<p><strong>Optional</strong></p>
+<p>Configure where Nacara will put the generated files.</p>
+<p>Default is <code>docs_deploy</code></p>
+<p><strong>Example</strong></p>
+<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span>{</span>
+<span>    </span><span style="color: #E45649">&quot;output&quot;</span><span>: </span><span style="color: #50A14F">&quot;public&quot;</span>
+<span>}</span></code></pre>
+</div></div></section><div class="section bd-docs-pagination bd-pagination-links"><a class="button bd-fat-button is-primary is-light bd-pagination-prev" href="/Nacara/nacara/introduction.html"><i>←</i><span class="is-hidden-mobile"><em>Overview</em><strong>Introduction</strong></span></a><a class="button bd-fat-button is-primary is-light bd-pagination-next" href="/Nacara/nacara/directory-structure.html"><span class="is-hidden-mobile"><em>Overview</em><strong>Directory structure</strong></span><i>→</i></a></div></div></div></div><script async="" src="/Nacara/resources/nacara-standard-layouts/scripts/menu.js"></script></body></html>
