@@ -5,6 +5,10 @@ $computed-navbar-height: $navbar-height + $navbar-padding-vertical * 2;
 @import './components/navigation-button.scss';
 @import './components/nacara-navbar.scss';
 
+$font-awesome-url: 'https://use.fontawesome.com/releases/v5.15.4/css/all.css' !default;
+
+@import url($font-awesome-url);
+
 // Fix bug: On some browser the body is not placed at the right place
 // This code should fix the issue
 html {
