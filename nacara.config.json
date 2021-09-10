@@ -14,13 +14,13 @@
                     {
                         "label": "Nacara",
                         "description": "Learn more about how Nacara works,\nand how to setup it in your project",
-                        "url": "/Nacara/documentation/introduction.html"
+                        "url": "/Nacara/nacara/introduction.html"
                     },
                     "divider",
                     {
                         "label": "Nacara.Layout.Standard",
                         "description": "Default layout used by Nacara",
-                        "url": "/Nacara/documentation/nacara-layout-standard/introduction.html"
+                        "url": "/Nacara/nacara-layout-standard/introduction.html"
                     }
                 ]
             },
