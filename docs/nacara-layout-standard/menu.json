@@ -1,12 +1,6 @@
 [
-    {
-        "type": "section",
-        "label": "Nacara-layout-standard",
-        "items": [
-            "nacara-layout-standard/introduction",
-            "nacara-layout-standard/layouts",
-            "nacara-layout-standard/markdown-features",
-            "nacara-layout-standard/scss-sass-variables"
-        ]
-    }
+    "nacara-layout-standard/introduction",
+    "nacara-layout-standard/layouts",
+    "nacara-layout-standard/markdown-features",
+    "nacara-layout-standard/scss-sass-variables"
 ]
