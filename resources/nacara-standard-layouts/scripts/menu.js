@@ -1,64 +1,3 @@
-const setupMenuNavigation = () => {
-    /*
-     * Initialize the menu state
-     */
-
-    // Collapse menu-group which doesn't concerns the current page
-    document
-        .querySelectorAll(`.menu .menu-group[data-collapsible=true][data-default-state=collapsed]`)
-        .forEach(function (menuGroup) {
-            var parentChildren = Array.from(menuGroup.parentElement.children);
-
-            var subItems =
-                parentChildren.find(function (child) {
-                    return child.nodeName === "UL";
-                });
-
-            // A menu-group is expanded when one of it's element is tagged as `is-active`
-            // This takes care of nested menus
-            const isActiveMenu =
-                menuGroup.parentElement.querySelector(".is-active") !== null
-
-            if (isActiveMenu) {
-                menuGroup.classList.add("is-expanded");
-                subItems.style.display = "block";
-            } else {
-                menuGroup.classList.remove("is-expanded");
-                subItems.style.display = "none";
-            }
-        });
-
-    // Register listener to handle menu-group
-    document
-        .querySelectorAll(`.menu .menu-group[data-collapsible=true]`)
-        .forEach(function (menuGroup) {
-            menuGroup.addEventListener("click", function (ev) {
-                // All the menu "calculation" are done relative to the .menu-group element
-                var menuGroup =
-                    ev.target.classList.contains("menu-group")
-                        ? ev.target
-                        : ev.target.closest(".menu-group");
-
-                var parentChildren = Array.from(menuGroup.parentElement.children);
-
-                var subItems =
-                    parentChildren.find(function (child) {
-                        return child.nodeName === "UL";
-                    });
-
-                if (menuGroup.classList.contains("is-expanded")) {
-                    menuGroup.classList.remove("is-expanded");
-                    subItems.style.display = "none";
-                } else {
-                    menuGroup.classList.add("is-expanded");
-                    subItems.style.display = "block";
-                }
-
-            });
-        });
-
-}
-
 const setupNavbarBurger = () => {
 
     /*
@@ -229,11 +168,6 @@ const setupGlobal = () => {
     setupNavbarBurger();
     setupNavbarDropdown();
     setupMobileMenu();
-
-    if (document.querySelector(".menu") !== null) {
-        setupMenuNavigation();
-    }
-
     setupCopyCode();
     scrollMenuOrTableOfContentIfNeeded();
 }
