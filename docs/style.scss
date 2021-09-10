@@ -59,10 +59,22 @@ $body-size: 14px;
 
 .content {
     .table {
+
+        &.is-vcentered {
+            td, th {
+                vertical-align: middle;
+            }
+        }
+
         .label-cell {
             white-space: nowrap;
             text-align: center !important;
             vertical-align: middle !important;
+        }
+
+        // Force call to take the maximum place
+        .fullwidth-cell {
+            width: 100%;
         }
     }
 }

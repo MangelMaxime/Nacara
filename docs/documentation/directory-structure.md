@@ -23,7 +23,7 @@ A basic Nacara site looks to something like that:
 
 Overview, of what each of those does:
 
-<table class="table is-narrow is-bordered">
+<table class="table is-narrow is-bordered is-vcentered">
     <thead>
         <tr>
             <th class="label-cell">File / Directory</th>
@@ -35,7 +35,7 @@ Overview, of what each of those does:
             <td class="label-cell">
                 <code>docs</code>
             </td>
-            <td style="vertical-align: middle">
+            <td class="fullwidth-cell">
                 Default, folder where you place your website source files likes:
                 <ul>
                     <li>Static resources</li>
@@ -50,7 +50,7 @@ Overview, of what each of those does:
                 <div class="is-size-7 my-2">or</div>
                 <code>docs/style.sass</code>
             </td>
-            <td style="vertical-align: middle">
+            <td class="fullwidth-cell">
                 <p>
                     Main entry file for styling your application, generated file will be <code>docs_deploy/style.css</code>
                 </p>
@@ -65,7 +65,7 @@ Overview, of what each of those does:
                 <div class="is-size-7 my-2">or</div>
                 <code>docs/sass</code>
             </td>
-            <td style="vertical-align: middle">
+            <td class="fullwidth-cell">
                 This is where you place your SASS/SCSS files imported by <code>style.scss</code>.
             </td>
         </tr>
@@ -73,7 +73,7 @@ Overview, of what each of those does:
             <td class="label-cell">
                 <code>docs_deploy</code>
             </td>
-            <td style="vertical-align: middle">
+            <td class="fullwidth-cell">
                 <p>This is where Nacara will put the generated files (by default).</p>
                 <p>You should add this folder to your <code>.gitignore</code>.</p>
             </td>
@@ -82,7 +82,7 @@ Overview, of what each of those does:
             <td class="label-cell">
                 <code>lightner/themes</code>
             </td>
-            <td style="vertical-align: middle">
+            <td class="fullwidth-cell">
                 <p>
 
 Recommended place to place your theme file user by [Code-lightner](https://github.com/MangelMaxime/Code-Lightner) to provides code highlights.
@@ -93,7 +93,7 @@ Recommended place to place your theme file user by [Code-lightner](https://githu
             <td class="label-cell">
                 <code>lightner/grammars</code>
             </td>
-            <td style="vertical-align: middle">
+            <td class="fullwidth-cell">
                 <p>
 
 Recommended place to place your grammars files user by [Code-lightner](https://github.com/MangelMaxime/Code-Lightner) to provides code highlights.
@@ -104,7 +104,7 @@ Recommended place to place your grammars files user by [Code-lightner](https://g
             <td class="label-cell">
                 <code>nacara.config.json</code>
             </td>
-            <td style="vertical-align: middle">
+            <td class="fullwidth-cell">
                 <p>Nacara config file.</p>
             </td>
         </tr>
@@ -112,7 +112,7 @@ Recommended place to place your grammars files user by [Code-lightner](https://g
             <td class="label-cell">
                 <code>package.json</code>
             </td>
-            <td style="vertical-align: middle">
+            <td class="fullwidth-cell">
                 <p>File used to configure your NPM dependencies like Nacara, Babel, nacara-layout-standard.</p>
             </td>
         </tr>
@@ -122,7 +122,7 @@ Recommended place to place your grammars files user by [Code-lightner](https://g
                 <div class="is-size-7 my-2">or</div>
                 <code>docs/\*\*/\*.md</code>
             </td>
-            <td style="vertical-align: middle">
+            <td class="fullwidth-cell">
                 <p>Any markdown file encounter are going to be transform by Nacara into HTML using the layout provided via the front-matter property.</p>
             </td>
         </tr>
@@ -130,7 +130,7 @@ Recommended place to place your grammars files user by [Code-lightner](https://g
             <td class="label-cell">
                 <code>docs/\*\*/\*.md</code>
             </td>
-            <td style="vertical-align: middle">
+            <td class="fullwidth-cell">
                 <p>Any markdown file encounter are going to be transform by Nacara into HTML using the layout provided via the front-matter property.</p>
             </td>
         </tr>
@@ -138,7 +138,7 @@ Recommended place to place your grammars files user by [Code-lightner](https://g
             <td class="label-cell">
                 <code>docs/\*\*/menu.json</code>
             </td>
-            <td style="vertical-align: middle">
+            <td class="fullwidth-cell">
                 Menu configuration for the section it is in.
             </td>
         </tr>
@@ -148,7 +148,7 @@ Recommended place to place your grammars files user by [Code-lightner](https://g
                 <div class="is-size-7 my-2">or</div>
                 <code>folders</code>
             </td>
-            <td style="vertical-align: middle">
+            <td class="fullwidth-cell">
                 Except for the special cases listed above, all the other file and folder will be copied into the destination folder.
             </td>
         </tr>
