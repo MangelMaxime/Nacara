@@ -24,126 +24,233 @@ let private renderIconFromClass (iconClass : string) (colorOpt :string option) =
         ]
     ]
 
-let private navbarItemIsFromSection (item : NavbarLink) (pageSection : string) =
-    match item.Section with
+let private navbarItemIsFromSection (itemSectionOpt : string option) (pageSection : string) =
+    match itemSectionOpt with
     | Some itemSection ->
         itemSection = pageSection
 
     | None ->
         false
 
-let private renderNavbarContainer container (pageSection : string) (items : NavbarLink list) =
-    container [
+let private renderNacaraNavbarDropdown (dropdown : DropdownInfo) =
+    let guid = System.Guid.NewGuid()
+
+    Bulma.navbarItem.div [
+        prop.className "has-nacara-dropdown"
+        prop.custom("data-guid", guid.ToString())
+
+        // Non-pinned dropdown are not rendered when on mobile
+        // They will be included in the navbar menu
+        if not dropdown.IsPinned then
+            helpers.isHiddenMobile
+
+        prop.children [
+            Html.div [
+                prop.className "nacara-dropdown-link"
+                prop.text dropdown.Label
+            ]
+
+            Html.div [
+                prop.classes [
+                    "nacara-dropdown"
+                    // Control how the dropdown is rendered
+                    // Useful when using partial layout for the content
+                    if dropdown.IsFullWidth then
+                        "is-fullwidth"
+                    else
+                        "is-floating"
+                ]
+
+                prop.children [
+                    for items in dropdown.Items do
+                        match items with
+                        | DropdownItem.Divider ->
+                            Bulma.navbarDivider [ ]
+
+                        | DropdownItem.Link linkInfo ->
+                            Html.a [
+                                prop.className "nacara-dropdown-item"
+                                prop.href linkInfo.Url
+                                prop.children [
+                                    match linkInfo.Description with
+                                    | Some description ->
+                                        Html.div [
+                                            Html.div [
+                                                Html.strong linkInfo.Label
+                                            ]
+
+                                            Html.div [
+                                                prop.className "nacara-dropdown-item-description"
+                                                prop.text description
+                                            ]
+                                        ]
+
+                                    | None ->
+                                        Html.div [
+                                            prop.text linkInfo.Label
+                                        ]
+                                ]
+                            ]
+                ]
+            ]
+        ]
+    ]
+
+let private renderNavbarBurgerMenu =
+    Bulma.navbarItem.div [
+        prop.className "navbar-burger-dots"
+        helpers.isHiddenTablet
+
+        prop.children [
+            Svg.svg [
+                svg.height 4
+                svg.stroke "none"
+                svg.viewBox(0, 0, 22, 4)
+                svg.width 22
+                svg.children [
+                    Svg.circle [
+                        svg.cx 2
+                        svg.cy 2
+                        svg.r 2
+                    ]
+                    Svg.circle [
+                        svg.cx 2
+                        svg.cy 2
+                        svg.r 2
+                        svg.transform [
+                            transform.translate(9, 0)
+                        ]
+                    ]
+                    Svg.circle [
+                        svg.cx 2
+                        svg.cy 2
+                        svg.r 2
+                        svg.transform [
+                            transform.translate(18, 0)
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ]
+
+let private renderStartNavbar (pageSection : string) (items : StartNavbarItem list) =
+    Bulma.navbarStart.div [
         for item in items do
 
             match item with
-            // Label only
-            | { Label = Some label; Icon = None } ->
+            | StartNavbarItem.LabelLink info ->
                 Bulma.navbarItem.a [
-                    prop.href item.Url
-                    prop.text label
-                    if navbarItemIsFromSection item pageSection then
+                    prop.href info.Url
+                    prop.text info.Label
+                    if navbarItemIsFromSection info.Section pageSection then
                         navbarItem.isActive
-
-                    match item.IconColor with
-                    | Some color ->
-                        prop.style [
-                            style.custom ("color", color)
-                        ]
-
-                    | None ->
-                        ()
+                    if not info.IsPinned then
+                        helpers.isHiddenMobile
                 ]
 
-            // Label and icon
-            | { Label = Some label; Icon = Some icon } ->
-                Bulma.navbarItem.a [
-                    prop.href item.Url
-                    if navbarItemIsFromSection item pageSection then
-                        navbarItem.isActive
+            | StartNavbarItem.Dropdown dropdown ->
+                renderNacaraNavbarDropdown dropdown
 
-                    prop.children [
-                        renderIconFromClass icon item.IconColor
-                        Html.span label
-                    ]
-                ]
-
-            // Icon only
-            | { Label = None; Icon = Some icon } ->
-                Bulma.navbarItem.a [
-                    prop.href item.Url
-                    if navbarItemIsFromSection item pageSection then
-                        navbarItem.isActive
-
-                    prop.children [
-                        renderIconFromClass icon item.IconColor
-                    ]
-                ]
-
-            | _ ->
-                printf $"""%A{item} is not a valid NavbarLink.
-
-A NavbarLink either have:
-- A label and no icon
-- A label and an icon
-- No label and an icon
-"""
-
+        renderNavbarBurgerMenu
     ]
 
-let private renderMobileNavbarItems (pageSection : string) (navbarConfig : NavbarConfig) =
+let private renderEndNavbar (items : IconLink list) =
+    Bulma.navbarEnd.div [
+        // On mobile, we hide the navbar end
+        // Its content will be include in the navbar menu
+        helpers.isHiddenMobile
 
-    let sectionLabelOpt =
-        navbarConfig.Start @ navbarConfig.End
-        |> List.tryFind (fun navbarLink ->
-            match navbarLink.Section with
-            | Some section ->
-                section = pageSection
+        prop.children [
+            for item in items do
 
-            | None ->
-                false
-        )
-        |> Option.map (fun navbarLink ->
-            navbarLink.Label
-        )
-
-    [
-        // If we found a navbar link with the name of the page section
-        // Display it in the navbar for mobile render
-        // So people know where they are in the webiste
-        match sectionLabelOpt with
-        | Some (Some sectionLabel) ->
-            Bulma.navbarItem.a [
-                helpers.isHiddenDesktop
-                navbarItem.isActive
-                prop.text sectionLabel
-            ]
-
-        | Some None
-        | None ->
-            null
-
-        for item in navbarConfig.End do
-
-            match item with
-            // Only render
-            | { Label = None; Icon = Some icon } ->
                 Bulma.navbarItem.a [
                     prop.href item.Url
-                    helpers.isHiddenDesktop
-
                     prop.children [
-                        renderIconFromClass icon item.IconColor
+                        Bulma.icon [
+                            Fa.i [ Fa.Icon item.Icon
+                                   Fa.Size Fa.FaLarge ]
+                                [ ]
+                        ]
                     ]
                 ]
+        ]
+    ]
 
-            | _ ->
-                ()
+
+/// <summary>
+/// Render the navbar menu.
+///
+/// It is the menu used on mobile.
+/// </summary>
+/// <param name="navbarConfig">Configuration of the navbar</param>
+/// <returns>A <c>ReactElement</c> representing the navbar menu</returns>
+let private renderNacaraNavbarMenu (navbarConfig : NavbarConfig) =
+    Html.div [
+        prop.className "nacara-navbar-menu"
+
+        prop.children [
+
+            for item in navbarConfig.Start do
+                match item with
+                | StartNavbarItem.LabelLink info ->
+                    // Skip the item if it is pinned
+                    if info.IsPinned then
+                        null
+                    else
+                        Html.a [
+                            prop.className "nacara-navbar-menu-item"
+                            prop.href info.Url
+                            prop.text info.Label
+                        ]
+
+                | StartNavbarItem.Dropdown dropdown ->
+                    // Skip the item if it is pinned
+                    if dropdown.IsPinned then
+                        null
+
+                    else
+                        Html.ul [
+                            prop.className "nacara-navbar-menu-dropdown"
+
+                            prop.children [
+                                Html.li [
+                                    prop.className "nacara-navbar-menu-dropdown-label"
+                                    prop.text dropdown.Label
+                                ]
+
+                                for item in dropdown.Items do
+                                    match item with
+                                    | DropdownItem.Link info ->
+                                        Html.li [
+                                            prop.className "nacara-navbar-menu-dropdown-link"
+                                            prop.children [
+                                                Html.a [
+                                                    prop.href info.Url
+                                                    prop.text info.Label
+                                                ]
+                                            ]
+                                        ]
+
+                                    | DropdownItem.Divider ->
+                                        null
+                            ]
+                        ]
+
+            // Render the navbar end items using the label only
+            for item in navbarConfig.End do
+                Html.a [
+                    prop.className "nacara-navbar-menu-item"
+                    prop.href item.Url
+                    prop.text item.Label
+                ]
+        ]
     ]
 
 let private navbar (config : Config) (pageSection : string) =
     Bulma.navbar [
         navbar.isFixedTop
+        prop.className "is-spaced"
 
         prop.children [
             Bulma.container [
@@ -153,39 +260,16 @@ let private navbar (config : Config) (pageSection : string) =
                         prop.href (config.Url + config.BaseUrl)
                         prop.text config.Title
                     ]
+                ]
 
-                    match config.Navbar with
-                    | Some navbarConfig ->
-                        // On mobile, only the items in the end of the navbar
-                        // have a chance to be rendered
-                        yield! renderMobileNavbarItems pageSection navbarConfig
-
-                    | None ->
-                        ()
-
-                    Bulma.navbarBurger [
-                        prop.custom ("data-target", "nav-menu")
-                        prop.children [
-                            Html.span [ ]
-                            Html.span [ ]
-                            Html.span [ ]
-                        ]
+                Bulma.navbarMenu [
+                    prop.children [
+                        renderStartNavbar pageSection config.Navbar.Start
+                        renderEndNavbar config.Navbar.End
                     ]
                 ]
 
-                match config.Navbar with
-                | Some navbarConfig ->
-                    Bulma.navbarMenu [
-                        prop.id "nav-menu"
-
-                        prop.children [
-                            renderNavbarContainer Bulma.navbarStart.div pageSection navbarConfig.Start
-                            renderNavbarContainer Bulma.navbarEnd.div pageSection navbarConfig.End
-                        ]
-                    ]
-
-                | None ->
-                    ()
+                renderNacaraNavbarMenu config.Navbar
             ]
         ]
     ]
@@ -260,6 +344,11 @@ let render (args : RenderArgs) =
 
             Html.body [
                 navbar args.Config args.Section
+
+                Html.div [
+                    prop.className "grey-overlay"
+                ]
+
                 args.Content
 
                 Html.script [

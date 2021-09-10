@@ -1,25 +1,53 @@
 {
     "url": "https://mangelmaxime.github.io",
     "baseUrl": "/Nacara/",
-    "editUrl" : "https://github.com/MangelMaxime/Nacara/edit/master/docsrc",
+    "editUrl" : "https://github.com/MangelMaxime/Nacara/edit/master/docs",
     "title": "Nacara",
     "serverPort": 8081,
     "navbar": {
         "start": [
             {
-                "section": "documentation",
-                "url": "/Nacara/documentation/introduction.html",
-                "label": "Docs"
+                "pinned": true,
+                "label": "Docs",
+                "items": [
+                    {
+                        "section": "nacara",
+                        "label": "Nacara",
+                        "description": "Learn more about how Nacara works,\nand how to setup it in your project",
+                        "url": "/Nacara/nacara/introduction.html"
+                    },
+                    "divider",
+                    {
+                        "section": "nacara-layout-standard",
+                        "label": "Nacara.Layout.Standard",
+                        "description": "Default layout used by Nacara",
+                        "url": "/Nacara/nacara-layout-standard/introduction.html"
+                    }
+                ]
             },
             {
                 "section": "showcase",
                 "url": "/Nacara/showcase/index.html",
-                "label": "Showcase"
+                "label": "Showcase",
+                "pinned": true
             },
             {
                 "section": "changelogs",
-                "url": "/Nacara/changelogs/nacara.html",
-                "label": "Changelogs"
+                "label": "Changelogs",
+                "items": [
+                    {
+                        "label": "Nacara",
+                        "url": "/Nacara/changelogs/nacara.html"
+                    },
+                    {
+                        "label": "Nacara.Core",
+                        "url": "/Nacara/changelogs/nacara-core.html"
+                    },
+                    {
+                        "label": "Nacara.Standard.Layout",
+                        "url": "/Nacara/changelogs/nacara-layout-standard.html"
+                    }
+                ]
             },
             {
                 "url": "https://gitter.im/fable-compiler/Fable",
@@ -35,12 +63,13 @@
         "end": [
             {
                 "url": "https://github.com/MangelMaxime/Nacara",
-                "icon": "fab fa-github"
+                "icon": "fab fa-github",
+                "label": "GitHub"
             },
             {
                 "url": "https://twitter.com/MangelMaxime",
                 "icon": "fab fa-twitter",
-                "iconColor": "#55acee"
+                "label": "Twitter"
             }
         ]
     },

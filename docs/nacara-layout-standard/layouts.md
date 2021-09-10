@@ -3,6 +3,12 @@ title: Layouts
 layout: nacara-standard
 ---
 
+Here are all the layouts include in this package:
+
+- `nacara-standard`: standard documentation page
+- `nacara-navbar-only`: a navbar with a blank canvas
+- `nacara-changelog`: for displaying your changelog on your website
+
 ## nacara-standard
 
 This layout is mostly used for documentation page.

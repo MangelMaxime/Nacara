@@ -1,0 +1,262 @@
+
+$nacara-navbar-dropdown-item-color: $text !default;
+$nacara-navbar-dropdown-boxed-shadow: $navbar-dropdown-boxed-shadow !default;
+$nacara-navbar-dropdown-z-index: $navbar-z !default;
+$nacara-grey-overlay-z: 20 !default;
+$nacara-grey-overlay-background-color: bulmaRgba($scheme-invert, 0.1) !default;
+$nacara-navbar-menu-border: 1px solid $navbar-item-active-background-color !default;
+
+// Adapt the navbar component to our specific vision of how
+// the navbar should behave for Nacara
+.navbar {
+    // Make .navbar-start take all the available place
+    // It will automatically push the .navbar-end in place
+    // By default, Bulma use some margin auto to achieve this but
+    // this harder to control for our use case
+    .navbar-start {
+        flex-grow: 1;
+    }
+
+    // Make sure the .navbar.container has enough space around it
+    // to display correctly on all display
+    & >.container {
+        margin-left: 1rem;
+        margin-right: 1rem;
+
+        // Mimic Bulma behavior with our own value
+        // Bulma: use -0.75rem
+        .navbar-menu {
+            margin-right: -1rem;
+        }
+    }
+
+    // Create our own implement of the navbar dropdown component
+    .navbar-item {
+        &.has-nacara-dropdown {
+            align-items: stretch;
+            padding: 0;
+
+            &.is-active,
+            &:hover {
+                .nacara-dropdown-link {
+                    background-color: $navbar-item-active-background-color;
+                }
+
+                .nacara-dropdown {
+                    // From tablet screen and bigger, the dropdown
+                    // follows the style declared in the configuration (floating or fullwidth)
+                    @include tablet {
+                        display: block;
+                    }
+
+                    // On mobile screen, the dropdown take the full width of the screen
+                    @include mobile {
+                        display: block;
+                        width: 100%;
+                        position: fixed;
+                        left: 0;
+                        top: $computed-navbar-height;
+                        transform: unset;
+                        border-radius: 0 0 8px 8px;
+                    }
+                }
+            }
+        }
+
+        .nacara-dropdown-link {
+            align-items: center;
+            display: flex;
+            padding: 0.5rem 2.5em 0.5rem 0.75rem;
+            border-radius: $radius;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            &::after {
+                @include arrow;
+                @include ltr-position(1.125em);
+                border-color: $navbar-item-color;
+            }
+        }
+    }
+
+    .nacara-dropdown {
+        top: $computed-navbar-height;
+        z-index: $nacara-navbar-dropdown-z-index;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        box-shadow: $nacara-navbar-dropdown-boxed-shadow;
+        background-color: $white;
+        display: none;
+        font-size: 0.875rem;
+
+        // Default dropdown style
+        // It make the dropdown "float" bellow the navbar item and centered on it
+        &.is-floating {
+            position: absolute;
+            left: 0;
+            border-radius: 8px;
+            top: 100%;
+        }
+
+        // Allow to make the dropdown take the full width of the screen
+        // Especially useful when using partial layouts for the dropdown
+        &.is-fullwidth {
+            width: 100%;
+            position: fixed;
+            left: 0;
+            transform: unset;
+            border-radius: 0 0 8px 8px;
+        }
+
+        // Mimic .navbar-item from Bulma
+        a.nacara-dropdown-item {
+            color: $nacara-navbar-dropdown-item-color;
+            align-items: center;
+            display: flex;
+            cursor: pointer;
+            // Allow the user to specific where to force a newline in the
+            // item description by adding `\n` in the JSON text
+            white-space: pre;
+            padding: 0.375rem 3rem 0.375rem 1rem;
+
+            &:hover {
+                background-color: $navbar-item-hover-background-color;
+                color: $navbar-item-hover-color;
+            }
+        }
+    }
+}
+
+.navbar-burger-dots {
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-left: auto;
+    height: 2.5rem; // Gives the same height as for the others navbar elements
+    border-radius: $radius;
+
+    svg {
+        fill: #ffffff
+    }
+
+    &:hover {
+        cursor: pointer;
+        background-color: $navbar-item-hover-background-color;
+    }
+
+    &.is-active {
+        background-color: $navbar-item-active-background-color;
+    }
+}
+
+// Overlay which helps make the dropdown stand out more
+// It takes the whole screen except the navbar space
+.grey-overlay {
+    position: fixed;
+    top: $computed-navbar-height;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: $nacara-grey-overlay-z;
+    display: none;
+    background-color: $nacara-grey-overlay-background-color;
+    width: 100%;
+    height: 100%;
+
+    &.is-active {
+        display: block;
+    }
+}
+
+.nacara-navbar-menu {
+
+    @include tablet {
+        display: none !important;
+    }
+
+    display: none;
+    position: fixed;
+    height: calc(100vh - #{$computed-navbar-height});
+    top: $computed-navbar-height;
+    width: 100vw;
+    left: 0;
+    background-color: $navbar-background-color;
+    flex-direction: column;
+    border-top: $nacara-navbar-menu-border;
+
+    &.is-active {
+        display: flex;
+    }
+
+    .nacara-navbar-menu-item {
+        color: $white;
+        flex-basis: 0;
+        flex-grow: 0;
+        padding: .75rem 1rem;
+        line-height: 1.5;
+        border-bottom: $nacara-navbar-menu-border;
+    }
+
+    a.nacara-navbar-menu-item {
+        &:hover {
+            background-color: $navbar-item-hover-background-color;
+        }
+    }
+
+    .nacara-navbar-menu-dropdown {
+        border-bottom: $nacara-navbar-menu-border;
+
+        .nacara-navbar-menu-dropdown-label {
+            color: $white;
+            flex-basis: 0;
+            flex-grow: 0;
+            padding: .75rem 1rem;
+            line-height: 1.5;
+            border-bottom: $nacara-navbar-menu-border;
+            position: relative;
+
+            &::after {
+                border: 3px solid $white;
+                border-radius: 2px;
+                border-right: 0;
+                border-top: 0;
+                content: " ";
+                display: block;
+                height: 0.625em;
+                margin-top: -0.4375em;
+                pointer-events: none;
+                position: absolute;
+                top: 50%;
+                right: 2.33em;
+                transform: rotate(-45deg);
+                transform-origin: center;
+                width: 0.625em;
+            }
+        }
+
+        .nacara-navbar-menu-dropdown-link {
+            flex-basis: 0;
+            flex-grow: 0;
+            padding: .75rem .75rem .75rem 2.5rem;
+            line-height: 1.5;
+            cursor: pointer;
+            font-size: .875rem;
+
+            &:not(:last-child) {
+                border-bottom: $nacara-navbar-menu-border;
+            }
+
+            a {
+                color: $white;
+            }
+
+            &:hover {
+                background-color: $navbar-item-hover-background-color;
+            }
+        }
+
+    }
+}

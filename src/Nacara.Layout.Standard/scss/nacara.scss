@@ -1,6 +1,22 @@
+$computed-navbar-height: $navbar-height + $navbar-padding-vertical * 2;
+
 @import './components/changelog.scss';
 @import './components/textual-steps.scss';
 @import './components/navigation-button.scss';
+@import './components/nacara-navbar.scss';
+
+// Fix bug: On some browser the body is not placed at the right place
+// This code should fix the issue
+html {
+    &.has-navbar-fixed-top {
+        padding-top: 0;
+
+        body {
+            padding-top: 0;
+            margin-top: $computed-navbar-height;
+        }
+    }
+}
 
 // Remove bottom margin of the name of the project in the navbar otherwise a the navbar is distorted
 .navbar-item.title.is-4 {
@@ -8,13 +24,17 @@
 }
 
 // Allow to add `is-active` class to navbar div item
-div.navbar-item {
-    cursor: default;
-    &.is-active {
-        background-color: $navbar-item-hover-background-color;
-        color: $navbar-item-hover-color;
+.navbar-brand {
+    div.navbar-item,
+    a.navbar-item {
+        &.is-active,
+        &:hover {
+            background-color: $navbar-item-hover-background-color;
+            color: $navbar-item-hover-color;
+        }
     }
 }
+
 
 // Collapsible / Expandable menu
 .menu-group {
@@ -95,14 +115,14 @@ h2, h3, h4, h5, h6  {
 // On desktop and above we only have the navbar to take into account
 @include desktop {
     .anchor {
-        padding: #{$navbar-height + 1rem} 0 0;
+        padding: #{$computed-navbar-height + 1rem} 0 0;
     }
 }
 
 // On touch screen we need to take into account the navbar and the breadcrumb
 @include touch {
     .anchor {
-        padding: #{$navbar-height * 2 + 1rem} 0 0;
+        padding: #{$computed-navbar-height * 2 + 1rem} 0 0;
     }
 }
 
@@ -120,13 +140,20 @@ h2, h3, h4, h5, h6  {
         height: $navbar-height;
         background: $white-ter;
         position: sticky;
-        top: $navbar-height;
+        top: $computed-navbar-height;
         z-index: 1;
+        overflow-x: auto;
 
         .menu-trigger {
             .icon {
                 margin-right: 0;
             }
+        }
+
+        .breadcrumb {
+            // Prevent the breadcrumb from being wrapped on small screens
+            //
+            flex-shrink: 0;
         }
 
         .breadcrumb>ul>li:last-child {
@@ -157,11 +184,11 @@ h2, h3, h4, h5, h6  {
     // The menu container has its own scrollbar if needed
     // 3.25rem is the navbar height but it is not yet available at this point of the SCSS compilation
     position: sticky;
-    top: $navbar-height;
+    top: $computed-navbar-height;
     // margin: 3.25rem 0 0;
     overflow-y: auto;
     overscroll-behavior: contain;
-    height: calc(100vh - #{$navbar-height});
+    height: calc(100vh - #{$computed-navbar-height});
 
     .menu {
         margin-top: $navbar-height;
@@ -214,8 +241,11 @@ h2, h3, h4, h5, h6  {
         margin-top: 0;
     }
 
-    // Prevents long words from breaking the layout.
-    word-break: break-all;
+    // Use the same font-size for the table font as for the rest
+    // I don't know if it is a bug from Bulma or Firefox
+    .table {
+        font-size: $body-size;
+    }
 }
 
 // Customize the menu to have a better display and also support TOC in it

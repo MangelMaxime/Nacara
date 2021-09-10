@@ -10,12 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * PR #87: Add breadcrumb on desktop (by @mabasic)
 * PR #87: Add current section name in the navbar on mobile too
+* Fix #90: Complete rework of the navbar behavior
+    - Added support for `Dropdown`
+    - Better mobile support
 
 ### Changed
 
 * PR #86: Make the Edit button a bit more discrete (by @mabasic)
 * PR #85: Change the Navigation buttons, to be styled as "Fat buttons" now (by @mabasic)
 * Fix #91: The edit button is not aligned correctly with the breadcrumb text (by @mabasic)
+* Fix #90: Us a different button style differentiate the navbar burger menu from the breadcrumb menu on mobile
 
 ## 1.0.0-beta-009 - 2021-08-23
 

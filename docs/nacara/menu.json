@@ -1,0 +1,32 @@
+[
+    {
+        "type": "section",
+        "label": "Overview",
+        "items": [
+            "nacara/introduction",
+            "nacara/configuration",
+            "nacara/directory-structure",
+            "nacara/api"
+        ]
+    },
+    {
+        "type": "section",
+        "label": "Guides",
+        "items": [
+            "nacara/guides/create-a-page",
+            "nacara/guides/customize-the-style",
+            "nacara/guides/create-a-section",
+            "nacara/guides/section-menu",
+            "nacara/guides/deploy-your-site"
+        ]
+    },
+    {
+        "type": "section",
+        "label": "Custom Layouts",
+        "items": [
+            "nacara/advanced/layout-from-scratch",
+            "nacara/advanced/custom-layout-js",
+            "nacara/advanced/custom-layout-fsharp"
+        ]
+    }
+]

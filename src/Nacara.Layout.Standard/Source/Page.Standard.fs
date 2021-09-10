@@ -183,15 +183,26 @@ let private renderEditButton (config : Config) (pageContext : PageContext) =
     | None ->
         null
 
+
 let private renderBreadcrumb
+    (navbar : NavbarConfig)
     (pageContext : PageContext)
     (menu : Menu) =
+
 
     match tryFindTitlePathToCurrentPage pageContext [ ] menu with
     | None ->
         null
 
     | Some titlePath ->
+        let titlePath =
+            match Navbar.tryFindWebsiteSectionLabelForPage navbar pageContext with
+            | Some sectionLabel ->
+                sectionLabel @ titlePath
+
+            | None ->
+                titlePath
+
         Bulma.breadcrumb [
             helpers.isHiddenTouch
             prop.children [
@@ -202,6 +213,7 @@ let private renderBreadcrumb
         ]
 
 let private renderPageContent
+        (navbar : NavbarConfig)
         (titleOpt : string option)
         (editButton : ReactElement)
         (navigationButtons : ReactElement)
@@ -221,7 +233,7 @@ let private renderPageContent
                                 Bulma.column [
                                     match sectionMenu with
                                     | Some sectionMenu ->
-                                        (renderBreadcrumb pageContext sectionMenu)
+                                        (renderBreadcrumb navbar pageContext sectionMenu)
                                     | None -> ()
                                 ]
                                 Bulma.column [
@@ -276,6 +288,7 @@ let render (rendererContext : RendererContext) (pageContext : PageContext) =
                         RenderMenu = true
                         PageContent =
                             renderPageContent
+                                rendererContext.Config.Navbar
                                 pageContext.Title
                                 (renderEditButton rendererContext.Config pageContext)
                                 (renderNavigationButtons rendererContext.Config.BaseUrl rendererContext.Pages rendererContext.SectionMenu pageContext)
