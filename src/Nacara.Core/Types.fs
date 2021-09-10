@@ -251,8 +251,6 @@ type MenuItemList =
     {
         Label : string
         Items : MenuItem list
-        Collapsible : bool
-        Collapsed : bool
     }
 
 and [<RequireQualifiedAccess>] MenuItem =
@@ -296,10 +294,6 @@ module MenuItem =
                         {
                             Label = get.Required.Field "label" Decode.string
                             Items = get.Required.Field "items" (Decode.list decoder)
-                            Collapsible = get.Optional.Field "collapsible" Decode.bool
-                                            |> Option.defaultValue true
-                            Collapsed = get.Optional.Field "collapsed" Decode.bool
-                                            |> Option.defaultValue false
                         }
                     )
                     |> Decode.map MenuItem.List

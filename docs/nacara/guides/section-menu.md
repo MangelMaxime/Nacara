@@ -82,9 +82,9 @@ The `title` front-matter will be used has the text to display in the menu.
 <table class="table is-narrow is-bordered">
     <thead>
         <tr>
-            <th class="has-text-centered">Name</th>
-            <th class="has-text-centered">Required</th>
-            <th class="has-text-centered">Description</th>
+            <th class="label-cell">Name</th>
+            <th class="label-cell">Required</th>
+            <th class="label-cell">Description</th>
         </tr>
     </thead>
     <tbody>
@@ -125,47 +125,29 @@ The `title` front-matter will be used has the text to display in the menu.
 
 **Properties**
 
-<table class="table is-narrow is-bordered">
+<table class="table is-narrow is-bordered is-vcentered">
     <thead>
         <tr>
-            <th class="has-text-centered">Name</th>
-            <th class="has-text-centered">Required</th>
-            <th class="has-text-centered">Description</th>
+            <th class="label-cell">Name</th>
+            <th class="label-cell">Required</th>
+            <th class="label-cell">Description</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td class="has-text-centered" style="vertical-align: middle"><code>type</code></td>
-            <td class="has-text-centered" style="vertical-align: middle">X</td>
+            <td class="label-cell"><code>type</code></td>
+            <td class="label-cell">X</td>
             <td>Always set to <code>section</code></td>
         </tr>
         <tr>
-            <td class="has-text-centered" style="vertical-align: middle"><code>label</code></td>
-            <td class="has-text-centered" style="vertical-align: middle">X</td>
+            <td class="label-cell"><code>label</code></td>
+            <td class="label-cell">X</td>
             <td>Text to display in the menu</td>
         </tr>
         <tr>
-            <td class="has-text-centered" style="vertical-align: middle"><code>items</code></td>
-            <td class="has-text-centered" style="vertical-align: middle">X</td>
+            <td class="label-cell"><code>items</code></td>
+            <td class="label-cell">X</td>
             <td>List of <a href="#menu.json">MenuItems</a></td>
-        </tr>
-        <tr>
-            <td class="has-text-centered" style="vertical-align: middle"><code>collapsible</code></td>
-            <td class="has-text-centered" style="vertical-align: middle"></td>
-            <td>
-                True, if the section can be collapse
-                <br/>
-                Default: <code>true</code>
-            </td>
-        </tr>
-        <tr>
-            <td class="has-text-centered" style="vertical-align: middle"><code>collapsed</code></td>
-            <td class="has-text-centered" style="vertical-align: middle"></td>
-            <td>
-                True, if the section is collapse by default
-                <br/>
-                Default: <code>false</code>
-            </td>
         </tr>
     </tbody>
 </table>
@@ -183,8 +165,6 @@ The `title` front-matter will be used has the text to display in the menu.
             {
                 "type": "section",
                 "label": "Advanced",
-                "collapsible": true,
-                "collapsed": true,
                 "items": [
                     "documentation/guides/advanced/guide-1"
                 ]
