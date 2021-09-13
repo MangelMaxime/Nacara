@@ -22,6 +22,9 @@ type Msg =
     | ProcessSass of filePath: string
     | CopyFileWithDestination of source : string * destination : string
     | DependencyFileChanged of filePath : string
+    | DeleteMarkdownFile of filePath : string
+    | DeleteSassFile of filePath : string
+    | DeleteOtherFile of filePath : string
 
 [<NoComparison; NoEquality>]
 type Model =
@@ -104,7 +107,24 @@ let fileWatcherSubscription (model : Model) =
                 | OtherFile _ ->
                     ProcessOther filePath
                     |> dispatch
-            | Events.Unlink
+            | Events.Unlink ->
+                match filePath with
+                | MarkdownFile ->
+                    DeleteMarkdownFile filePath
+                    |> dispatch
+
+                | SassFile ->
+                    DeleteSassFile filePath
+                    |> dispatch
+
+                | JavaScriptFile
+                | OtherFile _ ->
+                    DeleteOtherFile filePath
+                    |> dispatch
+
+                | MenuFile ->
+                    ()
+
             | Events.UnlinkDir
             | Events.Ready
             | Events.Raw
@@ -267,6 +287,13 @@ let private updatePagesCache (cache : PageContext list) (newPageContext : PageCo
 
     apply cache newPageContext [] false false
 
+let private removePageFromCache (cache : PageContext list) (pageId : string) =
+    cache
+    |> List.filter (fun pageContext ->
+        pageContext.PageId <> pageId
+    )
+
+
 let private sendReload (model : Model) =
     model.WssServer.clients.forEach(fun client key _ ->
         client.send("reload")
@@ -280,24 +307,26 @@ let private sendRefreshCSS (model : Model) =
 let update (msg : Msg) (model : Model) =
     match msg with
     | LoadMenuFile filePath ->
-        let action () =
-            initMenuFiles model.Config.SourceFolder filePath
-            |> Promise.map(
-                function
-                | Ok menuConfig ->
-                    (filePath, menuConfig)
+        // let action () =
+        //     initMenuFiles model.Config.SourceFolder filePath
+        //     |> Promise.map(
+        //         function
+        //         | Ok menuConfig ->
+        //             (filePath, menuConfig)
 
-                | Error errorMessage ->
-                    failwith errorMessage
-            )
-            |> Promise.catch (fun error ->
-                Log.error $"Failed to load menu file: %s{filePath}"
-                JS.console.error error
-                failwith ""
-            )
+        //         | Error errorMessage ->
+        //             failwith errorMessage
+        //     )
+        //     |> Promise.catch (fun error ->
+        //         Log.error $"Failed to load menu file: %s{filePath}"
+        //         JS.console.error error
+        //         failwith ""
+        //     )
 
+        // model
+        // , Cmd.OfPromise.perform action () MenuFiledLoaded
         model
-        , Cmd.OfPromise.perform action () MenuFiledLoaded
+        , Cmd.none
 
     | DependencyFileChanged filePath ->
         let dependencyOpt =
@@ -534,3 +563,31 @@ let update (msg : Msg) (model : Model) =
 
         model
         , Cmd.OfFunc.exec action args
+
+    | DeleteMarkdownFile filePath ->
+        let newPagesCache =
+            removePageFromCache model.Pages filePath
+
+        // model.Menus
+
+        let fileToRemove =
+            filePath
+            |> Directory.join model.Config.DestinationFolder
+            |> File.changeExtension "html"
+
+        let action =
+            File.unlink
+            >> Promise.map (fun _ ->
+                Log.log $"Removed: {filePath}"
+            )
+            >> Promise.catchEnd (fun error ->
+                Log.error $"Error while processing SASS file: %s{filePath}"
+                JS.console.error error
+            )
+
+        { model with
+            Pages = newPagesCache
+        }
+        , Cmd.OfFunc.exec action fileToRemove
+    | DeleteSassFile(filePath) -> failwith "Not Implemented"
+    | DeleteOtherFile(filePath) -> failwith "Not Implemented"

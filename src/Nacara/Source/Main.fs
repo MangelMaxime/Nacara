@@ -211,21 +211,21 @@ let private buildOrWatch (config : Config) =
                 layout.``default``
             )
 
-        let! menuFiles =
+        let menuFiles =
             files.MenuFiles
-            |> List.map (initMenuFiles config.SourceFolder)
-            |> Promise.all
+            |> List.map (initMenuFiles validPageContext config.SourceFolder)
+            // |> Promise.all
 
-        let (validMenuFiles, erroredMenuFiles) =
-            menuFiles
-            |> Array.partitionMap (fun x ->
-                match x with
-                | Ok validMenuFile ->
-                    Choice1Of2 validMenuFile
+        // let (validMenuFiles, erroredMenuFiles) =
+        //     menuFiles
+        //     |> Array.partitionMap (fun x ->
+        //         match x with
+        //         | Ok validMenuFile ->
+        //             Choice1Of2 validMenuFile
 
-                | Error errorMessage ->
-                    Choice2Of2 errorMessage
-            )
+        //         | Error errorMessage ->
+        //             Choice2Of2 errorMessage
+        //     )
 
         let layoutDependencies =
             layouts
@@ -259,7 +259,7 @@ let private buildOrWatch (config : Config) =
                     Layouts = layouts
                     Config = config
                     Pages = validPageContext |> Array.toList
-                    Menus = validMenuFiles |> Array.toList
+                    Menus = menuFiles //|> Array.toList
                     LightnerCache = lightnerCache
                 }
 
@@ -285,7 +285,7 @@ let private buildOrWatch (config : Config) =
                         Config = config
                         ProcessQueue = processQueue
                         Pages = validPageContext |> Array.toList
-                        Menus = validMenuFiles |> Array.toList
+                        Menus = menuFiles// |> Array.toList
                         LightnerCache = lightnerCache
                     }
 

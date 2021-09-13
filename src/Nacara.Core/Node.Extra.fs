@@ -183,3 +183,15 @@ module File =
 
     let statsSync (path : string) : Node.Fs.Stats =
         fs.statSync(U2.Case1 path)
+
+    let unlink (path : string) =
+        Promise.create (fun resolve reject ->
+            fs.unlink(U2.Case1 path, (fun (err: Node.Base.ErrnoException option) ->
+                match err with
+                | Some err ->
+                    reject (err :?> System.Exception)
+
+                | None ->
+                    resolve ()
+            ))
+        )

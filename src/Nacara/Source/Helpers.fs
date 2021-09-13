@@ -189,12 +189,19 @@ let (|MarkdownFile|JavaScriptFile|SassFile|MenuFile|OtherFile|) (filePath : stri
         else
             OtherFile ext
 
-let initMenuFiles (sourceFolder : string) (filePath : string) =
-    promise {
-        let fullFilePath =
-            path.join(sourceFolder, path.sep, filePath)
+[<NoComparison>]
+type private PageContextWithSegments =
+    {
+        Segments : string []
+        Page : PageContext
+    }
 
-        let! fileContent = File.read fullFilePath
+let initMenuFiles (pages : PageContext array) (sourceFolder : string) (filePath : string) =
+    // promise {
+        // let fullFilePath =
+        //     path.join(sourceFolder, path.sep, filePath)
+
+        // // let! fileContent = File.read fullFilePath
 
         let segments =
             path.normalize(filePath).Split(char path.sep)
@@ -206,17 +213,120 @@ let initMenuFiles (sourceFolder : string) (filePath : string) =
             else
                 segments.[0]
 
-        match Decode.fromString Menu.decoder fileContent with
-        | Ok items ->
+        // match Decode.fromString Menu.decoder fileContent with
+        // | Ok items ->
 
-            return Ok {
-                Section = section
-                Items = items
-            }
+        //     return Ok {
+        //         Section = section
+        //         Items = items
+        //     }
 
-        | Error errorMessage ->
-            return Error $"Error while reading %s{filePath}\n%s{errorMessage}"
-    }
+        // | Error errorMessage ->
+        //     return Error $"Error while reading %s{filePath}\n%s{errorMessage}"
+        let sectionPages =
+            pages
+            |> Array.filter (fun page ->
+                page.Section = section
+            )
+            |> Array.sortBy (fun page ->
+                page.RelativePath
+            )
+            |> Array.map (fun page ->
+                {
+                    Segments =
+                        page.RelativePath
+                            .Replace("\\", "/") // Normalize segments separator
+                            .Split('/').[1..] // Skip the first segment which is the section name
+                    Page =
+                        page
+                }
+            )
+            |> Array.toList
+
+        let rec tryFindMenuItemList (searchedSection : string) (menuItems : MenuItem list) =
+            menuItems
+            |> List.tryFind (
+                function
+                | MenuItem.Link _
+                | MenuItem.Page _ ->
+                    false
+
+                | MenuItem.List menuItemList ->
+                    menuItemList.Label = searchedSection
+            )
+
+        let rec toMenuItem (pages : PageContextWithSegments list) (res : Menu) =
+            match pages with
+            | currentPage :: tail ->
+                printfn "currentPage: %s" currentPage.Page.PageId
+
+                if currentPage.Segments.Length = 1 then
+                    printfn "Direct page"
+                    let newMenuItem =
+                        MenuItem.Page
+                            {
+                                Label = currentPage.Page.Title
+                                PageId = currentPage.Page.PageId
+                            }
+
+                    toMenuItem tail (newMenuItem :: res)
+                else
+                    printfn "List menu"
+                    let subSection =
+                        currentPage.Segments.[0]
+
+                    let updatedPage =
+                        {
+                            Segments = currentPage.Segments.[1..]
+                            Page = currentPage.Page
+                        }
+
+                    let updatedMenu =
+                        let mutable found = false
+
+                        let newMenu =
+                            res
+                            |> List.map (
+                                function
+                                | MenuItem.Link _
+                                | MenuItem.Page _ as item ->
+                                    item
+
+                                | MenuItem.List menuItemList as item ->
+                                    found <- true
+
+                                    if menuItemList.Label = subSection then
+                                        { menuItemList with
+                                            Items = toMenuItem [ updatedPage ] menuItemList.Items
+                                        }
+                                        |> MenuItem.List
+
+                                    else
+                                        item
+                            )
+
+                        if found then
+                            newMenu
+                        else
+                            let newMenuItemList =
+                                MenuItem.List
+                                    {
+                                        Label = subSection
+                                        Items = toMenuItem [ updatedPage ] [ ]
+                                    }
+
+                            res @ [ newMenuItemList ]
+
+                    toMenuItem tail updatedMenu
+
+            | [] ->
+                res
+
+        {
+            Section = section
+            Items = toMenuItem sectionPages []
+        }
+    // }
 
 module Server =
 

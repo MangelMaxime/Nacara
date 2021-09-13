@@ -265,57 +265,57 @@ type FlatMenu =
     | Link of MenuItemLink
     | Page of MenuItemPage
 
-module MenuItem =
+// module MenuItem =
 
-    let rec decoder : Decoder<MenuItem> =
-        Decode.oneOf [
-            Decode.string
-            |> Decode.map (fun pageId ->
-                {
-                    Label = None
-                    PageId = pageId
-                }
-                |> MenuItem.Page
-            )
+//     let rec decoder : Decoder<MenuItem> =
+//         Decode.oneOf [
+//             Decode.string
+//             |> Decode.map (fun pageId ->
+//                 {
+//                     Label = None
+//                     PageId = pageId
+//                 }
+//                 |> MenuItem.Page
+//             )
 
-            Decode.field "type" Decode.string
-            |> Decode.andThen (function
-                | "page" ->
-                    Decode.object (fun get ->
-                        {
-                            Label = get.Optional.Field "label" Decode.string
-                            PageId = get.Required.Field "pageId" Decode.string
-                        }
-                    )
-                    |> Decode.map MenuItem.Page
+//             Decode.field "type" Decode.string
+//             |> Decode.andThen (function
+//                 | "page" ->
+//                     Decode.object (fun get ->
+//                         {
+//                             Label = get.Optional.Field "label" Decode.string
+//                             PageId = get.Required.Field "pageId" Decode.string
+//                         }
+//                     )
+//                     |> Decode.map MenuItem.Page
 
-                | "section" ->
-                    Decode.object (fun get ->
-                        {
-                            Label = get.Required.Field "label" Decode.string
-                            Items = get.Required.Field "items" (Decode.list decoder)
-                        }
-                    )
-                    |> Decode.map MenuItem.List
+//                 | "section" ->
+//                     Decode.object (fun get ->
+//                         {
+//                             Label = get.Required.Field "label" Decode.string
+//                             Items = get.Required.Field "items" (Decode.list decoder)
+//                         }
+//                     )
+//                     |> Decode.map MenuItem.List
 
-                | "link" ->
-                    Decode.object (fun get ->
-                        {
-                            Label = get.Required.Field "label" Decode.string
-                            Href = get.Required.Field "href" Decode.string
-                        }
-                    )
-                    |> Decode.map MenuItem.Link
+//                 | "link" ->
+//                     Decode.object (fun get ->
+//                         {
+//                             Label = get.Required.Field "label" Decode.string
+//                             Href = get.Required.Field "href" Decode.string
+//                         }
+//                     )
+//                     |> Decode.map MenuItem.Link
 
-                | invalidType ->
-                    Decode.fail $"`%s{invalidType}` is not a valid type for a menu Item. Supported types are:\n- page\n- section\n- link"
-            )
-        ]
+//                 | invalidType ->
+//                     Decode.fail $"`%s{invalidType}` is not a valid type for a menu Item. Supported types are:\n- page\n- section\n- link"
+//             )
+//         ]
 
-module Menu =
+// module Menu =
 
-    let decoder : Decoder<Menu> =
-        Decode.list MenuItem.decoder
+//     let decoder : Decoder<Menu> =
+//         Decode.list MenuItem.decoder
 
 type MenuConfig =
     {

@@ -1,0 +1,3 @@
+---
+layout: nacara-navbar-only
+---
