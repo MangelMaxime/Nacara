@@ -232,10 +232,10 @@ module Server =
     let create (config : Config) =
         let app = express.express()
 
-        if config.BaseUrl <> "/" then
+        if config.SiteMetadata.BaseUrl <> "/" then
             app.``use``(fun (req : Request) (res : Response) (next : NextFunction) ->
                 let segments = req.url.Split('/').[1..]
-                let sanitizeBaseUrl = config.BaseUrl.Replace("/", "")
+                let sanitizeBaseUrl = config.SiteMetadata.BaseUrl.Replace("/", "")
                 if segments.Length > 1 && segments.[0] = sanitizeBaseUrl then
                     let newUrl = System.String.Join("/", segments.[1..])
                     res.writeHead(

@@ -170,7 +170,7 @@ let private renderNavigationButtons
             ]
 
 let private renderEditButton (config : Config) (pageContext : PageContext) =
-    match config.EditUrl with
+    match config.SiteMetadata.EditUrl with
     | Some url ->
         Bulma.button.a [
             helpers.isHiddenTouch
@@ -291,7 +291,7 @@ let render (rendererContext : RendererContext) (pageContext : PageContext) =
                                 rendererContext.Config.Navbar
                                 pageContext.Title
                                 (renderEditButton rendererContext.Config pageContext)
-                                (renderNavigationButtons rendererContext.Config.BaseUrl rendererContext.Pages rendererContext.SectionMenu pageContext)
+                                (renderNavigationButtons rendererContext.Config.SiteMetadata.BaseUrl rendererContext.Pages rendererContext.SectionMenu pageContext)
                                 pageContent
                                 pageContext
                                 rendererContext.SectionMenu
