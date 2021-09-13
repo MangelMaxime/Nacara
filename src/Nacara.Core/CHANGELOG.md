@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Changed
+
+* Fix #44: Move the "site metadata info" into a siteMetadata property in `nacara.config.json` (by @mabasic)
+
 ### Added
 
 * `Navbar.tryFindWebsiteSectionLabelForPage` function which return the label of the navbar item corresponding to the given page

@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * PR #85: Change the Navigation buttons, to be styled as "Fat buttons" now (by @mabasic)
 * Fix #91: The edit button is not aligned correctly with the breadcrumb text (by @mabasic)
 * Fix #90: Us a different button style differentiate the navbar burger menu from the breadcrumb menu on mobile
+* Fix #44: Move the "site metadata info" into a siteMetadata property in `nacara.config.json` (by @mabasic)
 
 ## 1.0.0-beta-009 - 2021-08-23
 
