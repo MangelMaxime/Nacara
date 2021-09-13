@@ -323,21 +323,39 @@ type MenuConfig =
         Items : Menu
     }
 
+type SiteMetadata =
+    {
+        Title: string
+        Url: string
+        BaseUrl: string
+        EditUrl: string option
+        FavIcon: string option
+    }
+
+module SiteMetadata =
+
+    let decoder : Decoder<SiteMetadata> =
+        Decode.object (fun get ->
+            {
+                Title = get.Required.Field "title" Decode.string
+                Url = get.Required.Field "url" Decode.string
+                BaseUrl = get.Required.Field "baseUrl" Decode.string
+                EditUrl = get.Optional.Field "editUrl" Decode.string
+                FavIcon = get.Optional.Field "favIcon" Decode.string
+            }
+        )
+
 type Config =
     {
-        FavIcon : string option
         WorkingDirectory : string
-        Url : string
         SourceFolder : string
-        BaseUrl : string
-        Title : string
-        EditUrl : string option
         Output : string
         Navbar : NavbarConfig
         LightnerConfig : LightnerConfig option
         Layouts : string array
         ServerPort : int
         IsWatch : bool
+        SiteMetadata: SiteMetadata
     }
 
     member this.DestinationFolder
@@ -390,14 +408,9 @@ module Config =
     let decoder (cwd : string) (isWatch : bool) : Decoder<Config> =
         Decode.object (fun get ->
             {
-                FavIcon = get.Optional.Field "favIcon" Decode.string
                 WorkingDirectory = cwd
-                Url = get.Required.Field "url" Decode.string
-                BaseUrl = get.Required.Field "baseUrl" Decode.string
-                Title = get.Required.Field "title" Decode.string
                 SourceFolder = get.Optional.Field "source" Decode.string
                                 |> Option.defaultValue "docs"
-                EditUrl = get.Optional.Field "editUrl" Decode.string
                 Output = get.Optional.Field "output" Decode.string
                             |> Option.defaultValue "docs_deploy"
                 Navbar = get.Optional.Field "navbar" NavbarConfig.decoder
@@ -407,6 +420,7 @@ module Config =
                 ServerPort = get.Optional.Field "serverPort" Decode.int
                                 |> Option.defaultValue 8080
                 IsWatch = isWatch
+                SiteMetadata = get.Required.Field "siteMetadata" SiteMetadata.decoder
             }
         )
 

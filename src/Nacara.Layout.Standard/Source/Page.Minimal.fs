@@ -257,8 +257,8 @@ let private navbar (config : Config) (pageSection : string) =
                 Bulma.navbarBrand.div [
                     Bulma.navbarItem.a [
                         prop.className "title is-4"
-                        prop.href (config.Url + config.BaseUrl)
-                        prop.text config.Title
+                        prop.href (config.SiteMetadata.Url + config.SiteMetadata.BaseUrl)
+                        prop.text config.SiteMetadata.Title
                     ]
                 ]
 
@@ -287,12 +287,12 @@ let render (args : RenderArgs) =
     let titleStr =
         match args.TitleOpt with
         | Some title ->
-            args.Config.Title  + " · " + title
+            args.Config.SiteMetadata.Title  + " · " + title
         | None ->
-            args.Config.Title
+            args.Config.SiteMetadata.Title
 
     let toUrl (url : string) =
-        args.Config.BaseUrl + url
+        args.Config.SiteMetadata.BaseUrl + url
 
     Html.html [
         prop.className "has-navbar-fixed-top"
@@ -314,11 +314,11 @@ let render (args : RenderArgs) =
                     prop.content "width=device-width, initial-scale=1"
                 ]
 
-                match args.Config.FavIcon with
+                match args.Config.SiteMetadata.FavIcon with
                 | Some favIcon ->
                     Html.link [
                         prop.rel "shortcut icon"
-                        prop.href (args.Config.BaseUrl + favIcon)
+                        prop.href (args.Config.SiteMetadata.BaseUrl + favIcon)
                     ]
 
                 | None ->
@@ -346,13 +346,13 @@ let render (args : RenderArgs) =
 
                 Html.script [
                     prop.async true
-                    prop.src (args.Config.BaseUrl + Dependencies.menu)
+                    prop.src (args.Config.SiteMetadata.BaseUrl + Dependencies.menu)
                 ]
 
                 if args.Config.IsWatch then
                     Html.script [
                         prop.async true
-                        prop.src (args.Config.BaseUrl + "resources/nacara/scripts/live-reload.js")
+                        prop.src (args.Config.SiteMetadata.BaseUrl + "resources/nacara/scripts/live-reload.js")
                     ]
             ]
         ]

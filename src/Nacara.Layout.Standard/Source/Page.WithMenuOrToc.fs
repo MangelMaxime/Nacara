@@ -67,7 +67,7 @@ let private renderMenuItemPage
                     "is-active"
             ]
 
-            prop.href (config.BaseUrl + info.PageId + ".html")
+            prop.href (config.SiteMetadata.BaseUrl + info.PageId + ".html")
             prop.text labelText
         ]
 

@@ -1,9 +1,11 @@
 {
-    "url": "https://mangelmaxime.github.io",
-    "baseUrl": "/Nacara/",
-    "editUrl" : "https://github.com/MangelMaxime/Nacara/edit/master/docs",
-    "title": "Nacara",
     "serverPort": 8081,
+    "siteMetadata": {
+        "title": "Nacara",
+        "url": "https://mangelmaxime.github.io",
+        "baseUrl": "/Nacara/",
+        "editUrl" : "https://github.com/MangelMaxime/Nacara/edit/master/docs"
+    },
     "navbar": {
         "start": [
             {
