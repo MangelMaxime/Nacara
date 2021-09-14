@@ -84,7 +84,8 @@
             "./lightner/grammars/json.json",
             "./lightner/grammars/JavaScript.tmLanguage.json",
             "./lightner/grammars/scss.tmLanguage.json",
-            "./lightner/grammars/html.tmLanguage.json"
+            "./lightner/grammars/html.tmLanguage.json",
+            "./lightner/grammars/shell-unix-bash.tmLanguage.json"
         ]
     },
     "layouts": [
