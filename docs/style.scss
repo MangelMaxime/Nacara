@@ -88,9 +88,9 @@ $body-size: 14px;
     color: $white;
     padding: 3rem;
 
-    // @include desktop {
-    //     margin: 0 6rem;
-    // }
+    @include desktop {
+        border-radius: $radius-large;
+    }
 
     .terminal {
         background-color: $black-ter;

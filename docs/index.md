@@ -58,15 +58,15 @@ layout: nacara-navbar-only
 
 <!-- <section class="hero ">
     <div class="hero-body"> -->
-<div class="container box index-quick-start">
+<div class="container index-quick-start">
     <div class="columns is-multiline">
         <div class="column is-half-desktop is-full-tablet is-flex is-justify-content-center">
-            <div class="is-flex has-text-centered has-text-weight-medium is-align-items-center is-size-4" >
-                Get up and running in &nbsp;<span class="is-italic">seconds</span>.
+            <div class="is-flex has-text-centered has-text-weight-medium is-align-items-center is-size-5-mobile is-size-4-tablet" >
+                <span>Get up and running in <span class="is-italic">seconds</span>.</span>
             </div>
         </div>
         <div class="column is-offset-0-desktop is-half-desktop is-offset-2-tablet is-8-tablet">
-            <div class="box terminal is-size-5">
+            <div class="box terminal is-size-6-mobile is-size-5-tablet">
                 <p class="line">
                     <span class="path">~</span>
                     <span class="prompt">$</span>
