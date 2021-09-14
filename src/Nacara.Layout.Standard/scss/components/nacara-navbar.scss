@@ -208,6 +208,8 @@ $nacara-navbar-menu-border: 1px solid $navbar-item-active-background-color !defa
 
     .nacara-navbar-menu-dropdown {
         border-bottom: $nacara-navbar-menu-border;
+        display: flex;
+        flex-direction: column;
 
         .nacara-navbar-menu-dropdown-label {
             color: $white;
@@ -244,6 +246,7 @@ $nacara-navbar-menu-border: 1px solid $navbar-item-active-background-color !defa
             line-height: 1.5;
             cursor: pointer;
             font-size: .875rem;
+            color: $white;
 
             &:not(:last-child) {
                 border-bottom: $nacara-navbar-menu-border;

@@ -210,11 +210,11 @@ let private renderNacaraNavbarMenu (navbarConfig : NavbarConfig) =
                         null
 
                     else
-                        Html.ul [
+                        Html.div [
                             prop.className "nacara-navbar-menu-dropdown"
 
                             prop.children [
-                                Html.li [
+                                Html.div [
                                     prop.className "nacara-navbar-menu-dropdown-label"
                                     prop.text dropdown.Label
                                 ]
@@ -222,11 +222,11 @@ let private renderNacaraNavbarMenu (navbarConfig : NavbarConfig) =
                                 for item in dropdown.Items do
                                     match item with
                                     | DropdownItem.Link info ->
-                                        Html.li [
+                                        Html.a [
                                             prop.className "nacara-navbar-menu-dropdown-link"
+                                            prop.href info.Url
                                             prop.children [
-                                                Html.a [
-                                                    prop.href info.Url
+                                                Html.span [
                                                     prop.text info.Label
                                                 ]
                                             ]
