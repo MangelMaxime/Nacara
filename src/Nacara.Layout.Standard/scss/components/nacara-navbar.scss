@@ -41,16 +41,27 @@ $nacara-navbar-menu-border: 1px solid $navbar-item-active-background-color !defa
                 .nacara-dropdown-link {
                     background-color: $navbar-item-active-background-color;
                 }
+            }
 
-                .nacara-dropdown {
-                    // From tablet screen and bigger, the dropdown
-                    // follows the style declared in the configuration (floating or fullwidth)
-                    @include tablet {
+            @include tablet {
+                &.is-active,
+                &:hover {
+                    .nacara-dropdown {
+                        // From tablet screen and bigger, the dropdown
+                        // follows the style declared in the configuration (floating or fullwidth)
                         display: block;
                     }
+                }
+            }
 
-                    // On mobile screen, the dropdown take the full width of the screen
-                    @include mobile {
+            // On mobile, don't support :hover because has the dropdown is not
+            // right after the dropdown button, when you try to move your mouse
+            // to it, the dropdown collapse.
+            // So on mobile screen, we only support "click dropdown"
+            @include mobile {
+                &.is-active {
+                    .nacara-dropdown {
+                        // On mobile screen, the dropdown take the full width of the screen
                         display: block;
                         width: 100%;
                         position: fixed;
