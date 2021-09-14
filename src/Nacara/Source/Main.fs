@@ -73,7 +73,8 @@ type FilesAccumulator =
         MarkdownFiles : string list
         MenuFiles : string list
         SassFiles : string list
-        JavaScriptFile : string list
+        JavaScriptFiles : string list
+        PartialFiles : string list
         OtherFiles : string list
     }
 
@@ -82,7 +83,8 @@ type FilesAccumulator =
             MarkdownFiles = []
             MenuFiles = []
             SassFiles = []
-            JavaScriptFile = []
+            JavaScriptFiles = []
+            PartialFiles = []
             OtherFiles = []
         }
 
@@ -148,9 +150,15 @@ let private buildOrWatch (config : Config) =
                     { acc with
                         MarkdownFiles = path :: acc.MarkdownFiles
                     }
+
                 | JavaScriptFile ->
                     { acc with
-                        JavaScriptFile = path :: acc.JavaScriptFile
+                        JavaScriptFiles = path :: acc.JavaScriptFiles
+                    }
+
+                | PartialFile ->
+                    { acc with
+                        PartialFiles = path :: acc.PartialFiles
                     }
 
                 | SassFile ->
@@ -234,12 +242,23 @@ let private buildOrWatch (config : Config) =
             )
             |> Array.toList
 
+        let partials =
+            files.PartialFiles
+            |> List.map (fun partial ->
+                {
+                    Id = getPartialId partial
+                    Path = partial
+                    Module =
+                        require.Invoke(path.join(cwd, config.SourceFolder, partial)) |> unbox
+                } : Partial
+            )
+
         let processQueue =
             [
                 for sassFile in files.SassFiles do
                     QueueFile.Sass sassFile
 
-                for javaScriptFile in files.JavaScriptFile do
+                for javaScriptFile in files.JavaScriptFiles do
                     QueueFile.JavaScript javaScriptFile
 
                 for otherFile in files.OtherFiles do
@@ -260,6 +279,7 @@ let private buildOrWatch (config : Config) =
                     Config = config
                     Pages = validPageContext |> Array.toList
                     Menus = validMenuFiles |> Array.toList
+                    Partials = partials
                     LightnerCache = lightnerCache
                 }
 
@@ -286,6 +306,7 @@ let private buildOrWatch (config : Config) =
                         ProcessQueue = processQueue
                         Pages = validPageContext |> Array.toList
                         Menus = validMenuFiles |> Array.toList
+                        Partials = partials
                         LightnerCache = lightnerCache
                     }
 

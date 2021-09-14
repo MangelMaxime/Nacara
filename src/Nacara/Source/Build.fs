@@ -20,6 +20,7 @@ type Model =
         Layouts : JS.Map<string, LayoutRenderFunc>
         Pages : PageContext list
         Menus : MenuConfig list
+        Partials : Partial list
         ProcessQueue : QueueFile list
         LightnerCache : JS.Map<string, CodeLightner.Config>
     }
@@ -32,6 +33,7 @@ type InitArgs =
         ProcessQueue : QueueFile list
         Pages : PageContext list
         Menus : MenuConfig list
+        Partials : Partial list
         LightnerCache : JS.Map<string, CodeLightner.Config>
     }
 
@@ -54,6 +56,7 @@ let init (args : InitArgs) =
         Config = args.Config
         Pages = args.Pages
         Menus = args.Menus
+        Partials = args.Partials
         ProcessQueue = args.ProcessQueue
         LightnerCache = args.LightnerCache
     }
@@ -83,6 +86,7 @@ let update (msg : Msg) (model : Model) =
                         {
                             PageContext = pageContext
                             Layouts = model.Layouts
+                            Partials = model.Partials
                             Menus = model.Menus
                             Config = model.Config
                             Pages = model.Pages

@@ -5,6 +5,7 @@
 
 $primary: #7679db;
 $text: #2b2b2b;
+$danger: #c43636;
 
 @import "./../node_modules/bulma/sass/utilities/derived-variables";
 
@@ -28,6 +29,9 @@ $menu-item-hover-color: $primary;
 $menu-item-hover-background-color: transparent;
 $menu-label-font-size: $size-6;
 $menu-item-radius: $radius-large $radius-large;
+
+$footer-background-color: $primary;
+$footer-color: $white;
 
 $link: $primary;
 
@@ -75,6 +79,41 @@ $body-size: 14px;
         // Force call to take the maximum place
         .fullwidth-cell {
             width: 100%;
+        }
+    }
+}
+
+.index-quick-start {
+    background-color: $primary;
+    color: $white;
+    padding: 3rem;
+
+    // @include desktop {
+    //     margin: 0 6rem;
+    // }
+
+    .terminal {
+        background-color: $black-ter;
+        overflow-x: auto;
+
+        .line {
+            white-space: nowrap;
+
+            .path {
+                color: $primary;
+            }
+
+            .prompt {
+                color : $danger;
+            }
+
+            .command {
+                color: #f0e68c;
+            }
+
+            .output {
+                color: $grey;
+            }
         }
     }
 }

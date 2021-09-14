@@ -54,6 +54,15 @@ let getPageId (filePath : string) =
         .Substring(0, extensionPos) // Remove extension
         .Replace("\\", "/") // Normalize segments separator
 
+let getPartialId (filePath : string) =
+    let filePath = filePath.Replace("_partials/", "")
+
+    let extensionPos = filePath.LastIndexOf('.')
+
+    filePath
+        .Substring(0, extensionPos) // Remove extension
+        .Replace("\\", "/") // Normalize segments separator
+
 let unEscapeHTML (unsafe : string) =
     unsafe
         .Replace("&amp;", "&")
@@ -176,18 +185,22 @@ let initPageContext (sourceFolder : string) (filePath : string) =
             return Error $"One property is missing from %s{filePath}.\n%s{errorMessage}"
     }
 
-let (|MarkdownFile|JavaScriptFile|SassFile|MenuFile|OtherFile|) (filePath : string) =
+let (|MarkdownFile|JavaScriptFile|PartialFile|SassFile|MenuFile|OtherFile|) (filePath : string) =
     let ext = path.extname(filePath)
 
-    match ext.ToLower() with
-    | ".md" -> MarkdownFile
-    | ".js" -> JavaScriptFile
-    | ".scss" | ".sass" -> SassFile
-    | _ ->
-        if path.basename(filePath) = "menu.json" then
-            MenuFile
-        else
-            OtherFile ext
+    if filePath.StartsWith("_partials") then
+        PartialFile
+    else
+        match ext.ToLower() with
+        | ".md" -> MarkdownFile
+        | ".js" ->
+            JavaScriptFile
+        | ".scss" | ".sass" -> SassFile
+        | _ ->
+            if path.basename(filePath) = "menu.json" then
+                MenuFile
+            else
+                OtherFile ext
 
 let initMenuFiles (sourceFolder : string) (filePath : string) =
     promise {

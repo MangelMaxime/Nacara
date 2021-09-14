@@ -14,6 +14,7 @@ exception InitMarkdownFileErrorException of filePath : string * original : exn
 [<NoComparison>]
 type Msg =
     | InitMarkdownFile of filePath : string
+    | PartialChanged of filePath : string
     | InitMarkdownFileError of InitMarkdownFileErrorException
     | ProcessMarkdown of pageContext : PageContext
     | ProcessOther of filePath: string
@@ -35,6 +36,7 @@ type Model =
         LayoutDependencies : LayoutDependency list
         Pages : PageContext list
         Menus : MenuConfig list
+        Partials : Partial list
         LightnerCache : JS.Map<string, CodeLightner.Config>
     }
 
@@ -46,6 +48,7 @@ type InitArgs =
         Config : Config
         Pages : PageContext list
         Menus : MenuConfig list
+        Partials : Partial list
         LightnerCache : JS.Map<string, CodeLightner.Config>
     }
 
@@ -70,6 +73,10 @@ let fileWatcherSubscription (model : Model) =
                 match filePath with
                 | MarkdownFile ->
                     InitMarkdownFile filePath
+                    |> dispatch
+
+                | PartialFile ->
+                    PartialChanged filePath
                     |> dispatch
 
                 | SassFile ->
@@ -235,6 +242,7 @@ let init (args : InitArgs) : Model * Cmd<Msg> =
         Config = args.Config
         Pages = args.Pages
         Menus = args.Menus
+        Partials = args.Partials
         LightnerCache = args.LightnerCache
     }
     , Cmd.batch [
@@ -465,6 +473,7 @@ let update (msg : Msg) (model : Model) =
             {
                 PageContext = pageContext
                 Layouts = model.LayoutRenderer
+                Partials = model.Partials
                 Menus = model.Menus
                 Config = model.Config
                 Pages = newPagesCache
@@ -534,3 +543,49 @@ let update (msg : Msg) (model : Model) =
 
         model
         , Cmd.OfFunc.exec action args
+
+    | PartialChanged filePath ->
+        if getPartialId filePath = "footer" then
+            let newPartials =
+                model.Partials
+                |> List.map (fun partial ->
+                    if partial.Path = filePath then
+                        let fullPath =
+                            path.join(model.Config.WorkingDirectory, model.Config.SourceFolder, filePath)
+
+                        // Delete the module from the cache
+                        emitJsStatement
+                            fullPath
+                            """
+delete require.cache[require.resolve($0)];
+                            """
+
+                        // Reload the module
+                        let newModule =
+                            require.Invoke(path.join(model.Config.WorkingDirectory, model.Config.SourceFolder, filePath)) |> unbox
+
+                        {
+                            Id = getPartialId filePath
+                            Path = filePath
+                            Module = newModule
+                        } : Partial
+                    else
+                        partial
+                )
+
+            // Regenerate all the pages
+            // Right now the partials supported are for the footer or the navbar so it concerns all the pages
+            let cmd =
+                model.Pages
+                |> List.map (fun page ->
+                    Cmd.ofMsg (ProcessMarkdown page)
+                )
+                |> Cmd.batch
+
+            { model with
+                Partials = newPartials
+            }
+            , cmd
+        else
+            model
+            , Cmd.none

@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Add `clean` command
 * Fix #8: Add `favIcon` property to `nacara.config.json`
 * Fix #70: Generate a .nojekyll file on production build
+* Fix #96: Add partials support
+* Fix #77: Add footer support
 
 ### Changed
 

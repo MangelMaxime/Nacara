@@ -278,6 +278,7 @@ let render (rendererContext : RendererContext) (pageContext : PageContext) =
                 Config = rendererContext.Config
                 Section = pageContext.Section
                 TitleOpt = pageContext.Title
+                Partials = rendererContext.Partials
                 Content =
                     WithMenuOrToc.render {
                         Config = rendererContext.Config

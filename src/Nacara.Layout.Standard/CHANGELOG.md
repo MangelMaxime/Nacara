@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Fix #90: Complete rework of the navbar behavior
     - Added support for `Dropdown`
     - Better mobile support
+* Fix #96: Add partials support
+* Fix #77: Add footer support
 
 ### Changed
 

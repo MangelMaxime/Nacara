@@ -59,6 +59,7 @@ type ProcessMarkdownArgs =
     {
         PageContext : PageContext
         Layouts : JS.Map<string, LayoutRenderFunc>
+        Partials : Partial list
         Menus : MenuConfig list
         Config : Config
         Pages : PageContext list
@@ -87,6 +88,7 @@ let markdown (args : ProcessMarkdownArgs) =
                     {
                         Config = args.Config
                         SectionMenu = categoryMenu
+                        Partials = args.Partials |> List.toArray
                         Menus = args.Menus |> List.toArray
                         Pages = args.Pages |> List.toArray
                         MarkdownToHtml = markdownToHtml args.LightnerCache

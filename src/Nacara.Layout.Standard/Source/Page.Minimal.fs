@@ -278,6 +278,7 @@ let private navbar (config : Config) (pageSection : string) =
 type RenderArgs =
     {
         Config : Config
+        Partials : Partial array
         Section : string
         TitleOpt : string option
         Content : ReactElement
@@ -293,6 +294,12 @@ let render (args : RenderArgs) =
 
     let toUrl (url : string) =
         args.Config.SiteMetadata.BaseUrl + url
+
+    let footerOpt =
+        args.Partials
+        |> Array.tryFind (fun partial ->
+            partial.Id = "footer"
+        )
 
     Html.html [
         prop.className "has-navbar-fixed-top"
@@ -348,6 +355,15 @@ let render (args : RenderArgs) =
                     prop.async true
                     prop.src (args.Config.SiteMetadata.BaseUrl + Dependencies.menu)
                 ]
+
+                match footerOpt with
+                | Some footer ->
+                    Bulma.footer [
+                        footer.Module.``default``
+                    ]
+
+                | None ->
+                    null
 
                 if args.Config.IsWatch then
                     Html.script [

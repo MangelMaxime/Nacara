@@ -367,11 +367,20 @@ type MarkdownIt =
     abstract render : string -> string
 
 
+[<NoComparison>]
+type Partial =
+    {
+        Id : string
+        Path : string
+        Module : {| ``default`` : ReactElement |}
+    }
+
 [<NoComparison; NoEquality>]
 type RendererContext =
     {
         Config : Config
         SectionMenu : Menu option
+        Partials : Partial array
         Menus : MenuConfig array
         Pages : PageContext array
         MarkdownToHtml : string -> JS.Promise<string>

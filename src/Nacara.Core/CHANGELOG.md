@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Rework the `NavbarConfig`
     - The start section of the navbar now support both `LabelLink` and `Dropdown`
     - The end section of the navbar can now only contains links with label/icon intended for Github, Twitter, etc links.
+* Fix #96: Add partials support
 
 ## 1.0.0-beta-001 - 2021-07-29
 

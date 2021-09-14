@@ -24,6 +24,7 @@ exportDefault
                                 Config = rendererContext.Config
                                 Section = pageContext.Section
                                 TitleOpt = pageContext.Title
+                                Partials = rendererContext.Partials
                                 Content =
                                     Html.div [
                                         prop.dangerouslySetInnerHTML pageContent
