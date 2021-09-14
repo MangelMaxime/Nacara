@@ -12,7 +12,7 @@ layout: nacara-navbar-only
                 <p class="subtitle">
                     Nacara is a static site generator focused on simplicity
                 </p>
-                <a href="/Nacara/documentation/introduction.html" class="button is-primary">
+                <a href="/Nacara/nacara/introduction.html" class="button is-primary">
                     Get up and running
                 </a>
             </div>
@@ -25,7 +25,7 @@ layout: nacara-navbar-only
                     <p class="subtitle">
                         No database, focus on your content
                     </p>
-                    <a class="mt-auto" href="/Nacara/documentation/guides/create-a-page.html">
+                    <a class="mt-auto" href="/Nacara/nacara/guides/create-a-page.html">
                         How Nacara works? →
                     </a>
                 </div>
@@ -36,7 +36,7 @@ layout: nacara-navbar-only
                     <p class="subtitle">
                         Write Markdown, SCSS, JS, HTML get a static website ready for deployment
                     </p>
-                    <a class="mt-auto" href="/Nacara/documentation/directory-structure.html">
+                    <a class="mt-auto" href="/Nacara/nacara/directory-structure.html">
                         Directory structure →
                     </a>
                 </div>
@@ -47,7 +47,7 @@ layout: nacara-navbar-only
                     <p class="subtitle">
                         Write your own layout to match your needs
                     </p>
-                    <a class="mt-auto" href="/Nacara/documentation/advanced/layout-from-scratch.html">
+                    <a class="mt-auto" href="/Nacara/nacara/advanced/layout-from-scratch.html">
                         How layouts works? →
                     </a>
                 </div>
