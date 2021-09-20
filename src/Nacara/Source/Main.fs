@@ -29,45 +29,6 @@ let private update (msg : Msg) (model : Model) =
         model
         , Cmd.none
 
-let private initLighterCache (config : Config) =
-    match config.LightnerConfig with
-    | Some lightnerConfig ->
-        let lightnerConfig =
-            lightnerConfig.GrammarFiles
-            |> List.map (fun filePath ->
-                if File.existSync filePath then
-                    let grammarText = File.readSync filePath
-                    match Decode.fromString (Decode.field "scopeName" Decode.string) grammarText with
-                    | Ok scopeName ->
-                        Some (scopeName, filePath)
-                    | Error msg ->
-                        Log.error $"Unable to find `scopeName` in `%s{filePath}`.\Sub decoder error:\n%s{msg}"
-                        None
-                else
-                    Log.error $"File not found: %s{filePath}"
-                    None
-            )
-            |> List.filter Option.isSome
-            |> List.map (function
-                | Some (scopeName, grammarPath) ->
-                    let config =
-                        jsOptions<CodeLightner.Config>(fun o ->
-                            o.backgroundColor <- lightnerConfig.BackgroundColor
-                            o.textColor <- lightnerConfig.TextColor
-                            o.themeFile <- lightnerConfig.ThemeFile
-                            o.scopeName <- scopeName
-                            o.grammarFiles <- [| Directory.join cwd grammarPath |]
-                        )
-                    scopeName.Split('.').[1], config
-                | None -> failwith "Should not happen, we filtered the list before"
-            )
-            |> List.toArray
-
-        JS.Constructors.Map.Create(lightnerConfig)
-
-    | None ->
-        JS.Constructors.Map.Create()
-
 type FilesAccumulator =
     {
         MarkdownFiles : string list
@@ -122,9 +83,12 @@ let private setupBabelIfNeeded () =
         if hasBabelConfig then
             Log.log "'babel.config.json' file found, loading Babel..."
             try
-                emitJsExpr () """require("@babel/register")"""
+                let! _ = importDynamic "@babel/register"
+                // do! emitJsStatement () """import("@babel/register")"""
+                ()
             with
                 | ex ->
+                    Log.error $"Unable to load Babel: %s{ex.Message}"
                     Log.error $"A 'babel.config.json' file was found, please install '@babel/register' package."
                     ``process``.exit ExitCode.FAILED_TO_LOAD_BABEL
     }
@@ -200,24 +164,28 @@ let private buildOrWatch (config : Config) =
                     Choice2Of2 errorMessage
             )
 
-        let lightnerCache = initLighterCache config
-
-        let layouts =
+        let! layouts =
             config.Layouts
             |> Array.map (fun layoutPath ->
-                let layout : LayoutInterface =
-                    // The path is relative, so load it relatively from the CWD
-                    if layoutPath.StartsWith("./") then
-                        let newPath =
-                            path.join(cwd, layoutPath)
+                promise {
+                    let! (layout : LayoutInterface) =
+                        // The path is relative, so load it relatively from the CWD
+                        if layoutPath.StartsWith("./") then
+                            let newPath =
+                                path.join(cwd, layoutPath)
 
-                        require.Invoke newPath |> unbox
-                    // The path is not relative, require it as an npm module
-                    else
-                        require.Invoke layoutPath |> unbox
+                            importDynamic newPath
 
-                layout.``default``
+                            // require.Invoke newPath |> unbox
+                        // The path is not relative, require it as an npm module
+                        else
+                            importDynamic layoutPath
+                            // require.Invoke layoutPath |> unbox
+
+                    return layout.``default``
+                }
             )
+            |> Promise.all
 
         let! menuFiles =
             files.MenuFiles
@@ -242,16 +210,25 @@ let private buildOrWatch (config : Config) =
             )
             |> Array.toList
 
-        let partials =
-            files.PartialFiles
-            |> List.map (fun partial ->
-                {
-                    Id = getPartialId partial
-                    Path = partial
-                    Module =
-                        require.Invoke(path.join(cwd, config.SourceFolder, partial)) |> unbox
-                } : Partial
-            )
+        let! partials =
+            Promise.lift [||]
+            // files.PartialFiles
+            // |> List.map (fun partial ->
+            //     promise {
+            //         let! m =
+            //             importDynamic (path.join(cwd, config.SourceFolder, partial))
+
+            //         let res : Partial =
+            //             {
+            //                 Id = getPartialId partial
+            //                 Path = partial
+            //                 Module = m
+            //             }
+
+            //         return res
+            //     }
+            // )
+            // |> Promise.all
 
         let processQueue =
             [
@@ -279,8 +256,7 @@ let private buildOrWatch (config : Config) =
                     Config = config
                     Pages = validPageContext |> Array.toList
                     Menus = validMenuFiles |> Array.toList
-                    Partials = partials
-                    LightnerCache = lightnerCache
+                    Partials = partials |> Array.toList
                 }
 
             Program.mkProgram Watch.init Watch.update (fun _ _ -> ())
@@ -306,8 +282,7 @@ let private buildOrWatch (config : Config) =
                         ProcessQueue = processQueue
                         Pages = validPageContext |> Array.toList
                         Menus = validMenuFiles |> Array.toList
-                        Partials = partials
-                        LightnerCache = lightnerCache
+                        Partials = partials |> Array.toList
                     }
 
                 Program.mkProgram Build.init Build.update (fun _ _ -> ())
@@ -317,7 +292,7 @@ let private buildOrWatch (config : Config) =
 let start () =
     promise {
         if isVersion then
-            Version.version()
+            do! Version.version()
             ``process``.exit(ExitCode.OK)
 
         else

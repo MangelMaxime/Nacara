@@ -8,7 +8,6 @@
     <Compile Include="Bindings/FrontMatter.fs" />
     <Compile Include="Bindings/Chokidar.fs" />
     <Compile Include="Bindings/Sass.fs" />
-    <Compile Include="Bindings/CodeLightner.fs" />
     <Compile Include="Bindings/Ws.fs" />
     <Compile Include="Node.Extra.fs" />
     <Compile Include="List.Extensions.fs" />

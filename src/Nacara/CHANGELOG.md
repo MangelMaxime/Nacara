@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 * Fix #44: Move the "site metadata info" into a siteMetadata property in `nacara.config.json` (by @mabasic)
+* Move the NPM package to be a pure ESM package
 
 ## 1.0.0-beta-014 - 2021-08-23
 

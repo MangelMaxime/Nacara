@@ -3,7 +3,7 @@ title: With FSharp
 layout: nacara-standard
 ---
 
-::: primary Note
+:::primary{title="Note"}
 Creating a layout via F#, is the recommended way when working on complex layout or releasing it as an NPM package.
 :::
 

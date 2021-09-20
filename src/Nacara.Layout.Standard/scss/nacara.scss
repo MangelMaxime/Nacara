@@ -68,6 +68,7 @@ span+.icon {
 h2, h3, h4, h5, h6  {
     a {
         visibility: hidden;
+        margin-left: 0.5rem;
     }
 
     &:hover {
@@ -76,6 +77,14 @@ h2, h3, h4, h5, h6  {
             visibility: visible;
         }
     }
+
+    &[id]::before {
+        content: '';
+        display: block;
+        height: calc(#{$computed-navbar-height + 1rem});
+        margin: -$computed-navbar-height 0 0;
+    }
+
 }
 
 // Make sure that when jumping to an anchor, that anchor is displayed just below the navbar and visible

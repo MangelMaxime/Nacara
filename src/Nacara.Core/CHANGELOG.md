@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 * Fix #44: Move the "site metadata info" into a siteMetadata property in `nacara.config.json` (by @mabasic)
+* Add `remarkPlugins` property to `nacara.config.json`
+* Add `rehypePlugins` property to `nacara.config.json`
 
 ### Added
 
@@ -17,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - The start section of the navbar now support both `LabelLink` and `Dropdown`
     - The end section of the navbar can now only contains links with label/icon intended for Github, Twitter, etc links.
 * Fix #96: Add partials support
+
+### Removed
+
+* Remove `lightner` property from `nacara.config.json`
 
 ## 1.0.0-beta-001 - 2021-07-29
 

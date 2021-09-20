@@ -169,26 +169,6 @@ module NavbarConfig =
             End = []
         }
 
-type LightnerConfig =
-    {
-        BackgroundColor : string option
-        TextColor : string option
-        ThemeFile : string
-        GrammarFiles : string list
-    }
-
-module LightnerConfig =
-
-    let decoder : Decoder<LightnerConfig> =
-        Decode.object (fun get ->
-            {
-                BackgroundColor = get.Optional.Field "backgroundColor" Decode.string
-                TextColor = get.Optional.Field "textColor" Decode.string
-                ThemeFile = get.Required.Field "themeFile" Decode.string
-                GrammarFiles = get.Required.Field "grammars" (Decode.list Decode.string)
-            }
-        )
-
 let private genericMsg msg value newLine =
     try
         "Expecting "
@@ -345,13 +325,53 @@ module SiteMetadata =
             }
         )
 
+[<NoComparison>]
+type RemarkPlugin =
+    {
+        Resolve : string
+        Property : string option
+        Options : obj option
+    }
+
+module RemarkPlugin =
+
+    let decoder : Decoder<RemarkPlugin> =
+        Decode.object (fun get ->
+            {
+                Resolve = get.Required.Field "resolve" Decode.string
+                Property = get.Optional.Field "property" Decode.string
+                Options = get.Optional.Field "options" Decode.value
+            }
+        )
+
+[<NoComparison>]
+type RehypePlugin =
+    {
+        Resolve : string
+        Property : string option
+        Options : obj option
+    }
+
+module RehypePlugin =
+
+    let decoder : Decoder<RehypePlugin> =
+        Decode.object (fun get ->
+            {
+                Resolve = get.Required.Field "resolve" Decode.string
+                Property = get.Optional.Field "property" Decode.string
+                Options = get.Optional.Field "options" Decode.value
+            }
+        )
+
+[<NoComparison>]
 type Config =
     {
         WorkingDirectory : string
         SourceFolder : string
         Output : string
         Navbar : NavbarConfig
-        LightnerConfig : LightnerConfig option
+        RemarkPlugins : RemarkPlugin array
+        RehypePlugins : RehypePlugin array
         Layouts : string array
         ServerPort : int
         IsWatch : bool
@@ -375,6 +395,74 @@ type Partial =
         Module : {| ``default`` : ReactElement |}
     }
 
+module MarkdownToHtml =
+    open Fable.Core.JsInterop
+
+    let unified : unit -> obj =
+        importMember "unified"
+
+    let remarkParse : obj =
+        import "default" "remark-parse"
+
+    let remarkRehype : obj =
+        import "default" "remark-rehype"
+
+    let rehypeRaw : obj =
+        import "default" "rehype-raw"
+
+    let rehypeFormat : obj =
+        import "default" "rehype-format"
+
+    let rehypeStringify : obj =
+        import "default" "rehype-stringify"
+
+    // For now, this function is using dynamic typing
+    // But later it would be nice to have bindings for the different remark & rehype plugins
+    // And rewrite this function with them
+    let markdownToHtml
+        (remarkPlugins : RemarkPlugin array)
+        (rehypePlugins : RehypePlugin array)
+        (markdownText : string) : JS.Promise<string> =
+
+        promise {
+            let chain =
+                unified()
+                    ?``use``(remarkParse)
+
+            // Apply the remark plugins
+            for remarkPlugin in remarkPlugins do
+                let! instance = importDynamic remarkPlugin.Resolve
+
+                match remarkPlugin.Property with
+                | Some property ->
+                    chain?``use``(instance?``default``?(property), remarkPlugin.Options)
+
+                | None ->
+                    chain?``use``(instance?``default``, remarkPlugin.Options)
+
+            // Convert from remark to rehype
+            chain
+                ?``use``(remarkRehype, {| allowDangerousHtml = true |})
+                ?``use``(rehypeRaw)
+
+            // Apply the rehype plugins
+            for rehypePlugin in rehypePlugins do
+                let! instance = importDynamic rehypePlugin.Resolve
+
+                match rehypePlugin.Property with
+                | Some property ->
+                    chain?``use``(instance?``default``?(property), rehypePlugin.Options)
+
+                | None ->
+                    chain?``use``(instance?``default``, rehypePlugin.Options)
+
+            // Generate the HTML
+            return chain
+                        ?``use``(rehypeFormat)
+                        ?``use``(rehypeStringify)
+                        ?``process``(markdownText)
+        }
+
 [<NoComparison; NoEquality>]
 type RendererContext =
     {
@@ -383,9 +471,15 @@ type RendererContext =
         Partials : Partial array
         Menus : MenuConfig array
         Pages : PageContext array
-        MarkdownToHtml : string -> JS.Promise<string>
-        MarkdownToHtmlWithPlugins : (MarkdownIt -> MarkdownIt) -> string -> JS.Promise<string>
     }
+
+    // MarkdownToHtml is a method so layout can add additional plugins if needed
+    // See: Nacara.Layout.Standard/Page.Standard.fs render function
+    member this.MarkdownToHtml (markdownText: string) =
+        MarkdownToHtml.markdownToHtml
+            this.Config.RemarkPlugins
+            this.Config.RehypePlugins
+            markdownText
 
 type LayoutDependency =
     {
@@ -424,7 +518,10 @@ module Config =
                             |> Option.defaultValue "docs_deploy"
                 Navbar = get.Optional.Field "navbar" NavbarConfig.decoder
                             |> Option.defaultValue NavbarConfig.empty
-                LightnerConfig = get.Optional.Field "lightner" LightnerConfig.decoder
+                RemarkPlugins = get.Optional.Field "remarkPlugins" (Decode.array RemarkPlugin.decoder)
+                            |> Option.defaultValue [||]
+                RehypePlugins = get.Optional.Field "rehypePlugins" (Decode.array RehypePlugin.decoder)
+                            |> Option.defaultValue [||]
                 Layouts = get.Required.Field "layouts" (Decode.array Decode.string)
                 ServerPort = get.Optional.Field "serverPort" Decode.int
                                 |> Option.defaultValue 8080

@@ -37,7 +37,6 @@ type Model =
         Pages : PageContext list
         Menus : MenuConfig list
         Partials : Partial list
-        LightnerCache : JS.Map<string, CodeLightner.Config>
     }
 
 [<NoComparison; NoEquality>]
@@ -49,7 +48,6 @@ type InitArgs =
         Pages : PageContext list
         Menus : MenuConfig list
         Partials : Partial list
-        LightnerCache : JS.Map<string, CodeLightner.Config>
     }
 
 let fileWatcherSubscription (model : Model) =
@@ -148,7 +146,7 @@ let layoutDependencyWatcherSubscription (model : Model) =
 let private startServer (config : Config) =
     let server = Server.create config
 
-    let wss = Ws.webSocket.Server.Create(jsOptions<Ws.WebSocket.ServerOptions>(fun o ->
+    let wss = Ws.webSocket.WebSocketServer.Create(jsOptions<Ws.WebSocket.ServerOptions>(fun o ->
         o.server <- !^server
     ))
 
@@ -179,7 +177,7 @@ let init (args : InitArgs) : Model * Cmd<Msg> =
 
     let liveReloadDependency =
         {
-            Source = path.join(__dirname, "../scripts/live-reload.js")
+            Source = path.join(Module.__dirname, "../scripts/live-reload.js")
             Destination = "resources/nacara/scripts/live-reload.js"
         }
 
@@ -243,7 +241,6 @@ let init (args : InitArgs) : Model * Cmd<Msg> =
         Pages = args.Pages
         Menus = args.Menus
         Partials = args.Partials
-        LightnerCache = args.LightnerCache
     }
     , Cmd.batch [
         processQueueCmd
@@ -477,7 +474,8 @@ let update (msg : Msg) (model : Model) =
                 Menus = model.Menus
                 Config = model.Config
                 Pages = newPagesCache
-                LightnerCache = model.LightnerCache
+                RemarkPlugins = model.Config.RemarkPlugins
+                RehypePlugins = model.Config.RehypePlugins
             } : Write.ProcessMarkdownArgs
 
         let action args =

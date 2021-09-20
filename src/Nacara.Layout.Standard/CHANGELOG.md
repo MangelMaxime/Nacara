@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Fix #91: The edit button is not aligned correctly with the breadcrumb text (by @mabasic)
 * Fix #90: Us a different button style differentiate the navbar burger menu from the breadcrumb menu on mobile
 * Fix #44: Move the "site metadata info" into a siteMetadata property in `nacara.config.json` (by @mabasic)
+* Move the NPM package to be a pure ESM package
+* Switch to `remark` and `rehype` for doing the markdown parsing
 
 ## 1.0.0-beta-009 - 2021-08-23
 

@@ -2,7 +2,12 @@
     "name": "nacara-layout-standard",
     "version": "1.0.0-beta-009",
     "description": "",
-    "main": "dist/Export.js",
+    "exports": "./dist/Export.js",
+    "type": "module",
+    "engines": {
+        "node": "^12.20.0 || ^14.13.1 || >=16.0.0",
+        "npm": ">=7.0.0"
+    },
     "files": [
         "dist",
         "scss",
@@ -17,5 +22,11 @@
         "bulma": "^0.9.3",
         "react": "^17.0.2",
         "react-dom": "^17.0.2"
+    },
+    "dependencies": {
+        "hastscript": "^7.0.2",
+        "mdast-util-to-hast": "^11.2.1",
+        "remark-directive": "^2.0.0",
+        "unist-util-visit": "^4.0.0"
     }
 }

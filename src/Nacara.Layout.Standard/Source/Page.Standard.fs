@@ -4,6 +4,7 @@ open Nacara.Core.Types
 open Feliz
 open Feliz.Bulma
 open Page.WithMenuOrToc
+open Node
 
 let private emptyPreviousButton =
     // Empty button to keep the layout working
@@ -262,11 +263,68 @@ let private renderPageContent
         navigationButtons
     ]
 
+// Use untyped code here because I don't have the bindings for the plugins ready yet
+// When the bindings are done, rewrite it to use them
+let rehypePlugins : RehypePlugin array =
+    [|
+        {
+            Resolve = "rehype-slug"
+            Property = None
+            Options = None
+        }
+        {
+            Resolve = "rehype-autolink-headings"
+            Property = None
+            Options =
+                {|
+                    behavior = "append"
+                    content = [|
+                        {|
+                            ``type`` = "element"
+                            tagName = "span"
+                            properties = {| className = ["anchor"] |}
+                            children = []
+                        |} |> box
+                        {|
+                            ``type`` = "text"
+                            value = "#"
+                        |} |> box
+                    |]
+                |}
+                |> box
+                |> Some
+        }
+    |]
+
+let remarkPlugins : RemarkPlugin array =
+    [|
+        {
+            Resolve = "remark-directive"
+            Property = None
+            Options = None
+        }
+        {
+            Resolve = path.join(Module.__dirname, "./../js/remark-block-container.js")
+            Property = None
+            Options = None
+        }
+    |]
+
 let render (rendererContext : RendererContext) (pageContext : PageContext) =
     promise {
         let rendererContext =
             { rendererContext with
-                MarkdownToHtml = rendererContext.MarkdownToHtmlWithPlugins Markdown.configure
+                Config =
+                    { rendererContext.Config with
+                        RehypePlugins =
+                            Array.append
+                                rendererContext.Config.RehypePlugins
+                                rehypePlugins
+                        RemarkPlugins =
+                            Array.append
+                                rendererContext.Config.RemarkPlugins
+                                remarkPlugins
+                    }
             }
 
         let! pageContent =

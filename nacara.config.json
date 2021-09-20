@@ -76,19 +76,18 @@
             }
         ]
     },
-    "lightner": {
-        "backgroundColor": "#FAFAFA",
-        "textColor": "",
-        "themeFile": "./lightner/themes/OneLight.json",
-        "grammars": [
-            "./lightner/grammars/fsharp.json",
-            "./lightner/grammars/json.json",
-            "./lightner/grammars/JavaScript.tmLanguage.json",
-            "./lightner/grammars/scss.tmLanguage.json",
-            "./lightner/grammars/html.tmLanguage.json",
-            "./lightner/grammars/shell-unix-bash.tmLanguage.json"
-        ]
-    },
+    "remarkPlugins": [
+        {
+            "resolve": "gatsby-remark-vscode",
+            "property": "remarkPlugin",
+            "options": {
+                "theme": "Atom One Light",
+                "extensions": [
+                    "vscode-theme-onelight"
+                ]
+            }
+        }
+    ],
     "layouts": [
         "nacara-layout-standard"
     ]

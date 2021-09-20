@@ -3,7 +3,7 @@ title: With JavaScript
 layout: nacara-standard
 ---
 
-::: primary Note
+:::primary{title="Note"}
 Creating a layout via JavaScript is the quickest way to extends Nacara because you just need a `.js` or `.jsx` file.
 
 However, for complex layout or creating a layout package, you should prefer F# because it will have all the types definition and helpers available for you via the nuget `Nacara.Core`

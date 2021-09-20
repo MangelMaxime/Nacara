@@ -30,6 +30,8 @@ $menu-item-hover-background-color: transparent;
 $menu-label-font-size: $size-6;
 $menu-item-radius: $radius-large $radius-large;
 
+$content-pre-padding: unset;
+
 $footer-background-color: $primary;
 $footer-color: $white;
 
@@ -38,13 +40,25 @@ $link: $primary;
 $body-size: 14px;
 
 @import "../node_modules/bulma/sass/utilities/_all.sass";
-@import './../node_modules/bulma/bulma.sass';
-@import './../node_modules/nacara-layout-standard/scss/nacara.scss';
+@import "./../node_modules/bulma/bulma.sass";
+@import "./../node_modules/nacara-layout-standard/scss/nacara.scss";
+
+// Begin gatsby-remark-vscode specific
+:root {
+    --grvsc-padding-v: 1.25rem;
+}
+
+// Make the code use the full width for when user use line highlighting
+.content {
+    pre > code {
+        width: 100%;
+    }
+}
+// End gatsby-remark-vscode specific
 
 // Override bulma
 .navbar {
     .navbar-dropdown {
-
         @include desktop {
             // Force navbar item text color otherwise it is the same as $navbar-item-color
             // Which is white in our case...
@@ -63,9 +77,9 @@ $body-size: 14px;
 
 .content {
     .table {
-
         &.is-vcentered {
-            td, th {
+            td,
+            th {
                 vertical-align: middle;
             }
         }
@@ -104,7 +118,7 @@ $body-size: 14px;
             }
 
             .prompt {
-                color : $danger;
+                color: $danger;
             }
 
             .command {

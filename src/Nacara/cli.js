@@ -19,6 +19,6 @@
 //   ],
 // });
 
-require = require("esm")(module/*, options*/)
-var nacara = require('./dist/Main.js');
-nacara.start();
+// require = require("esm")(module/*, options*/)
+import { start } from './dist/Main.js';
+start();

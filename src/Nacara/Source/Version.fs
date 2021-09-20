@@ -1,8 +1,14 @@
 module Version
 
+open Fable.Core
 open Fable.Core.JsInterop
 
-let version () =
-    let nacaraVersion : string = emitJsExpr () """require("../package.json").version"""
+let getVersion () : JS.Promise<string> =
+    import "default" "./../js/version.js"
 
-    Log.log $"Nacara version: {nacaraVersion}"
+let version () =
+    promise {
+        let! version = getVersion ()
+
+        Log.log $"Nacara version: {version}"
+    }

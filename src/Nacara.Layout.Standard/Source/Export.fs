@@ -5,6 +5,8 @@ open Nacara.Core.Types
 open Node
 open Feliz
 
+
+
 exportDefault
     {
         Renderers = [|
@@ -39,7 +41,7 @@ exportDefault
         |]
         Dependencies = [|
             {
-                Source = path.join(__dirname, "./../scripts/menu.js")
+                Source = path.join(Module.__dirname, "./../scripts/menu.js")
                 Destination = Dependencies.menu
             }
         |]

@@ -148,7 +148,7 @@ type [<AllowNullLiteral>] WebSocketStatic =
 module WebSocket =
 
     type [<AllowNullLiteral>] IExports =
-        abstract Server: ServerStatic
+        abstract WebSocketServer: ServerStatic
         abstract createWebSocketStream: websocket: WebSocket * ?options: DuplexOptions -> Duplex
 
     /// Data represents the message payload received over the WebSocket.

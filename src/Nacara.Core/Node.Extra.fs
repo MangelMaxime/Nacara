@@ -183,3 +183,12 @@ module File =
 
     let statsSync (path : string) : Node.Fs.Stats =
         fs.statSync(U2.Case1 path)
+
+
+
+module Module =
+
+    let fileURLToPath: string -> string = importMember  "url"
+
+    let inline __filename<'T> = fileURLToPath (emitJsExpr () "import.meta.url")
+    let inline __dirname<'T> = path.dirname(__filename)

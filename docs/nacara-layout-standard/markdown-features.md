@@ -32,10 +32,18 @@ This code have the copy button
 
 Block container allows you to easily colored message blocks, to emphasize part of your page.
 
-To create a block container, you need to wrap your text with 3 colons, specify a type and optionally add a title.
+To create a block container, you need to wrap your text with 3 colons, specify a type.
 
 ```
-::: <type> [optional title]
+:::<type>
+Your text goes here
+:::
+```
+
+You can also optionally specify a title
+
+```
+:::<type>{title="My title"}
 Your text goes here
 :::
 ```
@@ -62,7 +70,7 @@ Available types are:
     <div class="column is-6">
 
 ```
-::: primary Information
+:::primary{title="Information"}
 Your text goes here
 :::
 ```
@@ -70,7 +78,7 @@ Your text goes here
 </div>
     <div class="column is-6">
 
-::: primary Information
+:::primary{title="Information"}
 Your text goes here
 :::
 
@@ -78,7 +86,7 @@ Your text goes here
     <div class="column is-6">
 
 ```
-::: warning Warning
+:::warning{title="Warning"}
 Please read this notice
 :::
 ```
@@ -86,7 +94,7 @@ Please read this notice
 </div>
     <div class="column is-6">
 
-::: warning Warning
+:::warning{title="Warning"}
 Please read this notice
 :::
 
@@ -94,7 +102,7 @@ Please read this notice
 <div class="column is-6">
 
 ```
-::: info
+:::info
 Please read this notice
 :::
 ```
@@ -102,7 +110,7 @@ Please read this notice
 </div>
     <div class="column is-6">
 
-::: info
+:::info
 Please read this notice
 :::
 
@@ -110,7 +118,7 @@ Please read this notice
 <div class="column is-6">
 
 ```
-::: danger
+:::danger
 Something went wrong
 :::
 ```
@@ -118,7 +126,7 @@ Something went wrong
 </div>
     <div class="column is-6">
 
-::: danger
+:::danger
 Something went wrong
 :::
 
@@ -126,7 +134,7 @@ Something went wrong
 <div class="column is-6">
 
 ```
-::: success
+:::success
 Everything looks good
 :::
 ```
@@ -134,7 +142,7 @@ Everything looks good
 </div>
     <div class="column is-6">
 
-::: success
+:::success
 Everything looks good
 :::
 

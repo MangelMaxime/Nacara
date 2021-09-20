@@ -4,7 +4,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Markdown.fs" />
     <Compile Include="Helpers.fs" />
     <Compile Include="Dependencies.fs" />
     <Compile Include="ChangelogParser.fs" />

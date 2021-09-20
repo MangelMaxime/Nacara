@@ -11,7 +11,7 @@ type TableOfContent = Header list
 
 // Note: TableOfContent parser only extract information from h2 elements
 let parse (pageContent : string) =
-    let pattern = """(<h2[^>]*>(?<h2_text>((?!<\/h2>).)*)<a\s*href="(?<h2_link>[^"]*)"((?!<\/h2>).)*<\/h2>)"""
+    let pattern = """(<h2[^>]*>(?<h2_text>((?!<\/h2>).)*)<a[^>]*href="(?<h2_link>[^"]*)"((?!<\/h2>).)*<\/h2>)"""
 
     Regex.Matches(pageContent, pattern, RegexOptions.Singleline)
     |> Seq.cast<Match>

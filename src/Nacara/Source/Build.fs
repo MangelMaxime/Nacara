@@ -22,7 +22,6 @@ type Model =
         Menus : MenuConfig list
         Partials : Partial list
         ProcessQueue : QueueFile list
-        LightnerCache : JS.Map<string, CodeLightner.Config>
     }
 
 [<NoComparison; NoEquality>]
@@ -34,7 +33,6 @@ type InitArgs =
         Pages : PageContext list
         Menus : MenuConfig list
         Partials : Partial list
-        LightnerCache : JS.Map<string, CodeLightner.Config>
     }
 
 let init (args : InitArgs) =
@@ -58,7 +56,6 @@ let init (args : InitArgs) =
         Menus = args.Menus
         Partials = args.Partials
         ProcessQueue = args.ProcessQueue
-        LightnerCache = args.LightnerCache
     }
     , Cmd.batch [
         Cmd.ofMsg ProcessNextFile
@@ -90,7 +87,8 @@ let update (msg : Msg) (model : Model) =
                             Menus = model.Menus
                             Config = model.Config
                             Pages = model.Pages
-                            LightnerCache = model.LightnerCache
+                            RemarkPlugins = model.Config.RemarkPlugins
+                            RehypePlugins = model.Config.RehypePlugins
                         } : Write.ProcessMarkdownArgs
 
                     let action =

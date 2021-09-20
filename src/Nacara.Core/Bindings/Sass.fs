@@ -64,5 +64,5 @@ type [<AllowNullLiteral>] IExports =
     abstract render: options: Options * callback: (SassError -> Result -> obj) -> unit
     abstract renderSync: options: Options -> Result
 
-[<Import("*", "sass")>]
+[<Import("default", "sass")>]
 let sass : IExports = jsNative

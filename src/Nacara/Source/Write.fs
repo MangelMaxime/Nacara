@@ -6,6 +6,12 @@ open Fable.Core
 open Fable.React
 open Node
 
+// While waiting for React 18
+// Adding .js to the import fix the ESM import issue
+// https://github.com/facebook/react/issues/20235#issuecomment-861836181
+[<Import("default", "react-dom/server.js")>]
+let ReactDomServer: IReactDomServer = jsNative
+
 let sassFile (outputStyle : Sass.OutputStyle, destinationFolder : string, sourceFolder : string, relativeFilePath : string) =
     promise {
 
@@ -63,7 +69,8 @@ type ProcessMarkdownArgs =
         Menus : MenuConfig list
         Config : Config
         Pages : PageContext list
-        LightnerCache : JS.Map<string, CodeLightner.Config>
+        RemarkPlugins : RemarkPlugin array
+        RehypePlugins : RehypePlugin array
     }
 
 exception ProcessFileErrorException of pageContext : PageContext * errorMessage : string
@@ -91,8 +98,7 @@ let markdown (args : ProcessMarkdownArgs) =
                         Partials = args.Partials |> List.toArray
                         Menus = args.Menus |> List.toArray
                         Pages = args.Pages |> List.toArray
-                        MarkdownToHtml = markdownToHtml args.LightnerCache
-                        MarkdownToHtmlWithPlugins = markdownToHtmlWithPlugins args.LightnerCache
+                        // MarkdownToHtml = markdownToHtml args.RemarkPlugins args.RehypePlugins
                     }
 
                 let! reactContent =
