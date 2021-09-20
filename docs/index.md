@@ -56,8 +56,6 @@ layout: nacara-navbar-only
     </div>
 </section>
 
-<!-- <section class="hero ">
-    <div class="hero-body"> -->
 <div class="container index-quick-start">
     <div class="columns is-multiline">
         <div class="column is-half-desktop is-full-tablet is-flex is-justify-content-center">
@@ -94,8 +92,6 @@ layout: nacara-navbar-only
         </div>
     </div>
 </div>
-    <!-- </div>
-</section> -->
 
 <section class="hero">
     <div class="hero-body">
