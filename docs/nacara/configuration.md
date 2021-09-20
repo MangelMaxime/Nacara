@@ -47,7 +47,8 @@ Here is a list of the main category of option your can set within your `nacara.c
 
 1. [siteMetadata](#siteMetadata) (object)
 1. [navbar](#navbar) (object)
-1. [lightner](#lightner) (object)
+1. [remarkPlugins](#remarkplugins) (array)
+1. [rehypePlugins](#rehypeplugins) (array)
 1. [layouts](#layouts) (array)
 1. [serverPort](#serverPort) (int)
 1. [source](#source) (string)
@@ -439,7 +440,138 @@ Example: `fab fa-twitter`
 }
 ```
 
-## lightner
+## remarkPlugins
+
+This is where you configure the list of [remark](https://remark.js.org/) plugins to load.
+
+<table class="table is-narrow is-bordered is-vcentered">
+    <thead>
+        <tr>
+            <th class="label-cell">Property</th>
+            <th class="label-cell">Required</th>
+            <th class="label-cell">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="label-cell">
+                <code>resolve</code>
+            </td>
+            <td class="label-cell">X</td>
+            <td class="fullwidth-cell">
+                Name of the NPM package to load
+            </td>
+        </tr>
+        <tr>
+            <td class="label-cell">
+                <code>property</code>
+            </td>
+            <td class="label-cell"></td>
+            <td class="fullwidth-cell">
+
+If set, Nacara will load your plugin using `pluginName.default[propertyName]`
+
+*Note: The only plugin I found requiring the use of this feature is [gatsby-remark-vscode](https://github.com/andrewbranch/gatsby-remark-vscode)*
+
+```json
+{
+    "resolve": "gatsby-remark-vscode",
+    "property": "remarkPlugin",
+}
+```
+</td>
+        </tr>
+        <tr>
+            <td class="label-cell">
+                <code>options</code>
+            </td>
+            <td class="label-cell"></td>
+            <td class="fullwidth-cell">
+                Options to pass to the plugin
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+**Example**
+
+```json
+{
+    "remarkPlugins": [
+        {
+            "resolve": "gatsby-remark-vscode",
+            "property": "remarkPlugin",
+            "options": {
+                "theme": "Atom One Light",
+                "extensions": [
+                    "vscode-theme-onelight"
+                ]
+            }
+        },
+        {
+            "resolve": "remark-directive"
+        }
+    ]
+}
+```
+
+## rehypePlugins
+
+This is where you configure the list of [rehype](https://github.com/rehypejs/rehype) plugins to load.
+
+<table class="table is-narrow is-bordered is-vcentered">
+    <thead>
+        <tr>
+            <th class="label-cell">Property</th>
+            <th class="label-cell">Required</th>
+            <th class="label-cell">Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="label-cell">
+                <code>resolve</code>
+            </td>
+            <td class="label-cell">X</td>
+            <td class="fullwidth-cell">
+                Name of the NPM package to load
+            </td>
+        </tr>
+        <tr>
+            <td class="label-cell">
+                <code>property</code>
+            </td>
+            <td class="label-cell"></td>
+            <td class="fullwidth-cell">
+
+If set, Nacara will load your plugin using `pluginName.default[propertyName]`
+
+*Note: I don't think any rehype plugin needs this feature, but I added it to be on par with `remarkPlugins` feature.*
+</td>
+        </tr>
+        <tr>
+            <td class="label-cell">
+                <code>options</code>
+            </td>
+            <td class="label-cell"></td>
+            <td class="fullwidth-cell">
+                Options to pass to the plugin
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+**Example**
+
+```json
+{
+    "rehypePlugins": [
+        {
+            "resolve": "rehype-slug",
+        }
+    ]
+}
+```
 
 ## layouts
 
