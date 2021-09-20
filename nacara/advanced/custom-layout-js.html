@@ -1,389 +1,493 @@
-<html class="has-navbar-fixed-top" lang="en"><head><title>Nacara · With JavaScript</title><meta http-equiv="content-type" content="text/html; charset=UTF-8" charSet="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="shortcut icon" href="/Nacara/favicon-180x180.png"/><link rel="stylesheet" type="text/css" href="/Nacara/style.css"/><script src="https://unpkg.com/scroll-into-view-if-needed@2.2.28/umd/scroll-into-view-if-needed.min.js"></script></head><body><nav class="navbar is-fixed-top is-spaced"><div class="container"><div class="navbar-brand"><a class="navbar-item title is-4" href="https://mangelmaxime.github.io/Nacara/">Nacara</a></div><div class="navbar-menu"><div class="navbar-start"><div class="navbar-item has-nacara-dropdown" data-guid="fb3bf8d6-57a2-43cc-a8c9-9df6560dfc55"><div class="nacara-dropdown-link">Docs</div><div class="nacara-dropdown is-floating"><a class="nacara-dropdown-item" href="/Nacara/nacara/introduction.html"><div><div><strong>Nacara</strong></div><div class="nacara-dropdown-item-description">Learn more about how Nacara works,
-and how to setup it in your project</div></div></a><hr class="navbar-divider"/><a class="nacara-dropdown-item" href="/Nacara/nacara-layout-standard/introduction.html"><div><div><strong>Nacara.Layout.Standard</strong></div><div class="nacara-dropdown-item-description">Default layout used by Nacara</div></div></a></div></div><a class="navbar-item" href="/Nacara/showcase/index.html">Showcase</a><div class="navbar-item has-nacara-dropdown is-hidden-mobile" data-guid="e88da683-a779-45ed-bcd0-7fdb6ad548d0"><div class="nacara-dropdown-link">Changelogs</div><div class="nacara-dropdown is-floating"><a class="nacara-dropdown-item" href="/Nacara/changelogs/nacara.html"><div>Nacara</div></a><a class="nacara-dropdown-item" href="/Nacara/changelogs/nacara-core.html"><div>Nacara.Core</div></a><a class="nacara-dropdown-item" href="/Nacara/changelogs/nacara-layout-standard.html"><div>Nacara.Standard.Layout</div></a></div></div><a class="navbar-item is-hidden-mobile" href="https://gitter.im/fable-compiler/Fable">Support</a><a class="navbar-item is-hidden-mobile" href="https://www.patreon.com/MangelMaxime">Donate</a><div class="navbar-item navbar-burger-dots is-hidden-tablet"><svg height="4" stroke="none" viewBox="0 0 22 4" width="22"><circle cx="2" cy="2" r="2"></circle><circle cx="2" cy="2" r="2" transform="translate(9,0)"></circle><circle cx="2" cy="2" r="2" transform="translate(18,0)"></circle></svg></div></div><div class="navbar-end is-hidden-mobile"><a class="navbar-item" href="https://github.com/MangelMaxime/Nacara"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item" href="https://twitter.com/MangelMaxime"><span class="icon"><i class=" fab fa-twitter fa-lg"></i></span></a></div></div><div class="nacara-navbar-menu"><div class="nacara-navbar-menu-dropdown"><div class="nacara-navbar-menu-dropdown-label">Changelogs</div><a class="nacara-navbar-menu-dropdown-link" href="/Nacara/changelogs/nacara.html"><span>Nacara</span></a><a class="nacara-navbar-menu-dropdown-link" href="/Nacara/changelogs/nacara-core.html"><span>Nacara.Core</span></a><a class="nacara-navbar-menu-dropdown-link" href="/Nacara/changelogs/nacara-layout-standard.html"><span>Nacara.Standard.Layout</span></a></div><a class="nacara-navbar-menu-item" href="https://gitter.im/fable-compiler/Fable">Support</a><a class="nacara-navbar-menu-item" href="https://www.patreon.com/MangelMaxime">Donate</a><a class="nacara-navbar-menu-item" href="https://github.com/MangelMaxime/Nacara">GitHub</a><a class="nacara-navbar-menu-item" href="https://twitter.com/MangelMaxime">Twitter</a></div></div></nav><div class="grey-overlay"></div><div class="container"><div class="mobile-menu"><nav class="breadcrumb"><ul><li><a class="menu-trigger"><span></span><span></span><span></span></a></li><li class="is-active"><a>Docs</a></li><li class="is-active"><a>Nacara</a></li><li class="is-active"><a>Custom Layouts</a></li><li class="is-active"><a>With JavaScript</a></li></ul></nav></div><div class="columns is-gapless is-mobile"><div class="column is-menu-column is-3-desktop is-hidden-touch"><div class="menu-container"><aside class="menu"><p class="menu-label">Overview</p><ul class="menu-list"><li><a class=" " href="/Nacara/nacara/introduction.html">Introduction</a></li><li><a class=" " href="/Nacara/nacara/configuration.html">Configuration</a></li><li><a class=" " href="/Nacara/nacara/directory-structure.html">Directory structure</a></li><li><a class=" " href="/Nacara/nacara/api.html">API</a></li></ul><p class="menu-label">Guides</p><ul class="menu-list"><li><a class=" " href="/Nacara/nacara/guides/create-a-page.html">Create a page</a></li><li><a class=" " href="/Nacara/nacara/guides/customize-the-style.html">Style your application</a></li><li><a class=" " href="/Nacara/nacara/guides/create-a-section.html">Create a Section</a></li><li><a class=" " href="/Nacara/nacara/guides/section-menu.html">Section menu</a></li><li><a class=" " href="/Nacara/nacara/guides/deploy-your-site.html">Deploy your site</a></li></ul><p class="menu-label">Custom Layouts</p><ul class="menu-list"><li><a class=" " href="/Nacara/nacara/advanced/layout-from-scratch.html">Overview</a></li><li><a class=" is-active" href="/Nacara/nacara/advanced/custom-layout-js.html">With JavaScript</a></li><li><ul class="table-of-content"><li><a href="#Setup-Babel-for-JSX-support" data-toc-element="true">Setup Babel for JSX support </a></li><li><a href="#Blog-page-layout" data-toc-element="true">Blog page layout </a></li><li><a href="#Blog-index" data-toc-element="true">Blog index </a></li><li><a href="#Working-with-async-functions" data-toc-element="true">Working with async functions </a></li><li><a href="#Minimal-layout-file" data-toc-element="true">Minimal layout file </a></li></ul></li><li><a class=" " href="/Nacara/nacara/advanced/custom-layout-fsharp.html">With FSharp</a></li></ul></aside></div></div><div class="column is-8-desktop is-full-touch"><section class="section"><div class="content"><header class="page-header"><div class="columns is-vcentered"><div class="column"><nav class="breadcrumb is-hidden-touch"><ul><li class="is-active"><a>Docs</a></li><li class="is-active"><a>Nacara</a></li><li class="is-active"><a>Custom Layouts</a></li><li class="is-active"><a>With JavaScript</a></li></ul></nav></div><div class="column is-narrow"><a class="button is-hidden-touch is-ghost" target="_blank" href="https://github.com/MangelMaxime/Nacara/edit/master/docs/nacara/advanced/custom-layout-js.md">Edit</a></div></div><h1 class="title is-1">With JavaScript</h1></header><div><article class="message is-primary">
-                    <div class="message-header">
-                        <p> Note</p>
-                    </div>
-                    <div class="message-body"><p>Creating a layout via JavaScript is the quickest way to extends Nacara because you just need a <code>.js</code> or <code>.jsx</code> file.</p>
-<p>However, for complex layout or creating a layout package, you should prefer F# because it will have all the types definition and helpers available for you via the nuget <code>Nacara.Core</code></p>
-</div>
+<html class="has-navbar-fixed-top" lang="en"><head><title>Nacara · With JavaScript</title><meta http-equiv="content-type" content="text/html; charset=UTF-8" charSet="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="shortcut icon" href="/Nacara/favicon-180x180.png"/><link rel="stylesheet" type="text/css" href="/Nacara/style.css"/><script src="https://unpkg.com/scroll-into-view-if-needed@2.2.28/umd/scroll-into-view-if-needed.min.js"></script></head><body><nav class="navbar is-fixed-top is-spaced"><div class="container"><div class="navbar-brand"><a class="navbar-item title is-4" href="https://mangelmaxime.github.io/Nacara/">Nacara</a></div><div class="navbar-menu"><div class="navbar-start"><div class="navbar-item has-nacara-dropdown" data-guid="eeaf4b75-1fa3-4256-b1bc-31e155a9bc43"><div class="nacara-dropdown-link">Docs</div><div class="nacara-dropdown is-floating"><a class="nacara-dropdown-item" href="/Nacara/nacara/introduction.html"><div><div><strong>Nacara</strong></div><div class="nacara-dropdown-item-description">Learn more about how Nacara works,
+and how to setup it in your project</div></div></a><hr class="navbar-divider"/><a class="nacara-dropdown-item" href="/Nacara/nacara-layout-standard/introduction.html"><div><div><strong>Nacara.Layout.Standard</strong></div><div class="nacara-dropdown-item-description">Default layout used by Nacara</div></div></a></div></div><a class="navbar-item" href="/Nacara/showcase/index.html">Showcase</a><div class="navbar-item has-nacara-dropdown is-hidden-mobile" data-guid="e8611b44-30dc-483b-9c4e-3350bce4f196"><div class="nacara-dropdown-link">Changelogs</div><div class="nacara-dropdown is-floating"><a class="nacara-dropdown-item" href="/Nacara/changelogs/nacara.html"><div>Nacara</div></a><a class="nacara-dropdown-item" href="/Nacara/changelogs/nacara-core.html"><div>Nacara.Core</div></a><a class="nacara-dropdown-item" href="/Nacara/changelogs/nacara-layout-standard.html"><div>Nacara.Standard.Layout</div></a></div></div><a class="navbar-item is-hidden-mobile" href="https://gitter.im/fable-compiler/Fable">Support</a><a class="navbar-item is-hidden-mobile" href="https://www.patreon.com/MangelMaxime">Donate</a><div class="navbar-item navbar-burger-dots is-hidden-tablet"><svg height="4" stroke="none" viewBox="0 0 22 4" width="22"><circle cx="2" cy="2" r="2"></circle><circle cx="2" cy="2" r="2" transform="translate(9,0)"></circle><circle cx="2" cy="2" r="2" transform="translate(18,0)"></circle></svg></div></div><div class="navbar-end is-hidden-mobile"><a class="navbar-item" href="https://github.com/MangelMaxime/Nacara"><span class="icon"><i class=" fab fa-github fa-lg"></i></span></a><a class="navbar-item" href="https://twitter.com/MangelMaxime"><span class="icon"><i class=" fab fa-twitter fa-lg"></i></span></a></div></div><div class="nacara-navbar-menu"><div class="nacara-navbar-menu-dropdown"><div class="nacara-navbar-menu-dropdown-label">Changelogs</div><a class="nacara-navbar-menu-dropdown-link" href="/Nacara/changelogs/nacara.html"><span>Nacara</span></a><a class="nacara-navbar-menu-dropdown-link" href="/Nacara/changelogs/nacara-core.html"><span>Nacara.Core</span></a><a class="nacara-navbar-menu-dropdown-link" href="/Nacara/changelogs/nacara-layout-standard.html"><span>Nacara.Standard.Layout</span></a></div><a class="nacara-navbar-menu-item" href="https://gitter.im/fable-compiler/Fable">Support</a><a class="nacara-navbar-menu-item" href="https://www.patreon.com/MangelMaxime">Donate</a><a class="nacara-navbar-menu-item" href="https://github.com/MangelMaxime/Nacara">GitHub</a><a class="nacara-navbar-menu-item" href="https://twitter.com/MangelMaxime">Twitter</a></div></div></nav><div class="grey-overlay"></div><div class="container"><div class="mobile-menu"><nav class="breadcrumb"><ul><li><a class="menu-trigger"><span></span><span></span><span></span></a></li><li class="is-active"><a>Docs</a></li><li class="is-active"><a>Nacara</a></li><li class="is-active"><a>Custom Layouts</a></li><li class="is-active"><a>With JavaScript</a></li></ul></nav></div><div class="columns is-gapless is-mobile"><div class="column is-menu-column is-3-desktop is-hidden-touch"><div class="menu-container"><aside class="menu"><p class="menu-label">Overview</p><ul class="menu-list"><li><a class=" " href="/Nacara/nacara/introduction.html">Introduction</a></li><li><a class=" " href="/Nacara/nacara/configuration.html">Configuration</a></li><li><a class=" " href="/Nacara/nacara/directory-structure.html">Directory structure</a></li><li><a class=" " href="/Nacara/nacara/api.html">API</a></li></ul><p class="menu-label">Guides</p><ul class="menu-list"><li><a class=" " href="/Nacara/nacara/guides/create-a-page.html">Create a page</a></li><li><a class=" " href="/Nacara/nacara/guides/customize-the-style.html">Style your application</a></li><li><a class=" " href="/Nacara/nacara/guides/create-a-section.html">Create a Section</a></li><li><a class=" " href="/Nacara/nacara/guides/section-menu.html">Section menu</a></li><li><a class=" " href="/Nacara/nacara/guides/deploy-your-site.html">Deploy your site</a></li></ul><p class="menu-label">Custom Layouts</p><ul class="menu-list"><li><a class=" " href="/Nacara/nacara/advanced/layout-from-scratch.html">Overview</a></li><li><a class=" is-active" href="/Nacara/nacara/advanced/custom-layout-js.html">With JavaScript</a></li><li><ul class="table-of-content"><li><a href="#setup-babel-for-jsx-support" data-toc-element="true">Setup Babel for JSX support</a></li><li><a href="#blog-page-layout" data-toc-element="true">Blog page layout</a></li><li><a href="#blog-index" data-toc-element="true">Blog index</a></li><li><a href="#working-with-async-functions" data-toc-element="true">Working with async functions</a></li><li><a href="#minimal-layout-file" data-toc-element="true">Minimal layout file</a></li></ul></li><li><a class=" " href="/Nacara/nacara/advanced/custom-layout-fsharp.html">With FSharp</a></li></ul></aside></div></div><div class="column is-8-desktop is-full-touch"><section class="section"><div class="content"><header class="page-header"><div class="columns is-vcentered"><div class="column"><nav class="breadcrumb is-hidden-touch"><ul><li class="is-active"><a>Docs</a></li><li class="is-active"><a>Nacara</a></li><li class="is-active"><a>Custom Layouts</a></li><li class="is-active"><a>With JavaScript</a></li></ul></nav></div><div class="column is-narrow"><a class="button is-hidden-touch is-ghost" target="_blank" href="https://github.com/MangelMaxime/Nacara/edit/master/docs/nacara/advanced/custom-layout-js.md">Edit</a></div></div><h1 class="title is-1">With JavaScript</h1></header><div>
+<style class="grvsc-styles">.grvsc-container {
+overflow: auto;
+position: relative;
+-webkit-overflow-scrolling: touch;
+padding-top: 1rem;
+padding-top: var(--grvsc-padding-top, var(--grvsc-padding-v, 1rem));
+padding-bottom: 1rem;
+padding-bottom: var(--grvsc-padding-bottom, var(--grvsc-padding-v, 1rem));
+border-radius: 8px;
+border-radius: var(--grvsc-border-radius, 8px);
+font-feature-settings: normal;
+line-height: 1.4;
+}
+.grvsc-code {
+display: table;
+}
+.grvsc-line {
+display: table-row;
+box-sizing: border-box;
+width: 100%;
+position: relative;
+}
+.grvsc-line > * {
+position: relative;
+}
+.grvsc-gutter-pad {
+display: table-cell;
+padding-left: 0.75rem;
+padding-left: calc(var(--grvsc-padding-left, var(--grvsc-padding-h, 1.5rem)) / 2);
+}
+.grvsc-gutter {
+display: table-cell;
+-webkit-user-select: none;
+-moz-user-select: none;
+user-select: none;
+}
+.grvsc-gutter::before {
+content: attr(data-content);
+}
+.grvsc-source {
+display: table-cell;
+padding-left: 1.5rem;
+padding-left: var(--grvsc-padding-left, var(--grvsc-padding-h, 1.5rem));
+padding-right: 1.5rem;
+padding-right: var(--grvsc-padding-right, var(--grvsc-padding-h, 1.5rem));
+}
+.grvsc-source:empty::after {
+content: ' ';
+-webkit-user-select: none;
+-moz-user-select: none;
+user-select: none;
+}
+.grvsc-gutter + .grvsc-source {
+padding-left: 0.75rem;
+padding-left: calc(var(--grvsc-padding-left, var(--grvsc-padding-h, 1.5rem)) / 2);
+}
+/* Line transformer styles */
+.grvsc-has-line-highlighting > .grvsc-code > .grvsc-line::before {
+content: ' ';
+position: absolute;
+width: 100%;
+}
+.grvsc-line-diff-add::before {
+background-color: var(--grvsc-line-diff-add-background-color, rgba(0, 255, 60, 0.2));
+}
+.grvsc-line-diff-del::before {
+background-color: var(--grvsc-line-diff-del-background-color, rgba(255, 0, 20, 0.2));
+}
+.grvsc-line-number {
+padding: 0 2px;
+text-align: right;
+opacity: 0.7;
+}
+.atom-one-light {
+background-color: #FAFAFA;
+color: #383A42;
+}
+.atom-one-light .mtki { font-style: italic; }
+.atom-one-light .mtk1 { color: #383A42; }
+.atom-one-light .mtk5 { color: #E45649; }
+.atom-one-light .mtk10 { color: #50A14F; }
+.atom-one-light .mtk7 { color: #A0A1A7; }
+.atom-one-light .mtk14 { color: #A626A4; }
+.atom-one-light .mtk6 { color: #986801; }
+.atom-one-light .mtk8 { color: #0184BC; }
+.atom-one-light .mtk9 { color: #4078F2; }
+.atom-one-light .mtk4 { color: #C18401; }
+.atom-one-light .mtk15 { color: #CA1243; }
+.atom-one-light .grvsc-line-highlighted::before {
+background-color: var(--grvsc-line-highlighted-background-color, rgba(0, 0, 0, 0.05));
+box-shadow: inset var(--grvsc-line-highlighted-border-width, 4px) 0 0 0 var(--grvsc-line-highlighted-border-color, rgba(0, 0, 0, 0.2));
+}</style>
+<article class="message is-primary">
+  <div class="message-header">
+    <p>Note</p>
+  </div>
+  <div class="message-body">
+    <div>
+      <p>Creating a layout via JavaScript is the quickest way to extends Nacara because you just need a <code>.js</code> or <code>.jsx</code> file.</p>
+      <p>However, for complex layout or creating a layout package, you should prefer F# because it will have all the types definition and helpers available for you via the nuget <code>Nacara.Core</code></p>
+    </div>
+  </div>
 </article>
-<h2>Setup Babel for JSX support <a href="#Setup-Babel-for-JSX-support" aria-hidden="true"><span class="anchor" id="Setup-Babel-for-JSX-support"></span>#</a></h2>
+<h2 id="setup-babel-for-jsx-support">Setup Babel for JSX support<a aria-hidden="true" tabindex="-1" href="#setup-babel-for-jsx-support"><span class="[anchor]"></span>#</a></h2>
 <article class="message is-info">
-                    <div class="message-body"><p>If when setting up Nacara, you answer <strong>Yes</strong> to the question 'Do you want to setup Babel and react?' you can skip this step and go to <a href="#Blog-page-layout">Blog page layout</a></p>
-</div>
+  <div class="message-body">
+    <div>
+      <p>If when setting up Nacara, you answer <strong>Yes</strong> to the question 'Do you want to setup Babel and react?' you can skip this step and go to <a href="#Blog-page-layout">Blog page layout</a></p>
+    </div>
+  </div>
 </article>
 <ul class="textual-steps">
-<li>
-<p>Create the file <code>babel.config.json</code></p>
-<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span>{</span>
-<span>    </span><span style="color: #E45649">&quot;presets&quot;</span><span>: </span><span style="color: #383A42">[</span>
-<span>        </span><span style="color: #50A14F">&quot;@babel/preset-react&quot;</span>
-<span>    </span><span style="color: #383A42">]</span>
-<span>}</span></code></pre>
-</li>
-<li>
-<p>Install the Babel dependencies:</p>
-<pre><code>npm install --save-dev @babel/register @babel/preset-react
-</code></pre>
-</li>
+  <li>
+    <p>Create the file <code>babel.config.json</code></p>
+    <pre class="grvsc-container atom-one-light" data-language="json" data-index="0"><code class="grvsc-code"><span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">{</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk5">"presets"</span><span class="mtk1">: [</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        </span><span class="mtk10">"@babel/preset-react"</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    ]</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">}</span></span></span></code></pre>
+  </li>
+  <li>
+    <p>Install the Babel dependencies:</p>
+    <pre class="grvsc-container atom-one-light" data-language="" data-index="1"><code class="grvsc-code"><span class="grvsc-line"><span class="grvsc-source">npm install --save-dev @babel/register @babel/preset-react</span></span></code></pre>
+  </li>
 </ul>
-<h2>Blog page layout <a href="#Blog-page-layout" aria-hidden="true"><span class="anchor" id="Blog-page-layout"></span>#</a></h2>
+<h2 id="blog-page-layout">Blog page layout<a aria-hidden="true" tabindex="-1" href="#blog-page-layout"><span class="[anchor]"></span>#</a></h2>
 <article class="message is-info">
-                    <div class="message-body"><p>We are going to use JavaScript to write our layout but you can also write them using F#.</p>
-<p>For the tutorial, it is easier to use JavaScript as no setup is required</p>
-</div>
+  <div class="message-body">
+    <div>
+      <p>We are going to use JavaScript to write our layout but you can also write them using F#.</p>
+      <p>For the tutorial, it is easier to use JavaScript as no setup is required</p>
+    </div>
+  </div>
 </article>
 <ul class="textual-steps">
-<li>
-<p>Create a file <code>layouts/blog-page.jsx</code> at the root of your repository</p>
-<pre><code>├── docs
-├── docsrc
-├── layouts
-    └── blog-page.jsx
-├── lightner
-└── node_modules
-</code></pre>
-<p>Add this to the file:</p>
-<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span style="color: #A0A1A7;font-style: italic">// Nacara is using React for generating the HTML</span>
-<span style="color: #A626A4">const</span><span> </span><span style="color: #986801">React</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #0184BC">require</span><span style="color: #383A42">(</span><span style="color: #50A14F">&quot;react&quot;</span><span style="color: #383A42">);</span>
-<span style="color: #A0A1A7;font-style: italic">// We can reuse existing layouts function</span>
-<span style="color: #A0A1A7;font-style: italic">// Here, we want to re-use the minimal page which generates only the navbar for us</span>
-<span style="color: #A626A4">const</span><span> </span><span style="color: #986801">pageMinimal</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #0184BC">require</span><span style="color: #383A42">(</span><span style="color: #50A14F">&quot;nacara-layout-standard/dist/Page.Minimal&quot;</span><span style="color: #383A42">);</span>
-
-<span style="color: #A0A1A7;font-style: italic">// Main render function which glue the helpers together</span>
-<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">render</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #A626A4">async</span><span> </span><span style="color: #383A42">(rendererContext,</span><span> </span><span style="color: #383A42">pageContext)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
-
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// Render the blog content using our helpers</span>
-<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">content</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #50A14F">&quot;Blog page&quot;</span><span style="color: #383A42">;</span>
-
-<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #E45649">pageMinimal</span><span style="color: #383A42">.</span><span style="color: #4078F2">render</span><span style="color: #383A42">(</span><span style="color: #A626A4">new</span><span> </span><span style="color: #50A14F">pageMinimal</span><span style="color: #383A42">.</span><span style="color: #C18401">RenderArgs</span><span style="color: #383A42">(</span>
-<span>        </span><span style="color: #E45649">rendererContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Config</span><span style="color: #383A42">,</span><span> </span><span style="color: #A0A1A7;font-style: italic">// Forward the config information</span>
-<span>        </span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Section</span><span style="color: #383A42">,</span><span> </span><span style="color: #A0A1A7;font-style: italic">// Tell which section we are in</span>
-<span>        </span><span style="color: #383A42">title,</span><span> </span><span style="color: #A0A1A7;font-style: italic">// Pass the blog title to use in the page title</span>
-<span>        </span><span style="color: #383A42">content</span><span> </span><span style="color: #A0A1A7;font-style: italic">// Pass the blog content to render below the navbar</span>
-<span>    </span><span style="color: #383A42">));</span>
-
-<span style="color: #383A42">}</span>
-
-<span style="color: #A0A1A7;font-style: italic">// Each layout needs to export this object</span>
-<span style="color: #A626A4">export</span><span> </span><span style="color: #E45649">default</span><span> </span><span style="color: #383A42">{</span>
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// We can have several renderer, it is useful when publishing to npm</span>
-<span>    Renderers</span><span style="color: #0184BC">:</span><span> </span><span style="color: #383A42">[</span>
-<span>        </span><span style="color: #383A42">{</span>
-<span>            </span><span style="color: #A0A1A7;font-style: italic">// Unique name of the layout used by Nacara to know how to render your page</span>
-<span>            Name</span><span style="color: #0184BC">:</span><span> </span><span style="color: #50A14F">&quot;blog-page&quot;</span><span style="color: #383A42">,</span>
-<span>            </span><span style="color: #A0A1A7;font-style: italic">// render function</span>
-<span>            Func</span><span style="color: #0184BC">:</span><span> </span><span style="color: #E45649">render</span>
-<span>        </span><span style="color: #383A42">}</span>
-<span>    </span><span style="color: #383A42">],</span>
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// An array of external dependencies</span>
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// For example, if your layouts need to include some external</span>
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// JavaScript file you specify them here so Nacara know that it</span>
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// has to copy them into the destination directory</span>
-<span>    Dependencies</span><span style="color: #0184BC">:</span><span> </span><span style="color: #383A42">[]</span>
-<span style="color: #383A42">}</span></code></pre>
-</li>
-<li>
-<p>We need to decide what information are specific to a blog post and add them to the front matter.</p>
-<p>A blog page has:</p>
-<ul>
-<li>an author</li>
-<li>a title</li>
-<li>a date</li>
+  <li>
+    <p>Create a file <code>layouts/blog-page.jsx</code> at the root of your repository</p>
+    <pre class="grvsc-container atom-one-light" data-language="" data-index="2"><code class="grvsc-code"><span class="grvsc-line"><span class="grvsc-source">├── docs</span></span>
+<span class="grvsc-line"><span class="grvsc-source">├── docsrc</span></span>
+<span class="grvsc-line"><span class="grvsc-source">├── layouts</span></span>
+<span class="grvsc-line"><span class="grvsc-source">    └── blog-page.jsx</span></span>
+<span class="grvsc-line"><span class="grvsc-source">├── lightner</span></span>
+<span class="grvsc-line"><span class="grvsc-source">└── node_modules</span></span></code></pre>
+    <p>Add this to the file:</p>
+    <pre class="grvsc-container atom-one-light" data-language="js" data-index="3"><code class="grvsc-code"><span class="grvsc-line"><span class="grvsc-source"><span class="mtk7 mtki">// Nacara is using React for generating the HTML</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk6">React</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> </span><span class="mtk8">require</span><span class="mtk1">(</span><span class="mtk10">"react"</span><span class="mtk1">);</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk7 mtki">// We can reuse existing layouts function</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk7 mtki">// Here, we want to re-use the minimal page which generates only the navbar for us</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk6">pageMinimal</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> </span><span class="mtk8">require</span><span class="mtk1">(</span><span class="mtk10">"nacara-layout-standard/dist/Page.Minimal"</span><span class="mtk1">);</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk7 mtki">// Main render function which glue the helpers together</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk9">render</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> </span><span class="mtk14">async</span><span class="mtk1"> (rendererContext, pageContext) </span><span class="mtk14">=></span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// Render the blog content using our helpers</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk6">content</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> </span><span class="mtk10">"Blog page"</span><span class="mtk1">;</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">return</span><span class="mtk1"> pageMinimal.</span><span class="mtk9">render</span><span class="mtk1">(</span><span class="mtk14">new</span><span class="mtk1"> </span><span class="mtk10">pageMinimal</span><span class="mtk1">.</span><span class="mtk4">RenderArgs</span><span class="mtk1">(</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        rendererContext.</span><span class="mtk5">Config</span><span class="mtk1">, </span><span class="mtk7 mtki">// Forward the config information</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        pageContext.</span><span class="mtk5">Section</span><span class="mtk1">, </span><span class="mtk7 mtki">// Tell which section we are in</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        title, </span><span class="mtk7 mtki">// Pass the blog title to use in the page title</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        content </span><span class="mtk7 mtki">// Pass the blog content to render below the navbar</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    ));</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk7 mtki">// Each layout needs to export this object</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">export</span><span class="mtk1"> </span><span class="mtk5">default</span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// We can have several renderer, it is useful when publishing to npm</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk5">Renderers</span><span class="mtk8">:</span><span class="mtk1"> [</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk7 mtki">// Unique name of the layout used by Nacara to know how to render your page</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk5">Name</span><span class="mtk8">:</span><span class="mtk1"> </span><span class="mtk10">"blog-page"</span><span class="mtk1">,</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk7 mtki">// render function</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk5">Func</span><span class="mtk8">:</span><span class="mtk1"> </span><span class="mtk5">render</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        }</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    ],</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// An array of external dependencies</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// For example, if your layouts need to include some external</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// JavaScript file you specify them here so Nacara know that it</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// has to copy them into the destination directory</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk5">Dependencies</span><span class="mtk8">:</span><span class="mtk1"> []</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span></code></pre>
+  </li>
+  <li>
+    <p>We need to decide what information are specific to a blog post and add them to the front matter.</p>
+    <p>A blog page has:</p>
+    <ul>
+      <li>an author</li>
+      <li>a title</li>
+      <li>a date</li>
+    </ul>
+    <p>We will add these information via the front-matter.</p>
+    <p>Update the front-matter of <code>docsrc/blog/2021/welcome.md</code> with</p>
+    <pre class="grvsc-container atom-one-light" data-language="" data-index="4"><code class="grvsc-code"><span class="grvsc-line"><span class="grvsc-source">---</span></span>
+<span class="grvsc-line"><span class="grvsc-source">title: Welcome</span></span>
+<span class="grvsc-line"><span class="grvsc-source">layout: blog-page</span></span>
+<span class="grvsc-line"><span class="grvsc-source">author: Kira Nacara</span></span>
+<span class="grvsc-line"><span class="grvsc-source">date: 2021-08-20</span></span>
+<span class="grvsc-line"><span class="grvsc-source">---</span></span></code></pre>
+    <article class="message is-info">
+      <div class="message-body">
+        <div>
+          <p>Note how we also set the layout property to <code>blog-page</code> (our layout name)</p>
+        </div>
+      </div>
+    </article>
+  </li>
+  <li>
+    <p>We now need to update our <code>blog-page.jsx</code> script to use the new information.</p>
+    <p>Replace your <code>render</code> function with this code:</p>
+    <article class="message is-info">
+      <div class="message-body">
+        <div>
+          <p>We are adding a lot of code at once, take the time to read the comments</p>
+        </div>
+      </div>
+    </article>
+    <pre class="grvsc-container atom-one-light" data-language="js" data-index="5"><code class="grvsc-code"><span class="grvsc-line"><span class="grvsc-source"><span class="mtk7 mtki">// This render a stylized title for our blog page</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk9">BlogTitle</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> ({ title }) </span><span class="mtk14">=></span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">return</span><span class="mtk1"> &#x3C;</span><span class="mtk5">h2</span><span class="mtk1"> </span><span class="mtk6">className</span><span class="mtk1">=</span><span class="mtk10">"title is-size-3 has-text-primary has-text-weight-normal has-text-centered blog-title"</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        {title}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    &#x3C;/</span><span class="mtk5">h2</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk7 mtki">// A helper function to render the author and date of our blog post</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk9">AuthorAndDate</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> ({ authorName, date }) </span><span class="mtk14">=></span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk6">dateFormat</span><span class="mtk1"> </span><span class="mtk8">=</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        </span><span class="mtk14">new</span><span class="mtk1"> </span><span class="mtk10">Intl</span><span class="mtk1">.</span><span class="mtk4">DateTimeFormat</span><span class="mtk1">(</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk10">"en"</span><span class="mtk1">,</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">                </span><span class="mtk5">dateStyle</span><span class="mtk8">:</span><span class="mtk1"> </span><span class="mtk10">"long"</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            }</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        );</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">return</span><span class="mtk1"> &#x3C;</span><span class="mtk5">div</span><span class="mtk1"> </span><span class="mtk6">className</span><span class="mtk1">=</span><span class="mtk10">"tags has-addons is-justify-content-center"</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        &#x3C;</span><span class="mtk5">span</span><span class="mtk1"> </span><span class="mtk6">className</span><span class="mtk1">=</span><span class="mtk10">"tag is-rounded is-medium is-primary"</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            {authorName}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        &#x3C;/</span><span class="mtk5">span</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        &#x3C;</span><span class="mtk5">span</span><span class="mtk1"> </span><span class="mtk6">className</span><span class="mtk1">=</span><span class="mtk10">"tag is-rounded is-medium"</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            {dateFormat.</span><span class="mtk9">format</span><span class="mtk1">(date)}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        &#x3C;/</span><span class="mtk5">span</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    &#x3C;/</span><span class="mtk5">div</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk7 mtki">// A helper function to render the blog container,</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk7 mtki">// it will makes our blog centered on the page on desktop</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk9">BlogContainer</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> ({ children }) </span><span class="mtk14">=></span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">return</span><span class="mtk1"> &#x3C;</span><span class="mtk5">section</span><span class="mtk1"> </span><span class="mtk6">className</span><span class="mtk1">=</span><span class="mtk10">"section container"</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        &#x3C;</span><span class="mtk5">div</span><span class="mtk1"> </span><span class="mtk6">className</span><span class="mtk1">=</span><span class="mtk10">"columns"</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            &#x3C;</span><span class="mtk5">div</span><span class="mtk1"> </span><span class="mtk6">className</span><span class="mtk1">=</span><span class="mtk10">"column is-8-desktop is-offset-2-desktop"</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">                {children}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            &#x3C;/</span><span class="mtk5">div</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        &#x3C;/</span><span class="mtk5">div</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    &#x3C;/</span><span class="mtk5">section</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk7 mtki">// Main render function which glue the helpers together</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk9">render</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> </span><span class="mtk14">async</span><span class="mtk1"> (rendererContext, pageContext) </span><span class="mtk14">=></span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// Access the front matter information</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk6">title</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> pageContext.</span><span class="mtk5">Attributes</span><span class="mtk1">.</span><span class="mtk5">title</span><span class="mtk1">;</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk6">author</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> pageContext.</span><span class="mtk5">Attributes</span><span class="mtk1">.</span><span class="mtk5">author</span><span class="mtk1">;</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk6">date</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> pageContext.</span><span class="mtk5">Attributes</span><span class="mtk1">.</span><span class="mtk5">date</span><span class="mtk1">;</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// Transform the page content from Markdown to HTML</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk6">pageContent</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> </span><span class="mtk14">await</span><span class="mtk1"> rendererContext.</span><span class="mtk9">MarkdownToHtml</span><span class="mtk1">(pageContext.</span><span class="mtk5">Content</span><span class="mtk1">)</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// Render the blog content using our helpers</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk6">content</span><span class="mtk1"> </span><span class="mtk8">=</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        &#x3C;</span><span class="mtk4">BlogContainer</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            &#x3C;</span><span class="mtk4">BlogTitle</span><span class="mtk1"> </span><span class="mtk6">title</span><span class="mtk1">={title} /></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            &#x3C;</span><span class="mtk4">AuthorAndDate</span><span class="mtk1"> </span><span class="mtk6">authorName</span><span class="mtk1">={author} </span><span class="mtk6">date</span><span class="mtk1">={date} /></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            &#x3C;</span><span class="mtk5">div</span><span class="mtk1"> </span><span class="mtk6">className</span><span class="mtk1">=</span><span class="mtk10">"content"</span><span class="mtk1"> </span><span class="mtk6">dangerouslySetInnerHTML</span><span class="mtk1">={{ </span><span class="mtk5">__html</span><span class="mtk8">:</span><span class="mtk1"> pageContent }} /></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        &#x3C;/</span><span class="mtk4">BlogContainer</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">return</span><span class="mtk1"> pageMinimal.</span><span class="mtk9">render</span><span class="mtk1">(</span><span class="mtk14">new</span><span class="mtk1"> </span><span class="mtk10">pageMinimal</span><span class="mtk1">.</span><span class="mtk4">RenderArgs</span><span class="mtk1">(</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        rendererContext.</span><span class="mtk5">Config</span><span class="mtk1">, </span><span class="mtk7 mtki">// Forward the config information</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        pageContext.</span><span class="mtk5">Section</span><span class="mtk1">, </span><span class="mtk7 mtki">// Tell which section we are in</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        title, </span><span class="mtk7 mtki">// Pass the blog title to use in the page title</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        content </span><span class="mtk7 mtki">// Pass the blog content to render below the navbar</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    ));</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">}</span></span></span></code></pre>
+  </li>
 </ul>
-<p>We will add these information via the front-matter.</p>
-<p>Update the front-matter of <code>docsrc/blog/2021/welcome.md</code> with</p>
-<pre><code>---
-title: Welcome
-layout: blog-page
-author: Kira Nacara
-date: 2021-08-20
----
-</code></pre>
-<article class="message is-info">
-                    <div class="message-body"><p>Note how we also set the layout property to <code>blog-page</code> (our layout name)</p>
-</div>
-</article>
-</li>
-<li>
-<p>We now need to update our <code>blog-page.jsx</code> script to use the new information.</p>
-<p>Replace your <code>render</code> function with this code:</p>
-<article class="message is-info">
-                    <div class="message-body"><p>We are adding a lot of code at once, take the time to read the comments</p>
-</div>
-</article>
-<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span style="color: #A0A1A7;font-style: italic">// This render a stylized title for our blog page</span>
-<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">BlogTitle</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #383A42">(</span><span>{ </span><span style="color: #383A42">title</span><span> }</span><span style="color: #383A42">)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
-<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #383A42">&lt;</span><span style="color: #E45649">h2</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;title is-size-3 has-text-primary has-text-weight-normal has-text-centered blog-title&quot;</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">        {title}</span>
-<span style="color: #383A42">    &lt;/</span><span style="color: #E45649">h2</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">}</span>
-
-<span style="color: #A0A1A7;font-style: italic">// A helper function to render the author and date of our blog post</span>
-<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">AuthorAndDate</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #383A42">(</span><span>{ </span><span style="color: #383A42">authorName,</span><span> </span><span style="color: #383A42">date</span><span> }</span><span style="color: #383A42">)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
-<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">dateFormat</span><span> </span><span style="color: #0184BC">=</span>
-<span>        </span><span style="color: #A626A4">new</span><span> </span><span style="color: #50A14F">Intl</span><span style="color: #383A42">.</span><span style="color: #C18401">DateTimeFormat</span><span style="color: #383A42">(</span>
-<span>            </span><span style="color: #50A14F">&quot;en&quot;</span><span style="color: #383A42">,</span>
-<span>            </span><span style="color: #383A42">{</span>
-<span>                dateStyle</span><span style="color: #0184BC">:</span><span> </span><span style="color: #50A14F">&quot;long&quot;</span>
-<span>            </span><span style="color: #383A42">}</span>
-<span>        </span><span style="color: #383A42">);</span>
-
-<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #383A42">&lt;</span><span style="color: #E45649">div</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;tags has-addons is-justify-content-center&quot;</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">        &lt;</span><span style="color: #E45649">span</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;tag is-rounded is-medium is-primary&quot;</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">            {authorName}</span>
-<span style="color: #383A42">        &lt;/</span><span style="color: #E45649">span</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">        &lt;</span><span style="color: #E45649">span</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;tag is-rounded is-medium&quot;</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">            {</span><span style="color: #E45649">dateFormat</span><span style="color: #383A42">.</span><span style="color: #4078F2">format</span><span style="color: #383A42">(date)}</span>
-<span style="color: #383A42">        &lt;/</span><span style="color: #E45649">span</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">    &lt;/</span><span style="color: #E45649">div</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">}</span>
-
-<span style="color: #A0A1A7;font-style: italic">// A helper function to render the blog container,</span>
-<span style="color: #A0A1A7;font-style: italic">// it will makes our blog centered on the page on desktop</span>
-<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">BlogContainer</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #383A42">(</span><span>{ </span><span style="color: #383A42">children</span><span> }</span><span style="color: #383A42">)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
-<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #383A42">&lt;</span><span style="color: #E45649">section</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;section container&quot;</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">        &lt;</span><span style="color: #E45649">div</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;columns&quot;</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">            &lt;</span><span style="color: #E45649">div</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;column is-8-desktop is-offset-2-desktop&quot;</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">                {children}</span>
-<span style="color: #383A42">            &lt;/</span><span style="color: #E45649">div</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">        &lt;/</span><span style="color: #E45649">div</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">    &lt;/</span><span style="color: #E45649">section</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">}</span>
-
-<span style="color: #A0A1A7;font-style: italic">// Main render function which glue the helpers together</span>
-<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">render</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #A626A4">async</span><span> </span><span style="color: #383A42">(rendererContext,</span><span> </span><span style="color: #383A42">pageContext)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// Access the front matter information</span>
-<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">title</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">title</span><span style="color: #383A42">;</span>
-<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">author</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">author</span><span style="color: #383A42">;</span>
-<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">date</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">date</span><span style="color: #383A42">;</span>
-
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// Transform the page content from Markdown to HTML</span>
-<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">pageContent</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #A626A4">await</span><span> </span><span style="color: #E45649">rendererContext</span><span style="color: #383A42">.</span><span style="color: #4078F2">MarkdownToHtml</span><span style="color: #383A42">(</span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Content</span><span style="color: #383A42">)</span>
-
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// Render the blog content using our helpers</span>
-<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">content</span><span> </span><span style="color: #0184BC">=</span>
-<span>        </span><span style="color: #383A42">&lt;</span><span style="color: #C18401">BlogContainer</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">            &lt;</span><span style="color: #C18401">BlogTitle</span><span style="color: #383A42"> </span><span style="color: #986801">title</span><span style="color: #383A42">={title} /&gt;</span>
-<span style="color: #383A42">            &lt;</span><span style="color: #C18401">AuthorAndDate</span><span style="color: #383A42"> </span><span style="color: #986801">authorName</span><span style="color: #383A42">={author} </span><span style="color: #986801">date</span><span style="color: #383A42">={date} /&gt;</span>
-<span style="color: #383A42">            &lt;</span><span style="color: #E45649">div</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;content&quot;</span><span style="color: #383A42"> </span><span style="color: #986801">dangerouslySetInnerHTML</span><span style="color: #383A42">={{ __html</span><span style="color: #0184BC">:</span><span style="color: #383A42"> pageContent }} /&gt;</span>
-<span style="color: #383A42">        &lt;/</span><span style="color: #C18401">BlogContainer</span><span style="color: #383A42">&gt;</span>
-
-<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #E45649">pageMinimal</span><span style="color: #383A42">.</span><span style="color: #4078F2">render</span><span style="color: #383A42">(</span><span style="color: #A626A4">new</span><span> </span><span style="color: #50A14F">pageMinimal</span><span style="color: #383A42">.</span><span style="color: #C18401">RenderArgs</span><span style="color: #383A42">(</span>
-<span>        </span><span style="color: #E45649">rendererContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Config</span><span style="color: #383A42">,</span><span> </span><span style="color: #A0A1A7;font-style: italic">// Forward the config information</span>
-<span>        </span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Section</span><span style="color: #383A42">,</span><span> </span><span style="color: #A0A1A7;font-style: italic">// Tell which section we are in</span>
-<span>        </span><span style="color: #383A42">title,</span><span> </span><span style="color: #A0A1A7;font-style: italic">// Pass the blog title to use in the page title</span>
-<span>        </span><span style="color: #383A42">content</span><span> </span><span style="color: #A0A1A7;font-style: italic">// Pass the blog content to render below the navbar</span>
-<span>    </span><span style="color: #383A42">));</span>
-
-<span style="color: #383A42">}</span></code></pre>
-</li>
-</ul>
-<h2>Blog index <a href="#Blog-index" aria-hidden="true"><span class="anchor" id="Blog-index"></span>#</a></h2>
+<h2 id="blog-index">Blog index<a aria-hidden="true" tabindex="-1" href="#blog-index"><span class="[anchor]"></span>#</a></h2>
 <p>We are going to auto-generate the blog index page, so we can focus on writing our blog post instead of duplicating information.</p>
 <ul class="textual-steps">
-<li>
-<p>Create a file <code>layouts/blog-index.jsx</code> at the root of your repository</p>
-<pre><code>├── docs
-├── docsrc
-├── layouts
-    └── blog-page.jsx
-    └── blog-index.jsx
-├── lightner
-└── node_modules
-</code></pre>
-<p>Add this to the file:</p>
-<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span style="color: #A0A1A7;font-style: italic">// Nacara is using React for generating the HTML</span>
-<span style="color: #A626A4">const</span><span> </span><span style="color: #986801">React</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #0184BC">require</span><span style="color: #383A42">(</span><span style="color: #50A14F">&quot;react&quot;</span><span style="color: #383A42">);</span>
-<span style="color: #A0A1A7;font-style: italic">// We can reuse existing layouts function</span>
-<span style="color: #A0A1A7;font-style: italic">// Here, we want to re-use the minimal page which generates only the navbar for us</span>
-<span style="color: #A626A4">const</span><span> </span><span style="color: #986801">pageMinimal</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #0184BC">require</span><span style="color: #383A42">(</span><span style="color: #50A14F">&quot;nacara-layout-standard/dist/Page.Minimal&quot;</span><span style="color: #383A42">);</span>
-
-<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">render</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #A626A4">async</span><span> </span><span style="color: #383A42">(rendererContext,</span><span> </span><span style="color: #383A42">pageContext)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
-
-<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #E45649">pageMinimal</span><span style="color: #383A42">.</span><span style="color: #4078F2">render</span><span style="color: #383A42">(</span><span style="color: #A626A4">new</span><span> </span><span style="color: #50A14F">pageMinimal</span><span style="color: #383A42">.</span><span style="color: #C18401">RenderArgs</span><span style="color: #383A42">(</span>
-<span>        </span><span style="color: #E45649">rendererContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Config</span><span style="color: #383A42">,</span>
-<span>        </span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Section</span><span style="color: #383A42">,</span>
-<span>        </span><span style="color: #986801">undefined</span><span style="color: #383A42">,</span>
-<span>        </span><span style="color: #50A14F">&quot;Blog index&quot;</span>
-<span>    </span><span style="color: #383A42">));</span>
-
-<span style="color: #383A42">}</span>
-
-<span style="color: #A0A1A7;font-style: italic">// Each layout needs to export this object</span>
-<span style="color: #A626A4">export</span><span> </span><span style="color: #E45649">default</span><span> </span><span style="color: #383A42">{</span>
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// We can have several renderer, it is useful when publishing to npm</span>
-<span>    Renderers</span><span style="color: #0184BC">:</span><span> </span><span style="color: #383A42">[</span>
-<span>        </span><span style="color: #383A42">{</span>
-<span>            </span><span style="color: #A0A1A7;font-style: italic">// Unique name of the layout used by Nacara to know how to render your page</span>
-<span>            Name</span><span style="color: #0184BC">:</span><span> </span><span style="color: #50A14F">&quot;blog-index&quot;</span><span style="color: #383A42">,</span>
-<span>            </span><span style="color: #A0A1A7;font-style: italic">// render function</span>
-<span>            Func</span><span style="color: #0184BC">:</span><span> </span><span style="color: #E45649">render</span>
-<span>        </span><span style="color: #383A42">}</span>
-<span>    </span><span style="color: #383A42">],</span>
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// An array of external dependencies</span>
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// For example, if your layouts need to include some external</span>
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// JavaScript file you specify them here so Nacara know that it</span>
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// has to copy them into the destination directory</span>
-<span>    Dependencies</span><span style="color: #0184BC">:</span><span> </span><span style="color: #383A42">[]</span>
-<span style="color: #383A42">}</span></code></pre>
-</li>
-<li>
-<p>Change the <code>docsrc/blog/index.md</code> content to</p>
-<pre><code>---
-layout: blog-index
----
-</code></pre>
-<p>As you can see, we are only specifying the layout to use because this page page will be fully generated.</p>
-</li>
-<li>
-<p>Now, we want to modify our render function to generate the index page.</p>
-<p>To do that, we are going to:</p>
-<ol>
-<li>To retrieve the list of <code>blog-page</code></li>
-<li>Sort the page per date</li>
-<li>Extract the information we want from the page information, for example the title, date</li>
-<li>Render the list of blog pages</li>
-</ol>
-<p>Replace the <code>render</code> function with this code:</p>
-<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span style="color: #A0A1A7;font-style: italic">// This render a stylized title for our blog page</span>
-<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">PageTitle</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #383A42">(</span><span>{</span><span style="color: #383A42">title</span><span>}</span><span style="color: #383A42">)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
-<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #383A42">&lt;</span><span style="color: #E45649">h2</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;title is-size-3 has-text-primary has-text-weight-normal has-text-centered blog-title&quot;</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">        {title}</span>
-<span style="color: #383A42">    &lt;/</span><span style="color: #E45649">h2</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">}</span>
-
-<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">BlogPost</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #383A42">(</span><span>{</span><span style="color: #383A42">blogPage</span><span>}</span><span style="color: #383A42">)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
-<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">dateFormat</span><span> </span><span style="color: #0184BC">=</span>
-<span>        </span><span style="color: #A626A4">new</span><span> </span><span style="color: #50A14F">Intl</span><span style="color: #383A42">.</span><span style="color: #C18401">DateTimeFormat</span><span style="color: #383A42">(</span>
-<span>            </span><span style="color: #50A14F">&quot;en&quot;</span><span style="color: #383A42">,</span>
-<span>            </span><span style="color: #383A42">{</span>
-<span>                dateStyle</span><span style="color: #0184BC">:</span><span> </span><span style="color: #50A14F">&quot;short&quot;</span>
-<span>            </span><span style="color: #383A42">}</span>
-<span>        </span><span style="color: #383A42">);</span>
-
-<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">dateStr</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #E45649">dateFormat</span><span style="color: #383A42">.</span><span style="color: #4078F2">format</span><span style="color: #383A42">(</span><span style="color: #E45649">blogPage</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">date</span><span style="color: #383A42">);</span>
-
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// Add baseUrl + change file extension</span>
-<span>    </span><span style="color: #A626A4">let</span><span> </span><span style="color: #383A42">internalLink</span><span> </span><span style="color: #0184BC">=</span>
-<span>        </span><span style="color: #50A14F">&#039;{{REPLACE_WITH_BASE_URL}}&#039;</span><span> </span><span style="color: #0184BC">+</span><span> </span><span style="color: #E45649">blogPage</span><span style="color: #383A42">.</span><span style="color: #E45649">RelativePath</span><span style="color: #383A42">.</span><span style="color: #4078F2">substring</span><span style="color: #383A42">(</span><span style="color: #986801">0</span><span style="color: #383A42">,</span><span> </span><span style="color: #E45649">blogPage</span><span style="color: #383A42">.</span><span style="color: #E45649">RelativePath</span><span style="color: #383A42">.</span><span style="color: #4078F2">lastIndexOf</span><span style="color: #383A42">(</span><span style="color: #50A14F">&#039;.&#039;</span><span style="color: #383A42">)</span><span> </span><span style="color: #0184BC">+</span><span> </span><span style="color: #986801">1</span><span style="color: #383A42">)</span><span> </span><span style="color: #0184BC">+</span><span> </span><span style="color: #50A14F">&quot;html&quot;</span>
-
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// Use / for the URL and not \ needed when generating the blog from Windows</span>
-<span>    </span><span style="color: #383A42">internalLink</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #E45649">internalLink</span><span style="color: #383A42">.</span><span style="color: #4078F2">replace</span><span style="color: #383A42">(</span><span style="color: #0184BC">/\\/</span><span style="color: #A626A4">g</span><span style="color: #383A42">,</span><span> </span><span style="color: #50A14F">&quot;/&quot;</span><span style="color: #383A42">);</span>
-
-<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #383A42">&lt;</span><span style="color: #E45649">li</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">        </span><span style="color: #CA1243">{</span><span style="color: #383A42">dateStr </span><span style="color: #0184BC">+</span><span style="color: #383A42"> </span><span style="color: #50A14F">&quot;: &quot;</span><span style="color: #CA1243">}</span>
-<span style="color: #383A42">        &lt;</span><span style="color: #E45649">a</span><span style="color: #383A42"> </span><span style="color: #986801">href</span><span style="color: #383A42">={internalLink}&gt;</span>
-<span style="color: #383A42">            {</span><span style="color: #E45649">blogPage</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">title</span><span style="color: #383A42">}</span>
-<span style="color: #383A42">        &lt;/</span><span style="color: #E45649">a</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">        , by </span><span style="color: #CA1243">{</span><span style="color: #E45649">blogPage</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">author</span><span style="color: #CA1243">}</span>
-<span style="color: #383A42">    &lt;/</span><span style="color: #E45649">li</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">}</span>
-
-<span style="color: #A0A1A7;font-style: italic">// A helper function to render the blog container,</span>
-<span style="color: #A0A1A7;font-style: italic">// it will makes our blog centered on the page on desktop</span>
-<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">PageContainer</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #383A42">(</span><span>{</span><span style="color: #383A42">blogPages</span><span>}</span><span style="color: #383A42">)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
-<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #383A42">&lt;</span><span style="color: #E45649">section</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;section container&quot;</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">        &lt;</span><span style="color: #E45649">div</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;columns&quot;</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">            &lt;</span><span style="color: #E45649">div</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;column is-8-desktop is-offset-2-desktop&quot;</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">                &lt;</span><span style="color: #E45649">div</span><span style="color: #383A42"> </span><span style="color: #986801">className</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;content&quot;</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">                    &lt;</span><span style="color: #C18401">PageTitle</span><span style="color: #383A42"> </span><span style="color: #986801">title</span><span style="color: #383A42">={</span><span style="color: #50A14F">&quot;Blog posts&quot;</span><span style="color: #383A42">}/&gt;</span>
-<span style="color: #383A42">                    &lt;</span><span style="color: #E45649">ul</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">                        {</span><span style="color: #E45649">blogPages</span><span style="color: #383A42">.</span><span style="color: #4078F2">map</span><span style="color: #383A42">((blogPage, index) </span><span style="color: #A626A4">=&gt;</span><span style="color: #383A42"> {</span>
-<span style="color: #383A42">                            </span><span style="color: #A626A4">return</span><span style="color: #383A42"> &lt;</span><span style="color: #C18401">BlogPost</span><span style="color: #383A42"> </span><span style="color: #986801">key</span><span style="color: #383A42">={index} </span><span style="color: #986801">blogPage</span><span style="color: #383A42">={blogPage}/&gt;</span>
-<span style="color: #383A42">                        })}</span>
-<span style="color: #383A42">                    &lt;/</span><span style="color: #E45649">ul</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">                &lt;/</span><span style="color: #E45649">div</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">            &lt;/</span><span style="color: #E45649">div</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">        &lt;/</span><span style="color: #E45649">div</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">    &lt;/</span><span style="color: #E45649">section</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">}</span>
-
-<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">render</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #A626A4">async</span><span> </span><span style="color: #383A42">(rendererContext,</span><span> </span><span style="color: #383A42">pageContext)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
-
-<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">blogPages</span><span> </span><span style="color: #0184BC">=</span>
-<span>        </span><span style="color: #A0A1A7;font-style: italic">// In the rendererContext we have access to all Pages of our website</span>
-<span>        </span><span style="color: #E45649">rendererContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Pages</span>
-<span>            </span><span style="color: #A0A1A7;font-style: italic">// Filter out the blog-page files</span>
-<span>            </span><span style="color: #383A42">.</span><span style="color: #4078F2">filter</span><span style="color: #383A42">((pageContext)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
-<span>                </span><span style="color: #A626A4">return</span><span> </span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Layout</span><span> </span><span style="color: #0184BC">===</span><span> </span><span style="color: #50A14F">&quot;blog-page&quot;</span>
-<span>            </span><span style="color: #383A42">})</span>
-<span>            </span><span style="color: #A0A1A7;font-style: italic">// Sort the blog-page files by date (newest first)</span>
-<span>            </span><span style="color: #383A42">.</span><span style="color: #4078F2">sort</span><span style="color: #383A42">((pageContext1,</span><span> </span><span style="color: #383A42">pageContext2</span><span> </span><span style="color: #383A42">)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
-<span>                </span><span style="color: #A626A4">return</span><span> </span><span style="color: #E45649">pageContext2</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">date</span><span> </span><span style="color: #0184BC">-</span><span> </span><span style="color: #E45649">pageContext1</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">date</span>
-<span>            </span><span style="color: #383A42">});</span>
-
-<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #E45649">pageMinimal</span><span style="color: #383A42">.</span><span style="color: #4078F2">render</span><span style="color: #383A42">(</span><span style="color: #A626A4">new</span><span> </span><span style="color: #50A14F">pageMinimal</span><span style="color: #383A42">.</span><span style="color: #C18401">RenderArgs</span><span style="color: #383A42">(</span>
-<span>        </span><span style="color: #E45649">rendererContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Config</span><span style="color: #383A42">,</span>
-<span>        </span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Section</span><span style="color: #383A42">,</span>
-<span>        </span><span style="color: #986801">undefined</span><span style="color: #383A42">,</span>
-<span>        </span><span style="color: #383A42">&lt;</span><span style="color: #C18401">PageContainer</span><span style="color: #383A42"> </span><span style="color: #986801">blogPages</span><span style="color: #383A42">={blogPages}/&gt;</span>
-<span>    </span><span style="color: #383A42">));</span>
-
-<span style="color: #383A42">}</span></code></pre>
-</li>
+  <li>
+    <p>Create a file <code>layouts/blog-index.jsx</code> at the root of your repository</p>
+    <pre class="grvsc-container atom-one-light" data-language="" data-index="6"><code class="grvsc-code"><span class="grvsc-line"><span class="grvsc-source">├── docs</span></span>
+<span class="grvsc-line"><span class="grvsc-source">├── docsrc</span></span>
+<span class="grvsc-line"><span class="grvsc-source">├── layouts</span></span>
+<span class="grvsc-line"><span class="grvsc-source">    └── blog-page.jsx</span></span>
+<span class="grvsc-line"><span class="grvsc-source">    └── blog-index.jsx</span></span>
+<span class="grvsc-line"><span class="grvsc-source">├── lightner</span></span>
+<span class="grvsc-line"><span class="grvsc-source">└── node_modules</span></span></code></pre>
+    <p>Add this to the file:</p>
+    <pre class="grvsc-container atom-one-light" data-language="js" data-index="7"><code class="grvsc-code"><span class="grvsc-line"><span class="grvsc-source"><span class="mtk7 mtki">// Nacara is using React for generating the HTML</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk6">React</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> </span><span class="mtk8">require</span><span class="mtk1">(</span><span class="mtk10">"react"</span><span class="mtk1">);</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk7 mtki">// We can reuse existing layouts function</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk7 mtki">// Here, we want to re-use the minimal page which generates only the navbar for us</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk6">pageMinimal</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> </span><span class="mtk8">require</span><span class="mtk1">(</span><span class="mtk10">"nacara-layout-standard/dist/Page.Minimal"</span><span class="mtk1">);</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk9">render</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> </span><span class="mtk14">async</span><span class="mtk1"> (rendererContext, pageContext) </span><span class="mtk14">=></span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">return</span><span class="mtk1"> pageMinimal.</span><span class="mtk9">render</span><span class="mtk1">(</span><span class="mtk14">new</span><span class="mtk1"> </span><span class="mtk10">pageMinimal</span><span class="mtk1">.</span><span class="mtk4">RenderArgs</span><span class="mtk1">(</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        rendererContext.</span><span class="mtk5">Config</span><span class="mtk1">,</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        pageContext.</span><span class="mtk5">Section</span><span class="mtk1">,</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        </span><span class="mtk6">undefined</span><span class="mtk1">,</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        </span><span class="mtk10">"Blog index"</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    ));</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk7 mtki">// Each layout needs to export this object</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">export</span><span class="mtk1"> </span><span class="mtk5">default</span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// We can have several renderer, it is useful when publishing to npm</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk5">Renderers</span><span class="mtk8">:</span><span class="mtk1"> [</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk7 mtki">// Unique name of the layout used by Nacara to know how to render your page</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk5">Name</span><span class="mtk8">:</span><span class="mtk1"> </span><span class="mtk10">"blog-index"</span><span class="mtk1">,</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk7 mtki">// render function</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk5">Func</span><span class="mtk8">:</span><span class="mtk1"> </span><span class="mtk5">render</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        }</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    ],</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// An array of external dependencies</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// For example, if your layouts need to include some external</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// JavaScript file you specify them here so Nacara know that it</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// has to copy them into the destination directory</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk5">Dependencies</span><span class="mtk8">:</span><span class="mtk1"> []</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">}</span></span></span></code></pre>
+  </li>
+  <li>
+    <p>Change the <code>docsrc/blog/index.md</code> content to</p>
+    <pre class="grvsc-container atom-one-light" data-language="" data-index="8"><code class="grvsc-code"><span class="grvsc-line"><span class="grvsc-source">---</span></span>
+<span class="grvsc-line"><span class="grvsc-source">layout: blog-index</span></span>
+<span class="grvsc-line"><span class="grvsc-source">---</span></span></code></pre>
+    <p>As you can see, we are only specifying the layout to use because this page page will be fully generated.</p>
+  </li>
+  <li>
+    <p>Now, we want to modify our render function to generate the index page.</p>
+    <p>To do that, we are going to:</p>
+    <ol>
+      <li>To retrieve the list of <code>blog-page</code></li>
+      <li>Sort the page per date</li>
+      <li>Extract the information we want from the page information, for example the title, date</li>
+      <li>Render the list of blog pages</li>
+    </ol>
+    <p>Replace the <code>render</code> function with this code:</p>
+    <pre class="grvsc-container atom-one-light" data-language="js" data-index="9"><code class="grvsc-code"><span class="grvsc-line"><span class="grvsc-source"><span class="mtk7 mtki">// This render a stylized title for our blog page</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk9">PageTitle</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> ({title}) </span><span class="mtk14">=></span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">return</span><span class="mtk1"> &#x3C;</span><span class="mtk5">h2</span><span class="mtk1"> </span><span class="mtk6">className</span><span class="mtk1">=</span><span class="mtk10">"title is-size-3 has-text-primary has-text-weight-normal has-text-centered blog-title"</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        {title}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    &#x3C;/</span><span class="mtk5">h2</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk9">BlogPost</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> ({blogPage}) </span><span class="mtk14">=></span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk6">dateFormat</span><span class="mtk1"> </span><span class="mtk8">=</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        </span><span class="mtk14">new</span><span class="mtk1"> </span><span class="mtk10">Intl</span><span class="mtk1">.</span><span class="mtk4">DateTimeFormat</span><span class="mtk1">(</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk10">"en"</span><span class="mtk1">,</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">                </span><span class="mtk5">dateStyle</span><span class="mtk8">:</span><span class="mtk1"> </span><span class="mtk10">"short"</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            }</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        );</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk6">dateStr</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> dateFormat.</span><span class="mtk9">format</span><span class="mtk1">(blogPage.</span><span class="mtk5">Attributes</span><span class="mtk1">.</span><span class="mtk5">date</span><span class="mtk1">);</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// Add baseUrl + change file extension</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">let</span><span class="mtk1"> internalLink </span><span class="mtk8">=</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        </span><span class="mtk10">'{{REPLACE_WITH_BASE_URL}}'</span><span class="mtk1"> </span><span class="mtk8">+</span><span class="mtk1"> blogPage.</span><span class="mtk5">RelativePath</span><span class="mtk1">.</span><span class="mtk9">substring</span><span class="mtk1">(</span><span class="mtk6">0</span><span class="mtk1">, blogPage.</span><span class="mtk5">RelativePath</span><span class="mtk1">.</span><span class="mtk9">lastIndexOf</span><span class="mtk1">(</span><span class="mtk10">'.'</span><span class="mtk1">) </span><span class="mtk8">+</span><span class="mtk1"> </span><span class="mtk6">1</span><span class="mtk1">) </span><span class="mtk8">+</span><span class="mtk1"> </span><span class="mtk10">"html"</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// Use / for the URL and not \ needed when generating the blog from Windows</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    internalLink </span><span class="mtk8">=</span><span class="mtk1"> internalLink.</span><span class="mtk9">replace</span><span class="mtk1">(</span><span class="mtk8">/\\/</span><span class="mtk14">g</span><span class="mtk1">, </span><span class="mtk10">"/"</span><span class="mtk1">);</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">return</span><span class="mtk1"> &#x3C;</span><span class="mtk5">li</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        </span><span class="mtk15">{</span><span class="mtk1">dateStr </span><span class="mtk8">+</span><span class="mtk1"> </span><span class="mtk10">": "</span><span class="mtk15">}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        &#x3C;</span><span class="mtk5">a</span><span class="mtk1"> </span><span class="mtk6">href</span><span class="mtk1">={internalLink}></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            {blogPage.</span><span class="mtk5">Attributes</span><span class="mtk1">.</span><span class="mtk5">title</span><span class="mtk1">}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        &#x3C;/</span><span class="mtk5">a</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        , by </span><span class="mtk15">{</span><span class="mtk1">blogPage.</span><span class="mtk5">Attributes</span><span class="mtk1">.</span><span class="mtk5">author</span><span class="mtk15">}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    &#x3C;/</span><span class="mtk5">li</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk7 mtki">// A helper function to render the blog container,</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk7 mtki">// it will makes our blog centered on the page on desktop</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk9">PageContainer</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> ({blogPages}) </span><span class="mtk14">=></span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">return</span><span class="mtk1"> &#x3C;</span><span class="mtk5">section</span><span class="mtk1"> </span><span class="mtk6">className</span><span class="mtk1">=</span><span class="mtk10">"section container"</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        &#x3C;</span><span class="mtk5">div</span><span class="mtk1"> </span><span class="mtk6">className</span><span class="mtk1">=</span><span class="mtk10">"columns"</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            &#x3C;</span><span class="mtk5">div</span><span class="mtk1"> </span><span class="mtk6">className</span><span class="mtk1">=</span><span class="mtk10">"column is-8-desktop is-offset-2-desktop"</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">                &#x3C;</span><span class="mtk5">div</span><span class="mtk1"> </span><span class="mtk6">className</span><span class="mtk1">=</span><span class="mtk10">"content"</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">                    &#x3C;</span><span class="mtk4">PageTitle</span><span class="mtk1"> </span><span class="mtk6">title</span><span class="mtk1">={</span><span class="mtk10">"Blog posts"</span><span class="mtk1">}/></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">                    &#x3C;</span><span class="mtk5">ul</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">                        {blogPages.</span><span class="mtk9">map</span><span class="mtk1">((blogPage, index) </span><span class="mtk14">=></span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">                            </span><span class="mtk14">return</span><span class="mtk1"> &#x3C;</span><span class="mtk4">BlogPost</span><span class="mtk1"> </span><span class="mtk6">key</span><span class="mtk1">={index} </span><span class="mtk6">blogPage</span><span class="mtk1">={blogPage}/></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">                        })}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">                    &#x3C;/</span><span class="mtk5">ul</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">                &#x3C;/</span><span class="mtk5">div</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            &#x3C;/</span><span class="mtk5">div</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        &#x3C;/</span><span class="mtk5">div</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    &#x3C;/</span><span class="mtk5">section</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk9">render</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> </span><span class="mtk14">async</span><span class="mtk1"> (rendererContext, pageContext) </span><span class="mtk14">=></span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk6">blogPages</span><span class="mtk1"> </span><span class="mtk8">=</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        </span><span class="mtk7 mtki">// In the rendererContext we have access to all Pages of our website</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        rendererContext.</span><span class="mtk5">Pages</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk7 mtki">// Filter out the blog-page files</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            .</span><span class="mtk9">filter</span><span class="mtk1">((pageContext) </span><span class="mtk14">=></span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">                </span><span class="mtk14">return</span><span class="mtk1"> pageContext.</span><span class="mtk5">Layout</span><span class="mtk1"> </span><span class="mtk8">===</span><span class="mtk1"> </span><span class="mtk10">"blog-page"</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            })</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk7 mtki">// Sort the blog-page files by date (newest first)</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            .</span><span class="mtk9">sort</span><span class="mtk1">((pageContext1, pageContext2 ) </span><span class="mtk14">=></span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">                </span><span class="mtk14">return</span><span class="mtk1"> pageContext2.</span><span class="mtk5">Attributes</span><span class="mtk1">.</span><span class="mtk5">date</span><span class="mtk1"> </span><span class="mtk8">-</span><span class="mtk1"> pageContext1.</span><span class="mtk5">Attributes</span><span class="mtk1">.</span><span class="mtk5">date</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            });</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">return</span><span class="mtk1"> pageMinimal.</span><span class="mtk9">render</span><span class="mtk1">(</span><span class="mtk14">new</span><span class="mtk1"> </span><span class="mtk10">pageMinimal</span><span class="mtk1">.</span><span class="mtk4">RenderArgs</span><span class="mtk1">(</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        rendererContext.</span><span class="mtk5">Config</span><span class="mtk1">,</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        pageContext.</span><span class="mtk5">Section</span><span class="mtk1">,</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        </span><span class="mtk6">undefined</span><span class="mtk1">,</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        &#x3C;</span><span class="mtk4">PageContainer</span><span class="mtk1"> </span><span class="mtk6">blogPages</span><span class="mtk1">={blogPages}/></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    ));</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">}</span></span></span></code></pre>
+  </li>
 </ul>
-<h2>Working with async functions <a href="#Working-with-async-functions" aria-hidden="true"><span class="anchor" id="Working-with-async-functions"></span>#</a></h2>
+<h2 id="working-with-async-functions">Working with async functions<a aria-hidden="true" tabindex="-1" href="#working-with-async-functions"><span class="[anchor]"></span>#</a></h2>
 <p>Because, the markdown parser use an <code>async</code> function it can happens that you end up with this scenario.</p>
-<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">Abstract</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #A626A4">async</span><span> </span><span style="color: #383A42">(</span><span>{</span><span style="color: #383A42">rendererContext,</span><span> </span><span style="color: #383A42">blogPage</span><span>}</span><span style="color: #383A42">)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
-<span>    </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">abstractText</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #E45649">rendererContext</span><span style="color: #383A42">.</span><span style="color: #4078F2">MarkdownToHtml</span><span style="color: #383A42">(</span><span style="color: #E45649">blogPage</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">abstract</span><span style="color: #383A42">)</span>
-<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #383A42">&lt;</span><span style="color: #E45649">div</span><span style="color: #383A42"> </span><span style="color: #986801">class</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;abstract&quot;</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">        {abstractText}</span>
-<span style="color: #383A42">    &lt;/</span><span style="color: #E45649">div</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">}</span></code></pre>
+<pre class="grvsc-container atom-one-light" data-language="js" data-index="10"><code class="grvsc-code"><span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk9">Abstract</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> </span><span class="mtk14">async</span><span class="mtk1"> ({rendererContext, blogPage}) </span><span class="mtk14">=></span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk6">abstractText</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> rendererContext.</span><span class="mtk9">MarkdownToHtml</span><span class="mtk1">(blogPage.</span><span class="mtk5">Attributes</span><span class="mtk1">.</span><span class="mtk5">abstract</span><span class="mtk1">)</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">return</span><span class="mtk1"> &#x3C;</span><span class="mtk5">div</span><span class="mtk1"> </span><span class="mtk6">class</span><span class="mtk1">=</span><span class="mtk10">"abstract"</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        {abstractText}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    &#x3C;/</span><span class="mtk5">div</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">}</span></span></span></code></pre>
 <p>Unfortunately, this is not a valid JSX code.</p>
 <p>The cleanest way to deal with this case is to pre-process the markdown code directly into the main <code>render</code> function.</p>
-<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">render</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #A626A4">async</span><span> </span><span style="color: #383A42">(rendererContext,</span><span> </span><span style="color: #383A42">pageContext)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
-<span>    </span><span style="color: #A626A4">let</span><span> </span><span style="color: #383A42">blogPages</span><span> </span><span style="color: #0184BC">=</span>
-<span>        </span><span style="color: #E45649">rendererContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Pages</span>
-<span>            </span><span style="color: #A0A1A7;font-style: italic">//...</span>
-
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// Pre-process the blog-page files here, so we can use standard JSX afterwards</span>
-<span>    </span><span style="color: #A626A4">for</span><span> </span><span style="color: #383A42">(</span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">blogPage</span><span> </span><span style="color: #A626A4">of</span><span> </span><span style="color: #383A42">blogPages)</span><span> </span><span style="color: #383A42">{</span>
-<span>        </span><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">abstractText</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #A626A4">await</span><span> </span><span style="color: #E45649">rendererContext</span><span style="color: #383A42">.</span><span style="color: #4078F2">MarkdownToHtml</span><span style="color: #383A42">(</span><span style="color: #E45649">blogPage</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">abstract</span><span style="color: #383A42">);</span>
-<span>        </span><span style="color: #A0A1A7;font-style: italic">// Store the text representation into the blogPage information</span>
-<span>        </span><span style="color: #E45649">blogPage</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">abstractText</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #383A42">abstractText;</span>
-<span>    </span><span style="color: #383A42">}</span>
-
-<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #E45649">pageMinimal</span><span style="color: #383A42">.</span><span style="color: #4078F2">render</span><span style="color: #383A42">(</span><span style="color: #A626A4">new</span><span> </span><span style="color: #50A14F">pageMinimal</span><span style="color: #383A42">.</span><span style="color: #C18401">RenderArgs</span><span style="color: #383A42">(</span>
-<span>        </span><span style="color: #E45649">rendererContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Config</span><span style="color: #383A42">,</span>
-<span>        </span><span style="color: #E45649">pageContext</span><span style="color: #383A42">.</span><span style="color: #E45649">Section</span><span style="color: #383A42">,</span>
-<span>        </span><span style="color: #986801">undefined</span><span style="color: #383A42">,</span>
-<span>        </span><span style="color: #383A42">&lt;</span><span style="color: #C18401">PageContainer</span><span style="color: #383A42"> </span><span style="color: #986801">blogPages</span><span style="color: #383A42">={blogPages} /&gt;</span>
-<span>    </span><span style="color: #383A42">));</span>
-<span style="color: #383A42">}</span>
-
-<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">Abstract</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #383A42">(</span><span>{</span><span style="color: #383A42">rendererContext,</span><span> </span><span style="color: #383A42">blogPage</span><span>}</span><span style="color: #383A42">)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
-<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #383A42">&lt;</span><span style="color: #E45649">div</span><span style="color: #383A42"> </span><span style="color: #986801">class</span><span style="color: #383A42">=</span><span style="color: #50A14F">&quot;abstract&quot;</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">        {</span><span style="color: #A0A1A7;font-style: italic">/* Use the pre-processed text */</span><span style="color: #383A42">}</span>
-<span style="color: #383A42">        {</span><span style="color: #E45649">blogPage</span><span style="color: #383A42">.</span><span style="color: #E45649">Attributes</span><span style="color: #383A42">.</span><span style="color: #E45649">abstractText</span><span style="color: #383A42">}</span>
-<span style="color: #383A42">    &lt;/</span><span style="color: #E45649">div</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">}</span></code></pre>
-<h2>Minimal layout file <a href="#Minimal-layout-file" aria-hidden="true"><span class="anchor" id="Minimal-layout-file"></span>#</a></h2>
+<pre class="grvsc-container atom-one-light" data-language="js" data-index="11"><code class="grvsc-code"><span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk9">render</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> </span><span class="mtk14">async</span><span class="mtk1"> (rendererContext, pageContext) </span><span class="mtk14">=></span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">let</span><span class="mtk1"> blogPages </span><span class="mtk8">=</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        rendererContext.</span><span class="mtk5">Pages</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk7 mtki">//...</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// Pre-process the blog-page files here, so we can use standard JSX afterwards</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">for</span><span class="mtk1"> (</span><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk6">blogPage</span><span class="mtk1"> </span><span class="mtk14">of</span><span class="mtk1"> blogPages) {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        </span><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk6">abstractText</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> </span><span class="mtk14">await</span><span class="mtk1"> rendererContext.</span><span class="mtk9">MarkdownToHtml</span><span class="mtk1">(blogPage.</span><span class="mtk5">Attributes</span><span class="mtk1">.</span><span class="mtk5">abstract</span><span class="mtk1">);</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        </span><span class="mtk7 mtki">// Store the text representation into the blogPage information</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        blogPage.</span><span class="mtk5">Attributes</span><span class="mtk1">.</span><span class="mtk5">abstractText</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> abstractText;</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    }</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">return</span><span class="mtk1"> pageMinimal.</span><span class="mtk9">render</span><span class="mtk1">(</span><span class="mtk14">new</span><span class="mtk1"> </span><span class="mtk10">pageMinimal</span><span class="mtk1">.</span><span class="mtk4">RenderArgs</span><span class="mtk1">(</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        rendererContext.</span><span class="mtk5">Config</span><span class="mtk1">,</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        pageContext.</span><span class="mtk5">Section</span><span class="mtk1">,</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        </span><span class="mtk6">undefined</span><span class="mtk1">,</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        &#x3C;</span><span class="mtk4">PageContainer</span><span class="mtk1"> </span><span class="mtk6">blogPages</span><span class="mtk1">={blogPages} /></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    ));</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk9">Abstract</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> ({rendererContext, blogPage}) </span><span class="mtk14">=></span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">return</span><span class="mtk1"> &#x3C;</span><span class="mtk5">div</span><span class="mtk1"> </span><span class="mtk6">class</span><span class="mtk1">=</span><span class="mtk10">"abstract"</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        {</span><span class="mtk7 mtki">/* Use the pre-processed text */</span><span class="mtk1">}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        {blogPage.</span><span class="mtk5">Attributes</span><span class="mtk1">.</span><span class="mtk5">abstractText</span><span class="mtk1">}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    &#x3C;/</span><span class="mtk5">div</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">}</span></span></span></code></pre>
+<h2 id="minimal-layout-file">Minimal layout file<a aria-hidden="true" tabindex="-1" href="#minimal-layout-file"><span class="[anchor]"></span>#</a></h2>
 <p>If you want to write your own layout, here is a minimal file to start from.</p>
-<pre style="background-color: #FAFAFA;color: ;padding: 1em"><code><span style="color: #A626A4">const</span><span> </span><span style="color: #986801">React</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #0184BC">require</span><span style="color: #383A42">(</span><span style="color: #50A14F">&quot;react&quot;</span><span style="color: #383A42">);</span>
-
-<span style="color: #A0A1A7;font-style: italic">// Your render function, this is where you will write all of your code</span>
-<span style="color: #A626A4">const</span><span> </span><span style="color: #4078F2">render</span><span> </span><span style="color: #0184BC">=</span><span> </span><span style="color: #A626A4">async</span><span> </span><span style="color: #383A42">(rendererContext,</span><span> </span><span style="color: #383A42">pageContext)</span><span> </span><span style="color: #A626A4">=&gt;</span><span> </span><span style="color: #383A42">{</span>
-<span>    </span><span style="color: #A626A4">return</span><span> </span><span style="color: #383A42">&lt;</span><span style="color: #E45649">div</span><span style="color: #383A42">&gt;Hello, this page use my own layout&lt;/</span><span style="color: #E45649">div</span><span style="color: #383A42">&gt;</span>
-<span style="color: #383A42">}</span>
-
-<span style="color: #A626A4">export</span><span> </span><span style="color: #E45649">default</span><span> </span><span style="color: #383A42">{</span>
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// List of the renderers</span>
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// For now, we will have only one renderer</span>
-<span>    Renderers</span><span style="color: #0184BC">:</span><span> </span><span style="color: #383A42">[</span>
-<span>        </span><span style="color: #383A42">{</span>
-<span>            </span><span style="color: #A0A1A7;font-style: italic">// Name of your layout, this is what you write in the front-matter</span>
-<span>            </span><span style="color: #A0A1A7;font-style: italic">// Example:</span>
-<span>            </span><span style="color: #A0A1A7;font-style: italic">// ---</span>
-<span>            </span><span style="color: #A0A1A7;font-style: italic">// layout: my-layout</span>
-<span>            </span><span style="color: #A0A1A7;font-style: italic">// ---</span>
-<span>            Name</span><span style="color: #0184BC">:</span><span> </span><span style="color: #50A14F">&quot;my-layout&quot;</span><span style="color: #383A42">,</span>
-<span>            Func</span><span style="color: #0184BC">:</span><span> </span><span style="color: #E45649">render</span>
-<span>        </span><span style="color: #383A42">}</span>
-<span>    </span><span style="color: #383A42">],</span>
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// List of the static file to copy into the build directory</span>
-<span>    </span><span style="color: #A0A1A7;font-style: italic">// For example, if your layout need a `menu.js`</span>
-<span>    Dependencies</span><span style="color: #0184BC">:</span><span> </span><span style="color: #383A42">[]</span>
-<span style="color: #383A42">}</span></code></pre>
-</div></div></section><div class="section bd-docs-pagination bd-pagination-links"><a class="button bd-fat-button is-primary is-light bd-pagination-prev" href="/Nacara/nacara/advanced/layout-from-scratch.html"><i>←</i><span class="is-hidden-mobile"><em>Custom Layouts</em><strong>Overview</strong></span></a><a class="button bd-fat-button is-primary is-light bd-pagination-next" href="/Nacara/nacara/advanced/custom-layout-fsharp.html"><span class="is-hidden-mobile"><em>Custom Layouts</em><strong>With FSharp</strong></span><i>→</i></a></div></div></div></div><script async="" src="/Nacara/resources/nacara-standard-layouts/scripts/menu.js"></script><footer class="footer"><div class="content has-text-centered is-size-5"><p>The content of this website is copyright © 2021<br/>under the terms of the <a class="is-underlined" href="https://github.com/MangelMaxime/Nacara/blob/master/LICENSE.txt" style="color:white">MIT License</a></p></div></footer></body></html>
+<pre class="grvsc-container atom-one-light" data-language="js" data-index="12"><code class="grvsc-code"><span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk6">React</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> </span><span class="mtk8">require</span><span class="mtk1">(</span><span class="mtk10">"react"</span><span class="mtk1">);</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk7 mtki">// Your render function, this is where you will write all of your code</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">const</span><span class="mtk1"> </span><span class="mtk9">render</span><span class="mtk1"> </span><span class="mtk8">=</span><span class="mtk1"> </span><span class="mtk14">async</span><span class="mtk1"> (rendererContext, pageContext) </span><span class="mtk14">=></span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk14">return</span><span class="mtk1"> &#x3C;</span><span class="mtk5">div</span><span class="mtk1">>Hello, this page use my own layout&#x3C;/</span><span class="mtk5">div</span><span class="mtk1">></span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">}</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk14">export</span><span class="mtk1"> </span><span class="mtk5">default</span><span class="mtk1"> {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// List of the renderers</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// For now, we will have only one renderer</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk5">Renderers</span><span class="mtk8">:</span><span class="mtk1"> [</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        {</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk7 mtki">// Name of your layout, this is what you write in the front-matter</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk7 mtki">// Example:</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk7 mtki">// ---</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk7 mtki">// layout: my-layout</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk7 mtki">// ---</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk5">Name</span><span class="mtk8">:</span><span class="mtk1"> </span><span class="mtk10">"my-layout"</span><span class="mtk1">,</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">            </span><span class="mtk5">Func</span><span class="mtk8">:</span><span class="mtk1"> </span><span class="mtk5">render</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">        }</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    ],</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// List of the static file to copy into the build directory</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk7 mtki">// For example, if your layout need a `menu.js`</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">    </span><span class="mtk5">Dependencies</span><span class="mtk8">:</span><span class="mtk1"> []</span></span></span>
+<span class="grvsc-line"><span class="grvsc-source"><span class="mtk1">}</span></span></span></code></pre>
+</div></div></section><div class="section bd-docs-pagination bd-pagination-links"><a class="button bd-fat-button is-primary is-light bd-pagination-prev" href="/Nacara/nacara/advanced/layout-from-scratch.html"><i>←</i><span class="is-hidden-mobile"><em>Custom Layouts</em><strong>Overview</strong></span></a><a class="button bd-fat-button is-primary is-light bd-pagination-next" href="/Nacara/nacara/advanced/custom-layout-fsharp.html"><span class="is-hidden-mobile"><em>Custom Layouts</em><strong>With FSharp</strong></span><i>→</i></a></div></div></div></div><script async="" src="/Nacara/resources/nacara-standard-layouts/scripts/menu.js"></script></body></html>
