@@ -25,4 +25,4 @@ npx nacara serve
 
 You can now deploy the `docs` folder almost anywhere.
 
-For example, on Github you can choose to push the `docs` and serve your
+For example, on Github you can choose to push the `docs` and serve your website using [Github pages](https://pages.github.com/).
