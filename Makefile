@@ -62,7 +62,7 @@ watch: clean
 	@$(call log_target_info, "Watching...")
 	npx concurrently -p none \
 		"$(NODEMON_WATCHER)" \
-		"$(NACARA_LAYOUT_STANDARD_FABLE) --watch --sourceMaps --run \"make nodemon\"" \
+		"$(NACARA_LAYOUT_STANDARD_FABLE) --watch --sourceMaps" \
 		"$(NACARA_FABLE) --watch --sourceMaps"
 
 nodemon:
