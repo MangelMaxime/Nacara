@@ -49,6 +49,16 @@ $changelog-tag-width: 102px;
                     display: inline-flex;
                     align-items: center;
                 }
+
+                .anchor {
+                    @include desktop {
+                        padding-top: calc(#{$computed-navbar-height + 2rem});
+                    }
+
+                    @include touch {
+                        padding-top: calc(#{$computed-navbar-height + $navbar-height + 2rem});
+                    }
+                }
             }
 
             .tag {

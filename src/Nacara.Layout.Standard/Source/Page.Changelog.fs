@@ -44,9 +44,7 @@ let renderVersion (versionText : string) (date : DateTime option) =
                     // We make it appear a bit higher so the tag isn't squash against the navbar
                     Html.span [
                         prop.id slug
-                        prop.style [
-                            style.paddingTop (length.rem 4.25)
-                        ]
+                        prop.className "anchor"
                     ]
 
                     Bulma.tag [

@@ -78,28 +78,26 @@ h2, h3, h4, h5, h6  {
         }
     }
 
-    &[id]::before {
-        content: '';
-        display: block;
-        height: calc(#{$computed-navbar-height + 1rem});
-        margin: -$computed-navbar-height 0 0;
+    // Make sure that when jumping to an anchor, that anchor is displayed just below the navbar and visible
+
+    // On desktop and above we only have the navbar to take into account
+    @include desktop {
+        &[id]::before {
+            content: '';
+            display: block;
+            height: calc(#{$computed-navbar-height + 1rem});
+            margin: -$computed-navbar-height 0 0;
+        }
     }
 
-}
-
-// Make sure that when jumping to an anchor, that anchor is displayed just below the navbar and visible
-
-// On desktop and above we only have the navbar to take into account
-@include desktop {
-    .anchor {
-        padding: #{$computed-navbar-height + 1rem} 0 0;
-    }
-}
-
-// On touch screen we need to take into account the navbar and the breadcrumb
-@include touch {
-    .anchor {
-        padding: #{$computed-navbar-height * 2 + 1rem} 0 0;
+    // On touch screen we need to take into account the navbar and the breadcrumb
+    @include touch {
+        &[id]::before {
+            content: '';
+            display: block;
+            height: calc(#{$computed-navbar-height + $navbar-height + 1rem});
+            margin: calc(#{$computed-navbar-height + $navbar-height + 1rem} * -1) 0 0;
+        }
     }
 }
 
