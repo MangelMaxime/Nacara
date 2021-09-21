@@ -11,7 +11,6 @@ NACARA_FABLE=dotnet fable $(NACARA_DIR)/Source --outDir $(NACARA_DIR)/dist
 NODEMON_WATCHER=npx nodemon \
 	--watch $(NACARA_DIR)/dist \
 	--watch $(NACARA_LAYOUT_STANDARD_DIR)/dist \
-	--watch nacara.config.json \
 	--delay 150ms \
 	--handle-input \
 	--exec 'nacara watch'

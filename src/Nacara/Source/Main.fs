@@ -56,6 +56,8 @@ let private cliArgs =
     |> Seq.skip 2
     |> Seq.toList
 
+// TODO: Refactor the start of the application to use yargs
+// and process the arguments in a clean way
 let private hasCommand (command: string) =
     cliArgs
     |> List.exists (fun a ->

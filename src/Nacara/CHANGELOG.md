@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Fix #70: Generate a .nojekyll file on production build
 * Fix #96: Add partials support
 * Fix #77: Add footer support
+* Fix #2: Restart Nacara when changes to `nacara.config.json` are detected
 
 ### Changed
 
