@@ -17,19 +17,6 @@ $nacara-navbar-menu-border: 1px solid $navbar-item-active-background-color !defa
         flex-grow: 1;
     }
 
-    // Make sure the .navbar.container has enough space around it
-    // to display correctly on all display
-    & >.container {
-        margin-left: 1rem;
-        margin-right: 1rem;
-
-        // Mimic Bulma behavior with our own value
-        // Bulma: use -0.75rem
-        .navbar-menu {
-            margin-right: -1rem;
-        }
-    }
-
     // Create our own implement of the navbar dropdown component
     .navbar-item {
         &.has-nacara-dropdown {

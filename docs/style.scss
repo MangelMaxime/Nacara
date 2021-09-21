@@ -5,12 +5,12 @@
 
 $primary: #7679db;
 $text: #2b2b2b;
-$danger: #c43636;
+$danger: #f14668;
 
 @import "./../node_modules/bulma/sass/utilities/derived-variables";
 
 $navbar-item-color: $white;
-$navbar-background-color: $primary;
+$navbar-background-color: darken($primary, 1%);
 $navbar-item-active-color: $white;
 $navbar-item-active-background-color: lighten($primary, 4%);
 $navbar-item-hover-color: $white;
@@ -43,6 +43,10 @@ $body-size: 14px;
 @import "./../node_modules/bulma/bulma.sass";
 @import "./../node_modules/nacara-layout-standard/scss/nacara.scss";
 
+.hero-foot .box {
+    background-color: lighten($primary, 1%);
+}
+
 // Begin gatsby-remark-vscode specific
 :root {
     --grvsc-padding-v: 1.25rem;
@@ -53,8 +57,17 @@ $body-size: 14px;
     pre > code {
         width: 100%;
     }
+
+    pre {
+        word-break: break-all;
+        white-space: break-spaces;
+    }
 }
 // End gatsby-remark-vscode specific
+
+table td {
+    word-break: break-all;
+}
 
 // Override bulma
 .navbar {
@@ -98,14 +111,6 @@ $body-size: 14px;
 }
 
 .index-quick-start {
-    background-color: $primary;
-    color: $white;
-    padding: 3rem;
-
-    @include desktop {
-        border-radius: $radius-large;
-    }
-
     .terminal {
         background-color: $black-ter;
         overflow-x: auto;
