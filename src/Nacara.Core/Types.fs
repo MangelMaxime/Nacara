@@ -416,12 +416,16 @@ module MarkdownToHtml =
     let rehypeStringify : obj =
         import "default" "rehype-stringify"
 
+    let rehypePresetMinify : obj =
+        import "default" "rehype-preset-minify"
+
     // For now, this function is using dynamic typing
     // But later it would be nice to have bindings for the different remark & rehype plugins
     // And rewrite this function with them
     let markdownToHtml
         (remarkPlugins : RemarkPlugin array)
         (rehypePlugins : RehypePlugin array)
+        (isWatch : bool)
         (markdownText : string) : JS.Promise<string> =
 
         promise {
@@ -456,11 +460,14 @@ module MarkdownToHtml =
                 | None ->
                     chain?``use``(instance?``default``, rehypePlugin.Options)
 
-            // Generate the HTML
-            return chain
-                        ?``use``(rehypeFormat)
-                        ?``use``(rehypeStringify)
-                        ?``process``(markdownText)
+            chain
+                ?``use``(rehypeFormat)
+                ?``use``(rehypeStringify)
+
+            if not isWatch then
+                chain?``use``(rehypePresetMinify)
+
+            return chain?``process``(markdownText)
         }
 
 [<NoComparison; NoEquality>]
@@ -479,6 +486,7 @@ type RendererContext =
         MarkdownToHtml.markdownToHtml
             this.Config.RemarkPlugins
             this.Config.RehypePlugins
+            this.Config.IsWatch
             markdownText
 
 type LayoutDependency =
