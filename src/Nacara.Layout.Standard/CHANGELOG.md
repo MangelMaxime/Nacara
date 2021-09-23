@@ -26,6 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Move the NPM package to be a pure ESM package
 * Switch to `remark` and `rehype` for doing the markdown parsing
 
+### Fixed
+
+* Fix #112: If there is no menu or toc, center the page content
+
 ## 1.0.0-beta-009 - 2021-08-23
 
 ### Changed

@@ -86,6 +86,12 @@
                     "vscode-theme-onelight"
                 ]
             }
+        },
+        {
+            "resolve": "remark-github",
+            "options": {
+                "repository": "MangelMaxime/Nacara"
+            }
         }
     ],
     "layouts": [
