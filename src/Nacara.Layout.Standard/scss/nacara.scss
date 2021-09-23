@@ -82,21 +82,15 @@ h2, h3, h4, h5, h6  {
 
     // On desktop and above we only have the navbar to take into account
     @include desktop {
-        &[id]::before {
-            content: '';
-            display: block;
-            height: calc(#{$computed-navbar-height + 1rem});
-            margin: -$computed-navbar-height 0 0;
+        &[id] {
+            scroll-margin-top: $computed-navbar-height + 1rem;
         }
     }
 
     // On touch screen we need to take into account the navbar and the breadcrumb
     @include touch {
-        &[id]::before {
-            content: '';
-            display: block;
-            height: calc(#{$computed-navbar-height + $navbar-height + 1rem});
-            margin: calc(#{$computed-navbar-height + $navbar-height + 1rem} * -1) 0 0;
+        &[id] {
+            scroll-margin-top: $computed-navbar-height + $navbar-height + 1rem;
         }
     }
 }
