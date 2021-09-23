@@ -188,6 +188,20 @@ let private renderPageWithMenuOrTableOfContent
         ]
     ]
 
+let private renderPageContentOnly (pageContent : ReactElement) =
+    Bulma.container [
+        Bulma.columns [
+            Bulma.column [
+                column.is8Desktop
+                column.isOffset2Desktop
+
+                prop.children [
+                    pageContent
+                ]
+            ]
+        ]
+    ]
+
 
 let private renderPageWithoutMenuOrTableOfContent (pageContent : ReactElement) =
 
@@ -328,7 +342,6 @@ type RenderArgs =
         PageContext : PageContext
         PageHtml : string
         PageContent : ReactElement
-        RenderMenu : bool
     }
 
 let render (args : RenderArgs) =
@@ -336,39 +349,22 @@ let render (args : RenderArgs) =
     let tocInformation =
         TableOfContentParser.parse args.PageHtml
 
-    if args.RenderMenu then
-        match args.SectionMenu, tocInformation.IsEmpty with
-        // If there is a menu, we render it with the menu
-        // The menu renderer will take care of generating the TOC elements if needed
-        | Some sectionMenu, false
-        | Some sectionMenu, true ->
-            renderPageWithMenuOrTableOfContent
-                (renderBreadcrumb args.Config.Navbar args.PageContext sectionMenu)
-                (renderMenu args.Config args.Pages sectionMenu args.PageContext.PageId tocInformation)
-                args.PageContent
+    match args.SectionMenu, tocInformation.IsEmpty with
+    // If there is a menu, we render it with the menu
+    // The menu renderer will take care of generating the TOC elements if needed
+    | Some sectionMenu, _ ->
+        renderPageWithMenuOrTableOfContent
+            (renderBreadcrumb args.Config.Navbar args.PageContext sectionMenu)
+            (renderMenu args.Config args.Pages sectionMenu args.PageContext.PageId tocInformation)
+            args.PageContent
 
-        | None, false ->
-            renderPageWithMenuOrTableOfContent
-                null // No breadcrumb because there is no menu
-                (renderTableOfContentOnly tocInformation)
-                args.PageContent
+    // There is no menu but there is a table of content
+    | None, false ->
+        renderPageWithMenuOrTableOfContent
+            null // No breadcrumb because there is no menu
+            (renderTableOfContentOnly tocInformation)
+            args.PageContent
 
-        | None, true ->
-            renderPageWithMenuOrTableOfContent
-                null
-                null
-                args.PageContent
-
-    // Layout forced to not render the menu, so only try to render the page with a TOC
-    else
-        if tocInformation.IsEmpty then
-            renderPageWithMenuOrTableOfContent
-                null
-                null
-                args.PageContent
-
-        else
-            renderPageWithMenuOrTableOfContent
-                null // No breadcrumb because there is no menu
-                (renderTableOfContentOnly tocInformation)
-                args.PageContent
+    // There is no menu neither a table of content
+    | None, true ->
+        renderPageContentOnly args.PageContent

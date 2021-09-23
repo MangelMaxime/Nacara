@@ -239,7 +239,6 @@ let render (rendererContext : RendererContext) (pageContext : PageContext) =
                                 Pages = rendererContext.Pages
                                 PageContext = pageContext
                                 PageHtml = "" // Pass no content to the `render` function, as there is no interesting information in it for the changelog
-                                RenderMenu = true
                                 PageContent = changelogContainer changelogItems
                             }
                     }

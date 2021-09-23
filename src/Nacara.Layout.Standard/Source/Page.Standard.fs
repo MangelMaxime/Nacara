@@ -344,7 +344,6 @@ let render (rendererContext : RendererContext) (pageContext : PageContext) =
                         Pages = rendererContext.Pages
                         PageContext = pageContext
                         PageHtml = pageContent
-                        RenderMenu = true
                         PageContent =
                             renderPageContent
                                 rendererContext.Config.Navbar
