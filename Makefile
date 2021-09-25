@@ -12,7 +12,6 @@ NODEMON_WATCHER=npx nodemon \
 	--watch $(NACARA_DIR)/dist \
 	--watch $(NACARA_LAYOUT_STANDARD_DIR)/dist \
 	--delay 150ms \
-	--handle-input \
 	--exec 'nacara watch'
 
 setup-dev:

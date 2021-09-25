@@ -49,60 +49,12 @@ type FilesAccumulator =
             OtherFiles = []
         }
 
-let private cliArgs =
-    ``process``.argv
-    // 0. Is node program
-    // 1. Is the JavaScript file
-    |> Seq.skip 2
-    |> Seq.toList
-
-// TODO: Refactor the start of the application to use yargs
-// and process the arguments in a clean way
-let private hasCommand (command: string) =
-    cliArgs
-    |> List.exists (fun a ->
-        a = command
-    )
-
-let private isWatch =
-    hasCommand "watch"
-
-let private isServe =
-    hasCommand "serve"
-
-let private isVersion =
-    hasCommand "--version"
-
-let private isClean =
-    hasCommand "clean"
-
-let private setupBabelIfNeeded () =
-    promise {
-        // Load babel if the config file is found
-        let babelConfigPath = path.join(cwd, "babel.config.json")
-        let! hasBabelConfig = File.exist(babelConfigPath)
-
-        if hasBabelConfig then
-            Log.log "'babel.config.json' file found, loading Babel..."
-            try
-                let! _ = importDynamic "@babel/register"
-                // do! emitJsStatement () """import("@babel/register")"""
-                ()
-            with
-                | ex ->
-                    Log.error $"Unable to load Babel: %s{ex.Message}"
-                    Log.error $"A 'babel.config.json' file was found, please install '@babel/register' package."
-                    ``process``.exit ExitCode.FAILED_TO_LOAD_BABEL
-    }
-
-let private buildOrWatch (config : Config) =
+let private buildOrWatch (isWatch : bool) (config : Config) =
     promise {
         Log.log $"Source folder: %s{config.SourceFolder}"
 
         // Clean the output folder
         do! Clean.clean config
-
-        do! setupBabelIfNeeded ()
 
         // The config so now load the files from the source folder
         let! files = Directory.getFiles true config.SourceFolder
@@ -291,42 +243,48 @@ let private buildOrWatch (config : Config) =
                 |> Program.runWith elmishArgs
     }
 
-let start () =
+let initialize
+    (isWatch : bool)
+    (func : Config -> JS.Promise<unit>) =
     promise {
-        if isVersion then
-            do! Version.version()
-            ``process``.exit(ExitCode.OK)
+        Log.info $"Current directory:\n%s{cwd}"
 
+        let nacaraConfigPath = path.join(cwd, "nacara.config.json")
+        let! hasDocsConfig = File.exist(nacaraConfigPath)
+
+        // Check if the Nacara config file exist
+        if hasDocsConfig then
+            let! configJson = File.read nacaraConfigPath
+
+            // Check if the Nacara config file is valid
+            match Decode.fromString (Config.decoder cwd isWatch) configJson with
+            | Ok config ->
+                do! func config
+
+            | Error errorMessage ->
+                Log.error $"Invalid config file. Error:\n{errorMessage}"
+                ``process``.exit(ExitCode.INVALID_CONFIG_FILE)
         else
-            Log.info $"Current directory:\n%s{cwd}"
-
-            let nacaraConfigPath = path.join(cwd, "nacara.config.json")
-            let! hasDocsConfig = File.exist(nacaraConfigPath)
-
-            // Check if the Nacara config file exist
-            if hasDocsConfig then
-                let! configJson = File.read nacaraConfigPath
-
-                // Check if the Nacara config file is valid
-                match Decode.fromString (Config.decoder cwd isWatch) configJson with
-                | Ok config ->
-                    if isServe then
-                        Serve.serve config
-
-                    else if isClean then
-                        do! Clean.clean config
-                        Log.success $"Successfully removed {config.DestinationFolder}"
-                        ``process``.exit ExitCode.OK
-
-                    else
-                        do! buildOrWatch config
-
-                | Error errorMessage ->
-                    Log.error $"Invalid config file. Error:\n{errorMessage}"
-                    ``process``.exit(ExitCode.INVALID_CONFIG_FILE)
-            else
-                Log.error "Missing 'nacara.config.json' file"
-                ``process``.exit(ExitCode.MISSING_CONFIG_FILE)
-            return ()
+            Log.error "Missing 'nacara.config.json' file"
+            ``process``.exit(ExitCode.MISSING_CONFIG_FILE)
     }
-    |> Promise.start
+
+let runBuild _ =
+    initialize false (buildOrWatch false)
+
+
+let runWatch _ =
+    initialize true (buildOrWatch true)
+
+let runClean _ =
+    let func config =
+        promise {
+            do! Clean.clean config
+            Log.success $"Successfully removed {config.DestinationFolder}"
+            ``process``.exit ExitCode.OK
+        }
+
+    initialize false func
+
+let runServe _ =
+    initialize false Serve.serve

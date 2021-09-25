@@ -1,3 +1,3 @@
-import { start } from '../dist/Main.js';
+import { runWatch } from '../dist/Main.js';
 
-start();
+runWatch();

@@ -37,6 +37,7 @@
         "sass": "1.35.1",
         "unified": "^10.1.0",
         "vscode-theme-onelight": "github:akamud/vscode-theme-onelight",
-        "ws": "^8.1.0"
+        "ws": "^8.1.0",
+        "yargs": "^17.2.0"
     }
 }
