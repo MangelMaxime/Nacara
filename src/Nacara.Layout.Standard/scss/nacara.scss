@@ -221,6 +221,11 @@ h2, h3, h4, h5, h6  {
             word-break: break-all;
         }
     }
+
+    pre {
+        word-break: break-all;
+        white-space: break-spaces;
+    }
 }
 
 // Customize the menu to have a better display and also support TOC in it
