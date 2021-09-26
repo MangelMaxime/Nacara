@@ -86,6 +86,6 @@ release: build
 	node ./scripts/release-npm.js $(NACARA_LAYOUT_STANDARD_DIR)
 	node ./scripts/release-npm.js $(NACARA_CREATE_DIR)
 
-publish: release generate-docs
+publish-docs: release generate-docs
 	@$(call log_target_info, "Publishing...")
 	npx gh-pages --dist docs_deploy

@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-011 - 2021-09-26
+
+### Fixed
+
+* Add files from `js` folder to the published package
+
+## 1.0.0-beta-010 - 2021-09-26
+
 ### Added
 
 * PR #87: Add breadcrumb on desktop (by @mabasic)

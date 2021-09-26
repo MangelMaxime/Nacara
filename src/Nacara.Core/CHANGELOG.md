@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-002 - 2021-09-26
+
 ### Changed
 
 * Fix #44: Move the "site metadata info" into a siteMetadata property in `nacara.config.json` (by @mabasic)

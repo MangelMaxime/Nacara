@@ -1,6 +1,6 @@
 {
     "name": "nacara-layout-standard",
-    "version": "1.0.0-beta-009",
+    "version": "1.0.0-beta-011",
     "description": "",
     "exports": "./dist/Export.js",
     "type": "module",
@@ -11,7 +11,8 @@
     "files": [
         "dist",
         "scss",
-        "scripts"
+        "scripts",
+        "js"
     ],
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
