@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+* Force table cells to break words on mobile if needed allowing for a better display
+
 ## 1.0.0-beta-011 - 2021-09-26
 
 ### Fixed

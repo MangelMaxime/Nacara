@@ -215,6 +215,12 @@ h2, h3, h4, h5, h6  {
     .table {
         font-size: $body-size;
     }
+
+    @include mobile {
+        th, td {
+            word-break: break-all;
+        }
+    }
 }
 
 // Customize the menu to have a better display and also support TOC in it
