@@ -165,24 +165,27 @@ let private buildOrWatch (isWatch : bool) (config : Config) =
             |> Array.toList
 
         let! partials =
-            Promise.lift [||]
-            // files.PartialFiles
-            // |> List.map (fun partial ->
-            //     promise {
-            //         let! m =
-            //             importDynamic (path.join(cwd, config.SourceFolder, partial))
+            files.PartialFiles
+            // Temps
+            |> List.filter (fun partial ->
+                partial.EndsWith(".js")
+            )
+            |> List.map (fun partial ->
+                promise {
+                    let! m =
+                        importDynamic (path.join(cwd, config.SourceFolder, partial))
 
-            //         let res : Partial =
-            //             {
-            //                 Id = getPartialId partial
-            //                 Path = partial
-            //                 Module = m
-            //             }
+                    let res : Partial =
+                        {
+                            Id = getPartialId partial
+                            Path = partial
+                            Module = m
+                        }
 
-            //         return res
-            //     }
-            // )
-            // |> Promise.all
+                    return res
+                }
+            )
+            |> Promise.all
 
         let processQueue =
             [

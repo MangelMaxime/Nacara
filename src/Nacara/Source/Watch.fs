@@ -1,13 +1,13 @@
 module Watch
 
+#nowarn "52"
+
 open Nacara.Core.Types
 open Fable.Core
 open Fable.Core.JsInterop
 open Elmish
 open Node
 open Chokidar
-open Glutinum.Express
-open Glutinum.ExpressServeStaticCore
 
 exception InitMarkdownFileErrorException of filePath : string * original : exn
 
@@ -15,6 +15,8 @@ exception InitMarkdownFileErrorException of filePath : string * original : exn
 type Msg =
     | InitMarkdownFile of filePath : string
     | PartialChanged of filePath : string
+    | PartialLoaded of Partial
+    | InitPartialError of exn
     | InitMarkdownFileError of InitMarkdownFileErrorException
     | ProcessMarkdown of pageContext : PageContext
     | ProcessOther of filePath: string
@@ -271,6 +273,9 @@ let private updatePagesCache (cache : PageContext list) (newPageContext : PageCo
                 newPageContext :: newCache, attributesChanged
 
     apply cache newPageContext [] false false
+
+
+
 
 let private sendReload (model : Model) =
     model.WssServer.clients.forEach(fun client key _ ->
@@ -542,48 +547,117 @@ let update (msg : Msg) (model : Model) =
         model
         , Cmd.OfFunc.exec action args
 
-    | PartialChanged filePath ->
-        if getPartialId filePath = "footer" then
-            let newPartials =
+    | PartialChanged partialPath ->
+        let action (config, partialPath) =
+            promise {
+                let cacheBusting =
+                    System.DateTime.UtcNow.ToString("O")
+
+                let fullPath =
+                    path.join(config.WorkingDirectory, config.SourceFolder, partialPath)
+
+                let! m = importDynamic (fullPath + "?" + cacheBusting)
+
+                return {
+                    Id = getPartialId partialPath
+                    Path = partialPath
+                    Module = unbox m
+                }
+            }
+
+        model
+        , Cmd.OfPromise.either action (model.Config, partialPath) PartialLoaded InitPartialError
+
+    | PartialLoaded loadedPartial ->
+        let newPartials =
+            model.Partials
+            |> List.tryFind (fun partial ->
+                partial.Id = loadedPartial.Id
+            )
+            |> function
+            // If the partial is already loaded, replace it
+            | Some _ ->
                 model.Partials
                 |> List.map (fun partial ->
-                    if partial.Path = filePath then
-                        let fullPath =
-                            path.join(model.Config.WorkingDirectory, model.Config.SourceFolder, filePath)
-
-                        // Delete the module from the cache
-                        emitJsStatement
-                            fullPath
-                            """
-delete require.cache[require.resolve($0)];
-                            """
-
-                        // Reload the module
-                        let newModule =
-                            require.Invoke(path.join(model.Config.WorkingDirectory, model.Config.SourceFolder, filePath)) |> unbox
-
-                        {
-                            Id = getPartialId filePath
-                            Path = filePath
-                            Module = newModule
-                        } : Partial
+                    if partial.Id = loadedPartial.Id then
+                        loadedPartial
                     else
                         partial
                 )
+            // If the partial is not loaded, add it
+            | None ->
+                loadedPartial :: model.Partials
 
-            // Regenerate all the pages
-            // Right now the partials supported are for the footer or the navbar so it concerns all the pages
-            let cmd =
-                model.Pages
-                |> List.map (fun page ->
-                    Cmd.ofMsg (ProcessMarkdown page)
-                )
-                |> Cmd.batch
-
+        let newModel =
             { model with
                 Partials = newPartials
             }
-            , cmd
-        else
-            model
-            , Cmd.none
+
+        // Regenerate all the pages
+        // Right now the partials supported are for the footer or the navbar so it concerns all the pages
+        let cmds =
+            model.Pages
+            |> List.map (fun page ->
+                Cmd.ofMsg (ProcessMarkdown page)
+            )
+            |> Cmd.batch
+
+        newModel
+        , cmds
+
+    | InitPartialError error ->
+
+        Log.error error.Message
+
+        model
+        , Cmd.none
+        // let extension =
+        //     path.extname filePath
+
+        // if extension = ".jsx" then
+        // else
+
+//         if getPartialId filePath = "footer" then
+//             let newPartials =
+//                 model.Partials
+//                 |> List.map (fun partial ->
+//                     if partial.Path = filePath then
+//                         let fullPath =
+//                             path.join(model.Config.WorkingDirectory, model.Config.SourceFolder, filePath)
+
+//                         // Delete the module from the cache
+//                         emitJsStatement
+//                             fullPath
+//                             """
+// delete require.cache[require.resolve($0)];
+//                             """
+
+//                         // Reload the module
+//                         let newModule =
+//                             require.Invoke(path.join(model.Config.WorkingDirectory, model.Config.SourceFolder, filePath)) |> unbox
+
+//                         {
+//                             Id = getPartialId filePath
+//                             Path = filePath
+//                             Module = newModule
+//                         } : Partial
+//                     else
+//                         partial
+//                 )
+
+//             // Regenerate all the pages
+//             // Right now the partials supported are for the footer or the navbar so it concerns all the pages
+//             let cmd =
+//                 model.Pages
+//                 |> List.map (fun page ->
+//                     Cmd.ofMsg (ProcessMarkdown page)
+//                 )
+//                 |> Cmd.batch
+
+//             { model with
+//                 Partials = newPartials
+//             }
+//             , cmd
+//         else
+//             model
+//             , Cmd.none

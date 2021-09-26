@@ -2,6 +2,7 @@
     "name": "nacara-root",
     "private": "true",
     "license": "Apache-2.0",
+    "type": "module",
     "devDependencies": {
         "@babel/preset-react": "^7.14.5",
         "@babel/register": "^7.15.3",
