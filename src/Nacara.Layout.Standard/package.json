@@ -25,8 +25,9 @@
     },
     "dependencies": {
         "hastscript": "^7.0.2",
-        "mdast-util-to-hast": "^11.2.1",
+        "mdast-util-to-hast": "^11.3.0",
         "remark-directive": "^2.0.0",
-        "unist-util-visit": "^4.0.0"
+        "slugify": "^1.6.0",
+        "unist-util-visit": "^4.1.0"
     }
 }

@@ -17,12 +17,12 @@
         "npm": ">=7.0.0"
     },
     "dependencies": {
-        "chalk": "^4.1.1",
+        "chalk": "^4.1.2",
         "chokidar": "^3.5.2",
-        "core-js": "^3.15.1",
+        "core-js": "^3.18.0",
         "express": "^4.17.1",
         "front-matter": "^4.0.2",
-        "nodemon": "^2.0.12",
+        "nodemon": "^2.0.13",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "rehype-autolink-headings": "^6.1.0",
@@ -32,12 +32,11 @@
         "rehype-slug": "^5.0.0",
         "rehype-stringify": "^9.0.2",
         "remark-parse": "^10.0.0",
-        "remark-rehype": "^9.0.0",
+        "remark-rehype": "^9.1.0",
         "remark-slug": "^7.0.0",
-        "sass": "1.35.1",
+        "sass": "1.42.1",
         "unified": "^10.1.0",
-        "vscode-theme-onelight": "github:akamud/vscode-theme-onelight",
-        "ws": "^8.1.0",
-        "yargs": "^17.2.0"
+        "ws": "^8.2.2",
+        "yargs": "^17.2.1"
     }
 }
