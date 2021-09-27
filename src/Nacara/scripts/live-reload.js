@@ -25,10 +25,25 @@ const connect = () => {
     let connected = false;
 
     socket.onmessage = function (msg) {
-        if (msg.data == 'reload') {
-            window.location.reload();
+        var data = JSON.parse(msg.data);
+
+        if (data.type === 'reload') {
+            // Reload is for all the page
+            if (data.page == null) {
+                window.location.reload();
+            } else {
+                const targetedPage = data.page;
+
+                const currentPage =
+                    location.pathname.replace("/", "");
+
+                // Reload only if the targeted page is the current page
+                if (currentPage.startsWith(targetedPage)) {
+                    window.location.reload();
+                }
+            }
         }
-        else if (msg.data == 'refreshCSS') {
+        else if (data.type === 'refreshCSS') {
             refreshCSS();
         }
     };

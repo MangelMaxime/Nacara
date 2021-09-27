@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+* Improve reloading system to reload only if the change concern the current page.
+
+    This avoid reloading the page before it is ready when regenerating a lot of pages.
+
 ### Fixed
 
 * Force table cells to break words on mobile if needed allowing for a better display

@@ -6,6 +6,7 @@ open Fable.Core.JsInterop
 open Elmish
 open Node
 open Chokidar
+open Thoth.Json
 
 exception InitMarkdownFileErrorException of filePath : string * original : exn
 
@@ -151,7 +152,13 @@ let private startServer (config : Config) =
     ))
 
     wss.on("connection", fun (client : Ws.WebSocket) _ ->
-        client.send("Connected")
+        let data =
+            Encode.object [
+                "type", Encode.string "Connected"
+            ]
+            |> Encode.toString 0
+
+        client.send(data)
     )
     |> ignore
 
@@ -272,14 +279,27 @@ let private updatePagesCache (cache : PageContext list) (newPageContext : PageCo
 
     apply cache newPageContext [] false false
 
-let private sendReload (model : Model) =
+let private sendReload (model : Model) (page : string option) =
+    let data =
+        Encode.object [
+            "type", Encode.string "reload"
+            "page", Encode.option Encode.string page
+        ]
+        |> Encode.toString 0
+
     model.WssServer.clients.forEach(fun client key _ ->
-        client.send("reload")
+        client.send(data)
     )
 
 let private sendRefreshCSS (model : Model) =
+    let data =
+        Encode.object [
+            "type", Encode.string "refreshCSS"
+        ]
+        |> Encode.toString 0
+
     model.WssServer.clients.forEach(fun client key _ ->
-        client.send("refreshCSS")
+        client.send(data)
     )
 
 let update (msg : Msg) (model : Model) =
@@ -333,7 +353,7 @@ let update (msg : Msg) (model : Model) =
             Write.copyFileWithDestination args
             |> Promise.map( fun _ ->
                 Log.log $"Dependency file %s{source} copied to %s{destination}"
-                sendReload model
+                sendReload model None
             )
             |> Promise.catchEnd (fun error ->
                 Log.error $"Error while copying %s{source} to %s{destination}\n%A{error}"
@@ -482,7 +502,7 @@ let update (msg : Msg) (model : Model) =
             Write.markdown args
             |> Promise.map (fun _ ->
                 Log.log $"Processed: %s{pageContext.RelativePath}"
-                sendReload model
+                sendReload model (Some pageContext.PageId)
             )
             |> Promise.catchEnd (fun error ->
                 Log.error $"Error while processing markdown file: %s{pageContext.PageId}"
@@ -511,7 +531,7 @@ let update (msg : Msg) (model : Model) =
             Write.copyFile
             >> Promise.map (fun _ ->
                 Log.log $"Copied: %s{filePath}"
-                sendReload model
+                sendReload model None
             )
             >> Promise.catchEnd (fun error ->
                 Log.error $"Error while copying %s{filePath}"
