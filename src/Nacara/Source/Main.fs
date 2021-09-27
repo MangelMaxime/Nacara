@@ -166,24 +166,25 @@ let private buildOrWatch (isWatch : bool) (config : Config) =
 
         let! partials =
             files.PartialFiles
-            // Temps
-            |> List.filter (fun partial ->
-                partial.EndsWith(".js")
+            |> List.filter (fun path ->
+                match path with
+                | Js
+                | Jsx ->
+                    true
+                | Other _ ->
+                    Log.error $"Partial files must be JavaScript or JSX files: %s{path}"
+                    false
             )
             |> List.map (fun partial ->
-                promise {
-                    let! m =
-                        importDynamic (path.join(cwd, config.SourceFolder, partial))
+                match partial with
+                | Js ->
+                    Partial.loadFromJavaScript config partial
 
-                    let res : Partial =
-                        {
-                            Id = getPartialId partial
-                            Path = partial
-                            Module = m
-                        }
+                | Jsx ->
+                    Partial.loadPartialFromJsx config partial
 
-                    return res
-                }
+                | Other _ ->
+                    failwith "Should not happen, partials files have been filtered before"
             )
             |> Promise.all
 
@@ -283,7 +284,7 @@ let runClean _ =
     let func config =
         promise {
             do! Clean.clean config
-            Log.success $"Successfully removed {config.DestinationFolder}"
+            Log.success $"Successfully removed generated files"
             ``process``.exit ExitCode.OK
         }
 

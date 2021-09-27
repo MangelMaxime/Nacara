@@ -391,7 +391,6 @@ type MarkdownIt =
 type Partial =
     {
         Id : string
-        Path : string
         Module : {| ``default`` : ReactElement |}
     }
 

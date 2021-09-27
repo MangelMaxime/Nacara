@@ -1,7 +1,5 @@
 module Watch
 
-#nowarn "52"
-
 open Nacara.Core.Types
 open Fable.Core
 open Fable.Core.JsInterop
@@ -274,9 +272,6 @@ let private updatePagesCache (cache : PageContext list) (newPageContext : PageCo
 
     apply cache newPageContext [] false false
 
-
-
-
 let private sendReload (model : Model) =
     model.WssServer.clients.forEach(fun client key _ ->
         client.send("reload")
@@ -548,25 +543,24 @@ let update (msg : Msg) (model : Model) =
         , Cmd.OfFunc.exec action args
 
     | PartialChanged partialPath ->
-        let action (config, partialPath) =
-            promise {
-                let cacheBusting =
-                    System.DateTime.UtcNow.ToString("O")
+        match partialPath with
+        | Js ->
+            let action (config, partialPath) =
+                Partial.loadFromJavaScript config partialPath
 
-                let fullPath =
-                    path.join(config.WorkingDirectory, config.SourceFolder, partialPath)
+            model
+            , Cmd.OfPromise.either action (model.Config, partialPath) PartialLoaded InitPartialError
 
-                let! m = importDynamic (fullPath + "?" + cacheBusting)
+        | Jsx ->
+            let action (config, partialPath) =
+                Partial.loadPartialFromJsx config partialPath
 
-                return {
-                    Id = getPartialId partialPath
-                    Path = partialPath
-                    Module = unbox m
-                }
-            }
+            model
+            , Cmd.OfPromise.either action (model.Config, partialPath) PartialLoaded InitPartialError
 
-        model
-        , Cmd.OfPromise.either action (model.Config, partialPath) PartialLoaded InitPartialError
+        | Other _ ->
+            Log.error $"Partial files must be JavaScript or JSX files: %s{partialPath}"
+            model, Cmd.none
 
     | PartialLoaded loadedPartial ->
         let newPartials =
@@ -595,7 +589,7 @@ let update (msg : Msg) (model : Model) =
 
         // Regenerate all the pages
         // Right now the partials supported are for the footer or the navbar so it concerns all the pages
-        let cmds =
+        let cmd =
             model.Pages
             |> List.map (fun page ->
                 Cmd.ofMsg (ProcessMarkdown page)
@@ -603,7 +597,7 @@ let update (msg : Msg) (model : Model) =
             |> Cmd.batch
 
         newModel
-        , cmds
+        , cmd
 
     | InitPartialError error ->
 

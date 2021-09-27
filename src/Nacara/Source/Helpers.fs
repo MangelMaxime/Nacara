@@ -131,6 +131,14 @@ let (|MarkdownFile|JavaScriptFile|PartialFile|SassFile|MenuFile|OtherFile|) (fil
             else
                 OtherFile ext
 
+let (|Js|Jsx|Other|) (filePath : string) =
+    let ext = path.extname(filePath)
+
+    match ext.ToLower() with
+    | ".js" -> Js
+    | ".jsx" -> Jsx
+    | _ -> Other ext
+
 let initMenuFiles (sourceFolder : string) (filePath : string) =
     promise {
         let fullFilePath =
