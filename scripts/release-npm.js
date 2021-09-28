@@ -1,10 +1,10 @@
-const path = require('path')
-const chalk = require('chalk')
-const shell = require('shelljs')
+import path from "node:path"
+import chalk from "chalk"
+import shell from "shelljs"
 
 const log = console.log
 
-const release = require("./release-core").release
+import { release } from "./release-core.js"
 
 // Check that we have enough arguments
 if (process.argv.length < 3) {

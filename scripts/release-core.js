@@ -1,7 +1,7 @@
-const path = require('path')
-const fs = require('fs')
-const chalk = require('chalk')
-const parseChangelog = require('changelog-parser')
+import path from "node:path"
+import fs from "node:fs"
+import chalk from "chalk"
+import parseChangelog from "changelog-parser"
 
 const log = console.log
 
@@ -18,7 +18,7 @@ const log = console.log
  *
  * @param {Options} options
  */
-const release = async ( options ) => {
+export const release = async ( options ) => {
 
     // checks if the package.json and CHANGELOG exist
     const changelogPath = path.resolve(options.baseDirectory, "CHANGELOG.md")
@@ -86,5 +86,3 @@ const release = async ( options ) => {
     log(chalk.green(`Package published`))
     process.exit(0)
 }
-
-exports.release = release;
