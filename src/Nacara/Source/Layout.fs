@@ -17,9 +17,13 @@ let load (config : Config) (layoutPath : string) : JS.Promise<LayoutInfo> =
             let fullPath =
                 path.join(config.WorkingDirectory, layoutPath)
 
+            // Cache busting is useful for development, but not for production.
+            let cacheBusting =
+                System.DateTime.UtcNow.ToString("O")
+
             match layoutPath with
             | Js ->
-                return! importDynamic fullPath
+                return! importDynamic (fullPath + "?" + cacheBusting)
 
             | Jsx ->
                 let! res = babel?transformFileAsync(fullPath)
@@ -30,7 +34,7 @@ let load (config : Config) (layoutPath : string) : JS.Promise<LayoutInfo> =
 
                 do! File.write destination res?code
 
-                return! importDynamic destination
+                return! importDynamic (destination + "?" + cacheBusting)
 
             | Other _ ->
                 Log.error $"Local layouts scripts must be JavaScript or JSX files: %s{layoutPath}"
