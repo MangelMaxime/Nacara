@@ -10,10 +10,12 @@ open Thoth.Json
 
 exception InitMarkdownFileErrorException of filePath : string * original : exn
 
-[<NoComparison>]
+[<NoComparison; NoEquality>]
 type Msg =
     | InitMarkdownFile of filePath : string
     | PartialChanged of filePath : string
+    | LayoutSourceChanged of filePath : string
+    | LayoutSourceLoaded of LayoutInfo
     | PartialLoaded of Partial
     | InitPartialError of exn
     | InitMarkdownFileError of InitMarkdownFileErrorException
@@ -30,6 +32,7 @@ type Model =
     {
         FileWatcher : Chokidar.FSWatcher
         LayoutDependencyWatcher : Chokidar.FSWatcher
+        LayoutSourcesWatch : Chokidar.FSWatcher
         HttpServer : Http.Server
         WssServer : Ws.WebSocket.Server
         Config : Config
@@ -144,6 +147,31 @@ let layoutDependencyWatcherSubscription (model : Model) =
 
     [ handler ]
 
+let layoutSourcesWatcherSubscription (model : Model) =
+    let handler dispatch =
+        // Register behavior when:
+        // - a new file is added to the `Source` directory
+        // - a tracked file change
+        model.LayoutSourcesWatch.on(Events.All, (fun event path ->
+            match event with
+            | Events.Change ->
+                // Artificially make the layout relative as we are only watching relative files
+                // Chokidar doesn't have the leading "./"
+
+                LayoutSourceChanged ("./" + path)
+                |> dispatch
+
+            | Events.Add
+            | Events.Unlink
+            | Events.UnlinkDir
+            | Events.Ready
+            | Events.Raw
+            | Events.Error
+            | Events.AddDir
+            | _ -> ()
+        ))
+
+    [ handler ]
 let private startServer (config : Config) =
     let server = Server.create config
 
@@ -213,6 +241,14 @@ let init (args : InitArgs) : Model * Cmd<Msg> =
             liveReloadDependency.Source
         |])
 
+    let layoutSourcesWatcher =
+        args.Config.Layouts
+        // Keep only the relative layouts
+        |> Array.filter (fun layout ->
+            layout.StartsWith("./")
+        )
+        |> chokidar.watch
+
     let processQueueCmd =
         args.ProcessQueue
         |> List.map (
@@ -240,6 +276,7 @@ let init (args : InitArgs) : Model * Cmd<Msg> =
     {
         FileWatcher = chokidar.watch(args.Config.SourceFolder, chokidarOptions)
         LayoutDependencyWatcher = layoutDependencyWatcher
+        LayoutSourcesWatch = layoutSourcesWatcher
         HttpServer = httpServer
         WssServer = wssServer
         LayoutRenderer = layoutCache
@@ -339,6 +376,40 @@ let update (msg : Msg) (model : Model) =
             | None ->
                 Log.error $"Dependency file %s{filePath} changed but is not found in the tracked dependency list. This is likely a bug please report it."
                 Cmd.none
+
+        model
+        , cmd
+
+    | LayoutSourceChanged filePath ->
+        let action (config, layout) =
+            Layout.load config layout
+
+        model
+        , Cmd.OfPromise.perform action (model.Config, filePath) LayoutSourceLoaded
+
+    | LayoutSourceLoaded layoutInfo ->
+        let layoutNames =
+            layoutInfo.Renderers
+            |> Array.map (fun renderer ->
+                renderer.Name
+            )
+
+        // Regenerate pages depending on the changed layouts
+        let cmd =
+            model.Pages
+            |> List.filter (fun page ->
+                Array.contains page.Layout layoutNames
+            )
+            |> List.map (fun page ->
+                Cmd.ofMsg (ProcessMarkdown page)
+            )
+            |> Cmd.batch
+
+        // Update the layout cache
+        // It is a mutable JS.Map
+        for newRenderer in layoutInfo.Renderers do
+            model.LayoutRenderer.set(newRenderer.Name, newRenderer.Func)
+            |> ignore
 
         model
         , cmd

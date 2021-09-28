@@ -202,6 +202,7 @@ let private buildOrWatch (isWatch : bool) (config : Config) =
             Program.mkProgram Watch.init Watch.update (fun _ _ -> ())
             |> Program.withSubscription Watch.fileWatcherSubscription
             |> Program.withSubscription Watch.layoutDependencyWatcherSubscription
+            |> Program.withSubscription Watch.layoutSourcesWatcherSubscription
             |> Program.runWith elmishArgs
 
         else
