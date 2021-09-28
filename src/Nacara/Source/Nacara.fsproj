@@ -7,6 +7,7 @@
     <Compile Include="Helpers.fs" />
     <Compile Include="Write.fs" />
     <Compile Include="Partial.fs" />
+    <Compile Include="Layout.fs" />
     <Compile Include="Version.fs" />
     <Compile Include="Watch.fs" />
     <Compile Include="Clean.fs" />

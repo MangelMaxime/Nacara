@@ -26,7 +26,7 @@ module ExitCode =
     let COMPLETED_WITH_ERROR = 4
 
     [<Literal>]
-    let FAILED_TO_LOAD_BABEL = 5
+    let INVALID_LAYOUT_SCRIPT = 5
 
 [<RequireQualifiedAccess>]
 module Cmd =

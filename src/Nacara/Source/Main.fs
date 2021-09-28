@@ -120,25 +120,7 @@ let private buildOrWatch (isWatch : bool) (config : Config) =
 
         let! layouts =
             config.Layouts
-            |> Array.map (fun layoutPath ->
-                promise {
-                    let! (layout : LayoutInterface) =
-                        // The path is relative, so load it relatively from the CWD
-                        if layoutPath.StartsWith("./") then
-                            let newPath =
-                                path.join(cwd, layoutPath)
-
-                            importDynamic newPath
-
-                            // require.Invoke newPath |> unbox
-                        // The path is not relative, require it as an npm module
-                        else
-                            importDynamic layoutPath
-                            // require.Invoke layoutPath |> unbox
-
-                    return layout.``default``
-                }
-            )
+            |> Array.map (Layout.load config)
             |> Promise.all
 
         let! menuFiles =
