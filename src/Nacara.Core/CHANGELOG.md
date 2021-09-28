@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-003 - 2021-09-28
+
+### Fixed
+
+* Attach `MarkdownToHtml` to `RendererContext` class
+
 ## 1.0.0-beta-002 - 2021-09-26
 
 ### Changed

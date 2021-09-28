@@ -1,6 +1,6 @@
 {
     "name": "nacara",
-    "version": "1.0.0-beta-016",
+    "version": "1.0.0-beta-017",
     "license": "MIT",
     "bin": {
         "nacara": "./cli.js"

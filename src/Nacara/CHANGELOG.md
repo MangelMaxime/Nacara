@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-017 - 2021-09-26
+
+### Added
+
+* Fix #105: Re-add support for JS/JSX for both partials and layouts
+
 ## 1.0.0-beta-016 - 2021-09-26
 
 ### Fixed
