@@ -469,7 +469,8 @@ module MarkdownToHtml =
             return chain?``process``(markdownText)
         }
 
-[<NoComparison; NoEquality>]
+[<NoComparison; NoEquality; AttachMembers>]
+// AttachMembers is important so the MarkdownToHtml method is available from JavaScript
 type RendererContext =
     {
         Config : Config
