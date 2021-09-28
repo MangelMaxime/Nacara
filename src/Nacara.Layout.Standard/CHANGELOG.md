@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-012 - 2021-09-28
+
 ### Added
 
 * Improve reloading system to reload only if the change concern the current page.
@@ -15,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 * Force table cells to break words on mobile if needed allowing for a better display
+* Try fix exports so people can import the distributes files for their own custom layouts
 
 ## 1.0.0-beta-011 - 2021-09-26
 
