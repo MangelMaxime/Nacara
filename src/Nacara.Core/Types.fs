@@ -478,14 +478,31 @@ type RendererContext =
         Partials : Partial array
         Menus : MenuConfig array
         Pages : PageContext array
+
     }
 
     // MarkdownToHtml is a method so layout can add additional plugins if needed
     // See: Nacara.Layout.Standard/Page.Standard.fs render function
-    member this.MarkdownToHtml (markdownText: string) =
+    member this.MarkdownToHtml
+        (
+            markdownText: string,
+            ?remarkPlugins : RemarkPlugin array,
+            ?rehypePlugins : RehypePlugin array
+        ) =
+
+        let remarkPlugins =
+            remarkPlugins
+            |> Option.map (Array.append this.Config.RemarkPlugins)
+            |> Option.defaultValue this.Config.RemarkPlugins
+
+        let rehypePlugins =
+            rehypePlugins
+            |> Option.map (Array.append this.Config.RehypePlugins)
+            |> Option.defaultValue this.Config.RehypePlugins
+
         MarkdownToHtml.markdownToHtml
-            this.Config.RemarkPlugins
-            this.Config.RehypePlugins
+            remarkPlugins
+            rehypePlugins
             this.Config.IsWatch
             markdownText
 

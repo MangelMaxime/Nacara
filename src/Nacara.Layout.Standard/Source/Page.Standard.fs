@@ -312,24 +312,12 @@ let remarkPlugins : RemarkPlugin array =
 
 let render (rendererContext : RendererContext) (pageContext : PageContext) =
     promise {
-        let rendererContext =
-            { rendererContext with
-                Config =
-                    { rendererContext.Config with
-                        RehypePlugins =
-                            Array.append
-                                rendererContext.Config.RehypePlugins
-                                rehypePlugins
-                        RemarkPlugins =
-                            Array.append
-                                rendererContext.Config.RemarkPlugins
-                                remarkPlugins
-                    }
-            }
-
         let! pageContent =
-            pageContext.Content
-            |> rendererContext.MarkdownToHtml
+            rendererContext.MarkdownToHtml(
+                pageContext.Content,
+                remarkPlugins,
+                rehypePlugins
+            )
 
         return Minimal.render
             {
