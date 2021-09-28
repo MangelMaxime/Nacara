@@ -38,7 +38,10 @@ const connect = () => {
                     location.pathname.replace("/", "");
 
                 // Reload only if the targeted page is the current page
-                if (currentPage.startsWith(targetedPage)) {
+                if (currentPage.startsWith(targetedPage)
+                    // Special case for the root page
+                    || (currentPage === "" && targetedPage === "index")
+                    ) {
                     window.location.reload();
                 }
             }
