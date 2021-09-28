@@ -33,6 +33,19 @@ Overview, of what each of those does:
     <tbody>
         <tr>
             <td class="label-cell">
+                <code>.nacara</code>
+            </td>
+            <td class="fullwidth-cell">
+                <p>
+                    Internal folder where Nacara put generated or cached files
+                </p>
+                <p>
+                    You should add this folder to your <code>.gitignore</code>
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="label-cell">
                 <code>docs</code>
             </td>
             <td class="fullwidth-cell">
@@ -67,6 +80,14 @@ Overview, of what each of those does:
             </td>
             <td class="fullwidth-cell">
                 This is where you place your SASS/SCSS files imported by <code>style.scss</code>.
+            </td>
+        </tr>
+        <tr>
+            <td class="label-cell">
+                <code>docs/_partials</code>
+            </td>
+            <td class="fullwidth-cell">
+                This is where you place your partials files like <code>footer.jsx</code>
             </td>
         </tr>
         <tr>

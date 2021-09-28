@@ -42,7 +42,7 @@ cd my-site
 npm init nacara
 ```
 
-:::warning Warning
+:::warning{title="Warning"}
 The scaffolding project is still being in WIP so there can be some bugs in it
 :::
 
