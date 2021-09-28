@@ -6,7 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## 1.0.0-beta-017 - 2021-09-26
+## 1.0.0-beta-018 - 2021-09-28
+
+### Added
+
+* Fix #120: Add support for watching layout files changes
+
+### Fixed
+
+* Fix live reload for the index page it was never reloading
+
+## 1.0.0-beta-017 - 2021-09-28
 
 ### Added
 
