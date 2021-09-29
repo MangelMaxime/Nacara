@@ -124,6 +124,39 @@ const setupNavbarDropdown = () => {
             });
         })
 
+    const navbarDropdownTimeoutCache = {};
+
+    // Fullwidth dropdown needs to handle the hover event via JavaScript to add a small delay
+    // before hiding the dropdown when the mouse leave
+    // This is because when displaying a dropdown in fullwidth there is a gap between
+    // the dropdown-link and the dropdown content
+    document.querySelectorAll(".navbar-item.has-nacara-dropdown.is-fullwidth")
+        .forEach(function (navbarItem) {
+            navbarItem.addEventListener("mouseenter", function() {
+                const itemGuid = navbarItem.attributes.getNamedItem("data-guid").value;
+
+                // If there is already a timeout for this dropdown cancel it
+                if (navbarDropdownTimeoutCache[itemGuid]) {
+                    clearTimeout(navbarDropdownTimeoutCache[itemGuid]);
+                    delete navbarDropdownTimeoutCache[itemGuid];
+                }
+
+                // Add the CSS class which force to show the dropdown from the JS
+                navbarItem.classList.add("is-hovered-js");
+
+                // When the mouse leave, wait a small amount of time before removing the CSS class
+                navbarItem.addEventListener("mouseleave", function(ev) {
+                    const timeoutId = setTimeout(() => {
+                        navbarItem.classList.remove("is-hovered-js");
+                        delete navbarDropdownTimeoutCache[itemGuid];
+                    }, 200);
+                    // Store the timeoutID so we can cancel it if the user make some back and forth
+                    // between the link and the dropdown content
+                    navbarDropdownTimeoutCache[itemGuid] = timeoutId;
+                }, { once : true});
+            })
+        })
+
     const $greyOverlay = document.querySelector(".grey-overlay");
 
     if ($greyOverlay !== null) {
