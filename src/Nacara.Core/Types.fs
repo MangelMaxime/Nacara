@@ -112,6 +112,7 @@ type DropdownInfo =
         Items : DropdownItem list
         IsPinned : bool
         IsFullWidth : bool
+        Partial : string option
     }
 
 module DropdownInfo =
@@ -125,6 +126,7 @@ module DropdownInfo =
                             |> Option.defaultValue false
                 IsFullWidth = get.Optional.Field "fullwidth" Decode.bool
                             |> Option.defaultValue false
+                Partial = get.Optional.Field "partial" Decode.string
             }
         )
 

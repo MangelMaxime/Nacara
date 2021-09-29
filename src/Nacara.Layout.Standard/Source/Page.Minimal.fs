@@ -32,11 +32,17 @@ let private navbarItemIsFromSection (itemSectionOpt : string option) (pageSectio
     | None ->
         false
 
-let private renderNacaraNavbarDropdown (dropdown : DropdownInfo) =
+let private renderNacaraNavbarDropdown (partials : Partial array) (dropdown : DropdownInfo) =
     let guid = System.Guid.NewGuid()
 
     Bulma.navbarItem.div [
-        prop.className "has-nacara-dropdown"
+        prop.classes [
+            "has-nacara-dropdown"
+            if dropdown.IsFullWidth then
+                "is-fullwidth"
+            else
+                "is-floating"
+        ]
         prop.custom("data-guid", guid.ToString())
 
         // Non-pinned dropdown are not rendered when on mobile
@@ -62,35 +68,58 @@ let private renderNacaraNavbarDropdown (dropdown : DropdownInfo) =
                 ]
 
                 prop.children [
-                    for items in dropdown.Items do
-                        match items with
-                        | DropdownItem.Divider ->
-                            Bulma.navbarDivider [ ]
 
-                        | DropdownItem.Link linkInfo ->
-                            Html.a [
-                                prop.className "nacara-dropdown-item"
-                                prop.href linkInfo.Url
-                                prop.children [
-                                    match linkInfo.Description with
-                                    | Some description ->
-                                        Html.div [
+                    // If there is a partial set use it for the rendering
+                    match dropdown.Partial with
+                    | Some requestedPartial ->
+                        let partialOpt =
+                            partials
+                            |> Array.tryFind (fun partial ->
+                                partial.Id = requestedPartial
+                            )
+
+                        match partialOpt with
+                        | Some partial ->
+                            partial.Module.``default``
+
+                        | None ->
+                            Log.error $"""Dropdown '%s{dropdown.Label}' is requesting partial '%s{requestedPartial}' but it was not found.
+Please remove the 'partial' property from the dropdown or create the partial file '_partials/%s{requestedPartial}.js' or ''_partials/%s{requestedPartial}.jsx'
+                            """
+                            null
+
+                    // Otherwise, use the items arrays
+                    | None ->
+
+                        for items in dropdown.Items do
+                            match items with
+                            | DropdownItem.Divider ->
+                                Bulma.navbarDivider [ ]
+
+                            | DropdownItem.Link linkInfo ->
+                                Html.a [
+                                    prop.className "nacara-dropdown-item"
+                                    prop.href linkInfo.Url
+                                    prop.children [
+                                        match linkInfo.Description with
+                                        | Some description ->
                                             Html.div [
-                                                Html.strong linkInfo.Label
+                                                Html.div [
+                                                    Html.strong linkInfo.Label
+                                                ]
+
+                                                Html.div [
+                                                    prop.className "nacara-dropdown-item-description"
+                                                    prop.text description
+                                                ]
                                             ]
 
+                                        | None ->
                                             Html.div [
-                                                prop.className "nacara-dropdown-item-description"
-                                                prop.text description
+                                                prop.text linkInfo.Label
                                             ]
-                                        ]
-
-                                    | None ->
-                                        Html.div [
-                                            prop.text linkInfo.Label
-                                        ]
+                                    ]
                                 ]
-                            ]
                 ]
             ]
         ]
@@ -134,7 +163,7 @@ let private renderNavbarBurgerMenu =
         ]
     ]
 
-let private renderStartNavbar (pageSection : string) (items : StartNavbarItem list) =
+let private renderStartNavbar (partials : Partial array) (pageSection : string) (items : StartNavbarItem list) =
     Bulma.navbarStart.div [
         for item in items do
 
@@ -150,7 +179,7 @@ let private renderStartNavbar (pageSection : string) (items : StartNavbarItem li
                 ]
 
             | StartNavbarItem.Dropdown dropdown ->
-                renderNacaraNavbarDropdown dropdown
+                renderNacaraNavbarDropdown partials dropdown
 
         renderNavbarBurgerMenu
     ]
@@ -247,7 +276,7 @@ let private renderNacaraNavbarMenu (navbarConfig : NavbarConfig) =
         ]
     ]
 
-let private navbar (config : Config) (pageSection : string) =
+let private navbar (partials : Partial array) (config : Config) (pageSection : string) =
     Bulma.navbar [
         navbar.isFixedTop
         prop.className "is-spaced"
@@ -264,7 +293,7 @@ let private navbar (config : Config) (pageSection : string) =
 
                 Bulma.navbarMenu [
                     prop.children [
-                        renderStartNavbar pageSection config.Navbar.Start
+                        renderStartNavbar partials pageSection config.Navbar.Start
                         renderEndNavbar config.Navbar.End
                     ]
                 ]
@@ -343,7 +372,7 @@ let render (args : RenderArgs) =
             ]
 
             Html.body [
-                navbar args.Config args.Section
+                navbar args.Partials args.Config args.Section
 
                 Html.div [
                     prop.className "grey-overlay"
