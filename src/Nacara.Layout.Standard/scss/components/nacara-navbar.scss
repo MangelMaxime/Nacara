@@ -52,6 +52,7 @@ $nacara-navbar-menu-border: 1px solid $navbar-item-active-background-color !defa
             padding: 0;
 
             &.is-active,
+            &.is-hovered-js,
             &:hover {
                 .nacara-dropdown-link {
                     background-color: $navbar-item-active-background-color;
@@ -60,6 +61,7 @@ $nacara-navbar-menu-border: 1px solid $navbar-item-active-background-color !defa
 
             @include tablet {
                 &.is-active,
+                &.is-hovered-js,
                 &:hover {
                     .nacara-dropdown {
                         // From tablet screen and bigger, the dropdown

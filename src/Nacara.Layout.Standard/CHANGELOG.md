@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+* Add support for the partial inside the dropdowns
+
+### Fixed
+
+* Improve the hover behavior when using a fullwidth dropdown. Before this fix, the user needed to be really quick to access the dropdown content because of the gap between the Navbar Item and the Dropdown body.
+
 ## 1.0.0-beta-013 - 2021-09-28
 
 ### Fixed

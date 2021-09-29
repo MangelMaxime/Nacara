@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+* Add support for the `Partial` property to the `DropdownInfo`
+
 ## 1.0.0-beta-003 - 2021-09-28
 
 ### Fixed
