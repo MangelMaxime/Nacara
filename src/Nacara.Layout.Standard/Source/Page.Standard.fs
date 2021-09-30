@@ -3,7 +3,6 @@ module Page.Standard
 open Nacara.Core.Types
 open Feliz
 open Feliz.Bulma
-open Page.WithMenuOrToc
 open Node
 
 let private emptyPreviousButton =
@@ -190,8 +189,7 @@ let private renderBreadcrumb
     (pageContext : PageContext)
     (menu : Menu) =
 
-
-    match tryFindTitlePathToCurrentPage pageContext [ ] menu with
+    match Helpers.tryFindTitlePathToCurrentPage pageContext [ ] menu with
     | None ->
         null
 
@@ -205,10 +203,11 @@ let private renderBreadcrumb
                 titlePath
 
         Bulma.breadcrumb [
+            prop.className "is-category-navigation"
             helpers.isHiddenTouch
             prop.children [
                 Html.ul [
-                    yield! renderBreadcrumbItems titlePath
+                    yield! Helpers.renderBreadcrumbItems titlePath
                 ]
             ]
         ]

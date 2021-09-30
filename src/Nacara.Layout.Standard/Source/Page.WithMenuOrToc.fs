@@ -3,8 +3,47 @@ module Page.WithMenuOrToc
 open Nacara.Core.Types
 open Feliz
 open Feliz.Bulma
+open Thoth.Json
 
-let private renderTableOfContents (tableOfContent : TableOfContentParser.Header list) =
+type TocAttributes =
+    {
+        From : int
+        To : int
+    }
+
+module TocAttributes =
+
+    let decoder : Decoder<TocAttributes> =
+        Decode.object (fun get ->
+            {
+                From = get.Optional.At [ "toc"; "from" ] Decode.int
+                    |> Option.defaultValue 2
+                To = get.Optional.At [ "toc"; "to" ] Decode.int
+                    |> Option.defaultValue 2
+            }
+        )
+
+let private renderTocElement
+    (tocAttributes : TocAttributes)
+    (rank : int)
+    (headerInfo : TableOfContentParser.HeaderInfo) =
+    if tocAttributes.From <= rank && rank <= tocAttributes.To then
+        Html.li [
+            prop.custom("data-toc-rank", rank)
+            prop.children [
+                Html.a [
+                    prop.dangerouslySetInnerHTML headerInfo.Title
+                    prop.href headerInfo.Link
+                    prop.custom("data-toc-element", true)
+                ]
+            ]
+        ]
+    else
+        null
+
+let private renderTableOfContents
+    (tocAttributes : TocAttributes)
+    (tableOfContent : TableOfContentParser.Header list) =
     if tableOfContent.Length > 0 then
         Html.li [
             Html.ul [
@@ -12,13 +51,21 @@ let private renderTableOfContents (tableOfContent : TableOfContentParser.Header 
 
                 prop.children [
                     for tocElement in tableOfContent do
-                        Html.li [
-                            Html.a [
-                                prop.dangerouslySetInnerHTML tocElement.Title
-                                prop.href tocElement.Link
-                                prop.custom("data-toc-element", true)
-                            ]
-                        ]
+                        match tocElement with
+                        | TableOfContentParser.Header2 headerInfo ->
+                            renderTocElement tocAttributes 2 headerInfo
+
+                        | TableOfContentParser.Header3 headerInfo ->
+                            renderTocElement tocAttributes 3 headerInfo
+
+                        | TableOfContentParser.Header4 headerInfo ->
+                            renderTocElement tocAttributes 4 headerInfo
+
+                        | TableOfContentParser.Header5 headerInfo ->
+                            renderTocElement tocAttributes 5 headerInfo
+
+                        | TableOfContentParser.Header6 headerInfo ->
+                            renderTocElement tocAttributes 6 headerInfo
                 ]
             ]
         ]
@@ -30,6 +77,7 @@ let private renderMenuItemPage
     (pages : PageContext array)
     (info : MenuItemPage)
     (currentPageId : string)
+    (tocAttributes : TocAttributes)
     (tocInformation : TableOfContentParser.Header list) =
 
     let labelText =
@@ -72,7 +120,7 @@ let private renderMenuItemPage
         ]
 
         if isCurrentPage then
-            renderTableOfContents tocInformation
+            renderTableOfContents tocAttributes tocInformation
     ]
 
 /// <summary>
@@ -83,6 +131,7 @@ let rec private renderSubMenu
     (pages : PageContext array)
     (menu : Menu)
     (currentPageId : string)
+    (tocAttributes : TocAttributes)
     (tocInformation : TableOfContentParser.Header list) =
 
     menu
@@ -97,7 +146,7 @@ let rec private renderSubMenu
             ]
 
         | MenuItem.Page info ->
-            renderMenuItemPage config pages info currentPageId tocInformation
+            renderMenuItemPage config pages info currentPageId tocAttributes tocInformation
 
         | _ -> Html.none
     )
@@ -110,6 +159,7 @@ let rec private renderMenu
     (pages : PageContext array)
     (menu : Menu)
     (currentPageId : string)
+    (tocAttributes : TocAttributes)
     (tocInformation : TableOfContentParser.Header list) =
 
     let menuContent =
@@ -128,7 +178,7 @@ let rec private renderMenu
             | MenuItem.Page info ->
                 Bulma.menuList [
                     Html.li [
-                        renderMenuItemPage config pages info currentPageId tocInformation
+                        renderMenuItemPage config pages info currentPageId tocAttributes tocInformation
                     ]
                 ]
 
@@ -137,7 +187,7 @@ let rec private renderMenu
                     Bulma.menuLabel info.Label
 
                     Bulma.menuList [
-                        yield! renderSubMenu config pages info.Items currentPageId tocInformation
+                        yield! renderSubMenu config pages info.Items currentPageId tocAttributes tocInformation
                     ]
                 ]
         )
@@ -154,12 +204,12 @@ let rec private renderMenu
 
 
 let private renderPageWithMenuOrTableOfContent
-    (breadcrumbElement : ReactElement)
+    (mobileMenu : ReactElement)
     (menuElement : ReactElement)
     (pageContent : ReactElement) =
 
     Bulma.container [
-        breadcrumbElement
+        mobileMenu
 
         Bulma.columns [
             columns.isGapless
@@ -223,6 +273,7 @@ let private renderPageWithoutMenuOrTableOfContent (pageContent : ReactElement) =
     ]
 
 let private renderTableOfContentOnly
+    (tocAttributes : TocAttributes)
     (tocInformation : TableOfContentParser.Header list) =
 
     Html.div [
@@ -237,65 +288,18 @@ let private renderTableOfContentOnly
                         prop.text "Table of content"
                     ]
 
-                    renderTableOfContents tocInformation
+                    renderTableOfContents tocAttributes tocInformation
                 ]
             ]
         ]
     ]
 
-let rec tryFindTitlePathToCurrentPage
-    (pageContext : PageContext)
-    (acc : string list)
-    (menu : Menu) =
-
-    match menu with
-    | head :: tail ->
-        match head with
-        // Skip this item as it doesn't represent a page
-        | MenuItem.Link _ ->
-            tryFindTitlePathToCurrentPage pageContext acc tail
-
-        | MenuItem.List info ->
-            match tryFindTitlePathToCurrentPage pageContext (acc @ [ info.Label ]) info.Items with
-            | Some res ->
-                Some res
-
-            | None ->
-                tryFindTitlePathToCurrentPage pageContext acc tail
-
-        | MenuItem.Page info ->
-            if info.PageId = pageContext.PageId then
-                let menuLabel =
-                    Helpers.getMenuLabel pageContext info
-
-                Some (acc @ [ menuLabel ])
-            else
-                tryFindTitlePathToCurrentPage pageContext acc tail
-
-    | [ ] ->
-        None
-
-let renderBreadcrumbItems (items : string list) =
-    items
-    |> List.map (fun item ->
-        Html.li [
-            // Make the item active to make it not clickable
-            prop.className "is-active"
-
-            prop.children [
-                Html.a [
-                    prop.text item
-                ]
-            ]
-        ]
-    )
-
-let private renderBreadcrumb
+let private renderMobileMenu
     (navbar : NavbarConfig)
     (pageContext : PageContext)
     (menu : Menu) =
 
-    match tryFindTitlePathToCurrentPage pageContext [ ] menu with
+    match Helpers.tryFindTitlePathToCurrentPage pageContext [ ] menu with
     | None ->
         null
 
@@ -326,7 +330,7 @@ let private renderBreadcrumb
                             ]
                         ]
 
-                        yield! renderBreadcrumbItems titlePath
+                        yield! Helpers.renderBreadcrumbItems titlePath
                     ]
                 ]
             ]
@@ -349,22 +353,37 @@ let render (args : RenderArgs) =
     let tocInformation =
         TableOfContentParser.parse args.PageHtml
 
-    match args.SectionMenu, tocInformation.IsEmpty with
-    // If there is a menu, we render it with the menu
-    // The menu renderer will take care of generating the TOC elements if needed
-    | Some sectionMenu, _ ->
-        renderPageWithMenuOrTableOfContent
-            (renderBreadcrumb args.Config.Navbar args.PageContext sectionMenu)
-            (renderMenu args.Config args.Pages sectionMenu args.PageContext.PageId tocInformation)
-            args.PageContent
+    let tocAttributes =
+        Decode.fromValue
+            "$"
+            TocAttributes.decoder
+            args.PageContext.Attributes
 
-    // There is no menu but there is a table of content
-    | None, false ->
-        renderPageWithMenuOrTableOfContent
-            null // No breadcrumb because there is no menu
-            (renderTableOfContentOnly tocInformation)
-            args.PageContent
+    match tocAttributes with
+    | Ok tocAttributes ->
+        // Print a warning an incoherent interval if given
+        if tocAttributes.To < tocAttributes.From then
+            failwith $"Invalid TOC interval provide for the page %s{args.PageContext.PageId}.\ toc.from muss be less than toc.to"
 
-    // There is no menu neither a table of content
-    | None, true ->
-        renderPageContentOnly args.PageContent
+        match args.SectionMenu, tocInformation.IsEmpty with
+        // If there is a menu, we render it with the menu
+        // The menu renderer will take care of generating the TOC elements if needed
+        | Some sectionMenu, _ ->
+            renderPageWithMenuOrTableOfContent
+                (renderMobileMenu args.Config.Navbar args.PageContext sectionMenu)
+                (renderMenu args.Config args.Pages sectionMenu args.PageContext.PageId tocAttributes tocInformation)
+                args.PageContent
+
+        // There is no menu but there is a table of content
+        | None, false ->
+            renderPageWithMenuOrTableOfContent
+                null // No breadcrumb because there is no menu
+                (renderTableOfContentOnly tocAttributes tocInformation)
+                args.PageContent
+
+        // There is no menu neither a table of content
+        | None, true ->
+            renderPageContentOnly args.PageContent
+
+    | Error errorMessage ->
+        failwith $"Invalid toc configuration given for the page %s{args.PageContext.PageId}\n%s{errorMessage}"

@@ -1,5 +1,7 @@
 @charset "utf-8";
 
+$table-of-content-item-padding-left: 0.75rem !default;
+
 .menu-container {
     // Make the menu container "static" and always displayed at the same place
     // The menu container has its own scrollbar if needed
@@ -32,6 +34,14 @@
                 position: absolute;
                 top: calc(50% - 5px);
                 padding-left: 0.325rem;
+            }
+        }
+
+        .table-of-content {
+            @for $rank from 3 through 6 {
+                [data-toc-rank="#{$rank}"] {
+                    padding-left: calc($table-of-content-item-padding-left * ($rank - 2));
+                }
             }
         }
     }
