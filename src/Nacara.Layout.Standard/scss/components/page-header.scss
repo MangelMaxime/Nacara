@@ -1,0 +1,22 @@
+@charset "utf-8";
+
+.page-header {
+    min-height: 1em;
+    margin-bottom: 1em;
+
+    h1 {
+        margin-top: 0 !important;
+        margin-bottom: 1em;
+    }
+
+    .breadcrumb {
+        ul {
+            margin-left: 0;
+            margin-top: 0;
+        }
+
+        li {
+            height: $navbar-height;
+        }
+    }
+}

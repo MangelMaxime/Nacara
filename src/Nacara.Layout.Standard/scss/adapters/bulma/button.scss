@@ -1,0 +1,9 @@
+@charset "utf-8";
+
+button {
+    &.is-copy-button {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+    }
+}

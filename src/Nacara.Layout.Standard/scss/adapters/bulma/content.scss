@@ -1,0 +1,28 @@
+@charset "utf-8";
+
+.content {
+    .breadcrumb > ul > li:last-child {
+        font-weight: $weight-bold;
+    }
+
+    & li + li {
+        margin-top: 0;
+    }
+
+    // Use the same font-size for the table font as for the rest
+    // I don't know if it is a bug from Bulma or Firefox
+    .table {
+        font-size: $body-size;
+    }
+
+    @include mobile {
+        th, td {
+            word-break: break-all;
+        }
+    }
+
+    pre {
+        word-break: break-all;
+        white-space: break-spaces;
+    }
+}

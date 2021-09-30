@@ -1,0 +1,32 @@
+@charset "utf-8";
+
+// Anchor behavior
+h2, h3, h4, h5, h6  {
+    a {
+        visibility: hidden;
+        margin-left: 0.5rem;
+    }
+
+    &:hover {
+
+        a {
+            visibility: visible;
+        }
+    }
+
+    // Make sure that when jumping to an anchor, that anchor is displayed just below the navbar and visible
+
+    // On desktop and above we only have the navbar to take into account
+    @include desktop {
+        &[id] {
+            scroll-margin-top: $computed-navbar-height + 1rem;
+        }
+    }
+
+    // On touch screen we need to take into account the navbar and the breadcrumb
+    @include touch {
+        &[id] {
+            scroll-margin-top: $computed-navbar-height + $navbar-height + 1rem;
+        }
+    }
+}

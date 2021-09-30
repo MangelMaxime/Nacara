@@ -1,11 +1,11 @@
+@charset "utf-8";
+
 $computed-navbar-height: $navbar-height + $navbar-padding-vertical * 2;
 
-@import './components/changelog.scss';
-@import './components/textual-steps.scss';
-@import './components/navigation-button.scss';
-@import './components/nacara-navbar.scss';
+@import "./adapters/_all.scss";
+@import "./components/_all.scss";
 
-$font-awesome-url: 'https://use.fontawesome.com/releases/v5.15.4/css/all.css' !default;
+$font-awesome-url: "https://use.fontawesome.com/releases/v5.15.4/css/all.css" !default;
 
 @import url($font-awesome-url);
 
@@ -40,232 +40,16 @@ html {
 }
 
 // Add a space between an icon and the text
-.icon+span {
-    margin-left: .5rem;
+.icon + span {
+    margin-left: 0.5rem;
 }
 
-span+.icon {
-    margin-left: .5rem;
+span + .icon {
+    margin-left: 0.5rem;
 }
 
 // Force the margin-left when using span+.icon in a button element
 // otherwise the margin seems to small to me
-.button span+.icon {
-    margin-left: .5rem !important;
-}
-
-.page-header {
-    min-height: 1em;
-    margin-bottom: 1em;
-
-    h1 {
-        margin-top: 0 !important;
-        margin-bottom: 1em;
-    }
-}
-
-// Anchor behavior
-h2, h3, h4, h5, h6  {
-    a {
-        visibility: hidden;
-        margin-left: 0.5rem;
-    }
-
-    &:hover {
-
-        a {
-            visibility: visible;
-        }
-    }
-
-    // Make sure that when jumping to an anchor, that anchor is displayed just below the navbar and visible
-
-    // On desktop and above we only have the navbar to take into account
-    @include desktop {
-        &[id] {
-            scroll-margin-top: $computed-navbar-height + 1rem;
-        }
-    }
-
-    // On touch screen we need to take into account the navbar and the breadcrumb
-    @include touch {
-        &[id] {
-            scroll-margin-top: $computed-navbar-height + $navbar-height + 1rem;
-        }
-    }
-}
-
-@include desktop {
-    .mobile-menu {
-        display: none;
-    }
-}
-
-@include touch {
-    .mobile-menu {
-        display: flex;
-        flex-direction: revert;
-        align-items: center;
-        height: $navbar-height;
-        background: $white-ter;
-        position: sticky;
-        top: $computed-navbar-height;
-        z-index: 1;
-        overflow-x: auto;
-
-        .menu-trigger {
-            .icon {
-                margin-right: 0;
-            }
-        }
-
-        .breadcrumb {
-            // Prevent the breadcrumb from being wrapped on small screens
-            //
-            flex-shrink: 0;
-        }
-
-        .breadcrumb>ul>li:last-child {
-            font-weight: $weight-bold;
-        }
-    }
-}
-
-@include touch {
-    .is-main-content {
-        .section {
-            padding-top: 1rem;
-        }
-    }
-}
-
-// Ensure minimal size of the doc content
-// This allows to not have the 'Previous' & 'Next' button in the middle of the screen
-// when their are not a lot of content on the page
-.is-main-content > .section {
-    min-height: calc(
-        100vh - 7.5em
-    ); // 7.5em = 3em (section margin top) - 3em (section margin bottom) - 1.5em (to not stick too low)
-}
-
-.menu-container {
-    // Make the menu container "static" and always displayed at the same place
-    // The menu container has its own scrollbar if needed
-    // 3.25rem is the navbar height but it is not yet available at this point of the SCSS compilation
-    position: sticky;
-    top: $computed-navbar-height;
-    // margin: 3.25rem 0 0;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    height: calc(100vh - #{$computed-navbar-height});
-
-    .menu {
-        margin-top: $navbar-height;
-        padding-right: 1rem;
-        padding-left: 1rem;
-
-        @include desktop {
-            margin-bottom: $navbar-height;
-        }
-
-        @include touch {
-            margin-bottom: 10rem;
-        }
-
-        .menu-external-link {
-            position: relative;
-
-            &::after {
-                content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
-                position: absolute;
-                top: calc(50% - 5px);
-                padding-left: 0.325rem;
-            }
-        }
-    }
-}
-
-.column.is-menu-column {
-    &.force-show {
-        display: block !important;
-        padding: 0 !important;
-
-        .menu-container {
-            position: fixed;
-            left: 0;
-            background: $white-bis;
-            width: 100%;
-            z-index: 2;
-            margin-top: $navbar-height;
-        }
-    }
-}
-
-.content {
-    .breadcrumb > ul > li:last-child {
-        font-weight: $weight-bold;
-    }
-
-    & li + li {
-        margin-top: 0;
-    }
-
-    // Use the same font-size for the table font as for the rest
-    // I don't know if it is a bug from Bulma or Firefox
-    .table {
-        font-size: $body-size;
-    }
-
-    @include mobile {
-        th, td {
-            word-break: break-all;
-        }
-    }
-
-    pre {
-        word-break: break-all;
-        white-space: break-spaces;
-    }
-}
-
-// Customize the menu to have a better display and also support TOC in it
-
-.menu-trigger {
-    @include hamburger($navbar-height);
-}
-
-.breadcrumb {
-    ul {
-        margin-left: 0;
-        margin-top: 0;
-    }
-
-    li {
-        height: $navbar-height;
-    }
-}
-
-// Style relative to the snippet and copy button
-pre {
-    position: relative; // Make the pre relative so the copy button and positioned itself relative to it
-    padding-top: $size-4 !important; // This padding is to display correctly the button even if the snippet has only 1 line of code
-    padding-bottom: $size-4 !important; // This padding is to display correctly the button even if the snippet has only 1 line of code
-
-    button.is-copy-button {
-        visibility: hidden;
-    }
-
-    &:hover {
-        button.is-copy-button {
-            visibility: visible;
-        }
-    }
-}
-
-button {
-    &.is-copy-button {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-    }
+.button span + .icon {
+    margin-left: 0.5rem !important;
 }
