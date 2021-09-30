@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-005 - 2021-09-30
+
 ### Added
 
 * Add `Interop.importDynamic` which abstract dynamic loading of package/file.
