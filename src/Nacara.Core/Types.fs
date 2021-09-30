@@ -424,9 +424,9 @@ module MarkdownToHtml =
     // But later it would be nice to have bindings for the different remark & rehype plugins
     // And rewrite this function with them
     let markdownToHtml
+        (config : Config)
         (remarkPlugins : RemarkPlugin array)
         (rehypePlugins : RehypePlugin array)
-        (isWatch : bool)
         (markdownText : string) : JS.Promise<string> =
 
         promise {
@@ -436,7 +436,8 @@ module MarkdownToHtml =
 
             // Apply the remark plugins
             for remarkPlugin in remarkPlugins do
-                let! instance = importDynamic remarkPlugin.Resolve
+                let! instance =
+                    Interop.importDynamic config.WorkingDirectory remarkPlugin.Resolve
 
                 match remarkPlugin.Property with
                 | Some property ->
@@ -452,7 +453,8 @@ module MarkdownToHtml =
 
             // Apply the rehype plugins
             for rehypePlugin in rehypePlugins do
-                let! instance = importDynamic rehypePlugin.Resolve
+                let! instance =
+                    Interop.importDynamic config.WorkingDirectory rehypePlugin.Resolve
 
                 match rehypePlugin.Property with
                 | Some property ->
@@ -465,7 +467,7 @@ module MarkdownToHtml =
                 ?``use``(rehypeFormat)
                 ?``use``(rehypeStringify)
 
-            if not isWatch then
+            if not config.IsWatch then
                 chain?``use``(rehypePresetMinify)
 
             return chain?``process``(markdownText)
@@ -503,9 +505,9 @@ type RendererContext =
             |> Option.defaultValue this.Config.RehypePlugins
 
         MarkdownToHtml.markdownToHtml
+            this.Config
             remarkPlugins
             rehypePlugins
-            this.Config.IsWatch
             markdownText
 
 type LayoutDependency =

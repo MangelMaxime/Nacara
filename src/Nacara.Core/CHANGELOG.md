@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+* Add `Interop.importDynamic` which abstract dynamic loading of package/file.
+
+    This function takes care of prefix the path if needed for the import to works on Windows too
+
+### Fixed
+
+* Fix dynamic import for Windows
+
 ## 1.0.0-beta-04 - 2021-09-30
 
 ### Added

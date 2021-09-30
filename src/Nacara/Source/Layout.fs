@@ -23,7 +23,7 @@ let load (config : Config) (layoutPath : string) : JS.Promise<LayoutInfo> =
 
             match layoutPath with
             | Js ->
-                return! importDynamic (fullPath + "?" + cacheBusting)
+                return! Interop.importDynamic config.WorkingDirectory (fullPath + "?" + cacheBusting)
 
             | Jsx ->
                 let! res = babel?transformFileAsync(fullPath)
@@ -34,7 +34,7 @@ let load (config : Config) (layoutPath : string) : JS.Promise<LayoutInfo> =
 
                 do! File.write destination res?code
 
-                return! importDynamic (destination + "?" + cacheBusting)
+                return! Interop.importDynamic config.WorkingDirectory (destination + "?" + cacheBusting)
 
             | Other _ ->
                 Log.error $"Local layouts scripts must be JavaScript or JSX files: %s{layoutPath}"

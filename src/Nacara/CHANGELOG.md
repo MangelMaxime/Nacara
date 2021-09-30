@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+* Force to display `nacara` as the script name when displaying help
+* Fix dynamic load of module from absolute and relative path for Windows
+
 ## 1.0.0-beta-019 - 2021-09-30
 
 ### Added

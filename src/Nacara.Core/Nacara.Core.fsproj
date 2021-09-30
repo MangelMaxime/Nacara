@@ -13,6 +13,7 @@
     <Compile Include="List.Extensions.fs" />
     <Compile Include="Array.Extensions.fs" />
     <Compile Include="Log.fs" />
+    <Compile Include="Interop.fs" />
     <Compile Include="Types.fs" />
     <Compile Include="Menu.fs" />
     <Compile Include="Navbar.fs" />

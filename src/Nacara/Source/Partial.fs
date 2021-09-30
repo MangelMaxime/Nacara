@@ -18,7 +18,11 @@ let loadFromJavaScript (config : Config) (partialPath : string) =
         let fullPath =
             path.join(config.WorkingDirectory, config.SourceFolder, partialPath)
 
-        let! m = importDynamic (fullPath + "?" + cacheBusting)
+        let bustedPath =
+            fullPath + "?" + cacheBusting
+
+        let! m =
+            Interop.importDynamic config.WorkingDirectory bustedPath
 
         let res : Partial =
             {
@@ -50,7 +54,7 @@ let loadPartialFromJsx (config : Config) (partialPath : string) =
             destination + "?" + cacheBusting
 
         let! m =
-            importDynamic bustedPath
+            Interop.importDynamic config.WorkingDirectory bustedPath
 
         let res : Partial =
             {
