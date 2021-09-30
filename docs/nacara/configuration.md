@@ -1,6 +1,8 @@
 ---
 title: Configuration
 layout: nacara-standard
+toc:
+    to: 3
 ---
 
 The file `nacara.config.json` defines your site's metadata, navbar and other general configuration. This file is located at the root of your Nacara site.
@@ -54,7 +56,7 @@ Here is a list of the main category of option your can set within your `nacara.c
 1. [source](#source) (string)
 1. [output](#output) (string)
 
-## siteMetadata
+### siteMetadata
 
 The `siteMetadata` contains configuration common data related to you site like (for example, your site title, favIcon, etc).
 
@@ -140,7 +142,7 @@ Example: `editUrl + 'docs/introduction.md'`. If this field is omitted, there wil
 }
 ```
 
-## navbar
+### navbar
 
 All configuration related to the navbar goes here.
 
@@ -149,7 +151,7 @@ The navbar is split in 2 sections:
 - start: the **left part** of the navbar which appears next to your site title and can contains **textual links** or **dropdowns**
 - end: the **right part** of the navbar which appears at the end of it
 
-### start
+#### start
 
 The `start` of the navbar consist of a list of objects of 2 types:
 
@@ -157,7 +159,7 @@ The `start` of the navbar consist of a list of objects of 2 types:
 - `Dropdown`: Render a dropdown, where you place a list of link
 <!-- or fully customize its content -->
 
-#### LabelLink
+##### LabelLink
 
 <table class="table is-narrow is-bordered is-vcentered">
     <thead>
@@ -233,7 +235,7 @@ Default: `false`
 }
 ```
 
-#### Dropdown
+##### Dropdown
 
 <table class="table is-narrow is-bordered is-vcentered">
     <thead>
@@ -289,7 +291,7 @@ Default: `false`
     </tbody>
 </table>
 
-##### DropdownLink
+###### DropdownLink
 
 <table class="table is-narrow is-bordered is-vcentered">
     <thead>
@@ -369,7 +371,7 @@ You can use `\n` into the string in order to force a new line
 }
 ```
 
-### end
+#### end
 
 List of `IconLink`
 
@@ -440,7 +442,7 @@ Example: `fab fa-twitter`
 }
 ```
 
-## remarkPlugins
+### remarkPlugins
 
 This is where you configure the list of [remark](https://remark.js.org/) plugins to load.
 
@@ -515,7 +517,7 @@ If set, Nacara will load your plugin using `pluginName.default[propertyName]`
 }
 ```
 
-## rehypePlugins
+### rehypePlugins
 
 This is where you configure the list of [rehype](https://github.com/rehypejs/rehype) plugins to load.
 
@@ -573,7 +575,7 @@ If set, Nacara will load your plugin using `pluginName.default[propertyName]`
 }
 ```
 
-## layouts
+### layouts
 
 This is where you register the different layouts supported by your website.
 
@@ -597,7 +599,7 @@ It consists on a list of `string` which can be:
 }
 ```
 
-## serverPort
+### serverPort
 
 **Optional**
 
@@ -613,7 +615,7 @@ Default is `8080`.
 }
 ```
 
-## source
+### source
 
 **Optional**
 
@@ -629,7 +631,7 @@ Default is `docs`
 }
 ```
 
-## output
+### output
 
 **Optional**
 
