@@ -16,6 +16,7 @@ yargs(hideBin(process.argv))
     .completion()
     .strict()
     .help()
+    .scriptName("nacara")
     .alias("help", "h")
     .version()
     .command(
