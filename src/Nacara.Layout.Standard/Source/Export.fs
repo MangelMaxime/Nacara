@@ -22,16 +22,12 @@ exportDefault
                             let! pageContent =
                                 rendererContext.MarkdownToHtml pageContext.Content
 
-                            return Page.Minimal.render {
-                                Config = rendererContext.Config
-                                Section = pageContext.Section
-                                TitleOpt = pageContext.Title
-                                Partials = rendererContext.Partials
-                                Content =
-                                    Html.div [
-                                        prop.dangerouslySetInnerHTML pageContent
-                                    ]
-                            }
+                            let content =
+                                Html.div [
+                                    prop.dangerouslySetInnerHTML pageContent
+                                ]
+
+                            return Page.Minimal.render rendererContext pageContext content
                         }
             }
             {

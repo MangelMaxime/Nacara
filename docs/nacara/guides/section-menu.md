@@ -16,7 +16,7 @@ The menu is optional but it helps you:
 The menu of a section is defined by creating a `menu.json` file at the top level of your section.
 
 ```
-docsrc
+docs
 ├── blog
 └── documentation
     └── menu.json
@@ -54,7 +54,7 @@ You need to provide the relative path from the `source` folder.
 **Example:**
 
 ```
-docsrc
+docs
 ├── blog
 └── documentation
     └── page1.md
@@ -147,7 +147,7 @@ The `title` front-matter will be used has the text to display in the menu.
         <tr>
             <td class="label-cell"><code>items</code></td>
             <td class="label-cell">X</td>
-            <td>List of <a href="#menu.json">MenuItems</a></td>
+            <td>List of <a href="#menujson">MenuItems</a></td>
         </tr>
     </tbody>
 </table>

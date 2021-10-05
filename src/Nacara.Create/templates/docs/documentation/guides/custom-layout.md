@@ -84,7 +84,7 @@ const render = async (rendererContext, pageContext) => {
     return pageMinimal.render(new pageMinimal.RenderArgs(
         rendererContext.Config, // Forward the config information
         pageContext.Section, // Tell which section we are in
-        title, // Pass the blog title to use in the page title
+        pageContext.Title, // Pass the blog title to use in the page title
         content // Pass the blog content to render below the navbar
     ));
 
@@ -211,7 +211,7 @@ const render = async (rendererContext, pageContext) => {
     return pageMinimal.render(new pageMinimal.RenderArgs(
         rendererContext.Config, // Forward the config information
         pageContext.Section, // Tell which section we are in
-        title, // Pass the blog title to use in the page title
+        pageContext.Title, // Pass the blog title to use in the page title
         content // Pass the blog content to render below the navbar
     ));
 

@@ -19,6 +19,29 @@ This layout include:
 - A table of content
 - Navigation buttons
 
+### Front matter
+
+#### `toc`
+
+Optional</br>
+Type: `Object`
+
+Options:
+
+- `from` - Default: `2`</br>
+    The level of the heading to start the table of content
+
+- `to` - Default: `2`</br>
+    The level of the heading to end the table of content
+
+**Example**
+
+```yml
+toc:
+    from: 2
+    to: 3
+```
+
 ## nacara-navbar-only
 
 This layout will generate a navbar and your content underneath it.
@@ -29,25 +52,17 @@ In general, you will want to use this layout for your index page so you have tot
 
 This layout will parse your changelog file and generate a page based on it.
 
-**Front matter**
+### Front matter
 
-<table class="table is-narrow is-bordered">
-    <thead>
-        <tr>
-            <th class="has-text-centered">Name</th>
-            <th class="has-text-centered">Required</th>
-            <th class="has-text-centered">Description</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td class="has-text-centered" style="vertical-align: middle">
-                <code>changelog_path</code>
-            </td>
-            <td class="has-text-centered" style="vertical-align: middle">
-                X
-            </td>
-            <td>Relative path to the changelog to display</td>
-        </tr>
-    </tbody>
-</table>
+#### `changelog_path`
+
+Required</br>
+Type: `String`
+
+Relative path to the changelog to display
+
+**Example**
+
+```yml
+changelog_path: ./../../src/Nacara/CHANGELOG.md
+```

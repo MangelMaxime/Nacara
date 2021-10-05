@@ -36,7 +36,7 @@ Create the file `babel.config.json`
 Install the Babel dependencies:
 
 ```
-npm install --save-dev @babel/register @babel/preset-react
+npm install --D @babel/preset-react
 ```
 
 </li>
@@ -48,7 +48,7 @@ npm install --save-dev @babel/register @babel/preset-react
 :::info
 We are going to use JavaScript to write our layout but you can also write them using F#.
 
-For the tutorial, it is easier to use JavaScript as no setup is required
+For the tutorial, it is easier to use JavaScript as you can use scripts file directly.
 :::
 
 <ul class="textual-steps">
@@ -82,9 +82,8 @@ const render = async (rendererContext, pageContext) => {
     const content = "Blog page";
 
     return pageMinimal.render(new pageMinimal.RenderArgs(
-        rendererContext.Config, // Forward the config information
-        pageContext.Section, // Tell which section we are in
-        title, // Pass the blog title to use in the page title
+        rendererContext, // Forward the rendererContext
+        pageContext, // Forward the pageContext
         content // Pass the blog content to render below the navbar
     ));
 
@@ -209,9 +208,8 @@ const render = async (rendererContext, pageContext) => {
         </BlogContainer>
 
     return pageMinimal.render(new pageMinimal.RenderArgs(
-        rendererContext.Config, // Forward the config information
-        pageContext.Section, // Tell which section we are in
-        title, // Pass the blog title to use in the page title
+        rendererContext, // Forward the rendererContext
+        pageContext, // Forward the pageContext
         content // Pass the blog content to render below the navbar
     ));
 
@@ -255,9 +253,8 @@ const pageMinimal = require("nacara-layout-standard/dist/Page.Minimal");
 const render = async (rendererContext, pageContext) => {
 
     return pageMinimal.render(new pageMinimal.RenderArgs(
-        rendererContext.Config,
-        pageContext.Section,
-        undefined,
+        rendererContext,
+        pageContext,
         "Blog index"
     ));
 
@@ -380,9 +377,8 @@ const render = async (rendererContext, pageContext) => {
             });
 
     return pageMinimal.render(new pageMinimal.RenderArgs(
-        rendererContext.Config,
-        pageContext.Section,
-        undefined,
+        rendererContext,
+        pageContext,
         <PageContainer blogPages={blogPages}/>
     ));
 
@@ -424,9 +420,8 @@ const render = async (rendererContext, pageContext) => {
     }
 
     return pageMinimal.render(new pageMinimal.RenderArgs(
-        rendererContext.Config,
-        pageContext.Section,
-        undefined,
+        rendererContext,
+        pageContext,
         <PageContainer blogPages={blogPages} />
     ));
 }

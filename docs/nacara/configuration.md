@@ -268,6 +268,22 @@ It can be a string of value `divider` or an object of type [DropdownLink](#Dropd
         </tr>
         <tr>
             <td class="label-cell">
+                <code>partial</code>
+            </td>
+            <td class="label-cell"></td>
+            <td class="fullwidth-cell">
+Partial path to used for rendering the dropdown content.
+
+The partial property take precedence over the `items` property but you still need to fill the `items`.
+
+This is required for 2 reasons:
+
+1. Make Nacara understand your dropdown content and be able to generate the correct navigation element
+2. If the dropdown is not pinned, the `items` elements will be used to render the mobile menu
+            </td>
+        </tr>
+        <tr>
+            <td class="label-cell">
                 <code>fullwidth</code>
             </td>
             <td class="label-cell"></td>
