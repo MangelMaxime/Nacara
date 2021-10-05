@@ -11,16 +11,66 @@ open Node
 type FrontMatterAttributes =
     class end
 
+/// <summary>
+/// <para>Represents the context of a page within Nacara.</para>
+/// <para>It contains <c>all</c> the <c>information available for</c> the specified page like it's title, layout, etc.</para>
+/// </summary>
 [<NoComparison>]
 type PageContext =
     {
+        /// <summary>
+        /// PageId of the page
+        ///
+        /// <example>
+        /// - <c>index</c> is the page id of <c>docs/index.md</c>
+        /// - <c>nacara/introduction</c> is the page id of <c>docs/nacara/introduction.md</c>
+        /// </example>
+        /// </summary>
         PageId : string
+        /// <summary>
+        /// Relative path of the <strong>page</strong> from the source directory
+        /// </summary>
+        /// <example>
+        /// If source directory is <c>docs</c>, then <c>index.md</c> is the relative path of <c>docs/index.md</c>
+        /// </example>
         RelativePath : string
+        /// Absolute path of the page
         FullPath : string
+        /// <summary>
+        /// Content of the page stripped of the front-matter section
+        /// </summary>
         Content : string
+        /// <summary>
+        /// Name of the layout to use for the page set from the <c>layout</c> front-matter attribute
+        /// </summary>
         Layout : string
+        /// <summary>
+        /// Name of the section where the page is located in.
+        ///
+        /// Note: If the page is at the root level section will be `""`
+        ///
+        /// <example>
+        /// <code>
+        /// docs
+        /// ├── index.md
+        /// └── documentation
+        ///     └── page1.md
+        /// </code>
+        ///
+        /// - <c>index.md</c> has the section <c>""</c>
+        /// - <c>page1.md</c> has the section <c>"documentation"</c>
+        /// </example>
+        /// </summary>
         Section : string
+        /// <summary>
+        /// Optional title of the page set from the `title` front-matter attribute
+        /// </summary>
         Title : string option
+        /// <summary>
+        /// Raw front-matter attributes of the page
+        ///
+        /// You can use Thoth.Json to decode it using `Decode.fromValue` function
+        /// </summary>
         Attributes : FrontMatterAttributes
     }
 
@@ -35,17 +85,19 @@ type LabelLink =
 module LabelLink =
 
     let decoder : Decoder<LabelLink> =
-            Decode.object (fun get ->
-                {
-                    Section = get.Optional.Field "section" Decode.string
-                    Url = get.Required.Field "url" Decode.string
-                    Label = get.Required.Field "label" Decode.string
-                    IsPinned = get.Optional.Field "pinned" Decode.bool
-                            |> Option.defaultValue false
-                }
-            )
+        Decode.object (fun get ->
+            {
+                Section = get.Optional.Field "section" Decode.string
+                Url = get.Required.Field "url" Decode.string
+                Label = get.Required.Field "label" Decode.string
+                IsPinned = get.Optional.Field "pinned" Decode.bool
+                        |> Option.defaultValue false
+            }
+        )
 
-
+/// <summary>
+/// Documentation test
+/// </summary>
 type IconLink =
     {
         Url : string
@@ -56,13 +108,13 @@ type IconLink =
 module IconLink =
 
     let decoder : Decoder<IconLink> =
-            Decode.object (fun get ->
-                {
-                    Url = get.Required.Field "url" Decode.string
-                    Label = get.Required.Field "label" Decode.string
-                    Icon = get.Required.Field "icon" Decode.string
-                }
-            )
+        Decode.object (fun get ->
+            {
+                Url = get.Required.Field "url" Decode.string
+                Label = get.Required.Field "label" Decode.string
+                Icon = get.Required.Field "icon" Decode.string
+            }
+        )
 
 type DropdownLink =
     {
@@ -330,8 +382,21 @@ module SiteMetadata =
 [<NoComparison>]
 type RemarkPlugin =
     {
+        /// <summary>
+        /// Path to resolve the plugin, it can be
+        ///
+        /// - a relative path
+        /// - an absolute path
+        /// - a NPM package name
+        /// </summary>
         Resolve : string
+        /// <summary>
+        /// If the property to access the plugin is not <c>default</c>, you can specify it here.
+        /// </summary>
         Property : string option
+        /// <summary>
+        /// Options to pass to the plugin.
+        /// </summary>
         Options : obj option
     }
 
@@ -349,8 +414,21 @@ module RemarkPlugin =
 [<NoComparison>]
 type RehypePlugin =
     {
+        /// <summary>
+        /// Path to resolve the plugin, it can be
+        ///
+        /// - a relative path
+        /// - an absolute path
+        /// - a NPM package name
+        /// </summary>
         Resolve : string
+        /// <summary>
+        /// If the property to access the plugin is not <c>default</c>, you can specify it here.
+        /// </summary>
         Property : string option
+        /// <summary>
+        /// Options to pass to the plugin.
+        /// </summary>
         Options : obj option
     }
 
@@ -368,26 +446,53 @@ module RehypePlugin =
 [<NoComparison>]
 type Config =
     {
+        /// <summary>
+        /// The working directory where Nacara has been invoked from.
+        ///
+        /// All paths are relative to this directory.
+        /// </summary>
         WorkingDirectory : string
+        /// <summary>
+        /// Name of the folder where the sources files are located.
+        /// </summary>
         SourceFolder : string
+        /// <summary>
+        /// Name of the folder where the compiled files are written.
+        /// </summary>
         Output : string
+        /// <summary>
+        /// Navbar configuration
+        /// </summary>
         Navbar : NavbarConfig
+        /// <summary>
+        /// List of remark plugins to load when generating the pages.
+        /// </summary>
         RemarkPlugins : RemarkPlugin array
+        /// <summary>
+        /// List of rehype plugins to load when generating the pages.
+        /// </summary>
         RehypePlugins : RehypePlugin array
+        /// <summary>
+        /// List of the layouts package or script to load.
+        /// </summary>
         Layouts : string array
+        /// <summary>
+        /// Port to use when serving the files locally.
+        /// </summary>
         ServerPort : int
+        /// <summary>
+        /// <c>true</c> if nacara has been started in watch mode.
+        /// </summary>
         IsWatch : bool
+        /// <summary>
+        /// Site metadata available
+        /// </summary>
         SiteMetadata: SiteMetadata
     }
 
     member this.DestinationFolder
         with get () =
             path.join(this.WorkingDirectory, this.Output)
-
-// Minimal binding
-type MarkdownIt =
-    abstract render : string -> string
-
 
 [<NoComparison>]
 type Partial =

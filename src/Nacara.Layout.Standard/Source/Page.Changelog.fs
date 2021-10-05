@@ -227,21 +227,17 @@ let render (rendererContext : RendererContext) (pageContext : PageContext) =
                     renderChangelogItems rendererContext.MarkdownToHtml changelog.Versions
                     |> Promise.all
 
-                return Minimal.render {
+                let content =
+                    WithMenuOrToc.render {
                         Config = rendererContext.Config
-                        Section = pageContext.Section
-                        TitleOpt = pageContext.Title
-                        Partials = rendererContext.Partials
-                        Content =
-                            WithMenuOrToc.render {
-                                Config = rendererContext.Config
-                                SectionMenu = rendererContext.SectionMenu
-                                Pages = rendererContext.Pages
-                                PageContext = pageContext
-                                PageHtml = "" // Pass no content to the `render` function, as there is no interesting information in it for the changelog
-                                PageContent = changelogContainer changelogItems
-                            }
+                        SectionMenu = rendererContext.SectionMenu
+                        Pages = rendererContext.Pages
+                        PageContext = pageContext
+                        PageHtml = "" // Pass no content to the `render` function, as there is no interesting information in it for the changelog
+                        PageContent = changelogContainer changelogItems
                     }
+
+                return Minimal.render rendererContext pageContext content
 
             | Error errorMessage ->
                 return failwith errorMessage
