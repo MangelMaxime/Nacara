@@ -1,6 +1,6 @@
 ---
 title: Deploy your site
-layout: nacara-standard
+layout: standard
 ---
 
 Nacara is a static site generator, meaning that your website is only static HTML, JavaScript and CSS files.

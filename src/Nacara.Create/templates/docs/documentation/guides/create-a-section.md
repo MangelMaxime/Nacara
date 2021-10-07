@@ -1,6 +1,6 @@
 ---
 title: Create a Section
-layout: nacara-standard
+layout: standard
 ---
 
 A section in Nacara helps you organize your website. For example, you can have the following sections:
@@ -44,7 +44,7 @@ Create a file `docsrc/blog/index.md`:
 ```
 ---
 title: Blog
-layout: nacara-standard
+layout: standard
 ---
 
 List of posts:
@@ -59,7 +59,7 @@ Create a file `docsrc/blog/2021/welcome.md`:
 ```
 ---
 title: Welcome
-layout: nacara-standard
+layout: standard
 ---
 
 Welcome to my blog

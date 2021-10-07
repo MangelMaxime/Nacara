@@ -1,6 +1,6 @@
 ---
 title: Configuration
-layout: nacara-standard
+layout: standard
 toc:
     to: 3
 ---

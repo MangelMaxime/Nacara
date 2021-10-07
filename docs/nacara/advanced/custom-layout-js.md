@@ -1,6 +1,6 @@
 ---
 title: With JavaScript
-layout: nacara-standard
+layout: standard
 ---
 
 :::primary{title="Note"}

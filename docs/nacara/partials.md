@@ -1,6 +1,6 @@
 ---
 title: Partials
-layout: nacara-standard
+layout: standard
 ---
 
 Partials are small components which are used by the layout to give you control over a certain part of the page.

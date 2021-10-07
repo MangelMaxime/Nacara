@@ -1,6 +1,6 @@
 ---
 title: Markdown features
-layout: nacara-standard
+layout: standard
 ---
 
 ## Code blocks

@@ -1,6 +1,6 @@
 ---
 title: With FSharp
-layout: nacara-standard
+layout: standard
 ---
 
 :::primary{title="Note"}

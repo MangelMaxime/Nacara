@@ -1,6 +1,6 @@
 ---
 title: Section menu
-layout: nacara-standard
+layout: standard
 ---
 
 A menu is specific to a [section](/Nacara/documentation/nacara/guides/create-a-section.html).

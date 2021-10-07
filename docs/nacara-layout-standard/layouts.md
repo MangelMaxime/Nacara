@@ -1,6 +1,6 @@
 ---
 title: Layouts
-layout: nacara-standard
+layout: standard
 ---
 
 Here are all the layouts include in this package:

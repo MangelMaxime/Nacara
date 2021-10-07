@@ -1,6 +1,6 @@
 ---
 title: Partials
-layout: nacara-standard
+layout: standard
 ---
 
 The following partials are supported:

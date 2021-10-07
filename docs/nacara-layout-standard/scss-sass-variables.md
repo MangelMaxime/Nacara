@@ -1,6 +1,6 @@
 ---
 title: SCSS/SASS variables
-layout: nacara-standard
+layout: standard
 ---
 
 ## Computed
