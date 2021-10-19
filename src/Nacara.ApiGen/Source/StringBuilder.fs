@@ -18,7 +18,13 @@ type StringBuilder with
     member this.Indent(?factor : int) =
         let factor = defaultArg factor 1
 
-        let text = String.replicate factor "&nbsp;&nbsp;&nbsp;&nbsp;"
+        this.Space(factor * 4)
+        |> ignore
+
+    member this.Space(?factor : int) =
+        let factor = defaultArg factor 1
+
+        let text = String.replicate factor "&nbsp;"
 
         this.Append(text)
         |> ignore

@@ -108,20 +108,15 @@ let private codeBlock =
                         lang
 
                     | None ->
-                        "forceNoHighlight"
+                        ""
 
                 let formattedText =
-                    if innerText.Contains("\n") then
+                    if innerText.StartsWith("\n") then
 
-                        if innerText.StartsWith("\n") then
-
-                            sprintf "```%s%s\n```" lang innerText
-
-                        else
-                            sprintf "```%s\n%s\n```" lang innerText
+                        sprintf "```%s%s```" lang innerText
 
                     else
-                        sprintf "`%s`" innerText
+                        sprintf "```%s\n%s```" lang innerText
 
                 Some formattedText
 
@@ -136,32 +131,32 @@ let private codeInline =
             | VoidElement _ ->
                 None
             | NonVoidElement (innerText, _) ->
-                "`" + innerText + "`"
+                "<code>" + innerText + "</code>"
                 |> Some
     }
     |> applyFormatter
 
-let private anchor =
-    {
-        TagName = "a"
-        Formatter =
-            function
-            | VoidElement _ ->
-                None
+// let private anchor =
+//     {
+//         TagName = "a"
+//         Formatter =
+//             function
+//             | VoidElement _ ->
+//                 None
 
-            | NonVoidElement (innerText, attributes) ->
-                let href =
-                    match Map.tryFind "href" attributes with
-                    | Some href ->
-                        href
+//             | NonVoidElement (innerText, attributes) ->
+//                 let href =
+//                     match Map.tryFind "href" attributes with
+//                     | Some href ->
+//                         href
 
-                    | None ->
-                        ""
+//                     | None ->
+//                         ""
 
-                sprintf "[%s](%s)" innerText href
-                |> Some
-    }
-    |> applyFormatter
+//                 sprintf "[%s](%s)" innerText href
+//                 |> Some
+//     }
+//     |> applyFormatter
 
 let private paragraph =
     {
@@ -172,7 +167,7 @@ let private paragraph =
                 None
 
             | NonVoidElement (innerText, _) ->
-                nl + innerText + nl
+                "<p>" + innerText + "</p>"
                 |> Some
     }
     |> applyFormatter
@@ -193,6 +188,8 @@ let private block =
 
 let private see =
     let getCRef (attributes : Map<string, string>) = Map.tryFind "cref" attributes
+    let getHref (attributes : Map<string, string>) = Map.tryFind "href" attributes
+
     {
         TagName = "see"
         Formatter =
@@ -201,7 +198,7 @@ let private see =
                 match getCRef attributes with
                 | Some cref ->
                     // TODO: Add config to generates command
-                    "`" + extractMemberText cref + "`"
+                    "<code>" + extractMemberText cref + "</code>"
                     |> Some
 
                 | None ->
@@ -212,48 +209,23 @@ let private see =
                     match getCRef attributes with
                     | Some cref ->
                         // TODO: Add config to generates command
-                        "`" + extractMemberText cref + "`"
+                        "<code>" + extractMemberText cref + "</code>"
                         |> Some
 
                     | None ->
                         None
                 else
-                    "`" + innerText + "`"
-                    |> Some
-    }
-    |> applyFormatter
-
-let private xref =
-    let getHRef (attributes : Map<string, string>) = Map.tryFind "href" attributes
-    {
-        TagName = "xref"
-        Formatter =
-            function
-            | VoidElement attributes ->
-                match getHRef attributes with
-                | Some href ->
-                    // TODO: Add config to generates command
-                    "`" + extractMemberText href + "`"
-                    |> Some
-
-                | None ->
-                    None
-
-            | NonVoidElement (innerText, attributes) ->
-                if String.IsNullOrWhiteSpace innerText then
-                    match getHRef attributes with
+                    match getHref attributes with
                     | Some href ->
-                        // TODO: Add config to generates command
-                        "`" + extractMemberText href + "`"
+                        sprintf "[%s](%s)" innerText href
                         |> Some
 
                     | None ->
-                        None
-                else
-                    "`" + innerText + "`"
-                    |> Some
+                        "<code>" + innerText + "</code>"
+                        |> Some
     }
     |> applyFormatter
+
 
 let private paramRef =
     let getName (attributes : Map<string, string>) = Map.tryFind "name" attributes
@@ -265,25 +237,14 @@ let private paramRef =
             | VoidElement attributes ->
                 match getName attributes with
                 | Some name ->
-                    "`" + name + "`"
+                    "<code>" + name + "</code>"
                     |> Some
 
                 | None ->
                     None
 
             | NonVoidElement (innerText, attributes) ->
-                if String.IsNullOrWhiteSpace innerText then
-                    match getName attributes with
-                    | Some name ->
-                        // TODO: Add config to generates command
-                        "`" + name + "`"
-                        |> Some
-
-                    | None ->
-                        None
-                else
-                    "`" + innerText + "`"
-                    |> Some
+                None
 
     }
     |> applyFormatter
@@ -298,59 +259,14 @@ let private typeParamRef =
             | VoidElement attributes ->
                 match getName attributes with
                 | Some name ->
-                    "`" + name + "`"
+                    "<code>" + name + "</code>"
                     |> Some
 
                 | None ->
                     None
 
             | NonVoidElement (innerText, attributes) ->
-                if String.IsNullOrWhiteSpace innerText then
-                    match getName attributes with
-                    | Some name ->
-                        // TODO: Add config to generates command
-                        "`" + name + "`"
-                        |> Some
-
-                    | None ->
-                        None
-                else
-                    "`" + innerText + "`"
-                    |> Some
-    }
-    |> applyFormatter
-
-let private convertTable =
-    {
-        TagName = "table"
-        Formatter =
-            function
-            | VoidElement _ ->
                 None
-
-            | NonVoidElement (innerText, _) ->
-
-                let rowCount = Regex.Matches(innerText, "<th\s?>").Count
-                let convertedTable =
-                    innerText
-                        .Replace(nl, "")
-                        .Replace("\n", "")
-                        .Replace("<table>", "")
-                        .Replace("</table>", "")
-                        .Replace("<thead>", "")
-                        .Replace("</thead>", (String.replicate rowCount "| --- "))
-                        .Replace("<tbody>", nl)
-                        .Replace("</tbody>", "")
-                        .Replace("<tr>", "")
-                        .Replace("</tr>", "|" + nl)
-                        .Replace("<th>", "|")
-                        .Replace("</th>", "")
-                        .Replace("<td>", "|")
-                        .Replace("</td>", "")
-
-                nl + nl + convertedTable + nl
-                |> Some
-
     }
     |> applyFormatter
 
@@ -373,14 +289,14 @@ type private ItemList =
     /// A list where the items are a term followed by a definition (ie in markdown: * <TERM> - <DEFINITION>)
     | Definitions of Term * Definition
 
-let private itemListToStringAsMarkdownList (prefix : string) (item : ItemList) =
+let private itemListToStringAsMarkdownList (item : ItemList) =
     match item with
     | DescriptionOnly description ->
-        prefix + " " + description
+        description
     | TermOnly term ->
-        prefix + " " + "**" + term + "**"
+        "<strong>" + term + "</strong>"
     | Definitions (term, description) ->
-        prefix + " " + "**" + term + "** - " + description
+        "<strong>" + term + "</strong> - " + description
 
 let private list =
     let getType (attributes : Map<string, string>) = Map.tryFind "type" attributes
@@ -504,18 +420,32 @@ let private list =
 
                 match listStyle with
                 | Bulleted ->
-                    let items = extractItemList [] innerText
+                    let items =
+                        extractItemList [] innerText
+                        |> List.map (fun item ->
+                            "<li>" + itemListToStringAsMarkdownList item + "</li>"
+                        )
+                        |> String.concat Environment.NewLine
 
-                    items
-                    |> List.map (itemListToStringAsMarkdownList "*")
-                    |> String.concat Environment.NewLine
+                    "<ul>"
+                    + Environment.NewLine
+                    + items
+                    + Environment.NewLine
+                    + "</ul>"
 
                 | Numbered ->
-                    let items = extractItemList [] innerText
+                    let items =
+                        extractItemList [] innerText
+                        |> List.map (fun item ->
+                            "<li>" + itemListToStringAsMarkdownList item + "</li>"
+                        )
+                        |> String.concat Environment.NewLine
 
-                    items
-                    |> List.map (itemListToStringAsMarkdownList "1.")
-                    |> String.concat Environment.NewLine
+                    "<ol>"
+                    + Environment.NewLine
+                    + items
+                    + Environment.NewLine
+                    + "</ol>"
 
                 | Tablered ->
                     let columnHeaders = extractColumnHeader [] innerText
@@ -524,49 +454,43 @@ let private list =
                     let columnHeadersText =
                         columnHeaders
                         |> List.mapi (fun index header ->
-                            if index = 0 then
-                                "| " + header
-                            elif index = columnHeaders.Length - 1 then
-                                " | " + header + " |"
-                            else
-                                " | " + header
-                        )
-                        |> String.concat ""
-
-                    let seprator =
-                        columnHeaders
-                        |> List.mapi (fun index _ ->
-                            if index = 0 then
-                                "| ---"
-                            elif index = columnHeaders.Length - 1 then
-                                " | --- |"
-                            else
-                                " | ---"
+                            "<th>" + header + "</th>"
                         )
                         |> String.concat ""
 
                     let itemsText =
                         rows
                         |> List.map (fun columns ->
-                            columns
-                            |> List.mapi (fun index column ->
-                                if index = 0 then
-                                    "| " + column
-                                elif index = columnHeaders.Length - 1 then
-                                    " | " + column + " |"
-                                else
-                                    " | " + column
-                            )
-                            |> String.concat ""
+                            let rowContent =
+                                columns
+                                |> List.mapi (fun index column ->
+                                    "<td>" + column + "</td>"
+                                )
+                                |> String.concat Environment.NewLine
+
+                            "<tr>"
+                            + Environment.NewLine
+                            + rowContent
+                            + Environment.NewLine
+                            + "</tr>"
                         )
                         |> String.concat Environment.NewLine
 
-                    Environment.NewLine
+                    "<table>"
+                    + Environment.NewLine
+                    + "<thead><tr>"
+                    + Environment.NewLine
                     + columnHeadersText
                     + Environment.NewLine
-                    + seprator
+                    + "</tr></thead>"
+                    + Environment.NewLine
+                    + "<tbody>"
                     + Environment.NewLine
                     + itemsText
+                    + Environment.NewLine
+                    + "</tbody>"
+                    + Environment.NewLine
+                    + "</table>"
                 |> Some
     }
     |> applyFormatter
@@ -583,17 +507,97 @@ let private unescapeSpecialCharacters (text : string) =
         .Replace("&apos;", "'")
         .Replace("&amp;", "&")
 
-let applyAll (text : string) =
+let private summary =
+    {
+        TagName = "summary"
+        Formatter =
+            function
+            | VoidElement _ ->
+                None
+
+            | NonVoidElement (innerText, _) ->
+                """<div class="docs-summary">"""
+                + Environment.NewLine
+                + innerText
+                + Environment.NewLine
+                + "</div>"
+                |> Some
+
+    }
+    |> applyFormatter
+
+let private example =
+    {
+        TagName = "example"
+        Formatter =
+            function
+            | VoidElement _ ->
+                None
+
+            | NonVoidElement (innerText, _) ->
+                """<div class="docs-example">"""
+                + Environment.NewLine
+                + """<p><strong>Example</strong></p>"""
+                + Environment.NewLine
+                + innerText
+                + Environment.NewLine
+                + "</div>"
+                + Environment.NewLine
+                |> Some
+
+    }
+    |> applyFormatter
+
+let removeSummaryTag =
+    {
+        TagName = "summary"
+        Formatter =
+            function
+            | VoidElement _ ->
+                None
+
+            | NonVoidElement (innerText, _) ->
+                innerText
+                |> Some
+
+    }
+    |> applyFormatter
+
+let format (text : string) =
     text
+    |> removeSummaryTag
+    |> example
     |> paragraph
     |> block
-    |> codeInline
     |> codeBlock
+    |> codeInline // Important: Apply code inline before after the codeBlock as we are generating <code> tags
     |> see
-    |> xref
     |> paramRef
     |> typeParamRef
-    |> anchor
     |> list
-    |> convertTable
     |> unescapeSpecialCharacters
+
+/// <summary>
+/// Extract and format only the summary tags ignoring all the others specials tags
+/// </summary>
+/// <param name="text"></param>
+/// <returns></returns>
+let extractSummary (text : string) =
+    let extractor =
+        {
+            TagName = "summary"
+            Formatter =
+                function
+                | VoidElement _ ->
+                    None
+
+                | NonVoidElement (innerText, _) ->
+                    innerText
+                    |> Some
+
+        }
+        |> applyFormatter
+
+    text
+    |> extractor
+    |> format

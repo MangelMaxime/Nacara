@@ -111,6 +111,12 @@ GROUP ApiGen
 RESTRICTION: == net5.0
 NUGET
   remote: https://api.nuget.org/v3/index.json
+    Argu (6.1.1)
+      FSharp.Core (>= 4.3.2)
+      System.Configuration.ConfigurationManager (>= 4.4)
+    Expecto (9.0.4)
+      FSharp.Core (>= 4.6)
+      Mono.Cecil (>= 0.11.3)
     FSharp.Compiler.Service (40.0)
       FSharp.Core (5.0.2)
       Microsoft.Build.Framework (>= 16.9)
@@ -177,6 +183,7 @@ NUGET
       System.Security.Principal.Windows (>= 5.0)
     Microsoft.Win32.SystemEvents (5.0)
       Microsoft.NETCore.Platforms (>= 5.0)
+    Mono.Cecil (0.11.4)
     runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl (4.3.3)
     runtime.debian.9-x64.runtime.native.System.Security.Cryptography.OpenSsl (4.3.3)
     runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl (4.3.3)

@@ -1,3 +1,4 @@
+/// Helpers making it easier to work with menus
 module Menu
 
 open Nacara.Core.Types

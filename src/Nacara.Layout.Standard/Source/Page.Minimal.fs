@@ -184,7 +184,7 @@ let private renderStartNavbar (partials : Partial array) (pageSection : string) 
         renderNavbarBurgerMenu
     ]
 
-let private renderEndNavbar (items : IconLink list) =
+let private renderEndNavbar (items : EndNavbarItem list) =
     Bulma.navbarEnd.div [
         // On mobile, we hide the navbar end
         // Its content will be include in the navbar menu

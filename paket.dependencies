@@ -25,3 +25,5 @@ group ApiGen
     nuget FSharp.Formatting
     nuget FSharp.Core
     nuget FSharp.Compiler.Service
+    nuget Expecto
+    nuget Argu

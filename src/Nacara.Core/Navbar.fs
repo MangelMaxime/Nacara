@@ -1,3 +1,4 @@
+/// Helpers making it easier to work with navbar
 module Navbar
 
 open Nacara.Core.Types

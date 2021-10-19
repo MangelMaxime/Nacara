@@ -270,4 +270,4 @@ docs_deploy/
 .nacara/
 
 # Ignore generated API file
-docs/api/
+docs/reference/

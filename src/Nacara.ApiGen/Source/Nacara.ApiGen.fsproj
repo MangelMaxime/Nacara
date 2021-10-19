@@ -7,7 +7,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="StringBuilder.fs" />
+    <Compile Include="Helpers.fs" />
+    <Compile Include="DocLocator.fs" />
     <Compile Include="CommentFormatter.fs" />
+    <Compile Include="File.fs" />
+    <!-- <Compile Include="Generator/Namespace.fs" /> -->
+    <Compile Include="Render.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
   <Import Project="..\..\..\.paket\Paket.Restore.targets" />

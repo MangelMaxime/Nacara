@@ -148,3 +148,105 @@ $body-size: 14px;
         }
     }
 }
+
+// API gen specific
+
+
+
+
+.api-code {
+    font-family: monospace;
+    margin-bottom: 1rem;
+    scroll-margin-top: 5.25rem;
+
+    pre {
+        background-color: transparent;
+    }
+
+    .line {
+        white-space: nowrap;
+    }
+
+    .record-field-name,
+    .property {
+        color: #4078f2;
+    }
+
+    .keyword {
+        color: #A626A4;
+    }
+
+    .type {
+        color: #C18401;
+    }
+}
+
+.docs-summary {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    // border-top: 1px solid $grey-dark;
+}
+
+dl.docs-parameters {
+    margin-left: 1rem;
+}
+
+dl.docs-parameters dt:not(:first-child) {
+    padding-top: 1rem;
+    border-top: 1px solid $grey-dark;
+}
+
+/* dl.docs-parameters dt:before {
+    position: absolute;
+    margin-left: -0.5rem;
+    display: inline-block;
+    content: '-';
+} */
+
+dl.docs-parameters dd {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+dl.docs-parameters dt code {
+    color: currentColor;
+}
+
+.docs-summary a.type,
+dl.docs-parameters dt a.type {
+    color: #C18401;
+}
+
+.docs-summary a.type:hover,
+.api-code .type:hover,
+dl.docs-parameters dt a.type:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.record-field {
+    .record-field-type {
+        a {
+            color: #C18401;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .record-field-name {
+        // color: $text;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.table.api-code {
+    td {
+        padding: 0.25rem;
+        border: unset;
+    }
+}

@@ -1,3 +1,4 @@
+/// Contains all the domain types used by Nacara
 module Nacara.Core.Types
 
 open Thoth.Json
@@ -13,7 +14,7 @@ type FrontMatterAttributes =
 
 /// <summary>
 /// <para>Represents the context of a page within Nacara.</para>
-/// <para>It contains <c>all</c> the <c>information available for</c> the specified page like it's title, layout, etc.</para>
+/// <para>It contains all the information available for the specified page like it's title, layout, etc.</para>
 /// </summary>
 [<NoComparison>]
 type PageContext =
@@ -47,7 +48,7 @@ type PageContext =
         /// <summary>
         /// Name of the section where the page is located in.
         ///
-        /// Note: If the page is at the root level section will be `""`
+        /// Note: If the page is at the root level section will be <c>""</c>
         ///
         /// <example>
         /// <code>
@@ -63,27 +64,49 @@ type PageContext =
         /// </summary>
         Section : string
         /// <summary>
-        /// Optional title of the page set from the `title` front-matter attribute
+        /// Optional title of the page set from the <c>title</c> front-matter attribute
         /// </summary>
         Title : string option
         /// <summary>
         /// Raw front-matter attributes of the page
         ///
-        /// You can use Thoth.Json to decode it using `Decode.fromValue` function
+        /// You can use Thoth.Json to decode it using <c>Decode.fromValue</c> function
         /// </summary>
         Attributes : FrontMatterAttributes
     }
 
 type LabelLink =
     {
+        /// <summary>
+        /// Section related to this label link.
+        ///
+        /// It is used to link a page to this dropdown via the section information.
+        ///
+        /// <example>
+        /// - Generate a navigation breadcrumb
+        /// - Mark the link as active when on a related page
+        /// </example>
+        /// </summary>
         Section : string option
+        /// <summary>
+        /// Url to redirect to when clicking the label
+        /// </summary>
         Url : string
+        /// <summary>
+        /// If <c>true</c>, the label will be kept in the navbar when on mobile view.
+        ///
+        /// If <c>false</c>, the label will be moved to the mobile menu.
+        /// </summary>
         IsPinned : bool
+        /// <summary>
+        /// Text to display
+        /// </summary>
         Label : string
     }
 
 module LabelLink =
 
+    /// LabelLink decoder
     let decoder : Decoder<LabelLink> =
         Decode.object (fun get ->
             {
@@ -96,18 +119,30 @@ module LabelLink =
         )
 
 /// <summary>
-/// Documentation test
+/// Represents a link at the end of the Navbar
 /// </summary>
-type IconLink =
+type EndNavbarItem =
     {
+        /// <summary>
+        /// Url to redirect to when clicking the label
+        /// </summary>
         Url : string
+        /// <summary>
+        /// Text to display
+        /// </summary>
         Label : string
+        /// <summary>
+        /// Icon class to display on large screen
+        ///
+        /// For example, if you are using nacara-standard-layout,
+        /// it comes with Font Awesome support so the value could be <c>fab fa-github</c>
+        /// </summary>
         Icon : string
     }
 
-module IconLink =
+module EndNavbarItem =
 
-    let decoder : Decoder<IconLink> =
+    let decoder : Decoder<EndNavbarItem> =
         Decode.object (fun get ->
             {
                 Url = get.Required.Field "url" Decode.string
@@ -116,11 +151,34 @@ module IconLink =
             }
         )
 
+/// <summary>
+/// Simple representation of a dropdown link it can be used to generate the dropdown body if no <c>Partial</c> is provided to the dropdown.
+///
+/// It is also used to render the dropdown inside the mobile menu.
+/// </summary>
 type DropdownLink =
     {
+        /// <summary>
+        /// Section related to this label link.
+        /// It is used to link a page to this dropdown via the section information.
+        ///
+        /// <example>
+        /// - Generate a navigation breadcrumb
+        /// - Mark the link as active when on a related page
+        /// </example>
+        /// </summary>
         Section : string option
+        /// <summary>
+        /// Url to redirect to when clicking the label
+        /// </summary>
         Url : string
+        /// <summary>
+        /// Text to display
+        /// </summary>
         Label : string
+        /// <summary>
+        /// Optional description to display in the dropdown
+        /// </summary>
         Description : string option
     }
 
@@ -136,9 +194,16 @@ module DropdownLink =
             }
         )
 
+/// Represents a dropdown item.
 [<RequireQualifiedAccess>]
 type DropdownItem =
+    /// <summary>
+    /// Represents a simple divider in the dropdown. This can helps structure your dropdown down content.
+    /// </summary>
     | Divider
+    /// <summary>
+    /// Standard dropdown item
+    /// </summary>
     | Link of DropdownLink
 
 module DropdownItem =
@@ -158,12 +223,31 @@ module DropdownItem =
             |> Decode.map DropdownItem.Link
         ]
 
+/// Describe a dropdown element inside of the Navbar
 type DropdownInfo =
     {
+        /// <summary>
+        /// Text to display
+        /// </summary>
         Label : string
+        /// <summary>
+        /// List of dropdown items used as the main content if <c>Partial</c> is not set
+        /// or used for the mobile menu when the dropdown is not pinned.
+        /// </summary>
         Items : DropdownItem list
+        /// <summary>
+        /// If <c>true</c>, the dropdown as is will be available even on small screens.
+        ///
+        /// If <c>false</c>, the dropdown will available via the mobile menu.
+        /// </summary>
         IsPinned : bool
+        /// <summary>
+        /// If <c>true</c>, the dropdown will take the full width of the screen.
+        /// </summary>
         IsFullWidth : bool
+        /// <summary>
+        /// Optional partial to use to render the dropdown, it takes precedence over the <c>Items</c> property.
+        /// </summary>
         Partial : string option
     }
 
@@ -182,9 +266,20 @@ module DropdownInfo =
             }
         )
 
+/// <summary>
+/// Represents a start navbar item.
+///
+/// The start navbar is displayed on both the mobile and desktop screen.
+/// </summary>
 [<RequireQualifiedAccess>]
 type StartNavbarItem =
+    /// <summary>
+    /// Textual navbar item
+    /// </summary>
     | LabelLink of LabelLink
+    /// <summary>
+    /// Dropdown navbar item
+    /// </summary>
     | Dropdown of DropdownInfo
 
 module StartNavbarItem =
@@ -199,10 +294,25 @@ module StartNavbarItem =
             |> Decode.map StartNavbarItem.Dropdown
         ]
 
+/// <summary>
+/// All the information about the navbar configuration
+/// </summary>
 type NavbarConfig =
     {
+        /// <summary>
+        /// Start elements of the navbar
+        ///
+        /// This is the main section of the navbar.
+        /// </summary>
         Start : StartNavbarItem list
-        End : IconLink list
+        /// <summary>
+        /// End elements of the navbar.
+        ///
+        /// On desktop screen they are shown using icons
+        ///
+        /// On mobile screen they are shown inside the mobile menu
+        /// </summary>
+        End : EndNavbarItem list
     }
 
 module NavbarConfig =
@@ -212,91 +322,100 @@ module NavbarConfig =
             {
                 Start = get.Optional.Field "start" (Decode.list StartNavbarItem.decoder)
                             |> Option.defaultValue []
-                End = get.Optional.Field "end" (Decode.list IconLink.decoder)
+                End = get.Optional.Field "end" (Decode.list EndNavbarItem.decoder)
                         |> Option.defaultValue []
             }
         )
 
+    /// <summary>
+    /// Default navbar configuration
+    /// </summary>
+    /// <returns></returns>
     let empty : NavbarConfig =
         {
             Start = []
             End = []
         }
 
-let private genericMsg msg value newLine =
-    try
-        "Expecting "
-            + msg
-            + " but instead got:"
-            + (if newLine then "\n" else " ")
-            + (Decode.Helpers.anyToString value)
-    with
-        | _ ->
-            "Expecting "
-            + msg
-            + " but decoder failed. Couldn't report given value due to circular structure."
-            + (if newLine then "\n" else " ")
-
-let private errorToString (path : string, error) =
-    let reason =
-        match error with
-        | BadPrimitive (msg, value) ->
-            genericMsg msg value false
-        | BadType (msg, value) ->
-            genericMsg msg value true
-        | BadPrimitiveExtra (msg, value, reason) ->
-            genericMsg msg value false + "\nReason: " + reason
-        | BadField (msg, value) ->
-            genericMsg msg value true
-        | BadPath (msg, value, fieldName) ->
-            genericMsg msg value true + ("\nNode `" + fieldName + "` is unknown.")
-        | TooSmallArray (msg, value) ->
-            "Expecting " + msg + ".\n" + (Decode.Helpers.anyToString value)
-        | BadOneOf messages ->
-            "The following errors were found:\n\n" + String.concat "\n\n" messages
-        | FailMessage msg ->
-            "The following `failure` occurred with the decoder: " + msg
-
-    match error with
-    | BadOneOf _ ->
-        // Don't need to show the path here because each error case will show it's own path
-        reason
-    | _ ->
-        "Error at: `" + path + "`\n" + reason
-
-let private unwrapWith (errors: ResizeArray<DecoderError>) path (decoder: Decoder<'T>) value: 'T =
-    match decoder path value with
-    | Ok v -> v
-    | Error er -> errors.Add(er); Unchecked.defaultof<'T>
-
+/// <summary>
+///
+/// </summary>
 type MenuItemPage =
     {
+        /// <summary>
+        ///
+        /// </summary>
         Label : string option
+        /// <summary>
+        ///
+        /// </summary>
         PageId : string
     }
 
+/// <summary>
+///
+/// </summary>
 type MenuItemLink =
     {
+        /// <summary>
+        ///
+        /// </summary>
         Label : string
+        /// <summary>
+        ///
+        /// </summary>
         Href : string
     }
 
+/// <summary>
+///
+/// </summary>
 type MenuItemList =
     {
+        /// <summary>
+        ///
+        /// </summary>
         Label : string
+        /// <summary>
+        ///
+        /// </summary>
         Items : MenuItem list
     }
 
+/// <summary>
+///
+/// </summary>
 and [<RequireQualifiedAccess>] MenuItem =
+    /// <summary>
+    ///
+    /// </summary>
     | Page of MenuItemPage
+    /// <summary>
+    ///
+    /// </summary>
     | List of MenuItemList
+    /// <summary>
+    ///
+    /// </summary>
     | Link of MenuItemLink
 
+/// <summary>
+///
+/// </summary>
 type Menu = MenuItem list
 
+/// <summary>
+///
+/// </summary>
 [<RequireQualifiedAccess>]
 type FlatMenu =
+    /// <summary>
+    ///
+    /// </summary>
     | Link of MenuItemLink
+    /// <summary>
+    ///
+    /// </summary>
     | Page of MenuItemPage
 
 module MenuItem =
@@ -351,18 +470,45 @@ module Menu =
     let decoder : Decoder<Menu> =
         Decode.list MenuItem.decoder
 
+/// <summary>
+///
+/// </summary>
 type MenuConfig =
     {
+        /// <summary>
+        ///
+        /// </summary>
         Section : string
+        /// <summary>
+        ///
+        /// </summary>
         Items : Menu
     }
 
+/// <summary>
+///
+/// </summary>
 type SiteMetadata =
     {
+        /// <summary>
+        ///
+        /// </summary>
         Title: string
+        /// <summary>
+        ///
+        /// </summary>
         Url: string
+        /// <summary>
+        ///
+        /// </summary>
         BaseUrl: string
+        /// <summary>
+        ///
+        /// </summary>
         EditUrl: string option
+        /// <summary>
+        ///
+        /// </summary>
         FavIcon: string option
     }
 
@@ -379,6 +525,9 @@ module SiteMetadata =
             }
         )
 
+/// <summary>
+/// Configuration to load a remark plugin
+/// </summary>
 [<NoComparison>]
 type RemarkPlugin =
     {
@@ -411,6 +560,9 @@ module RemarkPlugin =
             }
         )
 
+/// <summary>
+/// Configuration to load a rehype plugin
+/// </summary>
 [<NoComparison>]
 type RehypePlugin =
     {
@@ -443,6 +595,9 @@ module RehypePlugin =
             }
         )
 
+/// <summary>
+/// Record which contains all the config information about the website
+/// </summary>
 [<NoComparison>]
 type Config =
     {
@@ -490,10 +645,16 @@ type Config =
         SiteMetadata: SiteMetadata
     }
 
+    /// <summary>
+    /// Return the destination folder absolute path
+    /// </summary>
     member this.DestinationFolder
         with get () =
             path.join(this.WorkingDirectory, this.Output)
 
+/// <summary>
+///
+/// </summary>
 [<NoComparison>]
 type Partial =
     {
@@ -642,7 +803,7 @@ type LayoutInterface =
 
 module Config =
 
-    let decoder (cwd : string) (isWatch : bool) : Decoder<Config> =
+    let decoder (cwd : string) (_ : bool) : Decoder<Config> =
         Decode.object (fun get ->
             {
                 WorkingDirectory = cwd
@@ -659,7 +820,7 @@ module Config =
                 Layouts = get.Required.Field "layouts" (Decode.array Decode.string)
                 ServerPort = get.Optional.Field "serverPort" Decode.int
                                 |> Option.defaultValue 8080
-                IsWatch = isWatch
+                IsWatch = false
                 SiteMetadata = get.Required.Field "siteMetadata" SiteMetadata.decoder
             }
         )
