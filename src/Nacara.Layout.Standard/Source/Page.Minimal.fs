@@ -184,7 +184,7 @@ let private renderStartNavbar (partials : Partial array) (pageSection : string) 
         renderNavbarBurgerMenu
     ]
 
-let private renderEndNavbar (items : IconLink list) =
+let private renderEndNavbar (items : EndNavbarItem list) =
     Bulma.navbarEnd.div [
         // On mobile, we hide the navbar end
         // Its content will be include in the navbar menu
@@ -303,29 +303,23 @@ let private navbar (partials : Partial array) (config : Config) (pageSection : s
         ]
     ]
 
-[<NoComparison>]
-type RenderArgs =
-    {
-        Config : Config
-        Partials : Partial array
-        Section : string
-        TitleOpt : string option
-        Content : ReactElement
-    }
+let render
+    (rendererContext : RendererContext)
+    (pageContext : PageContext)
+    (content : ReactElement) =
 
-let render (args : RenderArgs) =
     let titleStr =
-        match args.TitleOpt with
+        match pageContext.Title with
         | Some title ->
-            args.Config.SiteMetadata.Title  + " · " + title
+            rendererContext.Config.SiteMetadata.Title  + " · " + title
         | None ->
-            args.Config.SiteMetadata.Title
+            rendererContext.Config.SiteMetadata.Title
 
     let toUrl (url : string) =
-        args.Config.SiteMetadata.BaseUrl + url
+        rendererContext.Config.SiteMetadata.BaseUrl + url
 
     let footerOpt =
-        args.Partials
+        rendererContext.Partials
         |> Array.tryFind (fun partial ->
             partial.Id = "footer"
         )
@@ -350,11 +344,11 @@ let render (args : RenderArgs) =
                     prop.content "width=device-width, initial-scale=1"
                 ]
 
-                match args.Config.SiteMetadata.FavIcon with
+                match rendererContext.Config.SiteMetadata.FavIcon with
                 | Some favIcon ->
                     Html.link [
                         prop.rel "shortcut icon"
-                        prop.href (args.Config.SiteMetadata.BaseUrl + favIcon)
+                        prop.href (rendererContext.Config.SiteMetadata.BaseUrl + favIcon)
                     ]
 
                 | None ->
@@ -372,17 +366,17 @@ let render (args : RenderArgs) =
             ]
 
             Html.body [
-                navbar args.Partials args.Config args.Section
+                navbar rendererContext.Partials rendererContext.Config pageContext.Section
 
                 Html.div [
                     prop.className "grey-overlay"
                 ]
 
-                args.Content
+                content
 
                 Html.script [
                     prop.async true
-                    prop.src (args.Config.SiteMetadata.BaseUrl + Dependencies.menu)
+                    prop.src (rendererContext.Config.SiteMetadata.BaseUrl + Dependencies.menu)
                 ]
 
                 match footerOpt with
@@ -394,10 +388,10 @@ let render (args : RenderArgs) =
                 | None ->
                     null
 
-                if args.Config.IsWatch then
+                if rendererContext.Config.IsWatch then
                     Html.script [
                         prop.async true
-                        prop.src (args.Config.SiteMetadata.BaseUrl + "resources/nacara/scripts/live-reload.js")
+                        prop.src (rendererContext.Config.SiteMetadata.BaseUrl + "resources/nacara/scripts/live-reload.js")
                     ]
             ]
         ]

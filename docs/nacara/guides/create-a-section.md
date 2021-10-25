@@ -1,6 +1,6 @@
 ---
 title: Create a Section
-layout: nacara-standard
+layout: standard
 ---
 
 A section in Nacara helps you organize your website. For example, you can have the following sections:

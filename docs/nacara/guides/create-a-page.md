@@ -1,6 +1,6 @@
 ---
 title: Create a page
-layout: nacara-standard
+layout: standard
 ---
 
 A page in Nacara is a **Markdown** file composed of two things:
@@ -15,7 +15,7 @@ Create a file `docsrc/documentation/tutorial/my-page.md`:
 ```
 ---
 title: My page
-layout: nacara-standard
+layout: standard
 ---
 
 This is a new page created for the tutorial.

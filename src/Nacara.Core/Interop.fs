@@ -1,3 +1,4 @@
+/// Addition interop functions
 module Interop
 
 open Fable.Core.JsInterop

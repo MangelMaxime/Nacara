@@ -1,10 +1,11 @@
+/// Helpers making it easier to work with menus
 module Menu
 
 open Nacara.Core.Types
 
 
 /// <summary>
-/// Transform the given menu into a flat list of MenuItem.Page and MenuItem.Link
+/// Transform the given menu into a flat list of <c>MenuItem.Page</c> and <c>MenuItem.Link</c>
 ///
 /// This function is mostly used by <c>toFlatMenu</c> function.
 /// </summary>
@@ -22,7 +23,7 @@ let rec flatten (menu : Menu) =
 
 
 /// <summary>
-/// Transform a menu into a FlatMenu representation
+/// Transform a menu into a <c>FlatMenu</c> representation
 ///
 /// This function is handy when generating menu or the navigation button between pages.
 /// </summary>
@@ -39,7 +40,7 @@ let toFlatMenu (menu : Menu) =
     )
 
 /// <summary>
-/// It returns a MenuItem.List if it finds a page with the given pageId under a MenuItem.List.
+/// It returns a <c>MenuItem.List</c> if it finds a page with the given pageId under a MenuItem.List.
 ///
 /// Used for obtaining the section name for navigation buttons.
 /// </summary>

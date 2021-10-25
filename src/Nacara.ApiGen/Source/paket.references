@@ -1,0 +1,6 @@
+group ApiGen
+    FSharp.Core
+    FSharp.Formatting
+    FSharp.Compiler.Service
+    Argu
+    FSlugify

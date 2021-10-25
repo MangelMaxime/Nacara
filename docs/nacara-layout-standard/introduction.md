@@ -1,6 +1,6 @@
 ---
 title: Introduction
-layout: nacara-standard
+layout: standard
 ---
 
 ## Installation

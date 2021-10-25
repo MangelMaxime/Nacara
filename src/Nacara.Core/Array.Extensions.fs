@@ -1,3 +1,4 @@
+/// Additional operations on Array
 module Array
 
 // Copied from F# plus

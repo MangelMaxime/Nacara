@@ -318,29 +318,23 @@ let render (rendererContext : RendererContext) (pageContext : PageContext) =
                 rehypePlugins
             )
 
-        return Minimal.render
-            {
+        let content =
+            WithMenuOrToc.render {
                 Config = rendererContext.Config
-                Section = pageContext.Section
-                TitleOpt = pageContext.Title
-                Partials = rendererContext.Partials
-                Content =
-                    WithMenuOrToc.render {
-                        Config = rendererContext.Config
-                        SectionMenu = rendererContext.SectionMenu
-                        Pages = rendererContext.Pages
-                        PageContext = pageContext
-                        PageHtml = pageContent
-                        PageContent =
-                            renderPageContent
-                                rendererContext.Config.Navbar
-                                pageContext.Title
-                                (renderEditButton rendererContext.Config pageContext)
-                                (renderNavigationButtons rendererContext.Config.SiteMetadata.BaseUrl rendererContext.Pages rendererContext.SectionMenu pageContext)
-                                pageContent
-                                pageContext
-                                rendererContext.SectionMenu
-                    }
-
+                SectionMenu = rendererContext.SectionMenu
+                Pages = rendererContext.Pages
+                PageContext = pageContext
+                PageHtml = pageContent
+                PageContent =
+                    renderPageContent
+                        rendererContext.Config.Navbar
+                        pageContext.Title
+                        (renderEditButton rendererContext.Config pageContext)
+                        (renderNavigationButtons rendererContext.Config.SiteMetadata.BaseUrl rendererContext.Pages rendererContext.SectionMenu pageContext)
+                        pageContent
+                        pageContext
+                        rendererContext.SectionMenu
             }
+
+        return Minimal.render rendererContext pageContext content
     }

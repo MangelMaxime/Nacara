@@ -4,38 +4,63 @@ open Fable.Core.JsInterop
 open Nacara.Core.Types
 open Node
 open Feliz
-
-
+open Feliz.Bulma
 
 exportDefault
     {
         Renderers = [|
             {
-                Name = "nacara-standard"
+                Name = "standard"
                 Func = Page.Standard.render
             }
             {
-                Name = "nacara-navbar-only"
+                Name = "navbar-only"
                 Func =
                     fun rendererContext pageContext ->
                         promise {
                             let! pageContent =
                                 rendererContext.MarkdownToHtml pageContext.Content
 
-                            return Page.Minimal.render {
-                                Config = rendererContext.Config
-                                Section = pageContext.Section
-                                TitleOpt = pageContext.Title
-                                Partials = rendererContext.Partials
-                                Content =
-                                    Html.div [
-                                        prop.dangerouslySetInnerHTML pageContent
-                                    ]
-                            }
+                            let content =
+                                Html.div [
+                                    prop.dangerouslySetInnerHTML pageContent
+                                ]
+
+                            return Page.Minimal.render rendererContext pageContext content
                         }
             }
             {
-                Name = "nacara-changelog"
+                Name = "api"
+                Func =
+                    fun rendererContext pageContext ->
+                        promise {
+                            let! pageContent =
+                                rendererContext.MarkdownToHtml pageContext.Content
+
+                            let content =
+                                Bulma.container [
+                                    Bulma.columns [
+                                        Bulma.column [
+                                            column.is10Desktop
+                                            column.isOffset1Desktop
+
+                                            prop.children [
+                                                Bulma.section [
+                                                    Bulma.content [
+                                                        prop.dangerouslySetInnerHTML pageContent
+                                                    ]
+                                                ]
+                                            ]
+                                        ]
+                                    ]
+                                ]
+
+
+                            return Page.Minimal.render rendererContext pageContext content
+                        }
+            }
+            {
+                Name = "changelog"
                 Func = Page.Changelog.render
             }
         |]

@@ -29,10 +29,9 @@
                 ]
             },
             {
-                "section": "showcase",
-                "url": "/Nacara/showcase/index.html",
-                "label": "Showcase",
-                "pinned": true
+                "section": "reference",
+                "label": "API",
+                "url": "/Nacara/reference/Nacara.Core/index.html"
             },
             {
                 "section": "changelogs",

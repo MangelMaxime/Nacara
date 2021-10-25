@@ -4,23 +4,17 @@
     "license": "Apache-2.0",
     "type": "module",
     "devDependencies": {
-        "@babel/preset-react": "^7.14.5",
-        "@babel/register": "^7.15.3",
         "changelog-parser": "^2.8.0",
-        "concurrently": "^6.1.0",
-        "gh-pages": "^3.2.3",
-        "nodemon": "^2.0.7",
-        "shelljs": "^0.8.4",
-        "shx": "^0.3.3"
+        "concurrently": "^6.2.2",
+        "nodemon": "^2.0.13"
     },
     "engines": {
         "node": ">=14.0.0",
         "npm": ">=7.0.0"
     },
     "dependencies": {
-        "@fortawesome/fontawesome-free": "^5.15.3",
-        "bulma": "^0.9.2",
-        "bulma-switch": "^2.0.0",
+        "@babel/preset-react": "^7.14.5",
+        "bulma": "^0.9.3",
         "remark-github": "^11.1.0",
         "vscode-theme-onelight": "github:akamud/vscode-theme-onelight"
     }

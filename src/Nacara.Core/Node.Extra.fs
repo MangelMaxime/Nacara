@@ -1,3 +1,4 @@
+/// Additional Node.js functionality.
 module rec Node
 
 open Fable.Core

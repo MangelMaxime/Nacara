@@ -1,6 +1,6 @@
 ---
 title: Introduction
-layout: nacara-standard
+layout: standard
 ---
 
 This is a quick tutorial on how to use Nacara to build your site.

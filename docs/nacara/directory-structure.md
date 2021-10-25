@@ -1,6 +1,6 @@
 ---
 title: Directory structure
-layout: nacara-standard
+layout: standard
 ---
 
 A basic Nacara site looks to something like that:

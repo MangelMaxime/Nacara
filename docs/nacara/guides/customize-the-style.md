@@ -1,6 +1,6 @@
 ---
 title: Style your application
-layout: nacara-standard
+layout: standard
 ---
 
 Nacara allows you to customize your application style to match your design.

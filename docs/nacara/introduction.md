@@ -1,6 +1,6 @@
 ---
 title: Introduction
-layout: nacara-standard
+layout: standard
 ---
 
 Nacara is a static site generator. You write markdown files and let Nacara generate your website for you.

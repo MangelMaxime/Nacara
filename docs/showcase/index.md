@@ -1,5 +1,5 @@
 ---
-layout: nacara-navbar-only
+layout: navbar-only
 ---
 
 TODO showcase
