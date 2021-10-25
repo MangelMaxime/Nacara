@@ -49,6 +49,10 @@ let main argv =
             let dllFile = Path.Combine(libDir, project + ".dll")
             let apiDocInput = ApiDocInput.FromFile(dllFile)
 
+            let baseUrl =
+                res.TryGetResult Base_Url
+                |> Option.defaultValue "/"
+
             let apiDocModel =
                 ApiDocs.GenerateModel(
                     [ apiDocInput ],
@@ -57,7 +61,8 @@ let main argv =
                     qualify = true,
                     libDirs = [
                         libDir
-                    ]
+                    ],
+                    root = baseUrl
                 )
 
             // Load the XML doc file
@@ -67,10 +72,6 @@ let main argv =
             // Clean the output folder
             if Directory.Exists (Path.Combine(output, "reference", project)) then
                 Directory.Delete(Path.Combine(output, "reference", project), true)
-
-            let baseUrl =
-                res.TryGetResult Base_Url
-                |> Option.defaultValue "/"
 
             let apiUrl =
                 $"reference/{project}/"
