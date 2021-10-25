@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <OutputType>Exe</OutputType>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>botsay</ToolCommandName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
@@ -11,8 +13,8 @@
     <Compile Include="DocLocator.fs" />
     <Compile Include="CommentFormatter.fs" />
     <Compile Include="File.fs" />
-    <!-- <Compile Include="Generator/Namespace.fs" /> -->
     <Compile Include="Render.fs" />
+    <Compile Include="Generate.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
   <Import Project="..\..\..\.paket\Paket.Restore.targets" />

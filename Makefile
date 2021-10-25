@@ -4,6 +4,7 @@ NACARA_LAYOUT_STANDARD_DIR=src/Nacara.Layout.Standard
 NACARA_DIR=src/Nacara
 NACARA_CORE_DIR=src/Nacara.Core
 NACARA_CREATE_DIR=src/Nacara.Create
+NACARA_API_GEN_DIR=src/Nacara.ApiGen
 
 # Base of the Fable commands
 NACARA_LAYOUT_STANDARD_FABLE=dotnet fable $(NACARA_LAYOUT_STANDARD_DIR)/Source --outDir $(NACARA_LAYOUT_STANDARD_DIR)/dist
@@ -73,6 +74,15 @@ build: clean
 
 generate-docs: build
 	@$(call log_target_info, "Generating documentation...")
+	@# Publish Nacare.Core to have all the dll files available in a single folder
+	dotnet publish $(NACARA_CORE_DIR)
+	@# Generate the API reference files
+	cd $(NACARA_API_GEN_DIR)/Source \
+		&& dotnet run -f net5.0 -- \
+			--project Nacara.Core \
+			-lib ../../Nacara.Core/bin/Debug/netstandard2.0/publish/ \
+			--output ../../../docs/ \
+			--base-url /Nacara/
 	npx nacara
 
 release: build

@@ -49,7 +49,7 @@ $menu-item-radius: $radius-large $radius-large;
 $footer-background-color: $primary;
 $footer-color: $white;
 
-$link: $primary;
+$link: darken($primary, 4%);
 $code: $red;
 
 $body-size: 14px;
@@ -151,9 +151,6 @@ $body-size: 14px;
 
 // API gen specific
 
-
-
-
 .api-code {
     font-family: monospace;
     margin-bottom: 1rem;
@@ -167,17 +164,63 @@ $body-size: 14px;
         white-space: nowrap;
     }
 
-    .record-field-name,
-    .property {
-        color: #4078f2;
+    a.record-field-name,
+    a.union-case-property,
+    a.property {
+        // color: #4078f2;
+        color: darken($primary, 4%);
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    span.property {
+        color: darken($primary, 4%);
+    }
+
+    @keyframes blink {
+        0% {
+            background-color: lighten($primary, 4%);
+            color: $white;
+        }
+        100% {
+            background-color: transparent;
+            color: $link;
+        }
+    }
+
+    .property[id],
+    a[id] {
+        &:target {
+            animation-name: blink;
+            animation-direction: normal;
+            animation-duration: 0.75s;
+            animation-iteration-count: 2;
+            animation-timing-function: ease;
+        }
+
+        // On desktop and above we only have the navbar to take into account
+        @include desktop {
+            &[id] {
+                scroll-margin-top: $computed-navbar-height + 1rem;
+            }
+        }
+
+        // On touch screen we need to take into account the navbar and the breadcrumb
+        @include touch {
+            &[id] {
+                scroll-margin-top: $computed-navbar-height + $navbar-height + 1rem;
+            }
+        }
     }
 
     .keyword {
-        color: #A626A4;
+        color: #a626a4;
     }
 
     .type {
-        color: #C18401;
+        color: #c18401;
     }
 }
 
@@ -208,13 +251,17 @@ dl.docs-parameters dd {
     margin-bottom: 1em;
 }
 
+.doc-parameter {
+    margin-bottom: 1rem;
+}
+
 dl.docs-parameters dt code {
     color: currentColor;
 }
 
 .docs-summary a.type,
 dl.docs-parameters dt a.type {
-    color: #C18401;
+    color: #c18401;
 }
 
 .docs-summary a.type:hover,
@@ -224,10 +271,18 @@ dl.docs-parameters dt a.type:hover {
     cursor: pointer;
 }
 
+dt.api-code {
+    .return-type {
+        a {
+            color: #c18401;
+        }
+    }
+}
+
 .record-field {
     .record-field-type {
         a {
-            color: #C18401;
+            color: #c18401;
 
             &:hover {
                 text-decoration: underline;
@@ -241,6 +296,12 @@ dl.docs-parameters dt a.type:hover {
         &:hover {
             text-decoration: underline;
         }
+    }
+}
+
+a.union-case-property {
+    &:hover {
+        text-decoration: underline;
     }
 }
 

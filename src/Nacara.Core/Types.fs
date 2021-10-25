@@ -9,6 +9,13 @@ open Node
 #nowarn "21"
 #nowarn "40"
 
+/// <summary>
+/// Type representing front-matter attributes
+///
+/// If you need to access information from it consider it being an <c>obj</c>.
+///
+/// So you can either use dynamic typing or decode the object using Thoth.Json
+/// </summary>
 type FrontMatterAttributes =
     class end
 
@@ -75,6 +82,10 @@ type PageContext =
         Attributes : FrontMatterAttributes
     }
 
+/// <summary>
+/// Represents a simple link in the start section of the navbar
+/// </summary>
+[<NoComparison>]
 type LabelLink =
     {
         /// <summary>
@@ -198,7 +209,7 @@ module DropdownLink =
 [<RequireQualifiedAccess>]
 type DropdownItem =
     /// <summary>
-    /// Represents a simple divider in the dropdown. This can helps structure your dropdown down content.
+    /// Represents a simple divider in the dropdown. This can helps structure your dropdown content.
     /// </summary>
     | Divider
     /// <summary>
@@ -271,7 +282,7 @@ module DropdownInfo =
 ///
 /// The start navbar is displayed on both the mobile and desktop screen.
 /// </summary>
-[<RequireQualifiedAccess>]
+[<RequireQualifiedAccess; NoComparison>]
 type StartNavbarItem =
     /// <summary>
     /// Textual navbar item
@@ -297,6 +308,7 @@ module StartNavbarItem =
 /// <summary>
 /// All the information about the navbar configuration
 /// </summary>
+[<NoComparison>]
 type NavbarConfig =
     {
         /// <summary>
@@ -338,83 +350,85 @@ module NavbarConfig =
         }
 
 /// <summary>
-///
+/// Information specific to a menu item representing an internal page
 /// </summary>
 type MenuItemPage =
     {
         /// <summary>
+        /// Text to display in the menu.
         ///
+        /// If not set, the title of the page will be used.
         /// </summary>
         Label : string option
         /// <summary>
-        ///
+        /// PageId of the page to link to.
         /// </summary>
         PageId : string
     }
 
 /// <summary>
-///
+/// Information specific to menu item representing a link
 /// </summary>
 type MenuItemLink =
     {
         /// <summary>
-        ///
+        /// Text to display in the menu.
         /// </summary>
         Label : string
         /// <summary>
-        ///
+        /// Url to redirect to.
         /// </summary>
         Href : string
     }
 
 /// <summary>
-///
+/// Information specific to list of menu item, used to catagegorize the menu items.
 /// </summary>
 type MenuItemList =
     {
         /// <summary>
-        ///
+        /// Label to display on top of the list
         /// </summary>
         Label : string
         /// <summary>
-        ///
+        /// List of items contained in this list
         /// </summary>
         Items : MenuItem list
     }
 
 /// <summary>
-///
+/// All the different representation of a menu item
 /// </summary>
 and [<RequireQualifiedAccess>] MenuItem =
     /// <summary>
-    ///
+    /// Menu item representing an internal page
     /// </summary>
     | Page of MenuItemPage
     /// <summary>
-    ///
+    /// Menu item representing a list of menu item
     /// </summary>
     | List of MenuItemList
     /// <summary>
-    ///
+    /// Menu item representing a link
     /// </summary>
     | Link of MenuItemLink
 
 /// <summary>
-///
+/// A menu, consist of a list of <c>MenuItem</c>
 /// </summary>
 type Menu = MenuItem list
 
 /// <summary>
-///
+/// Flatten representation of a menu, used when searching the previous or next menu item.
 /// </summary>
 [<RequireQualifiedAccess>]
 type FlatMenu =
     /// <summary>
-    ///
+    /// Menu item representing a link
     /// </summary>
     | Link of MenuItemLink
     /// <summary>
-    ///
+    /// Menu item representing an internal page
     /// </summary>
     | Page of MenuItemPage
 
@@ -471,43 +485,60 @@ module Menu =
         Decode.list MenuItem.decoder
 
 /// <summary>
-///
+/// Menu configuration associated to a section of the website
 /// </summary>
 type MenuConfig =
     {
         /// <summary>
+        /// Name of the section associated to the menu
         ///
+        /// Each folder under the source solder represents a section.
+        /// <example>
+        /// The following directory structure contains 1 section named <c>documentation</c>
+        ///
+        /// <code>
+        /// docs
+        /// └── documentation
+        ///     └── page1.md
+        /// </code>
+        /// </example>
         /// </summary>
         Section : string
         /// <summary>
-        ///
+        /// Menu information associated to the section
         /// </summary>
         Items : Menu
     }
 
 /// <summary>
-///
+/// All metadata associated to the website
 /// </summary>
 type SiteMetadata =
     {
         /// <summary>
-        ///
+        /// Title of the website
         /// </summary>
         Title: string
         /// <summary>
+        /// URL for your website. This is the domain part of your URL.
         ///
+        /// For example, <c>https://mangelmaxime.github.io</c> is the URL of <c>https://mangelmaxime.github.io/Nacara/</c>
         /// </summary>
         Url: string
         /// <summary>
+        /// Base URL for your site. This is the path after the domain.
         ///
+        /// For example, <c>/Nacara/</c> is the baseUrl of <c>https://mangelmaxime.github.io/Nacara/</c>.
+        ///
+        /// For URLs that have no path, the baseUrl should be set to <c>/</c>.
         /// </summary>
         BaseUrl: string
         /// <summary>
-        ///
+        /// URL for editing your documentation.
         /// </summary>
         EditUrl: string option
         /// <summary>
-        ///
+        /// Path to your site favIcon
         /// </summary>
         FavIcon: string option
     }
@@ -653,12 +684,47 @@ type Config =
             path.join(this.WorkingDirectory, this.Output)
 
 /// <summary>
+/// Represents a partial script
 ///
+/// A partial is a script that is invoked at generation time, it is used to
+/// offer more customization to some elements of the website.
+///
+/// For example, some layout can detect if you add a <c>footer</c> partial and include it
+/// on all your pages.
+///
+/// It can also be used to write custom downpdown content using full HTML instead of
+/// the simple and predefined template.
 /// </summary>
 [<NoComparison>]
 type Partial =
     {
+        /// <summary>
+        /// Unique name of the partial, it is generated from the partial file name.
+        ///
+        /// <example>
+        /// With the following directory structure,
+        ///
+        /// <code>
+        /// docs
+        /// ├── index.md
+        /// └── _partials
+        ///     ├── dropdown
+        ///         └── api.jsx
+        ///     └── footer.jsx
+        /// </code>
+        ///
+        /// There are 2 partials:
+        /// - <c>dropdown/api</c>
+        /// - <c>footer</c>
+        ///
+        /// </example>
+        /// </summary>
         Id : string
+        /// <summary>
+        /// Module instance dynamically loaded of the partial.
+        ///
+        /// When inserting the partial Nacara will use the <c>default</c> exposed property
+        /// </summary>
         Module : {| ``default`` : ReactElement |}
     }
 
@@ -689,6 +755,15 @@ module MarkdownToHtml =
     // For now, this function is using dynamic typing
     // But later it would be nice to have bindings for the different remark & rehype plugins
     // And rewrite this function with them
+
+    /// <summary>
+    /// Transform markdown content to HTML using the remark and rehype plugins provided
+    /// </summary>
+    /// <param name="config">Nacara configuration</param>
+    /// <param name="remarkPlugins">List of remark plugins to use for the transformation</param>
+    /// <param name="rehypePlugins">List of rehype plugins to use for the transformation</param>
+    /// <param name="markdownText">Text to transform</param>
+    /// <returns>HTML text</returns>
     let markdownToHtml
         (config : Config)
         (remarkPlugins : RemarkPlugin array)
@@ -739,20 +814,63 @@ module MarkdownToHtml =
             return chain?``process``(markdownText)
         }
 
+/// <summary>
+/// A context accessible when rendering a page.
+///
+/// It contains all the information about the application state like user configuration,
+/// all the pages, partials, etc.
+/// </summary>
+
 [<NoComparison; NoEquality; AttachMembers>]
 // AttachMembers is important so the MarkdownToHtml method is available from JavaScript
 type RendererContext =
     {
+        /// <summary>
+        /// Config object coming from the <c>nacara.config.json</c> file
+        /// </summary>
         Config : Config
+        /// <summary>
+        /// <c>Some X</c> if the page we are rendering is in a section with a menu.
+        ///
+        /// <c>None</c> Otherwise
+        /// </summary>
         SectionMenu : Menu option
+        /// <summary>
+        /// All the partials available.
+        ///
+        /// If your layout support <c>footer</c> partial, then you can try to look
+        /// for it here. If found, you can use it or emit a warning/error if missing.
+        /// </summary>
         Partials : Partial array
+        /// <summary>
+        /// All the section menu available
+        /// </summary>
         Menus : MenuConfig array
+        /// <summary>
+        /// All the pages available
+        ///
+        /// Having access, to all the page like that makes it really easy to generate
+        /// index pages. For example, if you are generating a blog, you can want to generate
+        /// and blog index page. To do that, you can search all the pages with a specific
+        /// layout and access their title, summary, link, from it.
+        /// </summary>
         Pages : PageContext array
-
     }
 
     // MarkdownToHtml is a method so layout can add additional plugins if needed
     // See: Nacara.Layout.Standard/Page.Standard.fs render function
+
+    /// <summary>
+    /// Transform the given markdown text to HTML using the the provided plugins.
+    ///
+    /// This will method will include by default the plugins configured via
+    /// the configuration file. But if when writing a custom layout, you need a specific plugin,
+    /// you can add it via the corresponding argument.
+    /// </summary>
+    /// <param name="markdownText">Text to transform</param>
+    /// <param name="remarkPlugins">Layout specific remark plugins</param>
+    /// <param name="rehypePlugins">Layout specific rehype plugins</param>
+    /// <returns></returns>
     member this.MarkdownToHtml
         (
             markdownText: string,
@@ -776,25 +894,64 @@ type RendererContext =
             rehypePlugins
             markdownText
 
+
+/// <summary>
+/// Representation a layout depdency
+///
+/// A layout depdencency is a file that will be copied from the <c>Source</c> file
+/// to the <c>Destination</c> file inside of the output folder.
+///
+/// This is useful, when you want to include a JavaScript file to your layout
+/// </summary>
 type LayoutDependency =
     {
+        /// <summary>
+        ///
+        /// </summary>
         Source : string
+        /// <summary>
+        ///
+        /// </summary>
         Destination : string
     }
 
+/// <summary>
+/// Alias representing the function which generate a page
+/// </summary>
 type LayoutRenderFunc = RendererContext -> PageContext -> JS.Promise<ReactElement>
 
+/// <summary>
+/// Representation of a layout renderer
+/// </summary>
 [<NoComparison; NoEquality>]
 type LayoutRenderer =
     {
+        /// <summary>
+        /// Name of the layout, this is the name that the user will need to
+        /// specific via the <c>layout</c> property in their front-matter
+        /// </summary>
         Name : string
+        /// <summary>
+        /// Function that will generate the page
+        /// </summary>
         Func :  LayoutRenderFunc
     }
 
+/// <summary>
+/// Exposed contract of a layout
+/// </summary>
 [<NoComparison; NoEquality>]
 type LayoutInfo =
     {
+
+        /// <summary>
+        /// List of dependencies that will be copied to the output folder
+        /// </summary>
         Dependencies : LayoutDependency array
+
+        /// <summary>
+        /// List of renderers to make available
+        /// </summary>
         Renderers : LayoutRenderer array
     }
 
@@ -803,7 +960,7 @@ type LayoutInterface =
 
 module Config =
 
-    let decoder (cwd : string) (_ : bool) : Decoder<Config> =
+    let decoder (cwd : string) (isWatch : bool) : Decoder<Config> =
         Decode.object (fun get ->
             {
                 WorkingDirectory = cwd
@@ -820,15 +977,33 @@ module Config =
                 Layouts = get.Required.Field "layouts" (Decode.array Decode.string)
                 ServerPort = get.Optional.Field "serverPort" Decode.int
                                 |> Option.defaultValue 8080
-                IsWatch = false
+                IsWatch = isWatch
                 SiteMetadata = get.Required.Field "siteMetadata" SiteMetadata.decoder
             }
         )
 
+/// <summary>
+/// Represents a file in the queue to be processed
+/// </summary>
 [<RequireQualifiedAccess; NoComparison>]
 type QueueFile =
+    /// <summary>
+    /// Markdown file that need to be transform to HTML before being written
+    /// </summary>
     | Markdown of PageContext
+    /// <summary>
+    /// SASS file that will trigger a SASS compilation before being written
+    /// </summary>
     | Sass of filePath : string
+    /// <summary>
+    /// JavaScript file that will be copied as is to the output folder
+    /// </summary>
     | JavaScript of filePath : string
+    /// <summary>
+    /// A file that will be copied as is to the output folder
+    /// </summary>
     | LayoutDependency of LayoutDependency
+    /// <summary>
+    /// A file that will be copied as is to the output folder
+    /// </summary>
     | Other of filePath : string

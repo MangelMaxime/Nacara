@@ -136,28 +136,6 @@ let private codeInline =
     }
     |> applyFormatter
 
-// let private anchor =
-//     {
-//         TagName = "a"
-//         Formatter =
-//             function
-//             | VoidElement _ ->
-//                 None
-
-//             | NonVoidElement (innerText, attributes) ->
-//                 let href =
-//                     match Map.tryFind "href" attributes with
-//                     | Some href ->
-//                         href
-
-//                     | None ->
-//                         ""
-
-//                 sprintf "[%s](%s)" innerText href
-//                 |> Some
-//     }
-//     |> applyFormatter
-
 let private paragraph =
     {
         TagName = "para"
@@ -563,9 +541,46 @@ let removeSummaryTag =
     }
     |> applyFormatter
 
+let removeParamElement =
+    {
+        TagName = "param"
+        Formatter =
+            function
+            | VoidElement _ ->
+                None
+
+            | NonVoidElement (_, _) ->
+                // Returning an empty string will completely remove the element
+                Some ""
+
+    }
+    |> applyFormatter
+
+let removeRemarkTag =
+    {
+        TagName = "remark"
+        Formatter =
+            function
+            | VoidElement _ ->
+                None
+
+            | NonVoidElement (innerText, _) ->
+                innerText
+                |> Some
+
+    }
+    |> applyFormatter
+
+/// <summary>
+/// Format the given doc comments text
+/// </summary>
+/// <param name="text"></param>
+/// <returns></returns>
 let format (text : string) =
     text
     |> removeSummaryTag
+    |> removeParamElement
+    |> removeRemarkTag
     |> example
     |> paragraph
     |> block
@@ -578,26 +593,82 @@ let format (text : string) =
     |> unescapeSpecialCharacters
 
 /// <summary>
-/// Extract and format only the summary tags ignoring all the others specials tags
+/// Extract and format only the summary tag
 /// </summary>
 /// <param name="text"></param>
 /// <returns></returns>
-let extractSummary (text : string) =
-    let extractor =
-        {
-            TagName = "summary"
-            Formatter =
-                function
-                | VoidElement _ ->
-                    None
+let formatSummaryOnly (text : string) =
+    let pattern = tagPattern "summary"
 
-                | NonVoidElement (innerText, _) ->
-                    innerText
-                    |> Some
+    // Match all the param tags
+    match Regex.Match(text, pattern, RegexOptions.IgnoreCase) with
+    | m when m.Success ->
+        if m.Groups.["void_element"].Success then
+            ""
+        else if m.Groups.["non_void_element"].Success then
+            m.Groups.["non_void_innerText"].Value
+            |> format
 
-        }
-        |> applyFormatter
+        else
+            // Should not happen but we are forced to handle it by F# compiler
+            ""
 
-    text
-    |> extractor
-    |> format
+    | _ ->
+        ""
+
+
+/// <summary>
+/// Try to extract a specific param tag and format
+/// </summary>
+/// <returns>
+/// Return the formatted param tag doc if found.
+///
+/// Otherwise, it returns <c>None</c>
+/// </returns>
+let tryFormatParam (parameterName : string) (text : string) =
+    let pattern = tagPattern "param"
+
+    // Match all the param tags
+    Regex.Matches(text, pattern, RegexOptions.IgnoreCase)
+    // Try find the param tag that has name attribute equal to the parameterName
+    |> Seq.tryFind (fun m ->
+        if m.Groups.["void_element"].Success then
+            false
+        else if m.Groups.["non_void_element"].Success then
+            let attributes = getAttributes m.Groups.["non_void_attributes"]
+
+            match Map.tryFind "name" attributes with
+            | Some name ->
+                name = parameterName
+
+            | None ->
+                false
+        else
+            // Should not happen but we are forced to handle it by F# compiler
+            false
+    )
+    // Extract the inner text of the param tag
+    |> Option.map (fun m ->
+        m.Groups.["non_void_innerText"].Value
+        |> format
+    )
+
+let tryFormatReturnsOnly (text : string) =
+    let pattern = tagPattern "returns"
+
+    // Match all the param tags
+    match Regex.Match(text, pattern, RegexOptions.IgnoreCase) with
+    | m when m.Success ->
+        if m.Groups.["void_element"].Success then
+            None
+        else if m.Groups.["non_void_element"].Success then
+            m.Groups.["non_void_innerText"].Value
+            |> format
+            |> Some
+
+        else
+            // Should not happen but we are forced to handle it by F# compiler
+            None
+
+    | _ ->
+        None

@@ -146,6 +146,8 @@ NUGET
     FSharp.Core (5.0.2)
     FSharp.Formatting (11.4.3)
       FSharp.Compiler.Service (>= 40.0)
+    FSlugify (1.1)
+      FSharp.Core (>= 4.7)
     Microsoft.Build.Framework (16.11)
       System.Security.Permissions (>= 4.7)
     Microsoft.Build.Tasks.Core (16.11)

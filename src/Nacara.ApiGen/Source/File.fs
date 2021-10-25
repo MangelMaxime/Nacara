@@ -8,7 +8,7 @@ let write
     (fileName : string)
     (sb : StringBuilder) =
 
-    let filePath = Path.Join(docsRoot, fileName)
+    let filePath = Path.Combine(docsRoot, fileName)
 
     // Ensure that the directory exists
     Directory.CreateDirectory(Path.GetDirectoryName(filePath))

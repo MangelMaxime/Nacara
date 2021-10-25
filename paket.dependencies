@@ -27,3 +27,4 @@ group ApiGen
     nuget FSharp.Compiler.Service
     nuget Expecto
     nuget Argu
+    nuget FSlugify
