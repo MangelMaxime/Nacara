@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-015 - 2021-10-25
+
 ### Changed
 
 * Simplify the `Page.Minimal.render` function because I was often forgetting to add the new arguments when using JavaScript
