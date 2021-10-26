@@ -6,6 +6,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-017 - 2021-10-26
+
+### Fixed
+
+* Add missing `has-footer` to the body element when a footer is added via the partials.
+
+## 1.0.0-beta-016 - 2021-10-26
+
+### Fixed
+
+* Place correctly the footer even when there is not enought content to fill the whole page
+
+### Changed
+
+* In watch mode, general a local link for the brand item instead of redirecting the live website.
+
 ## 1.0.0-beta-015 - 2021-10-25
 
 ### Changed

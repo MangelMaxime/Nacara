@@ -36,7 +36,7 @@ The template is configured to use SCSS, if you prefer to use SASS you can adapt 
 
 Add the following code to the page you created earlier `docs/tutorial/my-page`
 
-```
+```md
 <div class="my-text">
 
 This text should be bold and red.
@@ -50,7 +50,7 @@ This text should be bold and red.
 
 Create a file `docs/scss/my-style.scss`
 
-```
+```scss
 .my-text {
     color: $danger;
     font-weight: $weight-bold;
@@ -65,7 +65,7 @@ Because default layout of Nacara use Bulma, you have access to [Bulma variables]
 
 Include your file in `style.scss`
 
-```
+```scss
 @import './scss/my-style.scss';
 ```
 

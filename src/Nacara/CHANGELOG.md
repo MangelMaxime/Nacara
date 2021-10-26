@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-021 - 2021-10-26
+
 ### Added
 
 * Support both `nacara.config.json` and `nacara.config.js` as the config file.

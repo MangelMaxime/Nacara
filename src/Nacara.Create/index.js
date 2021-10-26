@@ -94,7 +94,7 @@ const run = async () => {
 
     shell.cp(resolve('./templates/style.scss'), destination('docs/style.scss'));
 
-    shell.cp(resolve('./templates/.gitignore'), destination('.gitignore'));
+    shell.cp(resolve('./templates/gitignore'), destination('.gitignore'));
     shell.cp(resolve('./templates/package.json'), destination('./package.json'));
 
     shell.ls([

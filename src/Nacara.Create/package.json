@@ -1,6 +1,6 @@
 {
   "name": "create-nacara",
-  "version": "1.0.0-beta-001",
+  "version": "1.0.0-beta-004",
   "description": "",
   "main": "index.js",
   "bin": "index.js",
