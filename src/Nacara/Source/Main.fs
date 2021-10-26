@@ -236,12 +236,15 @@ let initialize
     promise {
         Log.info $"Current directory:\n%s{cwd}"
 
-        let nacaraConfigPath = path.join(cwd, "nacara.config.json")
-        let! hasDocsConfig = File.exist(nacaraConfigPath)
+        let nacaraJsonConfigPath = path.join(cwd, "nacara.confi2g.json")
+        let nacaraJsConfigPath = path.join(cwd, "nacara.config.js")
 
-        // Check if the Nacara config file exist
-        if hasDocsConfig then
-            let! configJson = File.read nacaraConfigPath
+        let! hasJsonConfig = File.exist(nacaraJsonConfigPath)
+        let! hasJsConfig = File.exist(nacaraJsConfigPath)
+
+        // Check if the Nacara JSON config file exist
+        if hasJsonConfig then
+            let! configJson = File.read nacaraJsonConfigPath
 
             // Check if the Nacara config file is valid
             match Decode.fromString (Config.decoder cwd isWatch) configJson with
@@ -251,6 +254,24 @@ let initialize
             | Error errorMessage ->
                 Log.error $"Invalid config file. Error:\n{errorMessage}"
                 ``process``.exit(ExitCode.INVALID_CONFIG_FILE)
+
+        // Try to find the config as a JS file
+        else if hasJsConfig then
+            let! configInstance =
+                // './' is important to treat the import as a relative file
+                // and not an NPM package
+                Interop.importDynamic cwd "./nacara.config.js"
+
+            // Check if the Nacara config file is valid
+            match Decode.fromValue "$" (Config.decoder cwd isWatch) configInstance?``default`` with
+            | Ok config ->
+                do! func config
+
+            | Error errorMessage ->
+                Log.error $"Invalid config file. Error:\n{errorMessage}"
+                ``process``.exit(ExitCode.INVALID_CONFIG_FILE)
+
+        // No config file found
         else
             Log.error "Missing 'nacara.config.json' file"
             ``process``.exit(ExitCode.MISSING_CONFIG_FILE)

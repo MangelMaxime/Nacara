@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+* Support both `nacara.config.json` and `nacara.config.js` as the config file.
+
+    The main goal is to have access to comments makking it easier for people to use the template.
+
 ## 1.0.0-beta-020 - 2021-09-30
 
 ### Fixed

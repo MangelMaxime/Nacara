@@ -28,7 +28,8 @@ yargs(hideBin(process.argv))
                 script: path.join(__dirname, "./js/nodemon-watch.js"),
                 args: process.argv.slice(2),
                 watch: [
-                    "nacara.config.json"
+                    "nacara.config.json",
+                    "nacara.config.js"
                 ],
                 delay: 200
             })
