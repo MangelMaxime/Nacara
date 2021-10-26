@@ -4,9 +4,11 @@
     "license": "Apache-2.0",
     "type": "module",
     "devDependencies": {
+        "chalk": "^4.1.2",
         "changelog-parser": "^2.8.0",
         "concurrently": "^6.2.2",
-        "nodemon": "^2.0.13"
+        "nodemon": "^2.0.13",
+        "shelljs": "^0.8.4"
     },
     "engines": {
         "node": ">=14.0.0",
