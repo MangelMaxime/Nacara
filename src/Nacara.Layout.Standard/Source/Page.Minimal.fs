@@ -371,39 +371,45 @@ let render
             ]
 
             Html.body [
-                navbar rendererContext.Partials rendererContext.Config pageContext.Section
+                if footerOpt.IsSome then
+                    prop.className "has-footer"
 
-                Html.div [
-                    prop.className "grey-overlay"
-                ]
 
-                Html.div [
-                    prop.className "nacara-content"
+                prop.children [
+                    navbar rendererContext.Partials rendererContext.Config pageContext.Section
 
-                    prop.children [
-                        content
-                    ]
-                ]
-
-                Html.script [
-                    prop.async true
-                    prop.src (rendererContext.Config.SiteMetadata.BaseUrl + Dependencies.menu)
-                ]
-
-                match footerOpt with
-                | Some footer ->
-                    Bulma.footer [
-                        footer.Module.``default``
+                    Html.div [
+                        prop.className "grey-overlay"
                     ]
 
-                | None ->
-                    null
+                    Html.div [
+                        prop.className "nacara-content"
 
-                if rendererContext.Config.IsWatch then
+                        prop.children [
+                            content
+                        ]
+                    ]
+
                     Html.script [
                         prop.async true
-                        prop.src (rendererContext.Config.SiteMetadata.BaseUrl + "resources/nacara/scripts/live-reload.js")
+                        prop.src (rendererContext.Config.SiteMetadata.BaseUrl + Dependencies.menu)
                     ]
+
+                    match footerOpt with
+                    | Some footer ->
+                        Bulma.footer [
+                            footer.Module.``default``
+                        ]
+
+                    | None ->
+                        null
+
+                    if rendererContext.Config.IsWatch then
+                        Html.script [
+                            prop.async true
+                            prop.src (rendererContext.Config.SiteMetadata.BaseUrl + "resources/nacara/scripts/live-reload.js")
+                        ]
+                ]
             ]
         ]
 
