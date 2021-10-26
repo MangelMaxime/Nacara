@@ -286,7 +286,12 @@ let private navbar (partials : Partial array) (config : Config) (pageSection : s
                 Bulma.navbarBrand.div [
                     Bulma.navbarItem.a [
                         prop.className "title is-4"
-                        prop.href (config.SiteMetadata.Url + config.SiteMetadata.BaseUrl)
+                        // In watch mode make the link redirect to the localhost instead of
+                        // the real website
+                        if config.IsWatch then
+                            prop.href config.SiteMetadata.BaseUrl
+                        else
+                            prop.href (config.SiteMetadata.Url + config.SiteMetadata.BaseUrl)
                         prop.text config.SiteMetadata.Title
                     ]
                 ]
@@ -372,7 +377,13 @@ let render
                     prop.className "grey-overlay"
                 ]
 
-                content
+                Html.div [
+                    prop.className "nacara-content"
+
+                    prop.children [
+                        content
+                    ]
+                ]
 
                 Html.script [
                     prop.async true
