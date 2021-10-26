@@ -68,7 +68,7 @@ layout: navbar-only
                 <p class="line">
                     <span class="path">~</span>
                     <span class="prompt">$</span>
-                    <span class="command">mkdir my-site</span>
+                    <span class="command">npm init nacara</span>
                 </p>
                 <p class="line">
                     <span class="path">~</span>
@@ -78,12 +78,7 @@ layout: navbar-only
                 <p class="line">
                     <span class="path">~/my-site</span>
                     <span class="prompt">$</span>
-                    <span class="command">npm init nacara</span>
-                </p>
-                <p class="line">
-                    <span class="path">~/my-site</span>
-                    <span class="prompt">$</span>
-                    <span class="command">npx nacara watch</span>
+                    <span class="command">npm run watch</span>
                 </p>
                 <p class="line">
                     <span class="output">Browse to http://localhost:8080</span>
