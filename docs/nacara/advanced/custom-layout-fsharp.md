@@ -101,9 +101,9 @@ dotnet fable --watch
 
 Register your layout in the `nacara.config.json`
 
-```json
+```js
 {
-    ...,
+    // ...
     "layouts": [
         "nacara-layout-standard",
         "./Nacara.Layout.Custom/Library.js"
@@ -114,3 +114,13 @@ Register your layout in the `nacara.config.json`
 </li>
 
 </ul>
+
+:::info
+You can find type documentation in the API section.
+
+Here are the most important one when working with custom layouts:
+
+- [RendererContext](/Nacara/reference/Nacara.Core/nacara-core-types-renderercontext.html) : Context accessible when rendering a page.
+- [PageContext](/Nacara/reference/Nacara.Core/nacara-core-types-pagecontext.html) : Represents the context of a page within Nacara.
+- [LayoutInfo](/Nacara/reference/Nacara.Core/nacara-core-types-layoutinfo.html) : Exposed contract of a layout
+:::

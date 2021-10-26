@@ -10,12 +10,12 @@ A section in Nacara helps you organize your website. For example, you can have t
 
 ## Create a new section
 
-A section, is defined by creating a folder right under your source folder (default is `docsrc`).
+A section, is defined by creating a folder right under your source folder (default is `docs`).
 
 If have this structure:
 
 ```
-docsrc
+docs
 ├── blog
 └── documentation
 ```

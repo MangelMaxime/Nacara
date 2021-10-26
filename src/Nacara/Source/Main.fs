@@ -236,7 +236,7 @@ let initialize
     promise {
         Log.info $"Current directory:\n%s{cwd}"
 
-        let nacaraJsonConfigPath = path.join(cwd, "nacara.confi2g.json")
+        let nacaraJsonConfigPath = path.join(cwd, "nacara.config.json")
         let nacaraJsConfigPath = path.join(cwd, "nacara.config.js")
 
         let! hasJsonConfig = File.exist(nacaraJsonConfigPath)

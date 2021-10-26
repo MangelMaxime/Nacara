@@ -12,7 +12,7 @@ However, for complex layout or creating a layout package, you should prefer F# b
 ## Setup Babel for JSX support
 
 :::info
-If when setting up Nacara, you answer **Yes** to the question 'Do you want to setup Babel and react?' you can skip this step and go to [Blog page layout](#Blog-page-layout)
+If you used the template to set up Nacara, you can skip this step and go to [Blog page layout](#Blog-page-layout)
 :::
 
 <ul class="textual-steps">
@@ -69,11 +69,11 @@ Create a file `layouts/blog-page.jsx` at the root of your repository
 Add this to the file:
 
 ```js
-// Nacara is using React for generating the HTML
-const React = require("react");
+// We need to import React for JSX to works
+import React from "react";
 // We can reuse existing layouts function
 // Here, we want to re-use the minimal page which generates only the navbar for us
-const pageMinimal = require("nacara-layout-standard/dist/Page.Minimal");
+import * as PageMinimal from "nacara-layout-standard/dist/Page.Minimal.js";
 
 // Main render function which glue the helpers together
 const render = async (rendererContext, pageContext) => {
@@ -81,11 +81,11 @@ const render = async (rendererContext, pageContext) => {
     // Render the blog content using our helpers
     const content = "Blog page";
 
-    return pageMinimal.render(new pageMinimal.RenderArgs(
+    return PageMinimal.render(
         rendererContext, // Forward the rendererContext
-        pageContext, // Forward the pageContext
+        pageContext.Section, // Forward the pageContext
         content // Pass the blog content to render below the navbar
-    ));
+    );
 
 }
 
@@ -108,6 +108,20 @@ export default {
 }
 
 ```
+
+
+:::info
+You can learn more about the API by going to the API section.
+
+The API is documented from F# but the properties available are the same in JavaScript.
+
+Here are the most important one when working with custom layouts:
+
+- [RendererContext](/Nacara/reference/Nacara.Core/nacara-core-types-renderercontext.html) : Context accessible when rendering a page.
+- [PageContext](/Nacara/reference/Nacara.Core/nacara-core-types-pagecontext.html) : Represents the context of a page within Nacara.
+- [LayoutInfo](/Nacara/reference/Nacara.Core/nacara-core-types-layoutinfo.html) : Exposed contract of a layout
+:::
+
 
 </li>
 
@@ -133,9 +147,31 @@ date: 2021-08-20
 ---
 ```
 
-:::info
-Note how we also set the layout property to `blog-page` (our layout name)
-:::
+</li>
+
+<li>
+
+In the previous, step we set the layout property to `blog-page`.
+
+In order order to avoid error like:
+
+> Layout renderer 'blog-page' is unknown
+
+We need to register our layout into our Nacara config.
+
+Add `./layouts/blog-page.jsx` to the list of `layouts` in `nacara.config.js`.
+
+You should have something like that:
+
+```js
+export default {
+    // ...
+    "layouts": [
+        "nacara-layout-standard",
+        "./layouts/blog-page.jsx"
+    ]
+}
+```
 
 </li>
 
@@ -207,11 +243,11 @@ const render = async (rendererContext, pageContext) => {
             <div className="content" dangerouslySetInnerHTML={{ __html: pageContent }} />
         </BlogContainer>
 
-    return pageMinimal.render(new pageMinimal.RenderArgs(
+    return PageMinimal.render(
         rendererContext, // Forward the rendererContext
-        pageContext, // Forward the pageContext
+        pageContext.Section, // Forward the pageContext
         content // Pass the blog content to render below the navbar
-    ));
+    );
 
 }
 ```
@@ -253,8 +289,9 @@ const pageMinimal = require("nacara-layout-standard/dist/Page.Minimal");
 const render = async (rendererContext, pageContext) => {
 
     return pageMinimal.render(new pageMinimal.RenderArgs(
-        rendererContext,
-        pageContext,
+        rendererContext.Config,
+        pageContext.Section,
+        undefined,
         "Blog index"
     ));
 
@@ -316,7 +353,7 @@ const PageTitle = ({title}) => {
     </h2>
 }
 
-const BlogPost = ({blogPage}) => {
+const BlogPost = ({blogPage, siteMetadata}) => {
     const dateFormat =
         new Intl.DateTimeFormat(
             "en",
@@ -329,14 +366,14 @@ const BlogPost = ({blogPage}) => {
 
     // Add baseUrl + change file extension
     let internalLink =
-        '/' + blogPage.RelativePath.substring(0, blogPage.RelativePath.lastIndexOf('.') + 1) + "html"
+        siteMetadata.BaseUrl + blogPage.RelativePath.substring(0, blogPage.RelativePath.lastIndexOf('.') + 1) + "html"
 
     // Use / for the URL and not \ needed when generating the blog from Windows
     internalLink = internalLink.replace(/\\/g, "/");
 
     return <li>
         {dateStr + ": "}
-        <a href={internalLink}>
+        <a className="is-underlined" href={internalLink}>
             {blogPage.Attributes.title}
         </a>
         , by {blogPage.Attributes.author}
@@ -345,7 +382,7 @@ const BlogPost = ({blogPage}) => {
 
 // A helper function to render the blog container,
 // it will makes our blog centered on the page on desktop
-const PageContainer = ({blogPages}) => {
+const PageContainer = ({blogPages, siteMetadata}) => {
     return <section className="section container">
         <div className="columns">
             <div className="column is-8-desktop is-offset-2-desktop">
@@ -353,7 +390,7 @@ const PageContainer = ({blogPages}) => {
                     <PageTitle title={"Blog posts"}/>
                     <ul>
                         {blogPages.map((blogPage, index) => {
-                            return <BlogPost key={index} blogPage={blogPage}/>
+                            return <BlogPost key={index} blogPage={blogPage} siteMetadata={siteMetadata}/>
                         })}
                     </ul>
                 </div>
@@ -376,11 +413,11 @@ const render = async (rendererContext, pageContext) => {
                 return pageContext2.Attributes.date - pageContext1.Attributes.date
             });
 
-    return pageMinimal.render(new pageMinimal.RenderArgs(
-        rendererContext,
-        pageContext,
-        <PageContainer blogPages={blogPages}/>
-    ));
+    return PageMinimal.render(
+        rendererContext, // Forward the rendererContext
+        pageContext.Section, // Forward the pageContext
+        <PageContainer blogPages={blogPages} siteMetadata={rendererContext.Config.SiteMetadata}/>
+    );
 
 }
 ```
@@ -419,7 +456,7 @@ const render = async (rendererContext, pageContext) => {
         blogPage.Attributes.abstractText = abstractText;
     }
 
-    return pageMinimal.render(new pageMinimal.RenderArgs(
+    return pageMinimal.render(
         rendererContext,
         pageContext,
         <PageContainer blogPages={blogPages} />
@@ -439,7 +476,8 @@ const Abstract = ({rendererContext, blogPage}) => {
 If you want to write your own layout, here is a minimal file to start from.
 
 ```js
-const React = require("react");
+// We need to import React for JSX to works
+import React from "react";
 
 // Your render function, this is where you will write all of your code
 const render = async (rendererContext, pageContext) => {

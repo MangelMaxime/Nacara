@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0 - 2021-10-26
+
+### Changed
+
+* Use ESM syntax in custom-layout.md file
+
 ## 1.0.0-beta-004 - 2021-10-26
 
 ### Fixed

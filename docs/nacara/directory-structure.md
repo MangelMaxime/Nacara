@@ -6,7 +6,9 @@ layout: standard
 A basic Nacara site looks to something like that:
 
 ```
-├── docs # Source directory
+├── docs
+│   ├── _partials
+│   │   └── [...]
 │   ├── documentation
 │   │   └── [...]
 │   ├── scss

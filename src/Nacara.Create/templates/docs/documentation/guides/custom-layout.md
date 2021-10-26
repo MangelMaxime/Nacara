@@ -115,15 +115,13 @@ Add `./layouts/blog-page.jsx` to the list of `layouts` in `nacara.config.js`.
 You should have something like that:
 
 ```js
-const config = {
+export default {
     // ...
     "layouts": [
         "nacara-layout-standard",
         "./layouts/blog-page.jsx"
     ]
 }
-
-module.exports = config;
 ```
 
 </li>

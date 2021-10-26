@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0-beta-022 - 2021-10-26
+
+### Fixed
+
+* Fix detection of `nacara.config.json` it was a relicat from a test
+
 ## 1.0.0-beta-021 - 2021-10-26
 
 ### Added

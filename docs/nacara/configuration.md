@@ -47,12 +47,12 @@ It not here is a minimal configuration file:
 
 Here is a list of the main category of option your can set within your `nacara.config.json` file:
 
-1. [siteMetadata](#siteMetadata) (object)
+1. [siteMetadata](#sitemetadata) (object)
 1. [navbar](#navbar) (object)
 1. [remarkPlugins](#remarkplugins) (array)
 1. [rehypePlugins](#rehypeplugins) (array)
 1. [layouts](#layouts) (array)
-1. [serverPort](#serverPort) (int)
+1. [serverPort](#serverport) (int)
 1. [source](#source) (string)
 1. [output](#output) (string)
 

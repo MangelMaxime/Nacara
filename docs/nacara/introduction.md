@@ -9,9 +9,7 @@ You can easily change how the site looks and feels, and if needed write your own
 
 ## Prerequisites
 
-Nacara requires you to have:
-
-- Node >= 14.x
+Nacara requires you to have at least Node.js 12.20, 14.14, or 16.0 because it is using ESM modules.
 
 ## Quick start
 
@@ -19,32 +17,19 @@ Nacara requires you to have:
 
 <li>
 
-Install the [prerequisites](#Prerequisites)
-
-</li>
-
-<li>
-
-Create a folder for your project
+Initialize your site from the template
 
 ```
-mkdir my-site
-```
-
-</li>
-
-<li>
-
-Initialize your site:
-
-```
-cd my-site
 npm init nacara
 ```
 
-:::warning{title="Warning"}
-The scaffolding project is still being in WIP so there can be some bugs in it
-:::
+</li>
+
+<li>
+
+```
+cd my-site
+```
 
 </li>
 
@@ -53,7 +38,7 @@ The scaffolding project is still being in WIP so there can be some bugs in it
 Run your site
 
 ```
-npx nacara watch
+npm run watch
 ```
 
 </li>
