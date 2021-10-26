@@ -192,8 +192,8 @@ $nacara-navbar-menu-border: 1px solid $navbar-item-active-background-color !defa
     z-index: $nacara-grey-overlay-z;
     display: none;
     background-color: $nacara-grey-overlay-background-color;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
 
     &.is-active {
         display: block;

@@ -22,6 +22,34 @@ html {
     }
 }
 
+// If a footer is added via the footer partial
+// We setup some specific rules allowing us to have
+// the footer stick to the bottom when there are not a lot of content
+// and otherwise it will be displayed under the page content as normal
+// Adapted from: https://css-tricks.com/couple-takes-sticky-footer/#there-is-flexbox
+body.has-footer {
+
+    display: flex;
+    flex-direction: column;
+
+    @include tablet {
+        height: calc(100vh - #{$computed-navbar-height});
+    }
+
+    @include mobile {
+        height: calc(100vh - #{$computed-navbar-height + $navbar-height});
+    }
+
+    .nacara-content {
+        flex: 1 0 auto;
+    }
+
+    .footer {
+        flex-shrink: 0;
+    }
+
+}
+
 // Remove bottom margin of the name of the project in the navbar otherwise a the navbar is distorted
 .navbar-item.title.is-4 {
     margin-bottom: 0;

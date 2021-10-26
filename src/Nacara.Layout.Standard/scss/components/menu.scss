@@ -12,14 +12,6 @@ $table-of-content-item-padding-left: 0.75rem !default;
     overflow-y: auto;
     overscroll-behavior: contain;
 
-    @include tablet {
-        height: calc(100vh - #{$computed-navbar-height});
-    }
-
-    @include mobile {
-        height: calc(100vh - #{$computed-navbar-height + $navbar-height});
-    }
-
     .menu {
         margin-top: $navbar-height;
         padding-right: 1rem;
