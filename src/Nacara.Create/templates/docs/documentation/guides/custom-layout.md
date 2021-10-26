@@ -9,40 +9,6 @@ In the previous chapter, we created our blog section but it is pretty bad lookin
 
 We are going to auto-generate the index page and also make a blog specific layout.
 
-## Setup Babel for JSX support
-
-:::info
-If when setting up Nacara, you answer **Yes** to the question 'Do you want to setup Babel and react?' you can skip this step and go to [Blog page layout](#Blog-page-layout)
-:::
-
-<ul class="textual-steps">
-
-<li>
-
-Create the file `babel.config.json`
-
-```json
-{
-    "presets": [
-        "@babel/preset-react"
-    ]
-}
-```
-
-</li>
-
-<li>
-
-Install the Babel dependencies:
-
-```
-npm install --save-dev @babel/register @babel/preset-react
-```
-
-</li>
-
-</ul>
-
 ## Blog page layout
 
 :::info
@@ -69,11 +35,11 @@ Create a file `layouts/blog-page.jsx` at the root of your repository
 Add this to the file:
 
 ```js
-// Nacara is using React for generating the HTML
-const React = require("react");
+// We need to import React for JSX to works
+import React from "react";
 // We can reuse existing layouts function
 // Here, we want to re-use the minimal page which generates only the navbar for us
-const pageMinimal = require("nacara-layout-standard/dist/Page.Minimal");
+import * as PageMinimal from "nacara-layout-standard/dist/Page.Minimal.js";
 
 // Main render function which glue the helpers together
 const render = async (rendererContext, pageContext) => {
@@ -81,12 +47,11 @@ const render = async (rendererContext, pageContext) => {
     // Render the blog content using our helpers
     const content = "Blog page";
 
-    return pageMinimal.render(new pageMinimal.RenderArgs(
-        rendererContext.Config, // Forward the config information
-        pageContext.Section, // Tell which section we are in
-        pageContext.Title, // Pass the blog title to use in the page title
+    return PageMinimal.render(
+        rendererContext, // Forward the rendererContext
+        pageContext.Section, // Forward the pageContext
         content // Pass the blog content to render below the navbar
-    ));
+    );
 
 }
 
@@ -107,7 +72,6 @@ export default {
     // has to copy them into the destination directory
     Dependencies: []
 }
-
 ```
 
 </li>
@@ -123,7 +87,7 @@ A blog page has:
 
 We will add these information via the front-matter.
 
-Update the front-matter of `docsrc/blog/2021/welcome.md` with
+Update the front-matter of `docs/blog/2021/welcome.md` with
 
 ```
 ---
@@ -134,9 +98,33 @@ date: 2021-08-20
 ---
 ```
 
-:::info
-Note how we also set the layout property to `blog-page` (our layout name)
-:::
+</li>
+
+<li>
+
+In the previous, step we set the layout property to `blog-page`.
+
+In order order to avoid error like:
+
+> Layout renderer 'blog-page' is unknown
+
+We need to register our layout into our Nacara config.
+
+Add `./layouts/blog-page.jsx` to the list of `layouts` in `nacara.config.js`.
+
+You should have something like that:
+
+```js
+const config = {
+    // ...
+    "layouts": [
+        "nacara-layout-standard",
+        "./layouts/blog-page.jsx"
+    ]
+}
+
+module.exports = config;
+```
 
 </li>
 
@@ -208,16 +196,14 @@ const render = async (rendererContext, pageContext) => {
             <div className="content" dangerouslySetInnerHTML={{ __html: pageContent }} />
         </BlogContainer>
 
-    return pageMinimal.render(new pageMinimal.RenderArgs(
-        rendererContext.Config, // Forward the config information
-        pageContext.Section, // Tell which section we are in
-        pageContext.Title, // Pass the blog title to use in the page title
+    return PageMinimal.render(
+        rendererContext, // Forward the rendererContext
+        pageContext.Section, // Forward the pageContext
         content // Pass the blog content to render below the navbar
-    ));
+    );
 
 }
 ```
-
 
 </li>
 
@@ -286,7 +272,7 @@ export default {
 
 <li>
 
-Change the `docsrc/blog/index.md` content to
+Change the `docs/blog/index.md` content to
 
 ```
 ---
@@ -304,7 +290,7 @@ Now, we want to modify our render function to generate the index page.
 
 To do that, we are going to:
 
-1. To retrieve the list of `blog-page`
+1. Retrieve the list of `blog-page`
 1. Sort the page per date
 1. Extract the information we want from the page information, for example the title, date
 1. Render the list of blog pages
@@ -312,6 +298,7 @@ To do that, we are going to:
 Replace the `render` function with this code:
 
 ```js
+
 // This render a stylized title for our blog page
 const PageTitle = ({title}) => {
     return <h2 className="title is-size-3 has-text-primary has-text-weight-normal has-text-centered blog-title">
@@ -319,7 +306,7 @@ const PageTitle = ({title}) => {
     </h2>
 }
 
-const BlogPost = ({blogPage}) => {
+const BlogPost = ({blogPage, siteMetadata}) => {
     const dateFormat =
         new Intl.DateTimeFormat(
             "en",
@@ -332,14 +319,14 @@ const BlogPost = ({blogPage}) => {
 
     // Add baseUrl + change file extension
     let internalLink =
-        '{{REPLACE_WITH_BASE_URL}}' + blogPage.RelativePath.substring(0, blogPage.RelativePath.lastIndexOf('.') + 1) + "html"
+        siteMetadata.BaseUrl + blogPage.RelativePath.substring(0, blogPage.RelativePath.lastIndexOf('.') + 1) + "html"
 
     // Use / for the URL and not \ needed when generating the blog from Windows
     internalLink = internalLink.replace(/\\/g, "/");
 
     return <li>
         {dateStr + ": "}
-        <a href={internalLink}>
+        <a className="is-underlined" href={internalLink}>
             {blogPage.Attributes.title}
         </a>
         , by {blogPage.Attributes.author}
@@ -348,7 +335,7 @@ const BlogPost = ({blogPage}) => {
 
 // A helper function to render the blog container,
 // it will makes our blog centered on the page on desktop
-const PageContainer = ({blogPages}) => {
+const PageContainer = ({blogPages, siteMetadata}) => {
     return <section className="section container">
         <div className="columns">
             <div className="column is-8-desktop is-offset-2-desktop">
@@ -356,7 +343,7 @@ const PageContainer = ({blogPages}) => {
                     <PageTitle title={"Blog posts"}/>
                     <ul>
                         {blogPages.map((blogPage, index) => {
-                            return <BlogPost key={index} blogPage={blogPage}/>
+                            return <BlogPost key={index} blogPage={blogPage} siteMetadata={siteMetadata}/>
                         })}
                     </ul>
                 </div>
@@ -379,12 +366,11 @@ const render = async (rendererContext, pageContext) => {
                 return pageContext2.Attributes.date - pageContext1.Attributes.date
             });
 
-    return pageMinimal.render(new pageMinimal.RenderArgs(
-        rendererContext.Config,
-        pageContext.Section,
-        undefined,
-        <PageContainer blogPages={blogPages}/>
-    ));
+    return PageMinimal.render(
+        rendererContext, // Forward the rendererContext
+        pageContext.Section, // Forward the pageContext
+        <PageContainer blogPages={blogPages} siteMetadata={rendererContext.Config.SiteMetadata}/>
+    );
 
 }
 ```

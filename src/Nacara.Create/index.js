@@ -11,42 +11,52 @@ const resolve = (relativePath) => {
     return path.join(__dirname, relativePath);
 };
 
-const nacaraConfigJson = (options) => {
+const nacaraConfig = (options) => {
     return `
-{
-    "url": "${options.url}",
-    "baseUrl": "${options.baseUrl}",
-    "editUrl" : "https://github.com/${options.organizationName}/${options.projectName}/edit/master/docsrc",
-    "title": "${options.title}",
+// For more information about the config, please visit:
+// https://mangelmaxime.github.io/Nacara/nacara/configuration.html
+export default {
+    "siteMetadata": {
+        "url": "https://your-nacara-test-site.com",
+        "baseUrl": "/",
+        // Please change this to your repo
+        "editUrl" : "https://github.com/MangelMaxime/Nacara/edit/master/docs",
+        "title": "${options.title}"
+    },
     "navbar": {
         "start": [
             {
                 "section": "documentation",
-                "url": "${options.baseUrl}documentation/index.html",
+                "url": "/documentation/index.html",
                 "label": "Documentation"
             }
         ],
         "end": [
+            // Please change it your repo or delete the item if you don't need it
             {
-                "url": "https://github.com/${options.organizationName}/${options.projectName}",
-                "icon": "fab fa-github"
+                "url": "https://github.com/MangelMaxime/Nacara",
+                "icon": "fab fa-github",
+                "label": "Github"
             }
         ]
     },
-    "lightner": {
-        "backgroundColor": "#FAFAFA",
-        "textColor": "",
-        "themeFile": "./lightner/themes/OneLight.json",
-        "grammars": [
-            "./lightner/grammars/fsharp.json",
-            "./lightner/grammars/json.json",
-            "./lightner/grammars/JavaScript.tmLanguage.json"
-        ]
-    },
+    "remarkPlugins": [
+        {
+            "resolve": "gatsby-remark-vscode",
+            "property": "remarkPlugin",
+            "options": {
+                "theme": "Atom One Light",
+                "extensions": [
+                    "vscode-theme-onelight"
+                ]
+            }
+        }
+    ],
     "layouts": [
         "nacara-layout-standard"
     ]
-}`.trim();
+}
+    `.trim();
 
 }
 
@@ -56,95 +66,73 @@ const run = async () => {
         [
             {
                 type: 'input',
-                name: 'url',
-                message: 'Public URL',
-                initial: 'https://mangelmaxime.github.io'
-            },
-            {
-                type: 'input',
                 name: 'title',
-                message: 'Website title',
-                initial: 'My Site'
+                message: 'What would you like to call your site?',
+                initial: 'My Nacara Site'
             },
             {
                 type: 'input',
-                name: 'baseUrl',
-                message: 'Base URL',
-                initial: '/'
-            },
-            {
-                type: 'input',
-                name: 'organizationName',
-                message: 'Organization name',
-                initial: 'MyOrganization'
-            },
-            {
-                type: 'input',
-                name: 'projectName',
-                message: 'Project name',
-                initial: 'MyProject'
-            },
-            {
-                type: 'select',
-                name: 'styleProcessor',
-                message: 'Choose how you want to style your application',
-                choices: [
-                    'scss',
-                    'sass'
-                ],
-                initial: 'scss'
-            },
-            {
-                type: 'confirm',
-                name: 'setupBabelAndReact',
-                message: 'Do you want to setup Babel and react? Useful, only if you are going to write custom layout with JSX',
-                initial: false
+                name: 'destination',
+                message: 'What would you like to name the folder where your site will be created?',
+                initial: 'my-site'
             }
         ]
     );
 
+    const destination = (relativePath) =>{
+        return path.join(response.destination, relativePath)
+    }
+
+    shell.rm("-rf", response.destination);
+    shell.mkdir(response.destination);
+
     console.log('Generating nacara.config.json file...');
-    await fs.writeFile('nacara.config.json', nacaraConfigJson(response));
+    await fs.writeFile(destination('nacara.config.js'), nacaraConfig(response));
 
     console.log('Setting up minimal site...');
-    shell.cp('-R', resolve('./templates/docs'), 'docs');
-    if (response.styleProcessor === 'scss') {
-        // shell.mkdir('-p', 'docs/scss');
-        shell.cp(resolve('./templates/style.scss'), 'docs/style.scss');
-    } else if (response.styleProcessor === 'sass') {
-        // shell.mkdir('-p', 'docs/sass');
-        shell.cp(resolve('./templates/style.sass'), 'docs/style.sass');
-    }
-    shell.cp('-R', resolve('./templates/lightner'), 'lightner');
-    shell.cp(resolve('./templates/.gitignore'), '.gitignore');
-    shell.cp(resolve('./templates/package.json'), './package.json');
+    shell.cp('-R', resolve('./templates/docs'), destination('docs'));
 
-    const styleExtension = (response.styleProcessor === 'scss') ? 'scss' : 'sass';
+    shell.cp(resolve('./templates/style.scss'), destination('docs/style.scss'));
 
-    // Replace placeholders with values coming from user response
-    console.log('Adapting the site to your needs...');
+    shell.cp(resolve('./templates/.gitignore'), destination('.gitignore'));
+    shell.cp(resolve('./templates/package.json'), destination('./package.json'));
+
     shell.ls([
-        'docs/**/*.md',
-        'package.json'
+        `${response.destination}/docs/**/*.md`,
+        `${response.destination}/package.json`
     ]).forEach(function (file) {
-        shell.sed('-i', /{{REPLACE_WITH_MY_SITE}}/g, response.title, file);
-        shell.sed('-i', /{{REPLACE_WITH_BASE_URL}}/g, response.baseUrl, file);
-        shell.sed('-i', /{{REPLACE_WITH_STYLE_EXTENSION}}/g, styleExtension, file);
         shell.sed('-i', /{{REPLACE_WITH_SITE_TITLE}}/g, response.title, file);
     });
 
-    // {{BEGIN_KEEP_IF_SCSS}}(?<text_to_keep>((?!{{END_KEEP_IF_SCSS}}).)*){{END_KEEP_IF_SCSS}}
-    // If SCSS replace with text_to_keep
-    // If not, replace the whole regex with nothing
+    await fs.copyFile(resolve('./templates/babel.config.json'), destination('./babel.config.json'));
 
     console.log('Installing NPM dependencies...');
-    execSync('npm install --save-dev nacara nacara-layout-standard', { cwd: '.', stdio: 'inherit' });
 
-    console.log('Configuring Babel and React for JSX support');
-    await fs.copyFile(resolve('./templates/babel.config.json'), './babel.config.json');
-    execSync('npm install --save-dev @babel/register @babel/preset-react', { cwd: '.', stdio: 'inherit' });
+    const npmArgs =
+        [
+            "nacara",
+            "nacara-layout-standard",
+            "@babel/register",
+            "@babel/preset-react",
+            "akamud/vscode-theme-onelight ",
+            "gatsby-remark-vscode",
+            // We need to force unified to be of the latest version
+            // because of gatsby...
+            // In the future, I will create a standalone version of gatsby-remark-vscode
+            "unified@latest"
+        ].join(" ")
+
+    execSync(
+        `npm install --silent --save-dev ${npmArgs}`,
+        {
+            cwd: response.destination,
+            stdio: 'inherit'
+        }
+    );
 
     console.log(chalk.green('Your site is ready!'));
+
+    console.log(``)
 }
 
 (async () => {

@@ -1,5 +1,11 @@
 [
-    "documentation/introduction",
+    {
+        "type": "section",
+        "label": "Overview",
+        "items": [
+            "documentation/introduction"
+        ]
+    },
     {
         "type": "section",
         "label": "Guides",

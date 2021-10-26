@@ -10,7 +10,7 @@ A section in Nacara helps you organize your website. For example, you can have t
 
 ## Create a new section
 
-A section, is defined by creating a folder right under your source folder in our case `docsrc`.
+A section, is defined by creating a folder right under your source folder.
 
 Currently, you have this structure:
 
@@ -25,7 +25,7 @@ This means that we only have a single section called `documentation`
 
 <li>
 
-Create a new folder `docsrc/blog`, to get
+Create a new folder `docs/blog`, to get
 
 ```
 docsrc
@@ -39,7 +39,7 @@ You now have 2 sections one for your documentation and another one for hosting s
 
 <li>
 
-Create a file `docsrc/blog/index.md`:
+Create a file `docs/blog/index.md`:
 
 ```
 ---
@@ -49,12 +49,12 @@ layout: standard
 
 List of posts:
 
-* [Welcome]({{REPLACE_WITH_BASE_URL}}blog/2021/welcome.html)
+* [Welcome](/blog/2021/welcome.html)
 ```
 
 This file will serve as the index of your blog
 
-Create a file `docsrc/blog/2021/welcome.md`:
+Create a file `docs/blog/2021/welcome.md`:
 
 ```
 ---
@@ -78,7 +78,7 @@ Add these lines to the `navbar.start` property of `nacara.config.json`:
 ```json
 {
     "section": "blog",
-    "url": "{{REPLACE_WITH_BASE_URL}}blog/index.html",
+    "url": "/blog/index.html",
     "label": "Blog"
 }
 ```
@@ -90,22 +90,18 @@ It should looks similar to that:
     "start": [
         {
             "section": "documentation",
-            "url": "{{REPLACE_WITH_BASE_URL}}documentation/index.html",
+            "url": "/documentation/index.html",
             "label": "Documentation"
         },
         {
             "section": "blog",
-            "url": "{{REPLACE_WITH_BASE_URL}}blog/index.html",
+            "url": "/blog/index.html",
             "label": "Blog"
         }
     ],
 ```
 
-Kill Nacara and re-start it to see the changes
-
-:::info
-Right now, Nacara doesn't restart itself yet when `nacara.config.json` is modified. It should come in future version.
-:::
+Nacara will re-start itself, to take your changes into consideration.
 
 You should see a `Blog` button in the navbar, click on it and see your blog index page.
 

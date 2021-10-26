@@ -1,5 +1,5 @@
 ---
-layout: nacara-navbar-only
+layout: navbar-only
 ---
 
 <section class="hero is-medium is-primary-light">

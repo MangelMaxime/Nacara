@@ -10,7 +10,7 @@ A page in Nacara is a **Markdown** file composed of two things:
 
 ## Create your first page
 
-Create a file `docsrc/documentation/tutorial/my-page.md`:
+Create a file `docs/documentation/guides/my-page.md`:
 
 ```
 ---
@@ -21,7 +21,7 @@ layout: standard
 This is a new page created for the tutorial.
 ```
 
-The new page is available at [http://localhost:8080/{{REPLACE_WITH_BASE_URL}}/documentation/tutorial/my-page.html](http://localhost:8080/{{REPLACE_WITH_BASE_URL}}/documentation/tutorial/my-page.html)
+The new page is available at [http://localhost:8080/documentation/guides/my-page.html](http://localhost:8080/documentation/guides/my-page.html)
 
 ## Add your page to the menu
 
@@ -29,24 +29,33 @@ If you look on the menu in the left, you will see that your page is missing from
 
 This is because you need to provide some information to Nacara via the `menu.json` file.
 
-Edit the file `docsrc/documentation/menu.json` to add `"documentation/tutorial/my-page"` to it.
+Edit the file `docs/documentation/menu.json` to add `"documentation/guides/my-page"` to it.
 
 The file should looks like:
 
 ```json
 [
-    "documentation/introduction",
     {
-        "type": "category",
-        "label": "API",
+        "type": "section",
+        "label": "Overview",
         "items": [
-            "documentation/guides/create-a-page",
-            "documentation/guides/create-a-section",
-            "documentation/guides/customize-the-style"
+            "documentation/introduction"
         ]
     },
-    "documentation/tutorial/my-page"
+    {
+        "type": "section",
+        "label": "Guides",
+        "items": [
+            "documentation/guides/create-a-page",
+            "documentation/guides/customize-the-style",
+            "documentation/guides/create-a-section",
+            "documentation/guides/custom-layout",
+            "documentation/guides/deploy-your-site"
+        ]
+    },
+    "documentation/guides/my-page"
 ]
+
 ```
 
-You should now see `My page` in the menu.
+You should now see `My page` at the bottom of the menu.

@@ -17,6 +17,14 @@ The static files generated are located in the `build` folder.
 
 ## Deploy your site
 
+:::warning{title="Important"}
+
+Don't forget to adapt the `siteMetadata` properties to your environnement before deploying the website.
+
+More information available [here](https://mangelmaxime.github.io/Nacara/nacara/configuration.html#sitemetadata)
+
+:::
+
 You can test your production website locally by running:
 
 ```
