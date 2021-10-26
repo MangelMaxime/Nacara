@@ -27,7 +27,7 @@ export default {
         "start": [
             {
                 "section": "documentation",
-                "url": "/documentation/index.html",
+                "url": "/documentation/introduction.html",
                 "label": "Documentation"
             }
         ],
