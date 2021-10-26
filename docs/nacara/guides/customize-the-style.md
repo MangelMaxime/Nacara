@@ -7,7 +7,7 @@ Nacara allows you to customize your application style to match your design.
 
 ## Main file
 
-The main file for styling your application is `docsrc/style.scss` or `docsrc/style.sass`.
+The main file for styling your application is `docs/style.scss` or `docs/style.sass`.
 
 Try editing this file and see the site being updated.
 
@@ -17,10 +17,10 @@ When you website become bigger you will want to split your `style` file into sma
 
 Nacara has specials folders to deal with that:
 
-- `docsrc/scss`: use this folder is you are using SCSS to write your style
-- `docsrc/sass`: use this folder is you are using SASS to write your style
+- `docs/scss`: use this folder is you are using SCSS to write your style
+- `docs/sass`: use this folder is you are using SASS to write your style
 
-When one of the files of these folders changes, Nacara will recompile your `docsrc/style.scss` or `docsrc/style.sass`.
+When one of the files of these folders changes, Nacara will recompile your `docs/style.scss` or `docs/style.sass`.
 
 Let's try it out, we are going to assume you use SCSS but the process is the same when using SASS.
 
@@ -28,7 +28,7 @@ Let's try it out, we are going to assume you use SCSS but the process is the sam
 
 <li>
 
-Add the following code to the page you created earlier `docsrc/tutorial/my-page`
+Add the following code to the page you created earlier `docs/tutorial/my-page`
 
 ```html
 <div class="my-text">
@@ -42,7 +42,7 @@ This text should be bold and red.
 
 <li>
 
-Create a file `docsrc/scss/my-style.scss`
+Create a file `docs/scss/my-style.scss`
 
 ```scss
 .my-text {

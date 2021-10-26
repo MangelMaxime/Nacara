@@ -122,7 +122,7 @@ A blog page has:
 
 We will add these information via the front-matter.
 
-Update the front-matter of `docsrc/blog/2021/welcome.md` with
+Update the front-matter of `docs/blog/2021/welcome.md` with
 
 ```
 ---
@@ -283,7 +283,7 @@ export default {
 
 <li>
 
-Change the `docsrc/blog/index.md` content to
+Change the `docs/blog/index.md` content to
 
 ```
 ---
@@ -329,7 +329,7 @@ const BlogPost = ({blogPage}) => {
 
     // Add baseUrl + change file extension
     let internalLink =
-        '{{REPLACE_WITH_BASE_URL}}' + blogPage.RelativePath.substring(0, blogPage.RelativePath.lastIndexOf('.') + 1) + "html"
+        '/' + blogPage.RelativePath.substring(0, blogPage.RelativePath.lastIndexOf('.') + 1) + "html"
 
     // Use / for the URL and not \ needed when generating the blog from Windows
     internalLink = internalLink.replace(/\\/g, "/");

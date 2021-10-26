@@ -10,7 +10,7 @@ A page in Nacara is a **Markdown** file composed of two things:
 
 ## Create your first page
 
-Create a file `docsrc/documentation/tutorial/my-page.md`:
+Create a file `docs/documentation/tutorial/my-page.md`:
 
 ```
 ---
@@ -29,7 +29,7 @@ If you look on the menu in the left, you will see that your page is missing from
 
 This is because you need to provide some information to Nacara via the `menu.json` file.
 
-Edit the file `docsrc/documentation/menu.json` to add `"documentation/tutorial/my-page"` to it.
+Edit the file `docs/documentation/menu.json` to add `"documentation/tutorial/my-page"` to it.
 
 The file should looks like:
 
