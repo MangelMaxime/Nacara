@@ -296,7 +296,6 @@ To do that, we are going to:
 Replace the `render` function with this code:
 
 ```js
-
 // This render a stylized title for our blog page
 const PageTitle = ({title}) => {
     return <h2 className="title is-size-3 has-text-primary has-text-weight-normal has-text-centered blog-title">

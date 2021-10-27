@@ -11,24 +11,6 @@ open Node
 
 let cwd = ``process``.cwd()
 
-type Model =
-    | Initializing
-    | ServerMode
-    | BuildMode
-
-type Msg =
-    |NoOp
-
-let private init () =
-    Initializing
-    , Cmd.none
-
-let private update (msg : Msg) (model : Model) =
-    match msg with
-    | NoOp ->
-        model
-        , Cmd.none
-
 type FilesAccumulator =
     {
         MarkdownFiles : string list

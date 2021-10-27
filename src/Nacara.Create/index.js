@@ -60,6 +60,15 @@ export default {
 
 }
 
+const directoryExists = async (directory) => {
+    try {
+        await fs.access(directory);
+        return true;
+    } catch (err) {
+        return false;
+    }
+};
+
 const run = async () => {
 
     const response = await prompt(
@@ -83,7 +92,27 @@ const run = async () => {
         return path.join(response.destination, relativePath)
     }
 
-    shell.rm("-rf", response.destination);
+    // If the directory already exist ask confirmation before deleting it
+    if (await directoryExists(response.destination)) {
+        const askConfirmation = new Confirm({
+            message: `The folder '${response.destination}' already exists. Do you want to delete it?`
+        });
+
+        const userConfirmation = await askConfirmation.run();
+
+        // User gave permission to delete the folder
+        // Delete it
+        if (userConfirmation) {
+            shell.rm('-rf', response.destination);
+        }
+        // User asked to not delete the folder
+        // Stop here
+        else {
+            console.log(chalk.red('Aborting, please chose another destination or accept to delete the folder'));
+            process.exit(1);
+        }
+    }
+
     shell.mkdir(response.destination);
 
     console.log('Generating nacara.config.json file...');
@@ -130,9 +159,12 @@ const run = async () => {
         }
     );
 
-    console.log(chalk.green('Your site is ready!'));
+    console.log(chalk.green('\nYour site is ready!\n'));
 
-    console.log(``)
+    console.log(`Usage instructions:\n`);
+    console.log(`    1. Move into the generated folder '${response.destination}'`);
+    console.log(`    2. Run 'npm run watch'`);
+    console.log(`    3. Browser to http://localhost:8080 to see your website`);
 }
 
 (async () => {
