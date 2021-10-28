@@ -53,7 +53,6 @@ type User =
 
 let hello (u : User) =
     printfn "Hello, %s" u.Firstname
-
 ```
                 """.Trim()
 
@@ -87,7 +86,6 @@ type User =
 
 let hello (u : User) =
     printfn "Hello, %s" u.Firstname
-
 ```
                 """.Trim()
 
