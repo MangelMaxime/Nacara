@@ -85,7 +85,12 @@ generate-docs: build
 			--base-url /Nacara/
 	npx nacara
 
-release: build
+test: build
+	@$(call log_target_info, "Testing...")
+	cd $(NACARA_API_GEN_DIR)/Tests && dotnet run
+
+
+release: test
 	@$(call log_target_info, "Releasing...")
 	@# Remove .fable/.gitignore files otherwise npm doesn't publish that directory
 	rm -rf $(NACARA_DIR)/dist/.fable/.gitignore
@@ -95,6 +100,7 @@ release: build
 	node ./scripts/release-nuget.js $(NACARA_CORE_DIR) Nacara.Core.fsproj
 	node ./scripts/release-npm.js $(NACARA_LAYOUT_STANDARD_DIR)
 	node ./scripts/release-npm.js $(NACARA_CREATE_DIR)
+	node ./scripts/release-nuget.js $(NACARA_API_GEN_DIR) Source/Nacara.ApiGen.fsproj
 
 publish-docs: release generate-docs
 	@$(call log_target_info, "Publishing...")
