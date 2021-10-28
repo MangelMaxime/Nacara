@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0 - 2021-10-28
+
+### Added
+
+* Release v1.0.0
+
+## 1.0.0-beta-023 - 2021-10-28
+
+### Fixed
+
+* Check if a directory exist before executing `Directory.rmdir`. Since Node.js v16 it generate an error if the directory doesn't exist
+
 ## 1.0.0-beta-022 - 2021-10-26
 
 ### Fixed

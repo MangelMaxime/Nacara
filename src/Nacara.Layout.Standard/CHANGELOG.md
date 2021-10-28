@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.0.0 - 2021-10-28
+
+### Added
+
+* Release v1.0.0
+* Added ApiGen minimal style
+
 ## 1.0.0-beta-017 - 2021-10-26
 
 ### Fixed
