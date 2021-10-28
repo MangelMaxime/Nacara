@@ -55,6 +55,10 @@
                     {
                         "label": "Nacara.Standard.Layout",
                         "url": "/Nacara/changelogs/nacara-layout-standard.html"
+                    },
+                    {
+                        "label": "Nacara.ApiGen",
+                        "url": "/Nacara/changelogs/nacara-apigen.html"
                     }
                 ]
             },
