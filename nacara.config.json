@@ -25,6 +25,13 @@
                         "label": "Nacara.Layout.Standard",
                         "description": "Default layout used by Nacara",
                         "url": "/Nacara/nacara-layout-standard/introduction.html"
+                    },
+                    "divider",
+                    {
+                        "section": "nacara-apigen",
+                        "label": "Nacara.ApiGen",
+                        "description": "API documentation generator for Nacara",
+                        "url": "/Nacara/nacara-apigen/introduction.html"
                     }
                 ]
             },
