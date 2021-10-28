@@ -104,13 +104,18 @@ module Directory =
             "recursive" ==> true
         ]
 
-        Promise.create (fun resolve reject ->
-            fs?rmdir(dir, options, (fun (err : Base.ErrnoException option) ->
-                match err with
-                | Some err -> reject (err :?> System.Exception)
-                | None -> resolve ()
-            ))
-        )
+        promise {
+            let! dirExist = exists dir
+
+            if dirExist then
+                do! Promise.create (fun resolve reject ->
+                    fs?rmdir(dir, options, (fun (err : Base.ErrnoException option) ->
+                        match err with
+                        | Some err -> reject (err :?> System.Exception)
+                        | None -> resolve ()
+                    ))
+                )
+        }
 
 [<RequireQualifiedAccess>]
 module File =
