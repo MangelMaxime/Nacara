@@ -12,6 +12,11 @@ open FSlugify.SlugGenerator
 let slugify text =
     slugify DefaultSlugGeneratorOptions text
 
+let wrapWithClass cls text =
+    $"""<span class="{cls}">{text}</span>"""
+
+let wrapInKeyword text =
+    wrapWithClass "keyword" text
 
 [<RequireQualifiedAccess>]
 type TextNode =
@@ -45,12 +50,6 @@ type TextNode =
 
     member this.Html
         with get () =
-            let wrapWithClass cls text =
-                $"""<span class="{cls}">{text}</span>"""
-
-            let wrapInKeyword text =
-                wrapWithClass "keyword" text
-
             match this with
             | Text s ->
                 s
@@ -221,13 +220,19 @@ let renderGenericParameters (parameters : IList<FSharpGenericParameter>) : TextN
     ]
     |> TextNode.Node
 
-let renderParameterType (typ : FSharpType) : TextNode =
+let rec renderParameterType (isTopLevel : bool) (typ : FSharpType) : TextNode =
+    // This correspond to a generic paramter like: 'T
+    if typ.IsGenericParameter then
+        TextNode.Node [
+            TextNode.Tick
+            TextNode.Text typ.GenericParameter.DisplayName
+        ]
     // Not a generic type we can display it as it is
     // Example:
     //      - string
     //      - int
     //      - MyObject
-    if typ.GenericArguments.Count = 0 then
+    else if typ.GenericArguments.Count = 0 then
         TextNode.Text typ.TypeDefinition.DisplayName
 
     // This is a generic type we need more logic
@@ -259,23 +264,70 @@ let renderParameterType (typ : FSharpType) : TextNode =
 
                         // This is a type definition like: 'T option or Choice<'T1, 'T2>
                         else if arg.HasTypeDefinition then
-                            // This is the name of the type definition
-                            // In Choice<'T1, 'T2> this correspond to Choice
-                            TextNode.Text arg.TypeDefinition.DisplayName
-                            TextNode.LessThan
-                            // Render the generic parameters list in the form of 'T1, 'T2
-                            renderGenericParameters arg.TypeDefinition.GenericParameters
-                            TextNode.GreaterThan
+                            // For some generic types definition we don't add the generic arguments
+                            if arg.TypeDefinition.DisplayName = "exn"
+                                || arg.TypeDefinition.DisplayName = "unit" then
+
+                                TextNode.Text arg.TypeDefinition.DisplayName
+
+                            else
+                                // This is the name of the type definition
+                                // In Choice<'T1, 'T2> this correspond to Choice
+                                TextNode.Text arg.TypeDefinition.DisplayName
+                                TextNode.LessThan
+                                // Render the generic parameters list in the form of 'T1, 'T2
+                                renderGenericParameters arg.TypeDefinition.GenericParameters
+                                TextNode.GreaterThan
 
                         else if arg.IsFunctionType then
-                            TextNode.Text "function type"
+
+                            let res =
+                                [
+                                    for index in 0 .. arg.GenericArguments.Count - 1 do
+                                        let arg = arg.GenericArguments.[index]
+
+                                        if index <> 0 then
+                                            TextNode.Space
+                                            TextNode.Arrow
+                                            TextNode.Space
+
+                                        renderParameterType false arg
+                                ]
+
+                            // Try to detect curried case
+                            // Like in:
+                            // let create (f: ('T -> unit) -> (exn -> unit) -> unit): JS.Promise<'T> = jsNative
+                            // FCS gives back an equivalent of :
+                            // let create (f: ('T -> unit) -> ((exn -> unit) -> unit)): JS.Promise<'T> = jsNative
+                            // So we try to detect it to avoid the extract Parents
+                            match res with
+                            | (TextNode.Node (TextNode.LeftParent :: _ ) :: _ ) ->
+                                TextNode.Node res
+
+                            | _ ->
+                                TextNode.Node [
+                                    TextNode.LeftParent
+
+                                    yield! res
+
+                                    TextNode.RightParent
+                                ]
 
                         else
                             let i = 0
                             TextNode.Text "Unkown syntax please open an issue"
                 ]
 
-            TextNode.Node result
+            // If this is a top level function we don't neeed to add the parenthesis
+            TextNode.Node [
+                if not isTopLevel then
+                    TextNode.LeftParent
+
+                TextNode.Node result
+
+                if not isTopLevel then
+                    TextNode.RightParent
+            ]
 
         else
             let separator =
@@ -296,7 +348,6 @@ let renderParameterType (typ : FSharpType) : TextNode =
                         if arg.IsGenericParameter then
                             TextNode.Tick
                             TextNode.Text arg.GenericParameter.DisplayName
-
                         else
 
                             let url =
@@ -305,7 +356,15 @@ let renderParameterType (typ : FSharpType) : TextNode =
                                 |> String.replace "." "-"
                                 |> String.append ".html"
 
+                            let subType =
+                                renderParameterType false arg
+
                             TextNode.Anchor (url, arg.TypeDefinition.DisplayName)
+                            TextNode.LessThan
+
+                            subType
+
+                            TextNode.GreaterThan
                 ]
 
             TextNode.Node result
@@ -333,7 +392,7 @@ let rec extractParamTypesInformation
             match paramType with
             | Choice1Of2 fsharpParameter, name, _apiDoc ->
                 let returnType =
-                    renderParameterType fsharpParameter.Type
+                    renderParameterType true fsharpParameter.Type
 
                 let newState =
                     { state with
@@ -364,6 +423,10 @@ let renderValueOrFunction
 
     if not entities.IsEmpty then
 
+        sb.WriteLine """<p class="is-size-5"><strong>Values and functions</strong></p>"""
+        sb.NewLine ()
+        sb.WriteLine "<hr/>"
+
         for entity in entities do
             let (ApiDocMemberDetails(usageHtml, paramTypes, returnType, modifiers, typars, baseType, location, compiledName)) =
                 entity.Details
@@ -378,6 +441,14 @@ let renderValueOrFunction
                 | Some returnType ->
                     // Remove the starting <code> and ending </code>
                     returnType.HtmlText.[6 .. returnType.HtmlText.Length - 8]
+                    // Adapt the text to have basic syntax highlighting
+                    |> fun text ->
+                        text.Replace("&lt;", wrapInKeyword "&lt;")
+                    |> fun text ->
+                        text.Replace("&gt;", wrapInKeyword "&gt;")
+                    |> fun text ->
+                        text.Replace(",", wrapInKeyword ",")
+
                 | None ->
                     "unit"
 
@@ -422,7 +493,9 @@ let renderValueOrFunction
                 // sb.WriteLine """<div class="api-code">"""
                 // sb.WriteLine $"""<div><span class="keyword">val</span>&nbsp;%s{entity.Name}&nbsp;<span class="keyword">:</span></div>"""
 
-                for (name, returnType) in paramTypesInfo.Infos do
+                for index in 0 .. paramTypesInfo.Infos.Length - 1 do
+                    let (name, returnType) = paramTypesInfo.Infos.[index]
+
                     sb.Write "<div>"
                     sb.Space 4 // Equivalent to 'val '
                     sb.Write name
@@ -431,7 +504,11 @@ let renderValueOrFunction
                     sb.Space 1
                     sb.Write returnType.Html
                     sb.Space (paramTypesInfo.MaxReturnTypeLength - returnType.Length + 1) // Complete with space to align the '->'
-                    sb.Write """<span class="keyword">-></span>"""
+
+                    // Don't add the arrow after the last parameter
+                    if index <> paramTypesInfo.Infos.Length - 1 then
+                        sb.Write """<span class="keyword">-></span>"""
+
                     sb.Write "</div>"
                     sb.NewLine ()
 
@@ -595,33 +672,35 @@ let renderIndex
             ns.Name = "global"
         )
 
-    sb.WriteLine """<p class="is-size-5"><strong>Declared namespaces</strong></p>"""
-    sb.NewLine ()
-    sb.WriteLine "<p>"
-    sb.WriteLine """<table class="table is-bordered docs-modules">"""
-    sb.WriteLine "<thead>"
-    sb.WriteLine "<tr>"
-    sb.WriteLine """<th width="25%">Namespace</th>"""
-    sb.WriteLine """<th width="75%">Description</th>"""
-    sb.WriteLine "</tr>"
-    sb.WriteLine "</thead>"
+    if not standardNamespaces.IsEmpty then
 
-    sb.WriteLine "<tbody>"
-
-    for ns in standardNamespaces do
-
-        // TODO: Support <namespacedoc> tag as supported by F# formatting
-        // Namespace cannot have documentatin so this is a trick to support it
-        let url = linkGenerator ns.UrlBaseName
-
+        sb.WriteLine """<p class="is-size-5"><strong>Declared namespaces</strong></p>"""
+        sb.NewLine ()
+        sb.WriteLine "<p>"
+        sb.WriteLine """<table class="table is-bordered docs-modules">"""
+        sb.WriteLine "<thead>"
         sb.WriteLine "<tr>"
-        sb.WriteLine $"""<td><a href="{url}">{ns.Name}</a></td>"""
-        sb.WriteLine $"""<td></td>"""
+        sb.WriteLine """<th width="25%">Namespace</th>"""
+        sb.WriteLine """<th width="75%">Description</th>"""
         sb.WriteLine "</tr>"
+        sb.WriteLine "</thead>"
 
-    sb.WriteLine "</tbody>"
-    sb.WriteLine "</table>"
-    sb.WriteLine "</p>"
+        sb.WriteLine "<tbody>"
+
+        for ns in standardNamespaces do
+
+            // TODO: Support <namespacedoc> tag as supported by F# formatting
+            // Namespace cannot have documentatin so this is a trick to support it
+            let url = linkGenerator ns.UrlBaseName
+
+            sb.WriteLine "<tr>"
+            sb.WriteLine $"""<td><a href="{url}">{ns.Name}</a></td>"""
+            sb.WriteLine $"""<td></td>"""
+            sb.WriteLine "</tr>"
+
+        sb.WriteLine "</tbody>"
+        sb.WriteLine "</table>"
+        sb.WriteLine "</p>"
 
     if not globalNamespace.IsEmpty then
         renderDeclaredModules
@@ -802,7 +881,7 @@ let renderUnionType
                         sb.Space 1
 
                     let returnType =
-                        renderParameterType fsharpField.FieldType
+                        renderParameterType true fsharpField.FieldType
 
                     sb.Write returnType.Html
 

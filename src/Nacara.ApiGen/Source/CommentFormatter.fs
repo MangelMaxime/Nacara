@@ -656,7 +656,6 @@ let tryFormatParam (parameterName : string) (text : string) =
 let tryFormatReturnsOnly (text : string) =
     let pattern = tagPattern "returns"
 
-    // Match all the param tags
     match Regex.Match(text, pattern, RegexOptions.IgnoreCase) with
     | m when m.Success ->
         if m.Groups.["void_element"].Success then

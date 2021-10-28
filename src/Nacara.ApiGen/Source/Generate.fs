@@ -113,18 +113,18 @@ let generateEntityPage
             generateLink
             entityInfo.Entity.NestedEntities
 
-        renderValueOrFunction
-            sb
-            docLocator
-            generateLink
-            entityInfo.Entity.ValuesAndFuncs
-
         // A module can contains module declarations
         renderDeclaredModules
             sb
             docLocator
             generateLink
             entityInfo.Entity.NestedEntities
+
+        renderValueOrFunction
+            sb
+            docLocator
+            generateLink
+            entityInfo.Entity.ValuesAndFuncs
 
     else if symbol.IsNamespace then
 
