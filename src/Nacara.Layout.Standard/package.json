@@ -1,10 +1,10 @@
 {
     "name": "nacara-layout-standard",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "",
     "exports": {
         ".": "./dist/Export.js",
-        "./": "./"
+        "./*": "./*"
     },
     "type": "module",
     "engines": {
