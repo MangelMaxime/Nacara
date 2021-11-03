@@ -91,14 +91,14 @@ exportDefault
 
 Compile you project to JavaScript using Fable
 
-:::info
 If you don't already have Fable installed in your project you need to install it
 
-```fs
+```
 dotnet new tool-manifest
 dotnet tool install fable
 ```
-:::
+
+Launch the compilation
 
 ```sh
 dotnet fable --watch
