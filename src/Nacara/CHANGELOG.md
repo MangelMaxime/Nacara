@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.1.0 - 2021-11-04
+
+### Changed
+
+* Provide the `relativePath` to `unified`.
+
+    This is required for `remark-code-import` plugins to work.
+
 ## 1.0.0 - 2021-10-28
 
 ### Added

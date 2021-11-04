@@ -762,13 +762,22 @@ module MarkdownToHtml =
     /// <param name="config">Nacara configuration</param>
     /// <param name="remarkPlugins">List of remark plugins to use for the transformation</param>
     /// <param name="rehypePlugins">List of rehype plugins to use for the transformation</param>
+    /// <param name="relativePath">Relative path of the markdown file</param>
     /// <param name="markdownText">Text to transform</param>
     /// <returns>HTML text</returns>
     let markdownToHtml
         (config : Config)
         (remarkPlugins : RemarkPlugin array)
         (rehypePlugins : RehypePlugin array)
+        (relativePath : string)
         (markdownText : string) : JS.Promise<string> =
+
+        let absolutePath =
+            path.join(
+                config.WorkingDirectory,
+                config.SourceFolder,
+                relativePath
+            )
 
         promise {
             let chain =
@@ -811,7 +820,12 @@ module MarkdownToHtml =
             if not config.IsWatch then
                 chain?``use``(rehypePresetMinify)
 
-            return chain?``process``(markdownText)
+            return chain?``process``(
+                {|
+                    value = markdownText
+                    path = absolutePath
+                |}
+            )
         }
 
 /// <summary>
@@ -868,12 +882,14 @@ type RendererContext =
     /// you can add it via the corresponding argument.
     /// </summary>
     /// <param name="markdownText">Text to transform</param>
+    /// <param name="relativePath">Relative path to the markdown file. Generally it comes from the page context</param>
     /// <param name="remarkPlugins">Layout specific remark plugins</param>
     /// <param name="rehypePlugins">Layout specific rehype plugins</param>
     /// <returns></returns>
     member this.MarkdownToHtml
         (
             markdownText: string,
+            relativePath: string,
             ?remarkPlugins : RemarkPlugin array,
             ?rehypePlugins : RehypePlugin array
         ) =
@@ -892,6 +908,7 @@ type RendererContext =
             this.Config
             remarkPlugins
             rehypePlugins
+            relativePath
             markdownText
 
 

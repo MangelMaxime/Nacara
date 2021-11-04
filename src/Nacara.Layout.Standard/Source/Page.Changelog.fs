@@ -221,10 +221,13 @@ let render (rendererContext : RendererContext) (pageContext : PageContext) =
                     ))
                 )
 
+            let markdownToHtml content =
+                rendererContext.MarkdownToHtml(content, pageContext.RelativePath)
+
             match ChangelogParser.parse changelogContent with
             | Ok changelog ->
                 let! changelogItems =
-                    renderChangelogItems rendererContext.MarkdownToHtml changelog.Versions
+                    renderChangelogItems markdownToHtml changelog.Versions
                     |> Promise.all
 
                 let content =

@@ -19,7 +19,10 @@ exportDefault
                     fun rendererContext pageContext ->
                         promise {
                             let! pageContent =
-                                rendererContext.MarkdownToHtml pageContext.Content
+                                rendererContext.MarkdownToHtml(
+                                    pageContext.Content,
+                                    pageContext.RelativePath
+                                )
 
                             let content =
                                 Html.div [
@@ -35,7 +38,10 @@ exportDefault
                     fun rendererContext pageContext ->
                         promise {
                             let! pageContent =
-                                rendererContext.MarkdownToHtml pageContext.Content
+                                rendererContext.MarkdownToHtml(
+                                    pageContext.Content,
+                                    pageContext.RelativePath
+                                )
 
                             let content =
                                 Bulma.container [

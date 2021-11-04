@@ -314,6 +314,7 @@ let render (rendererContext : RendererContext) (pageContext : PageContext) =
         let! pageContent =
             rendererContext.MarkdownToHtml(
                 pageContext.Content,
+                pageContext.RelativePath,
                 remarkPlugins,
                 rehypePlugins
             )
