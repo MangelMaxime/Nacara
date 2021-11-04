@@ -233,7 +233,11 @@ const render = async (rendererContext, pageContext) => {
     const date = pageContext.Attributes.date;
 
     // Transform the page content from Markdown to HTML
-    const pageContent = await rendererContext.MarkdownToHtml(pageContext.Content)
+    const pageContent =
+        await rendererContext.MarkdownToHtml(
+            pageContext.Content,
+            pageContext.RelativePath
+        )
 
     // Render the blog content using our helpers
     const content =
@@ -432,7 +436,12 @@ Because, the markdown parser use an `async` function it can happens that you end
 
 ```js
 const Abstract = async ({rendererContext, blogPage}) => {
-    const abstractText = rendererContext.MarkdownToHtml(blogPage.Attributes.abstract)
+    const abstractText =
+        await rendererContext.MarkdownToHtml(
+            blogPage.Attributes.abstract,
+            pageContext.RelativePath
+        );
+
     return <div class="abstract">
         {abstractText}
     </div>
@@ -451,7 +460,12 @@ const render = async (rendererContext, pageContext) => {
 
     // Pre-process the blog-page files here, so we can use standard JSX afterwards
     for (const blogPage of blogPages) {
-        const abstractText = await rendererContext.MarkdownToHtml(blogPage.Attributes.abstract);
+        const abstractText =
+            await rendererContext.MarkdownToHtml(
+                blogPage.Attributes.abstract,
+                blogPage.RelativePath
+            );
+
         // Store the text representation into the blogPage information
         blogPage.Attributes.abstractText = abstractText;
     }

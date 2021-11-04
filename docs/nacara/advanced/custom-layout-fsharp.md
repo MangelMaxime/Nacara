@@ -61,7 +61,10 @@ open Fable.React.Props
 let render (rendererContext : RendererContext) (pageContext : PageContext) =
     promise {
         let! pageContent =
-            rendererContext.MarkdownToHtml pageContext.Content
+            rendererContext.MarkdownToHtml(
+                pageContext.Content,
+                pageContext.RelativePath
+            )
 
         return div [ ]
             [
