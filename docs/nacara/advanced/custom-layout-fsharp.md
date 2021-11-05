@@ -104,7 +104,7 @@ dotnet tool install fable
 Launch the compilation
 
 ```sh
-dotnet fable --watch
+dotnet fable --outDir dist --watch
 ```
 
 </li>
@@ -118,7 +118,7 @@ Register your layout in the `nacara.config.json`
     // ...
     "layouts": [
         "nacara-layout-standard",
-        "./Nacara.Layout.Custom/Library.js"
+        "./Nacara.Layout.Custom/dist/Library.js"
     ]
 }
 ```
