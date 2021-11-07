@@ -52,7 +52,9 @@ let private (|Header6|_|) (m : Match) : option<Header> =
     genHeaderMatcher 6 Header.Header6 m
 
 let private generateHeaderPattern (rank : int)=
-    $"""(?<header_%i{rank}>(<h%i{rank}[^>]*>(?<h%i{rank}_text>((?!<\/h%i{rank}>).)*)<a[^>]*href="(?<h%i{rank}_link>[^"]*)"((?!<\/h%i{rank}>).)*<\/h%i{rank}>))"""
+    // $"""(?<header_%i{rank}>(<h%i{rank}[^>]*>(?<h%i{rank}_text>((?!<\/h%i{rank}>).)*)<a[^>]*href="(?<h%i{rank}_link>[^"]*)"((?!<\/h%i{rank}>).)*<\/h%i{rank}>))"""
+    $"""(?<header_%i{rank}>(<h%i{rank}[^>]*>(?<h%i{rank}_text>((?!<\/h%i{rank}>).)*)<a[^>]*href="?(?<h%i{rank}_link>[^" >]*)"?((?!<\/h%i{rank}>).)*<\/h%i{rank}>))"""
+
 
 // Note: TableOfContent parser only extract information from h2 elements
 let parse (pageContent : string) =
