@@ -10,6 +10,7 @@
     <Compile Include="Bindings/Chokidar.fs" />
     <Compile Include="Bindings/Sass.fs" />
     <Compile Include="Bindings/Ws.fs" />
+    <Compile Include="Bindings/Semver.fs" />
     <Compile Include="Node.Extra.fs" />
     <Compile Include="List.Extensions.fs" />
     <Compile Include="Array.Extensions.fs" />

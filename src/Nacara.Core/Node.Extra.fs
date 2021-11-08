@@ -100,22 +100,50 @@ module Directory =
         )
 
     let rmdir (dir : string) =
-        let options = createObj [
-            "recursive" ==> true
-        ]
+        let useRm = Semver.semver.gte(``process``.version, "v14.14.0")
 
-        promise {
-            let! dirExist = exists dir
+        // Depending on Node.JS version we use different methods to remove a directory
+        // to avoid warning
+        // [DEP0147] DeprecationWarning: In future versions of Node.js,
+        // fs.rmdir(path, { recursive: true }) will be removed.
+        // Use fs.rm(path, { recursive: true }) instead
 
-            if dirExist then
-                do! Promise.create (fun resolve reject ->
-                    fs?rmdir(dir, options, (fun (err : Base.ErrnoException option) ->
-                        match err with
-                        | Some err -> reject (err :?> System.Exception)
-                        | None -> resolve ()
-                    ))
-                )
-        }
+        // fs.rm is not available in Node.js v14.14.0 and below
+        if useRm then
+            let options = createObj [
+                "recursive" ==> true
+            ]
+
+            promise {
+                let! dirExist = exists dir
+
+                if dirExist then
+                    do! Promise.create (fun resolve reject ->
+                        fs?rm(dir, options, (fun (err : Base.ErrnoException option) ->
+                            match err with
+                            | Some err -> reject (err :?> System.Exception)
+                            | None -> resolve ()
+                        ))
+                    )
+            }
+        // In version below 14.14.0, we can use fs?mrdir
+        else
+            let options = createObj [
+                "recursive" ==> true
+            ]
+
+            promise {
+                let! dirExist = exists dir
+
+                if dirExist then
+                    do! Promise.create (fun resolve reject ->
+                        fs?rmdir(dir, options, (fun (err : Base.ErrnoException option) ->
+                            match err with
+                            | Some err -> reject (err :?> System.Exception)
+                            | None -> resolve ()
+                        ))
+                    )
+            }
 
 [<RequireQualifiedAccess>]
 module File =
