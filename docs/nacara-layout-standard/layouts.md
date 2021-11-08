@@ -24,7 +24,7 @@ This layout include:
 #### `toc`
 
 Optional</br>
-Type: `Object`
+Type: `Object | Boolean`
 
 Options:
 
@@ -37,9 +37,13 @@ Options:
 **Example**
 
 ```yml
+# Change the configuration of the table of content
 toc:
     from: 2
     to: 3
+
+# Disable the table of content
+toc: false
 ```
 
 ## nacara-navbar-only
