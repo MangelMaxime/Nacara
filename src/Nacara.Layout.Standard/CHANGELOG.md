@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.1.2 - 2021-11-08
+
+### Fixed
+
+* Fix missing `fable_modules` folder from `dist`
+
 ## 1.1.1 - 2021-11-07
 
 ### Fixed
