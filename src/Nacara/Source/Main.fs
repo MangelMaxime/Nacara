@@ -230,6 +230,7 @@ let private buildOrWatch
             |> Program.withSubscription Watch.fileWatcherSubscription
             |> Program.withSubscription Watch.layoutDependencyWatcherSubscription
             |> Program.withSubscription Watch.layoutSourcesWatcherSubscription
+            |> Program.withSubscription Watch.outputFileWatcherSubscription
             |> Program.runWith elmishArgs
 
         else

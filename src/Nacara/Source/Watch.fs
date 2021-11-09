@@ -26,13 +26,17 @@ type Msg =
     | ProcessSass of filePath: string
     | CopyFileWithDestination of source : string * destination : string
     | DependencyFileChanged of filePath : string
+    | SendRefreshCSS
+    | SendReloadPage of filePath : string
+    | SendFullReload
 
 [<NoComparison; NoEquality>]
 type Model =
     {
         FileWatcher : Chokidar.FSWatcher
         LayoutDependencyWatcher : Chokidar.FSWatcher
-        LayoutSourcesWatch : Chokidar.FSWatcher
+        LayoutSourcesWatcher : Chokidar.FSWatcher
+        OutputFileWatcher : Chokidar.FSWatcher
         HttpServer : Http.Server
         WssServer : Ws.WebSocket.Server
         Config : Config
@@ -152,7 +156,7 @@ let layoutSourcesWatcherSubscription (model : Model) =
         // Register behavior when:
         // - a new file is added to the `Source` directory
         // - a tracked file change
-        model.LayoutSourcesWatch.on(Events.All, (fun event path ->
+        model.LayoutSourcesWatcher.on(Events.All, (fun event path ->
             match event with
             | Events.Change ->
                 // Artificially make the layout relative as we are only watching relative files
@@ -172,6 +176,30 @@ let layoutSourcesWatcherSubscription (model : Model) =
         ))
 
     [ handler ]
+
+let outputFileWatcherSubscription (model : Model) =
+    let handler dispatch =
+        // Trigger a reload from the browser when a file
+        // in the output folder change
+        // The event can be anything as even if a file is deleted we should update the website
+        model.OutputFileWatcher.on(Events.All, (fun event filePath ->
+            let ext = path.extname(filePath)
+
+            match ext.ToLower() with
+            | ".css" ->
+                dispatch SendRefreshCSS
+
+            | ".html" ->
+                dispatch (SendReloadPage filePath)
+
+            // This type of file doesn't have any specific behaviour
+            // we force a full reload independently of the page we are currently on
+            | _ ->
+                dispatch SendFullReload
+        ))
+
+    [ handler ]
+
 let private startServer (config : Config) =
     let server = Server.create config
 
@@ -241,7 +269,7 @@ let init (args : InitArgs) : Model * Cmd<Msg> =
             liveReloadDependency.Source
         |])
 
-    let layoutSourcesWatcher =
+    let layoutSourcesWatcherer =
         args.Config.Layouts
         // Keep only the relative layouts
         |> Array.filter (fun layout ->
@@ -276,7 +304,8 @@ let init (args : InitArgs) : Model * Cmd<Msg> =
     {
         FileWatcher = chokidar.watch(args.Config.SourceFolder, chokidarOptions)
         LayoutDependencyWatcher = layoutDependencyWatcher
-        LayoutSourcesWatch = layoutSourcesWatcher
+        LayoutSourcesWatcher = layoutSourcesWatcherer
+        OutputFileWatcher = chokidar.watch(args.Config.DestinationFolder, chokidarOptions)
         HttpServer = httpServer
         WssServer = wssServer
         LayoutRenderer = layoutCache
@@ -361,6 +390,22 @@ let update (msg : Msg) (model : Model) =
         model
         , Cmd.OfPromise.perform action () MenuFiledLoaded
 
+    | SendRefreshCSS ->
+        model
+        , Cmd.OfFunc.exec sendRefreshCSS model
+
+    | SendReloadPage filePath ->
+        let pageId =
+            path.relative(model.Config.DestinationFolder, filePath)
+            |> getPageId
+
+        model
+        , Cmd.OfFunc.exec (sendReload model) (Some pageId)
+
+    | SendFullReload ->
+        model
+        , Cmd.OfFunc.exec (sendReload model) None
+
     | DependencyFileChanged filePath ->
         let dependencyOpt =
             model.LayoutDependencies
@@ -424,7 +469,6 @@ let update (msg : Msg) (model : Model) =
             Write.copyFileWithDestination args
             |> Promise.map( fun _ ->
                 Log.log $"Dependency file %s{source} copied to %s{destination}"
-                sendReload model None
             )
             |> Promise.catchEnd (fun error ->
                 Log.error $"Error while copying %s{source} to %s{destination}\n%A{error}"
@@ -573,7 +617,6 @@ let update (msg : Msg) (model : Model) =
             Write.markdown args
             |> Promise.map (fun _ ->
                 Log.log $"Processed: %s{pageContext.RelativePath}"
-                sendReload model (Some pageContext.PageId)
             )
             |> Promise.catchEnd (fun error ->
                 Log.error $"Error while processing markdown file: %s{pageContext.PageId}"
@@ -602,7 +645,6 @@ let update (msg : Msg) (model : Model) =
             Write.copyFile
             >> Promise.map (fun _ ->
                 Log.log $"Copied: %s{filePath}"
-                sendReload model None
             )
             >> Promise.catchEnd (fun error ->
                 Log.error $"Error while copying %s{filePath}"
@@ -623,7 +665,6 @@ let update (msg : Msg) (model : Model) =
             Write.sassFile
             >> Promise.map (fun _ ->
                 Log.log $"Processed: %s{filePath}"
-                sendRefreshCSS model
             )
             >> Promise.catchEnd (fun error ->
                 Log.error $"Error while processing SASS file: %s{filePath}"
