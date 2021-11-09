@@ -33,3 +33,11 @@ This will spawn `postcss` once the initial clean is done and then generates your
 :::warning
 It is important that you place your command **between** quotes or singles quotes.
 :::
+
+## Watcher improvements
+
+If you see an error about too `EMFILE: too many open files`, you can trying setting the `CHOKIDAR_USEPOLLING` environment variable to `true`.
+
+Example: `CHOKIDAR_USEPOLLING=true nacara watch`
+
+See [Chokidar documentation](https://github.com/paulmillr/chokidar#performance) to learn more about it.
