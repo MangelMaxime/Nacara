@@ -1,7 +1,7 @@
 module Main
 
 open Fable.Import
-
+open System
 open Fable.Core
 open Fable.Core.JsInterop
 open Thoth.Json
@@ -31,12 +31,57 @@ type FilesAccumulator =
             OtherFiles = []
         }
 
-let private buildOrWatch (isWatch : bool) (config : Config) =
+type Argv =
+    {
+        afterClean : string
+    }
+
+let private buildOrWatch
+    (isWatch : bool)
+    (argv : Argv)
+    (config : Config) =
     promise {
         Log.log $"Source folder: %s{config.SourceFolder}"
 
         // Clean the output folder
         do! Clean.clean config
+        // Make sure that the destination folder exist before doing anything else
+        // This is required to attach chokidar watcher
+        do! Directory.create config.DestinationFolder
+
+        if not (String.IsNullOrEmpty argv.afterClean) then
+            let infos = argv.afterClean.Split(' ')
+
+            let cmd = infos.[0]
+
+            let options =
+                if infos.Length > 1 then
+                    infos.[1..]
+                else
+                    [| |]
+
+            // If in watch mode, start the command in the background
+            // And forget about it
+            if isWatch then
+                childProcess.spawn(
+                    cmd,
+                    ResizeArray options,
+                    {|
+                        detached = true
+                        stdio = "inherit"
+                    |}
+                )
+                |> ignore
+            else
+                // Otherwise, run the command and wait for it to finish
+                childProcess.spawnSync(
+                    cmd,
+                    ResizeArray options,
+                    {|
+                        stdio = "inherit"
+                    |}
+                )
+                |> ignore
 
         // The config so now load the files from the source folder
         let! files = Directory.getFiles true config.SourceFolder
@@ -259,12 +304,11 @@ let initialize
             ``process``.exit(ExitCode.MISSING_CONFIG_FILE)
     }
 
-let runBuild _ =
-    initialize false (buildOrWatch false)
+let runBuild argv =
+    initialize false (buildOrWatch false argv)
 
-
-let runWatch _ =
-    initialize true (buildOrWatch true)
+let runWatch argv =
+    initialize true (buildOrWatch true argv)
 
 let runClean _ =
     let func config =

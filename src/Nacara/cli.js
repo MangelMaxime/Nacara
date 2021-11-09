@@ -8,6 +8,7 @@ import path from 'node:path';
 import { info } from './dist/Nacara.Core/Log.js';
 import yargs from 'yargs';
 import { hideBin } from "yargs/helpers";
+import afterCleanOptions from './js/afterClean-options.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -22,8 +23,14 @@ yargs(hideBin(process.argv))
     .command(
         "watch",
         "Start the development server",
-        () => {},
-        async () => {
+        (argv) => {
+            argv
+                .option(
+                    "run",
+                    afterCleanOptions
+                )
+        },
+        async (argv) => {
             nodemon({
                 script: path.join(__dirname, "./js/nodemon-watch.js"),
                 args: process.argv.slice(2),
@@ -57,9 +64,15 @@ yargs(hideBin(process.argv))
         runServe
     )
     .command(
-        ["$0", "build"],
+        "build",
         "Build the website",
-        () => {},
+        (argv) => {
+            argv
+                .option(
+                    "afterClean",
+                    afterCleanOptions
+                )
+        },
         runBuild
     )
     .argv
