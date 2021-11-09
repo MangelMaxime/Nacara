@@ -141,6 +141,7 @@ const run = async () => {
         [
             "nacara",
             "nacara-layout-standard",
+            "bulma",
             "@babel/register",
             "@babel/preset-react",
             "akamud/vscode-theme-onelight ",
