@@ -64,7 +64,7 @@ yargs(hideBin(process.argv))
         runServe
     )
     .command(
-        "build",
+        [ "$0", "build" ],
         "Build the website",
         (argv) => {
             argv
