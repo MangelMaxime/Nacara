@@ -6,6 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.3.0 - 2021-11-09
+
+### Added
+
+* Add a new option `--afterClean` allowing the user to launch a command after Nacara clean the output folder.
+
+    Example usage:
+
+    If you are not using SCSS to generate your style but TailwindCSS you can hook it up here in the Nacara process.
+
+### Changed
+
+* Fix #134: Trigger `live-reload` mechanism by watching the output folder.
+
+    Example usage:
+
+    This allows the user to generates their CSS files externally from Nacara
+
 ## 1.2.0 - 2021-11-08
 
 ### Fixed

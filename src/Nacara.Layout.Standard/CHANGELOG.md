@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.2.1 - 2021-11-09
+
+### Fixed
+
+* Make the menu-container scrollable on mobile
+
+### Added
+
+* Fix #108: If the dropdown correspond to the active page, we indicate it visually
+
 ## 1.2.0 - 2021-11-08
 
 ### Added
