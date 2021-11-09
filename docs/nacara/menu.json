@@ -5,6 +5,7 @@
         "items": [
             "nacara/introduction",
             "nacara/configuration",
+            "nacara/cli-usage",
             "nacara/directory-structure",
             "nacara/partials"
         ]
