@@ -54,7 +54,8 @@ $nacara-navbar-menu-border: 1px solid $navbar-item-active-background-color !defa
 
             &.is-active,
             &.is-hovered-js,
-            &:hover {
+            &:hover,
+            &.is-current-page {
                 .nacara-dropdown-link {
                     background-color: $navbar-item-active-background-color;
                 }

@@ -32,8 +32,24 @@ let private navbarItemIsFromSection (itemSectionOpt : string option) (pageSectio
     | None ->
         false
 
-let private renderNacaraNavbarDropdown (partials : Partial array) (dropdown : DropdownInfo) =
+let private renderNacaraNavbarDropdown (partials : Partial array) (dropdown : DropdownInfo) (pageSection : string) =
     let guid = System.Guid.NewGuid()
+
+    let isDropdownFromCurrentPage =
+        dropdown.Items
+        |> List.tryFind (fun item ->
+            match item with
+            | DropdownItem.Link info ->
+                match info.Section with
+                | Some section ->
+                    section = pageSection
+                | None ->
+                    false
+
+            | DropdownItem.Divider ->
+                false
+        )
+        |> Option.isSome
 
     Bulma.navbarItem.div [
         prop.classes [
@@ -42,6 +58,9 @@ let private renderNacaraNavbarDropdown (partials : Partial array) (dropdown : Dr
                 "is-fullwidth"
             else
                 "is-floating"
+
+            if isDropdownFromCurrentPage then
+                "is-current-page"
         ]
         prop.custom("data-guid", guid.ToString())
 
@@ -179,7 +198,7 @@ let private renderStartNavbar (partials : Partial array) (pageSection : string) 
                 ]
 
             | StartNavbarItem.Dropdown dropdown ->
-                renderNacaraNavbarDropdown partials dropdown
+                renderNacaraNavbarDropdown partials dropdown pageSection
 
         renderNavbarBurgerMenu
     ]
