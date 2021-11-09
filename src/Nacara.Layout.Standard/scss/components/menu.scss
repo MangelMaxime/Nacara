@@ -12,6 +12,10 @@ $table-of-content-item-padding-left: 0.75rem !default;
     overflow-y: auto;
     overscroll-behavior: contain;
 
+    @include touch {
+        height: calc(100vh - #{$computed-navbar-height});
+    }
+
     .menu {
         margin-top: $navbar-height;
         padding-right: 1rem;
