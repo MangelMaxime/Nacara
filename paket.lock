@@ -108,7 +108,7 @@ NUGET
       FSharp.Core (>= 4.7.2) - restriction: >= netstandard2.0
 
 GROUP ApiGen
-RESTRICTION: || (== net5.0) (== net6.0)
+RESTRICTION: == net5.0
 NUGET
   remote: https://api.nuget.org/v3/index.json
     Argu (6.1.1)
@@ -117,11 +117,11 @@ NUGET
     Expecto (9.0.4)
       FSharp.Core (>= 4.6)
       Mono.Cecil (>= 0.11.3)
-    FSharp.Compiler.Service (41.0.1)
-      FSharp.Core (6.0.1)
-      Microsoft.Build.Framework (>= 16.11)
-      Microsoft.Build.Tasks.Core (>= 16.11)
-      Microsoft.Build.Utilities.Core (>= 16.11)
+    FSharp.Compiler.Service (40.0)
+      FSharp.Core (5.0.2)
+      Microsoft.Build.Framework (>= 16.9)
+      Microsoft.Build.Tasks.Core (>= 16.9)
+      Microsoft.Build.Utilities.Core (>= 16.9)
       System.Buffers (>= 4.5.1)
       System.Collections.Immutable (>= 5.0)
       System.Diagnostics.Process (>= 4.3)
@@ -130,12 +130,11 @@ NUGET
       System.Linq.Queryable (>= 4.3)
       System.Memory (>= 4.5.4)
       System.Net.Requests (>= 4.3)
-      System.Net.Security (>= 4.3.1)
+      System.Net.Security (>= 4.3)
       System.Reflection.Emit (>= 4.3)
       System.Reflection.Metadata (>= 5.0)
       System.Reflection.TypeExtensions (>= 4.3)
       System.Runtime (>= 4.3)
-      System.Runtime.CompilerServices.Unsafe (>= 5.0)
       System.Runtime.InteropServices (>= 4.3)
       System.Runtime.Loader (>= 4.3)
       System.Security.Claims (>= 4.3)
@@ -144,8 +143,8 @@ NUGET
       System.Threading.Tasks.Parallel (>= 4.3)
       System.Threading.Thread (>= 4.3)
       System.Threading.ThreadPool (>= 4.3)
-    FSharp.Core (6.0.1)
-    FSharp.Formatting (12.0)
+    FSharp.Core (5.0.2)
+    FSharp.Formatting (11.4.3)
       FSharp.Compiler.Service (>= 40.0)
     FSlugify (1.1)
       FSharp.Core (>= 4.7)
