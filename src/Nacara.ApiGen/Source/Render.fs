@@ -8,6 +8,8 @@ open Helpers
 open System.Collections.Generic
 open FSharp.Compiler.Symbols
 open FSlugify.SlugGenerator
+open System.Text.RegularExpressions
+open System.Xml.Linq
 
 let slugify text =
     slugify DefaultSlugGeneratorOptions text
@@ -148,10 +150,48 @@ type TextNode =
             | Tick ->
                 1
 
+let formatXmlComment
+    (commentOpt : XElement option) : string =
+
+    match commentOpt with
+    | Some comment ->
+        let docComment = comment.ToString()
+
+        let pattern =
+            $"""<member name=".*">((?'xml_doc'(?:(?!<member>)(?!<\/member>)[\s\S])*)<\/member\s*>)"""
+
+        let m = Regex.Match(docComment, pattern, RegexOptions.Singleline)
+
+        // Remove the <member> and </member> tags
+        if m.Success then
+            let xmlDoc = m.Groups.["xml_doc"].Value
+
+            let lines =
+                xmlDoc
+                |> String.splitLines
+                |> Array.toList
+
+            // Remove the non meaning full indentation
+            let content =
+                lines
+                |> List.map (fun line ->
+                    // Add a small protection in case the user didn't align all it's tags
+                    if line.StartsWith(" ") then
+                        line.Substring(1)
+                    else
+                        line
+                )
+                |> String.concat "\n"
+
+            CommentFormatter.format content
+        else
+            CommentFormatter.format docComment
+
+    | None ->
+        ""
 
 let renderDeclaredTypes
     (sb : StringBuilder)
-    (docLocator : DocLocator)
     (linkGenerator : string -> string)
     (entities : ApiDocEntity list) =
 
@@ -183,11 +223,7 @@ let renderDeclaredTypes
             sb.WriteLine "<tr>"
             sb.WriteLine $"""<td><a href="{url}">{typ.Name}</a></td>"""
 
-            match docLocator.TryFindComment typ.Symbol.XmlDocSig with
-            | Some comment ->
-                sb.WriteLine $"""<td>{CommentFormatter.format comment}</td>"""
-            | None ->
-                sb.WriteLine $"""<td></td>"""
+            sb.WriteLine $"""<td>{formatXmlComment typ.Comment.Xml}</td>"""
 
             sb.WriteLine "</tr>"
         )
@@ -417,7 +453,6 @@ let rec extractParamTypesInformation
 
 let renderValueOrFunction
     (sb : StringBuilder)
-    (docLocator : DocLocator)
     (linkGenerator : string -> string)
     (entities : ApiDocMember list) =
 
@@ -438,7 +473,7 @@ let renderValueOrFunction
                 // For now, we are just using returnType.HtmlText to have something ready as parsing from
                 // FSharpMemberOrFunctionOrValue seems to be quite complex
                 match returnType with
-                | Some returnType ->
+                | Some (_, returnType) ->
                     // Remove the starting <code> and ending </code>
                     returnType.HtmlText.[6 .. returnType.HtmlText.Length - 8]
                     // Adapt the text to have basic syntax highlighting
@@ -522,9 +557,12 @@ let renderValueOrFunction
             sb.WriteLine "</div>"
             sb.NewLine ()
 
-            match docLocator.TryFindComment entity with
-            | Some comment ->
+            // match docLocator.TryFindComment entity with
+            match entity.Comment.Xml with
+            | Some xmlComment ->
+                let comment = xmlComment.ToString()
                 sb.WriteLine (CommentFormatter.formatSummaryOnly comment)
+
 
                 if paramTypesInfo.Infos.Length <> 0 then
                     sb.WriteLine """<p><strong>Parameters</strong></p>"""
@@ -601,7 +639,6 @@ let renderValueOrFunction
 
 let renderDeclaredModules
     (sb : StringBuilder)
-    (docLocator : DocLocator)
     (linkGenerator : string -> string)
     (entities : ApiDocEntity list) =
 
@@ -633,11 +670,7 @@ let renderDeclaredModules
             sb.WriteLine "<tr>"
             sb.WriteLine $"""<td><a href="{url}">{md.Name}</a></td>"""
 
-            match docLocator.TryFindComment md.Symbol.XmlDocSig with
-            | Some comment ->
-                sb.WriteLine $"""<td>{CommentFormatter.formatSummaryOnly comment}</td>"""
-            | None ->
-                sb.WriteLine $"""<td></td>"""
+            sb.WriteLine $"""<td>{formatXmlComment md.Comment.Xml}</td>"""
 
             sb.WriteLine "</tr>"
         )
@@ -648,7 +681,6 @@ let renderDeclaredModules
 
 let renderNamespace
     (sb : StringBuilder)
-    (docLocator : DocLocator)
     (linkGenerator : string -> string)
     (apiDoc : ApiDocNamespace) =
 
@@ -656,13 +688,11 @@ let renderNamespace
 
     renderDeclaredModules
         sb
-        docLocator
         linkGenerator
         apiDoc.Entities
 
 let renderIndex
     (sb : StringBuilder)
-    (docLocator : DocLocator)
     (linkGenerator : string -> string)
     (namespaces: list<ApiDocNamespace>) =
 
@@ -705,13 +735,11 @@ let renderIndex
     if not globalNamespace.IsEmpty then
         renderDeclaredModules
             sb
-            docLocator
             linkGenerator
             globalNamespace.Head.Entities
 
 let renderRecordType
     (sb : StringBuilder)
-    (docLocator : DocLocator)
     (info : ApiDocEntityInfo) =
 
     let entity = info.Entity
@@ -723,7 +751,7 @@ let renderRecordType
 
     for field in entity.RecordFields do
         match field.ReturnInfo.ReturnType with
-        | Some returnType ->
+        | Some (_, returnType) ->
             let escapedReturnType =
                 // Remove the starting <code> and ending </code>
                 returnType.HtmlText.[6 .. returnType.HtmlText.Length - 8]
@@ -795,15 +823,12 @@ let renderRecordType
 
     sb.WriteLine "</div>"
 
-
-
-    match docLocator.TryFindComment entity.Symbol.XmlDocSig with
-    | Some docComment ->
-
+    match entity.Comment.Xml with
+    | Some _ ->
         sb.WriteLine """<div class="docs-summary">"""
         sb.WriteLine "<p><strong>Description</strong></p>"
         sb.WriteLine "<p>"
-        sb.WriteLine (CommentFormatter.format docComment)
+        sb.WriteLine (formatXmlComment entity.Comment.Xml)
         sb.WriteLine "</p>"
         sb.WriteLine "</div>"
 
@@ -817,7 +842,7 @@ let renderRecordType
 
     for field in entity.RecordFields do
         match field.ReturnInfo.ReturnType with
-        | Some returnType ->
+        | Some (_, returnType) ->
             let escapedReturnType =
                 // Remove the starting <code> and ending </code>
                 returnType.HtmlText.[6 .. returnType.HtmlText.Length - 8]
@@ -830,9 +855,10 @@ let renderRecordType
 
             sb.WriteLine """<dd>"""
 
-            match docLocator.TryFindComment field with
-            | Some docComment ->
-                sb.WriteLine (CommentFormatter.format docComment)
+            match field.Comment.Xml with
+            | Some _ ->
+                sb.WriteLine (formatXmlComment entity.Comment.Xml)
+
             | None ->
                 ()
 
@@ -846,7 +872,6 @@ let renderRecordType
 
 let renderUnionType
     (sb : StringBuilder)
-    (docLocator : DocLocator)
     (info : ApiDocEntityInfo) =
 
     let entity = info.Entity
@@ -890,13 +915,12 @@ let renderUnionType
     sb.WriteLine "</div>"
 
 
-    match docLocator.TryFindComment entity.Symbol.XmlDocSig with
-    | Some docComment ->
-
+    match entity.Comment.Xml with
+    | Some _ ->
         sb.WriteLine """<div class="docs-summary">"""
         sb.WriteLine "<p><strong>Description</strong></p>"
         sb.WriteLine "<p>"
-        sb.WriteLine (CommentFormatter.format docComment)
+        sb.WriteLine (formatXmlComment entity.Comment.Xml)
         sb.WriteLine "</p>"
         sb.WriteLine "</div>"
 
@@ -916,9 +940,10 @@ let renderUnionType
 
         sb.WriteLine """<dd>"""
 
-        match docLocator.TryFindComment case with
-        | Some docComment ->
-            sb.WriteLine (CommentFormatter.format docComment)
+        match case.Comment.Xml with
+        | Some _ ->
+            sb.WriteLine (formatXmlComment entity.Comment.Xml)
+
         | None ->
             ()
 

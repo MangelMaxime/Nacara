@@ -118,7 +118,10 @@ let private codeBlock =
                     else
                         sprintf "```%s\n%s```" lang innerText
 
-                Some formattedText
+                Environment.NewLine
+                + formattedText
+                + Environment.NewLine
+                |> Some
 
     }
     |> applyFormatter
@@ -513,13 +516,15 @@ let private example =
                 None
 
             | NonVoidElement (innerText, _) ->
-                """<div class="docs-example">"""
+                Environment.NewLine
+                + """<div class="docs-example">"""
                 + Environment.NewLine
                 + """<p><strong>Example</strong></p>"""
                 + Environment.NewLine
                 + innerText
                 + Environment.NewLine
                 + "</div>"
+                + Environment.NewLine
                 + Environment.NewLine
                 |> Some
 

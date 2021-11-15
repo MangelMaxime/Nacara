@@ -18,7 +18,6 @@ layout: api
 
 let generateIndexPage
     (docsRoot : string)
-    (docLocator : DocLocator)
     (generateLink : string -> string)
     (namespaces : ApiDocNamespace list)
     (destination : string)
@@ -28,7 +27,6 @@ let generateIndexPage
 
     renderIndex
         sb
-        docLocator
         generateLink
         namespaces
 
@@ -38,7 +36,6 @@ let generateIndexPage
 let generateNamespacePage
     (docsRoot : string)
     (apiUrl : string)
-    (docLocator : DocLocator)
     (generateLink : string -> string)
     (ns : ApiDocNamespace) =
 
@@ -46,7 +43,6 @@ let generateNamespacePage
 
     renderNamespace
         sb
-        docLocator
         generateLink
         ns
 
@@ -60,7 +56,6 @@ let generateNamespacePage
 let generateEntityPage
     (docsRoot : string)
     (apiUrl : string)
-    (docLocator : DocLocator)
     (generateLink : string -> string)
     (entityInfo : ApiDocEntityInfo) =
 
@@ -103,26 +98,23 @@ let generateEntityPage
     let symbol = entityInfo.Entity.Symbol
 
     if symbol.IsFSharpRecord then
-        renderRecordType sb docLocator entityInfo
+        renderRecordType sb entityInfo
 
     else if symbol.IsFSharpModule then
 
         renderDeclaredTypes
             sb
-            docLocator
             generateLink
             entityInfo.Entity.NestedEntities
 
         // A module can contains module declarations
         renderDeclaredModules
             sb
-            docLocator
             generateLink
             entityInfo.Entity.NestedEntities
 
         renderValueOrFunction
             sb
-            docLocator
             generateLink
             entityInfo.Entity.ValuesAndFuncs
 
@@ -131,23 +123,20 @@ let generateEntityPage
         printfn "TODO: Namespace"
 
     else if symbol.IsFSharpUnion then
-        renderUnionType sb docLocator entityInfo
+        renderUnionType sb entityInfo
 
     else
 
-        match docLocator.TryFindComment symbol.XmlDocSig with
-        | Some docComment ->
-
+        match entityInfo.Entity.Comment.Xml with
+        | Some _ ->
             sb.WriteLine """<div class="docs-summary">"""
             sb.WriteLine "<p><strong>Description</strong></p>"
             sb.WriteLine "<p>"
-            sb.WriteLine (CommentFormatter.format docComment)
+            sb.WriteLine (formatXmlComment entityInfo.Entity.Comment.Xml)
             sb.WriteLine "</p>"
             sb.WriteLine "</div>"
 
         | None ->
             ()
-
-        ()
 
     File.write docsRoot destination sb

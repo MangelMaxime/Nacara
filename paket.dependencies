@@ -24,7 +24,7 @@ group ApiGen
 
     nuget FSharp.Formatting
     nuget FSharp.Core
-    nuget FSharp.Compiler.Service
+    nuget FSharp.Compiler.Service 40.0.0
     nuget Expecto
     nuget Argu
     nuget FSlugify

@@ -67,7 +67,6 @@ let main argv =
 
             // Load the XML doc file
             let xmlFile = Path.Combine(libDir, project + ".xml")
-            let docLocator = new DocLocator(xmlFile)
 
             // Clean the output folder
             if Directory.Exists (Path.Combine(output, "reference", project)) then
@@ -85,7 +84,6 @@ let main argv =
 
             generateIndexPage
                 output
-                docLocator
                 generateLink
                 apiDocModel.Collection.Namespaces
                 indexPageDestination
@@ -95,7 +93,6 @@ let main argv =
                 generateNamespacePage
                     output
                     apiUrl
-                    docLocator
                     generateLink
                     ns
 
@@ -104,7 +101,6 @@ let main argv =
                 generateEntityPage
                     output
                     apiUrl
-                    docLocator
                     generateLink
                     entity
 
