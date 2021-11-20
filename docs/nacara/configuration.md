@@ -111,7 +111,7 @@ For URLs that have no path, the baseUrl should be set to `/`.
             <td class="fullwidth-cell">
 Path to your site favIcon
 
-If this field is omitted, not `favIcon` tag will be added to your website and the browser will use it's default behavior.
+If this field is omitted, no `favIcon` tag will be added to your website and the browser will use it's default behavior.
             </td>
         </tr>
         <tr>
