@@ -11,12 +11,18 @@ open Node
 
 let cwd = ``process``.cwd()
 
+[<RequireQualifiedAccess; NoComparison>]
+type PotentialFsharpFileResult =
+    | Markdown of Result<PageContext,string>
+    | Other of string
+
 type FilesAccumulator =
     {
         MarkdownFiles : string list
         MenuFiles : string list
         SassFiles : string list
         JavaScriptFiles : string list
+        PotentialFsharpFiles : string list
         PartialFiles : string list
         OtherFiles : string list
     }
@@ -27,6 +33,7 @@ type FilesAccumulator =
             MenuFiles = []
             SassFiles = []
             JavaScriptFiles = []
+            PotentialFsharpFiles = []
             PartialFiles = []
             OtherFiles = []
         }
@@ -123,6 +130,11 @@ let private buildOrWatch
                         MenuFiles = path :: acc.MenuFiles
                     }
 
+                | FsharpFile _ ->
+                    { acc with
+                        PotentialFsharpFiles = path :: acc.PotentialFsharpFiles
+                    }
+
                 | OtherFile _ ->
                     { acc with
                         OtherFiles = path :: acc.OtherFiles
@@ -131,8 +143,53 @@ let private buildOrWatch
 
         let! pageContextResults =
             files.MarkdownFiles
-            |> List.map (initPageContext config.SourceFolder)
+            |> List.map (initPageContextFromFile config.SourceFolder)
             |> Promise.all
+
+        let! potentialFsharpFiles =
+            files.PotentialFsharpFiles
+            |> List.map (fun filePath ->
+                promise {
+                    let fullFilePath =
+                        path.join(config.SourceFolder, path.sep, filePath)
+
+                    let! fileContent = File.read fullFilePath
+
+                    match FsharpFileParser.tryParse fileContent with
+                    | Some markdownContent ->
+
+                        let! pageContext =
+                            initPageContextFromContent markdownContent fullFilePath filePath
+
+                        return PotentialFsharpFileResult.Markdown pageContext
+
+                    | None ->
+                        return PotentialFsharpFileResult.Other filePath
+                }
+            )
+            |> Promise.all
+
+        let (literateFiles, otherFiles) =
+            potentialFsharpFiles
+            |> Array.partitionMap (fun potentialFsharpFile ->
+                match potentialFsharpFile with
+                | PotentialFsharpFileResult.Markdown pageContextResult ->
+                    Choice1Of2 pageContextResult
+
+                | PotentialFsharpFileResult.Other filePath ->
+                    Choice2Of2 filePath
+            )
+
+        // Add the literate files to the markdown files queue
+        let pageContextResults =
+            Array.append pageContextResults literateFiles
+
+        // Add the files which are not valid literate files to the "other files" queue
+        let files =
+            { files with
+                OtherFiles =
+                    files.OtherFiles @ (Array.toList otherFiles)
+            }
 
         let (validPageContext, erroredPageContext) =
             pageContextResults

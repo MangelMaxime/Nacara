@@ -11,9 +11,16 @@ open Thoth.Json
 exception InitMarkdownFileErrorException of filePath : string * original : exn
 
 [<NoComparison; NoEquality>]
+type FsharpFileLoadedResult =
+    | ProcessAsMarkdown of pageContext : PageContext
+    | CopyToDestination of filePath : string
+
+[<NoComparison; NoEquality>]
 type Msg =
     | InitMarkdownFile of filePath : string
     | PartialChanged of filePath : string
+    | LoadFsharpFile of filePath : string
+    | FsharpFileLoaded of FsharpFileLoadedResult
     | LayoutSourceChanged of filePath : string
     | LayoutSourceLoaded of LayoutInfo
     | PartialLoaded of Partial
@@ -83,6 +90,10 @@ let fileWatcherSubscription (model : Model) =
 
                 | PartialFile ->
                     PartialChanged filePath
+                    |> dispatch
+
+                | FsharpFile ->
+                    LoadFsharpFile filePath
                     |> dispatch
 
                 | SassFile ->
@@ -390,6 +401,49 @@ let update (msg : Msg) (model : Model) =
         model
         , Cmd.OfPromise.perform action () MenuFiledLoaded
 
+    | LoadFsharpFile filePath ->
+
+        let action () =
+            promise {
+                let fullFilePath =
+                    path.join(model.Config.SourceFolder, path.sep, filePath)
+
+                let! fileContent = File.read fullFilePath
+
+                // Try parsing the file as Literate F# file
+                match FsharpFileParser.tryParse fileContent with
+                | Some markdownContent ->
+
+                    let! pageContext =
+                        initPageContextFromContent markdownContent fullFilePath filePath
+
+                    match pageContext with
+                    | Ok pageContext ->
+                        return (ProcessAsMarkdown pageContext)
+
+                    | Error errorMessage ->
+                        return failwith errorMessage
+
+                | None ->
+                    return (CopyToDestination filePath)
+            }
+            |> Promise.catch (fun error ->
+                raise (InitMarkdownFileErrorException (filePath, error))
+            )
+
+        model
+        , Cmd.OfPromise.either action () FsharpFileLoaded InitMarkdownFileError
+
+    | FsharpFileLoaded action ->
+        match action with
+        | CopyToDestination filePath ->
+            model
+            , Cmd.ofMsg (ProcessOther filePath)
+
+        | ProcessAsMarkdown pageContext ->
+            model
+            , Cmd.ofMsg (ProcessMarkdown pageContext)
+
     | SendRefreshCSS ->
         model
         , Cmd.OfFunc.exec sendRefreshCSS model
@@ -508,7 +562,7 @@ let update (msg : Msg) (model : Model) =
         let action filePath =
             promise {
                 let! pageContext =
-                    initPageContext model.Config.SourceFolder filePath
+                    initPageContextFromFile model.Config.SourceFolder filePath
 
                 match pageContext with
                 | Ok pageContext ->

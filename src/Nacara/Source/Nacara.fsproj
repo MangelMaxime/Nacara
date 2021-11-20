@@ -9,6 +9,7 @@
     <Compile Include="Partial.fs" />
     <Compile Include="Layout.fs" />
     <Compile Include="Version.fs" />
+    <Compile Include="FsharpFileParser.fs" />
     <Compile Include="Watch.fs" />
     <Compile Include="Clean.fs" />
     <Compile Include="Serve.fs" />

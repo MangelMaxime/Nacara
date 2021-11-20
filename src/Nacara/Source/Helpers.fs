@@ -6,6 +6,7 @@ open Fable.Core.JsInterop
 open Node
 open Nacara.Core.Types
 open Thoth.Json
+open System
 
 [<RequireQualifiedAccess>]
 module ExitCode =
@@ -71,16 +72,13 @@ let unEscapeHTML (unsafe : string) =
         .Replace("&quot;", "\"")
         .Replace("&#039;", "'")
 
-let initPageContext (sourceFolder : string) (filePath : string) =
-    promise {
-        let fullFilePath =
-            path.join(sourceFolder, path.sep, filePath)
 
-        let! fileContent = File.read fullFilePath
+let initPageContextFromContent (fileContent : string) (fullFilePath : string) (relativeFilePath : string) =
+    promise {
         let fm = FrontMatter.fm.Invoke(fileContent)
 
         let segments =
-            path.normalize(filePath).Split(char path.sep)
+            path.normalize(relativeFilePath).Split(char path.sep)
 
         let section =
             // Menu.json is at the root level of the sourceFolder let's make its section empty for now
@@ -100,8 +98,8 @@ let initPageContext (sourceFolder : string) (filePath : string) =
         match Decode.fromValue "$" commonInfoDecoder fm.attributes with
         | Ok commonInfo ->
             return Ok {
-                PageId = getPageId filePath
-                RelativePath = filePath
+                PageId = getPageId relativeFilePath
+                RelativePath = relativeFilePath
                 FullPath = fullFilePath
                 Content = fm.body
                 Layout = commonInfo.Layout
@@ -111,10 +109,20 @@ let initPageContext (sourceFolder : string) (filePath : string) =
             }
 
         | Error errorMessage ->
-            return Error $"One property is missing from %s{filePath}.\n%s{errorMessage}"
+            return Error $"One property is missing from %s{relativeFilePath}.\n%s{errorMessage}"
     }
 
-let (|MarkdownFile|JavaScriptFile|PartialFile|SassFile|MenuFile|OtherFile|) (filePath : string) =
+let initPageContextFromFile (sourceFolder : string) (filePath : string) =
+    promise {
+        let fullFilePath =
+            path.join(sourceFolder, path.sep, filePath)
+
+        let! fileContent = File.read fullFilePath
+
+        return! initPageContextFromContent fileContent fullFilePath filePath
+    }
+
+let (|MarkdownFile|JavaScriptFile|PartialFile|FsharpFile|SassFile|MenuFile|OtherFile|) (filePath : string) =
     let ext = path.extname(filePath)
 
     if filePath.StartsWith("_partials") then
@@ -125,6 +133,7 @@ let (|MarkdownFile|JavaScriptFile|PartialFile|SassFile|MenuFile|OtherFile|) (fil
         | ".js" ->
             JavaScriptFile
         | ".scss" | ".sass" -> SassFile
+        | ".fs" | ".fsx" -> FsharpFile
         | _ ->
             if path.basename(filePath) = "menu.json" then
                 MenuFile
@@ -202,3 +211,46 @@ module Server =
         app.``use``(serveStaticRouter)
 
         http.createServer(app)
+
+module String =
+
+    let normalizeEndOfLine (text : string)=
+        text.Replace("\r\n", "\n")
+
+    let splitBy (c : char) (text : string) =
+        text.Split(c)
+
+    let splitLines (text : string) =
+        text
+        |> normalizeEndOfLine
+        |> splitBy '\n'
+
+    let toLower (text : string) =
+        text.ToLower()
+
+    let replace (oldValue : string) (newValue : string) (text : string) =
+        text.Replace(oldValue, newValue)
+
+    let append (value : string) (text : string) =
+        text + value
+
+    let prepend (value : string) (text : string) =
+        value + text
+
+    let join (sep : string) (values : string array) =
+        String.Join(sep, values)
+
+    let trimStartEmptyLines (text : string) =
+        text
+        |> splitLines
+        |> Array.skipWhile String.IsNullOrEmpty
+        |> join "\n"
+
+    let trimEndEmptyLines (text : string) =
+        // Could be optimized by using a for loop
+        text
+        |> splitLines
+        |> Array.rev
+        |> Array.skipWhile String.IsNullOrEmpty
+        |> Array.rev
+        |> join "\n"
