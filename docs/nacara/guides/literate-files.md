@@ -43,7 +43,7 @@ From here the code is visible
 
 ## Markdown blocks
 
-Markdown blocks are defined by using `(** ... *)`. Anything because these tags is going to be treated as markdown.
+Markdown blocks are defined by using `(** ... *)`. Anything between these tags is going to be treated as markdown.
 
 ```fs
 (**
