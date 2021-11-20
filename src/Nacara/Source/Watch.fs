@@ -10,6 +10,7 @@ open Thoth.Json
 
 exception InitMarkdownFileErrorException of filePath : string * original : exn
 exception LoadMenuFileErrorException of filePath : string * original : exn
+exception LayoutSourceLoadErrorException of filePath : string * original : exn
 
 [<NoComparison; NoEquality>]
 type FsharpFileLoadedResult =
@@ -24,6 +25,7 @@ type Msg =
     | FsharpFileLoaded of FsharpFileLoadedResult
     | LayoutSourceChanged of filePath : string
     | LayoutSourceLoaded of LayoutInfo
+    | LayoutSourceLoadError of LayoutSourceLoadErrorException
     | PartialLoaded of Partial
     | InitPartialError of exn
     | InitMarkdownFileError of InitMarkdownFileErrorException
@@ -482,9 +484,19 @@ let update (msg : Msg) (model : Model) =
     | LayoutSourceChanged filePath ->
         let action (config, layout) =
             Layout.load config layout
+            |> Promise.catch (fun error ->
+                raise (LayoutSourceLoadErrorException (filePath, error))
+            )
 
         model
-        , Cmd.OfPromise.perform action (model.Config, filePath) LayoutSourceLoaded
+        , Cmd.OfPromise.either action (model.Config, filePath) LayoutSourceLoaded LayoutSourceLoadError
+
+    | LayoutSourceLoadError error ->
+        Log.error $"Error while loading layout: %s{error.filePath}"
+        Log.error $"%A{error.original}"
+
+        model
+        , Cmd.none
 
     | LayoutSourceLoaded layoutInfo ->
         let layoutNames =
@@ -587,7 +599,7 @@ let update (msg : Msg) (model : Model) =
 
     | LoadMenuFileError error ->
         Log.error $"Error while loading menu: %s{error.filePath}"
-        Log.error $"%s{error.original.Message}"
+        Log.error $"%A{error.original}"
 
         model
         , Cmd.none
