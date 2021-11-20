@@ -9,6 +9,7 @@ open Chokidar
 open Thoth.Json
 
 exception InitMarkdownFileErrorException of filePath : string * original : exn
+exception LoadMenuFileErrorException of filePath : string * original : exn
 
 [<NoComparison; NoEquality>]
 type FsharpFileLoadedResult =
@@ -29,6 +30,7 @@ type Msg =
     | ProcessMarkdown of pageContext : PageContext
     | ProcessOther of filePath: string
     | LoadMenuFile of filePath : string
+    | LoadMenuFileError of LoadMenuFileErrorException
     | MenuFiledLoaded of filePath : string * menuConfig : MenuConfig
     | ProcessSass of filePath: string
     | CopyFileWithDestination of source : string * destination : string
@@ -393,13 +395,11 @@ let update (msg : Msg) (model : Model) =
                     failwith errorMessage
             )
             |> Promise.catch (fun error ->
-                Log.error $"Failed to load menu file: %s{filePath}"
-                JS.console.error error
-                failwith ""
+                raise (LoadMenuFileErrorException (filePath, error))
             )
 
         model
-        , Cmd.OfPromise.perform action () MenuFiledLoaded
+        , Cmd.OfPromise.either action () MenuFiledLoaded LoadMenuFileError
 
     | LoadFsharpFile filePath ->
 
@@ -581,6 +581,13 @@ let update (msg : Msg) (model : Model) =
     | InitMarkdownFileError error ->
         Log.error $"Error while initializing context of file: %s{error.filePath}"
         Log.error $"%A{error.original}"
+
+        model
+        , Cmd.none
+
+    | LoadMenuFileError error ->
+        Log.error $"Error while loading menu: %s{error.filePath}"
+        Log.error $"%s{error.original.Message}"
 
         model
         , Cmd.none
@@ -786,58 +793,7 @@ let update (msg : Msg) (model : Model) =
         , cmd
 
     | InitPartialError error ->
-
         Log.error error.Message
 
         model
         , Cmd.none
-        // let extension =
-        //     path.extname filePath
-
-        // if extension = ".jsx" then
-        // else
-
-//         if getPartialId filePath = "footer" then
-//             let newPartials =
-//                 model.Partials
-//                 |> List.map (fun partial ->
-//                     if partial.Path = filePath then
-//                         let fullPath =
-//                             path.join(model.Config.WorkingDirectory, model.Config.SourceFolder, filePath)
-
-//                         // Delete the module from the cache
-//                         emitJsStatement
-//                             fullPath
-//                             """
-// delete require.cache[require.resolve($0)];
-//                             """
-
-//                         // Reload the module
-//                         let newModule =
-//                             require.Invoke(path.join(model.Config.WorkingDirectory, model.Config.SourceFolder, filePath)) |> unbox
-
-//                         {
-//                             Id = getPartialId filePath
-//                             Path = filePath
-//                             Module = newModule
-//                         } : Partial
-//                     else
-//                         partial
-//                 )
-
-//             // Regenerate all the pages
-//             // Right now the partials supported are for the footer or the navbar so it concerns all the pages
-//             let cmd =
-//                 model.Pages
-//                 |> List.map (fun page ->
-//                     Cmd.ofMsg (ProcessMarkdown page)
-//                 )
-//                 |> Cmd.batch
-
-//             { model with
-//                 Partials = newPartials
-//             }
-//             , cmd
-//         else
-//             model
-//             , Cmd.none
