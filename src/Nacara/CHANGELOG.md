@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.4.0 - 2021-11-20
+
+### Added
+
+* Add support for "Literate F#" files
+
+### Fixed
+
+* Fix #139: Don't crash on invalid menu.json file
+* Fix #133: In watch mode, don't crash on invalid JS/JSX file
+
 ## 1.3.1 - 2021-11-09
 
 ### Fixed
