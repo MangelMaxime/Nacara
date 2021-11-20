@@ -18,7 +18,8 @@
             "nacara/guides/customize-the-style",
             "nacara/guides/create-a-section",
             "nacara/guides/section-menu",
-            "nacara/guides/deploy-your-site"
+            "nacara/guides/deploy-your-site",
+            "nacara/guides/literate-files"
         ]
     },
     {

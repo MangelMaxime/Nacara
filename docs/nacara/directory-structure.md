@@ -151,10 +151,14 @@ Recommended place to place your grammars files user by [Code-lightner](https://g
         </tr>
         <tr>
             <td class="label-cell">
-                <code>docs/\*\*/\*.md</code>
+                <code>docs/\*\*/\*.fs</code>
+                <div class="is-size-7 my-2">or</div>
+                <code>docs/\*\*/\*.fsx</code>
             </td>
             <td class="fullwidth-cell">
-                <p>Any markdown file encounter are going to be transform by Nacara into HTML using the layout provided via the front-matter property.</p>
+                <p>F# files are tested to see if there are [literate](/nacara/guides/literate-files.html) files.</p>
+                <p>If they are, they are transformed like as markdown files.</p>
+                <p>If not, there are copied as is to the output folder.</p>
             </td>
         </tr>
         <tr>
