@@ -26,7 +26,7 @@ yargs(hideBin(process.argv))
         (argv) => {
             argv
                 .option(
-                    "run",
+                    "afterClean",
                     afterCleanOptions
                 )
         },

@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.4.1 - 2021-11-21
+
+### Fixed
+
+* Change the `run` hook name to `afterClean`. This was a relica coming from the development.
+
 ## 1.4.0 - 2021-11-20
 
 ### Added
