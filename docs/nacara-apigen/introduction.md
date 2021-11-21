@@ -35,7 +35,7 @@ dotnet publish
 # Run nacara-apigen
 dotnet nacara-apigen \
     --project MyProject \
-    -lib srcbin/Debug/netstandard2.0/publish \
+    -lib src/bin/Debug/netstandard2.0/publish \
     --output docs \
     --base-url /my-site/
 ```
