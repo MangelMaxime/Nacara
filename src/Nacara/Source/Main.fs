@@ -74,7 +74,7 @@ let private buildOrWatch
                     cmd,
                     ResizeArray options,
                     {|
-                        detached = true
+                        shell = true
                         stdio = "inherit"
                     |}
                 )
@@ -85,6 +85,7 @@ let private buildOrWatch
                     cmd,
                     ResizeArray options,
                     {|
+                        shell = true
                         stdio = "inherit"
                     |}
                 )
