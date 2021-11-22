@@ -13,7 +13,7 @@ NODEMON_WATCHER=npx nodemon \
 	--watch $(NACARA_DIR)/dist \
 	--watch $(NACARA_LAYOUT_STANDARD_DIR)/dist \
 	--delay 150ms \
-	--exec 'nacara watch'
+	--exec \"nacara watch\"
 
 setup-dev:
 	@$(call log_target_info, "Setting up the npm link for local development")
