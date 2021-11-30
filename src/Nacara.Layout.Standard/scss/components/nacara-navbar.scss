@@ -6,6 +6,7 @@ $nacara-navbar-dropdown-z-index: $navbar-z !default;
 $nacara-grey-overlay-z: 20 !default;
 $nacara-grey-overlay-background-color: bulmaRgba($scheme-invert, 0.1) !default;
 $nacara-navbar-menu-border: 1px solid $navbar-item-active-background-color !default;
+$nacara-navbar-dropdown-floating-max-width: 300px !default;
 
 // Adapt the navbar component to our specific vision of how
 // the navbar should behave for Nacara
@@ -88,6 +89,7 @@ $nacara-navbar-menu-border: 1px solid $navbar-item-active-background-color !defa
                         top: $computed-navbar-height;
                         transform: unset;
                         border-radius: 0 0 8px 8px;
+                        max-width: 100%;
                     }
                 }
             }
@@ -128,6 +130,8 @@ $nacara-navbar-menu-border: 1px solid $navbar-item-active-background-color !defa
             left: 0;
             border-radius: 8px;
             top: 100%;
+            width: max-content;
+            max-width: $nacara-navbar-dropdown-floating-max-width;
         }
 
         // Allow to make the dropdown take the full width of the screen
@@ -146,10 +150,7 @@ $nacara-navbar-menu-border: 1px solid $navbar-item-active-background-color !defa
             align-items: center;
             display: flex;
             cursor: pointer;
-            // Allow the user to specific where to force a newline in the
-            // item description by adding `\n` in the JSON text
-            white-space: pre;
-            padding: 0.375rem 3rem 0.375rem 1rem;
+            padding: 0.375rem 1rem 0.375rem 1rem;
 
             &:hover {
                 background-color: $navbar-item-hover-background-color;

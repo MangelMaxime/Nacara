@@ -81,6 +81,12 @@ Control the color of the grey overlay which is displayed when the dropdown is op
 
 ---
 
+`$nacara-navbar-dropdown-floating-max-width`
+
+Default: `300px`
+
+Control the max width of the dropdown when floating
+
 ## Textual steps
 
 ---

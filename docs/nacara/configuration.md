@@ -342,9 +342,7 @@ Default: `false`
             </td>
             <td class="label-cell"></td>
             <td class="fullwidth-cell">
-Optional description
-
-You can use `\n` into the string in order to force a new line
+                Optional description
             </td>
         </tr>
         <tr>

@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+* Addd `$nacara-navbar-dropdown-floating-max-width` SCSS variable
+
+### Changed
+
+* Make the floating dropdown able to return the text to new line automatically
+
+### Removed
+
+* Can't force new line using `\n` in the dropdown description
+
 ## 1.2.1 - 2021-11-09
 
 ### Fixed
