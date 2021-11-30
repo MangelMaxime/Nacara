@@ -129,7 +129,7 @@ Please remove the 'partial' property from the dropdown or create the partial fil
 
                                                 Html.div [
                                                     prop.className "nacara-dropdown-item-description"
-                                                    prop.text description
+                                                    prop.dangerouslySetInnerHTML description
                                                 ]
                                             ]
 

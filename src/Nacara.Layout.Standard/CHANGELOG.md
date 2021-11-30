@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 * Make the floating dropdown able to return the text to new line automatically
+* The dropdown description now accept an HTML string
 
 ### Removed
 
