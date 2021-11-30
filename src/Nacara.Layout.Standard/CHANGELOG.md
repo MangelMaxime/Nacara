@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.3.0 - 2021-11-30
+
 ### Added
 
 * Addd `$nacara-navbar-dropdown-floating-max-width` SCSS variable
