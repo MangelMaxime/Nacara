@@ -3,7 +3,7 @@ module Nacara.ApiGen.CommentFormatter
 open System
 open System.Text.RegularExpressions
 
-let inline nl<'T> = Environment.NewLine
+let inline newLine<'T> = "\n"
 
 let private tagPattern (tagName : string) =
     sprintf """(?'void_element'<%s(?'void_attributes'\s+[^\/>]+)?\/>)|(?'non_void_element'<%s(?'non_void_attributes'\s+[^>]+)?>(?'non_void_innerText'(?:(?!<%s>)(?!<\/%s>)[\s\S])*)<\/%s\s*>)""" tagName tagName tagName tagName tagName
@@ -118,9 +118,9 @@ let private codeBlock =
                     else
                         sprintf "```%s\n%s```" lang innerText
 
-                Environment.NewLine
+                newLine
                 + formattedText
-                + Environment.NewLine
+                + newLine
                 |> Some
 
     }
@@ -162,7 +162,7 @@ let private block =
                 None
 
             | NonVoidElement (innerText, _) ->
-                nl + innerText + nl
+                newLine + innerText + newLine
                 |> Some
     }
     |> applyFormatter
@@ -406,12 +406,12 @@ let private list =
                         |> List.map (fun item ->
                             "<li>" + itemListToStringAsMarkdownList item + "</li>"
                         )
-                        |> String.concat Environment.NewLine
+                        |> String.concat newLine
 
                     "<ul>"
-                    + Environment.NewLine
+                    + newLine
                     + items
-                    + Environment.NewLine
+                    + newLine
                     + "</ul>"
 
                 | Numbered ->
@@ -420,12 +420,12 @@ let private list =
                         |> List.map (fun item ->
                             "<li>" + itemListToStringAsMarkdownList item + "</li>"
                         )
-                        |> String.concat Environment.NewLine
+                        |> String.concat newLine
 
                     "<ol>"
-                    + Environment.NewLine
+                    + newLine
                     + items
-                    + Environment.NewLine
+                    + newLine
                     + "</ol>"
 
                 | Tablered ->
@@ -447,30 +447,30 @@ let private list =
                                 |> List.mapi (fun index column ->
                                     "<td>" + column + "</td>"
                                 )
-                                |> String.concat Environment.NewLine
+                                |> String.concat newLine
 
                             "<tr>"
-                            + Environment.NewLine
+                            + newLine
                             + rowContent
-                            + Environment.NewLine
+                            + newLine
                             + "</tr>"
                         )
-                        |> String.concat Environment.NewLine
+                        |> String.concat newLine
 
                     "<table>"
-                    + Environment.NewLine
+                    + newLine
                     + "<thead><tr>"
-                    + Environment.NewLine
+                    + newLine
                     + columnHeadersText
-                    + Environment.NewLine
+                    + newLine
                     + "</tr></thead>"
-                    + Environment.NewLine
+                    + newLine
                     + "<tbody>"
-                    + Environment.NewLine
+                    + newLine
                     + itemsText
-                    + Environment.NewLine
+                    + newLine
                     + "</tbody>"
-                    + Environment.NewLine
+                    + newLine
                     + "</table>"
                 |> Some
     }
@@ -498,9 +498,9 @@ let private summary =
 
             | NonVoidElement (innerText, _) ->
                 """<div class="docs-summary">"""
-                + Environment.NewLine
+                + newLine
                 + innerText
-                + Environment.NewLine
+                + newLine
                 + "</div>"
                 |> Some
 
@@ -516,16 +516,16 @@ let private example =
                 None
 
             | NonVoidElement (innerText, _) ->
-                Environment.NewLine
+                newLine
                 + """<div class="docs-example">"""
-                + Environment.NewLine
+                + newLine
                 + """<p><strong>Example</strong></p>"""
-                + Environment.NewLine
+                + newLine
                 + innerText
-                + Environment.NewLine
+                + newLine
                 + "</div>"
-                + Environment.NewLine
-                + Environment.NewLine
+                + newLine
+                + newLine
                 |> Some
 
     }
