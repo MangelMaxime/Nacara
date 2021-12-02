@@ -15,12 +15,19 @@ module Types =
         | ListItem of string
         | Text of string
 
+    type OtherItem =
+        {
+            ListItem : string
+            TextBody : string option
+        }
+
     [<RequireQualifiedAccess>]
     type CategoryType =
         | Added
         | Changed
         | Deprecated
         | Removed
+        | Improved
         | Fixed
         | Security
         | Unknown of string
@@ -32,6 +39,7 @@ module Types =
                 | Changed -> "Changed"
                 | Deprecated -> "Deprecated"
                 | Removed -> "Removed"
+                | Improved -> "Improved"
                 | Fixed -> "Fixed"
                 | Security -> "Security"
                 | Unknown tag -> tag
@@ -40,7 +48,8 @@ module Types =
         { Version : string option
           Title : string
           Date : DateTime option
-          Categories : Map<CategoryType, CategoryBody list> }
+          Categories : Map<CategoryType, CategoryBody list>
+          OtherItems : OtherItem list }
 
     type Changelog =
         { Title : string
@@ -169,6 +178,36 @@ module Transform =
         // End of the Section, return the built content
         | _ -> symbols, sectionContent
 
+    let rec private tryEatRawText (symbols : Symbols list) =
+        match symbols with
+        // If this is the beginning of a text block
+        | Symbols.RawText _::_ ->
+            // Capture all the lines of the text block
+            let textLines =
+                symbols
+                |> List.takeWhile (function
+                    | Symbols.RawText _ -> true
+                    | _ -> false
+                )
+
+            // Regroup everything into a single string
+            let content =
+                textLines
+                |> List.map (function
+                    | Symbols.RawText text -> text
+                    | _ -> failwith "Should not happen the list has been filtered"
+                )
+                |> String.concat "\n"
+
+            // Remove already handle symbols
+            let rest =
+                symbols
+                |> List.skip textLines.Length
+
+            rest, Some content
+        // End of the Section, return the built content
+        | _ -> symbols, None
+
     let rec private parse (symbols : Symbols list) (changelog : Changelog) =
         match symbols with
         | Symbols.Title title::tail ->
@@ -182,10 +221,13 @@ module Transform =
 
         | Symbols.SectionHeader (title, version, date)::tail ->
             let version =
-                { Version = version
-                  Title = title
-                  Date = date |> Option.map DateTime.Parse
-                  Categories = Map.empty }
+                {
+                    Version = version
+                    Title = title
+                    Date = date |> Option.map DateTime.Parse
+                    Categories = Map.empty
+                    OtherItems = []
+                }
 
             parse tail { changelog with Versions = version :: changelog.Versions }
 
@@ -198,6 +240,7 @@ module Transform =
                 | "changed" -> CategoryType.Changed
                 | "deprecated" -> CategoryType.Deprecated
                 | "removed" -> CategoryType.Removed
+                | "improved" -> CategoryType.Improved
                 | "fixed" -> CategoryType.Fixed
                 | "security" -> CategoryType.Security
                 | unknown -> CategoryType.Unknown unknown
@@ -241,9 +284,27 @@ module Transform =
 
             parse rest { changelog with Description = content }
 
-        | Symbols.ListItem text ::_ ->
-            sprintf "A list item should always be under a category. The following list item made the parser failed:\n\n%s\n" text
-            |> Error
+        | Symbols.ListItem text :: tail ->
+            match changelog.Versions with
+            | currentVersion::otherVersions ->
+                let (unparsedSymbols, textBody) = tryEatRawText tail
+
+                let otherItemItem =
+                    {
+                        ListItem = text
+                        TextBody = textBody
+                    }
+
+                let versions =
+                    { currentVersion with
+                        OtherItems = currentVersion.OtherItems @ [ otherItemItem ]
+                    } :: otherVersions
+
+                parse unparsedSymbols { changelog with Versions = versions }
+            | _ ->
+
+                sprintf "A list item should always be under version. The following list item made the parser failed:\n\n%s\n" text
+                |> Error
 
         | [] -> Ok { changelog with Versions = changelog.Versions |> List.rev }
 

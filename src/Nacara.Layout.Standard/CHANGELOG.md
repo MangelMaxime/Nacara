@@ -6,10 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+* Add a `Improved` category to the changelog
+
 ### Fixed
 
 * Fix #144: `toc: false` disabled the whole menu and not just the TOC
 * Fix #145: Don't generate an empty `<li></li>` if the TOC contains no elements
+
+### Improved
+
+* Fix #148: Allow changelog items to be define outside of a category
+
+    This allows support of RELEASE_NOTES files too.
+
+### Changed
+
+* Change the visual of the Changelog page
 
 ## 1.3.0 - 2021-11-30
 

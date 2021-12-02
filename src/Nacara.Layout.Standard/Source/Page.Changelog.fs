@@ -9,6 +9,7 @@ open Fable.Core
 open Node
 open Feliz
 open Feliz.Bulma
+open Fable.FontAwesome
 
 type Attributes =
     {
@@ -66,6 +67,36 @@ let renderVersion (versionText : string) (date : DateTime option) =
         ]
     ]
 
+let private renderDetail
+    (markdownToHml : string -> JS.Promise<string>)
+    (content : string) =
+        promise {
+            let! htmlText =
+                content
+                |> ChangelogParser.splitLines
+                // Remove one level of indentation from the content
+                // This is to make markdown understands that this is not a quoted paragraph as we don't provide it the whole text
+                // and so it doesn't know that the line is indented under a list item
+                |> Array.map (fun line ->
+                    if line.StartsWith("    ") then
+                        line.Substring(3)
+                    else
+                        line
+                )
+                |> Array.toList
+                |> String.concat "\n"
+                |> markdownToHml
+
+            return Html.li [
+                prop.className "changelog-list-item"
+                prop.children [
+                    Html.div [
+                        prop.className "changelog-details"
+                        prop.dangerouslySetInnerHTML htmlText
+                    ]
+                ]
+            ]
+        }
 type ChangelogParser.Types.CategoryType with
     member this.Color
         with get () =
@@ -75,6 +106,7 @@ type ChangelogParser.Types.CategoryType with
             | ChangelogParser.Types.CategoryType.Deprecated -> color.isWarning
             | ChangelogParser.Types.CategoryType.Removed -> color.isDanger
             | ChangelogParser.Types.CategoryType.Fixed -> color.isInfo
+            | ChangelogParser.Types.CategoryType.Improved -> color.isInfo
             | ChangelogParser.Types.CategoryType.Security -> color.isInfo
             | ChangelogParser.Types.CategoryType.Unknown _ -> color.isInfo
 
@@ -83,30 +115,13 @@ let private renderCategoryBody
     (category : ChangelogParser.Types.CategoryType)
     (body : ChangelogParser.Types.CategoryBody) =
         promise {
-            let removeParagraphMarkup (text : string) =
-                match Regex.Match(text.Trim(), "^<p>(.*)</p>$") with
-                | m when m.Success ->
-                    m.Groups.[1].Value
-                | _ -> text
-
-            let textToHtml (text : string) =
-                markdownToHml text
-                // |> Promise.map removeParagraphMarkup
-
             match body with
             | ChangelogParser.Types.CategoryBody.ListItem content ->
-                let! htmlText = textToHtml content
+                let! htmlText = markdownToHml content
 
                 return Html.li [
                     prop.className "changelog-list-item"
                     prop.children [
-                        Bulma.tag [
-                            category.Color
-                            tag.isMedium
-                            text.hasTextWeightBold
-                            prop.text category.Text
-                        ]
-
                         Html.div [
                             prop.className "changelog-list-item-text"
 
@@ -120,31 +135,43 @@ let private renderCategoryBody
                 ]
 
             | ChangelogParser.Types.CategoryBody.Text content ->
-                let! htmlText =
-                    content
-                    |> ChangelogParser.splitLines
-                    // Remove one level of indentation from the content
-                    // This is to make markdown understands that this is not a quoted paragraph as we don't provide it the whole text
-                    // and so it doesn't know that the line is indented under a list item
-                    |> Array.map (fun line ->
-                        if line.StartsWith("    ") then
-                            line.Substring(3)
-                        else
-                            line
-                    )
-                    |> Array.toList
-                    |> String.concat "\n"
-                    |> textToHtml
+                return! renderDetail markdownToHml content
+        }
 
-                return Html.li [
-                    prop.className "changelog-list-item"
-                    prop.children [
-                        Html.div [
-                            prop.className "changelog-details"
-                            prop.dangerouslySetInnerHTML htmlText
+let private renderOtherItem
+    (markdownToHml : string -> JS.Promise<string>)
+    (content : string) =
+        promise {
+            let! htmlText = markdownToHml content
+
+            return Html.li [
+                prop.className "changelog-list-item"
+                prop.children [
+                    Bulma.tag [
+                        tag.isMedium
+                        prop.className "no-category"
+                        prop.children [
+                            Bulma.icon [
+                                Fa.i
+                                    [
+                                        Fa.Solid.ChevronRight
+                                    ]
+                                    [ ]
+                            ]
+                        ]
+                    ]
+
+                    Html.div [
+                        prop.className "changelog-list-item-text"
+
+                        prop.children [
+                            Html.span [
+                                prop.dangerouslySetInnerHTML htmlText
+                            ]
                         ]
                     ]
                 ]
+            ]
         }
 
 let renderChangelogItems
@@ -170,16 +197,74 @@ let renderChangelogItems
 
                             return
                                 // Use fragment instead of `ofArray` to avoid having to set a `Key` on each children
-                                React.fragment bodyItemsHtml
+                                Html.div [
+                                    Html.li [
+                                        prop.className "changelog-list-item"
+                                        prop.children [
+                                            Bulma.tag [
+                                                prop.className "changelog-list-item-category"
+                                                categoryType.Color
+                                                tag.isMedium
+                                                text.hasTextWeightBold
+                                                prop.text categoryType.Text
+                                            ]
+                                        ]
+                                    ]
+
+                                    yield! bodyItemsHtml
+                                ]
 
                         }
                     )
                     |> Promise.all
 
+                let! otherItems =
+                    version.OtherItems
+                    |> List.map (fun item ->
+                        promise {
+                            let! listItem = renderOtherItem markdownToHml item.ListItem
+
+                            let! details =
+                                match item.TextBody with
+                                | Some details ->
+                                    renderDetail markdownToHml details
+
+                                | None ->
+                                    Promise.lift null
+
+                            return React.fragment [
+                                listItem
+                                details
+                            ]
+                        }
+                    )
+                    |> Promise.all
+
+                let otherSection =
+                    if otherItems.Length > 0 then
+                        React.fragment [
+                            Html.li [
+                                prop.className "changelog-list-item"
+                                prop.children [
+                                    Bulma.tag [
+                                        color.isInfo
+                                        tag.isMedium
+                                        text.hasTextWeightBold
+                                        prop.text "Other"
+                                    ]
+                                ]
+                            ]
+
+                            yield! otherItems
+                        ]
+                    else
+                        null
+
                 return
                     React.fragment [
                             yield renderVersion versionText version.Date
                             yield! categoriesHtml
+                            yield otherSection
                     ]
             }
 
