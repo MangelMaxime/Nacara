@@ -149,6 +149,7 @@ module Transform =
     let rec private parseCategoryBody (symbols : Symbols list) (sectionContent : CategoryBody list) =
         match symbols with
         | Symbols.ListItem item::tail ->
+
             parseCategoryBody tail (sectionContent @ [ CategoryBody.ListItem item ])
         // If this is the beginning of a text block
         | Symbols.RawText _::_ ->
@@ -167,6 +168,13 @@ module Transform =
                     | Symbols.RawText text -> text
                     | _ -> failwith "Should not happen the list has been filtered"
                 )
+                // Skip empty lines at the beginning
+                |> List.skipWhile String.IsNullOrEmpty
+                // Skip empty lines at the end
+                |> List.rev
+                |> List.skipWhile String.IsNullOrEmpty
+                |> List.rev
+                // Join the lines
                 |> String.concat "\n"
 
             // Remove already handle symbols
@@ -174,7 +182,12 @@ module Transform =
                 symbols
                 |> List.skip textLines.Length
 
-            parseCategoryBody rest (sectionContent @ [ CategoryBody.Text content ])
+            // If details is an empty line don't store it
+            if String.IsNullOrEmpty content then
+                parseCategoryBody rest sectionContent
+            else
+                parseCategoryBody rest (sectionContent @ [ CategoryBody.Text content ])
+
         // End of the Section, return the built content
         | _ -> symbols, sectionContent
 
@@ -197,6 +210,13 @@ module Transform =
                     | Symbols.RawText text -> text
                     | _ -> failwith "Should not happen the list has been filtered"
                 )
+                // Skip empty lines at the beginning
+                |> List.skipWhile String.IsNullOrEmpty
+                // Skip empty lines at the end
+                |> List.rev
+                |> List.skipWhile String.IsNullOrEmpty
+                |> List.rev
+                // Join the lines
                 |> String.concat "\n"
 
             // Remove already handle symbols
