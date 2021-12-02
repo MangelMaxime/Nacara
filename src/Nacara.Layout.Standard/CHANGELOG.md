@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+* Fix #144: `toc: false` disabled the whole menu and not just the TOC
+* Fix #145: Don't generate an empty `<li></li>` if the TOC contains no elements
+
 ## 1.3.0 - 2021-11-30
 
 ### Added

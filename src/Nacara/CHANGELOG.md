@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-* Fix #144: `toc: false` disabled the whole menu and not just the TOC
+* Fix #143: Make the F# literate front-matter less strict
 
 ## 1.4.2 - 2021-11-21
 
