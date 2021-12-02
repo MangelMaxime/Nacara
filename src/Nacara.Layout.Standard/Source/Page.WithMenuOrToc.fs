@@ -67,40 +67,36 @@ let private renderTocElement
     else
         null
 
-let private renderTableOfContents
-    (tocConfig : TocConfig option)
+let private renderTableOfContent
+    (tocConfig : TocConfig)
     (tableOfContent : TableOfContentParser.Header list) =
-    match tocConfig with
-    | Some tocConfig ->
-        if tableOfContent.Length > 0 then
-            Html.li [
-                Html.ul [
-                    prop.className "table-of-content"
 
-                    prop.children [
-                        for tocElement in tableOfContent do
-                            match tocElement with
-                            | TableOfContentParser.Header2 headerInfo ->
-                                renderTocElement tocConfig 2 headerInfo
+    if tableOfContent.Length > 0 then
+        Html.li [
+            Html.ul [
+                prop.className "table-of-content"
 
-                            | TableOfContentParser.Header3 headerInfo ->
-                                renderTocElement tocConfig 3 headerInfo
+                prop.children [
+                    for tocElement in tableOfContent do
+                        match tocElement with
+                        | TableOfContentParser.Header2 headerInfo ->
+                            renderTocElement tocConfig 2 headerInfo
 
-                            | TableOfContentParser.Header4 headerInfo ->
-                                renderTocElement tocConfig 4 headerInfo
+                        | TableOfContentParser.Header3 headerInfo ->
+                            renderTocElement tocConfig 3 headerInfo
 
-                            | TableOfContentParser.Header5 headerInfo ->
-                                renderTocElement tocConfig 5 headerInfo
+                        | TableOfContentParser.Header4 headerInfo ->
+                            renderTocElement tocConfig 4 headerInfo
 
-                            | TableOfContentParser.Header6 headerInfo ->
-                                renderTocElement tocConfig 6 headerInfo
-                    ]
+                        | TableOfContentParser.Header5 headerInfo ->
+                            renderTocElement tocConfig 5 headerInfo
+
+                        | TableOfContentParser.Header6 headerInfo ->
+                            renderTocElement tocConfig 6 headerInfo
                 ]
             ]
-        else
-            null
-
-    | None ->
+        ]
+    else
         null
 
 let private renderMenuItemPage
@@ -108,8 +104,7 @@ let private renderMenuItemPage
     (pages : PageContext array)
     (info : MenuItemPage)
     (currentPageId : string)
-    (tocConfig : TocConfig option)
-    (tocInformation : TableOfContentParser.Header list) =
+    (tocElement : ReactElement) =
 
     let labelText =
         match info.Label with
@@ -151,7 +146,7 @@ let private renderMenuItemPage
         ]
 
         if isCurrentPage then
-            renderTableOfContents tocConfig tocInformation
+            tocElement
     ]
 
 /// <summary>
@@ -162,8 +157,7 @@ let rec private renderSubMenu
     (pages : PageContext array)
     (menu : Menu)
     (currentPageId : string)
-    (tocConfig : TocConfig option)
-    (tocInformation : TableOfContentParser.Header list) =
+    (tocElement : ReactElement) =
 
     menu
     |> List.map (
@@ -177,7 +171,7 @@ let rec private renderSubMenu
             ]
 
         | MenuItem.Page info ->
-            renderMenuItemPage config pages info currentPageId tocConfig tocInformation
+            renderMenuItemPage config pages info currentPageId tocElement
 
         | _ -> Html.none
     )
@@ -190,8 +184,7 @@ let rec private renderMenu
     (pages : PageContext array)
     (menu : Menu)
     (currentPageId : string)
-    (tocConfig : TocConfig option)
-    (tocInformation : TableOfContentParser.Header list) =
+    (tocELement : ReactElement) =
 
     let menuContent =
         menu
@@ -209,7 +202,7 @@ let rec private renderMenu
             | MenuItem.Page info ->
                 Bulma.menuList [
                     Html.li [
-                        renderMenuItemPage config pages info currentPageId tocConfig tocInformation
+                        renderMenuItemPage config pages info currentPageId tocELement
                     ]
                 ]
 
@@ -218,7 +211,7 @@ let rec private renderMenu
                     Bulma.menuLabel info.Label
 
                     Bulma.menuList [
-                        yield! renderSubMenu config pages info.Items currentPageId tocConfig tocInformation
+                        yield! renderSubMenu config pages info.Items currentPageId tocELement
                     ]
                 ]
         )
@@ -303,9 +296,7 @@ let private renderPageWithoutMenuOrTableOfContent (pageContent : ReactElement) =
         ]
     ]
 
-let private renderTableOfContentOnly
-    (tocConfig : TocConfig option)
-    (tocInformation : TableOfContentParser.Header list) =
+let private renderTableOfContentOnly (tocElement : ReactElement) =
 
     Html.div [
         prop.className "menu-container"
@@ -319,7 +310,7 @@ let private renderTableOfContentOnly
                         prop.text "Table of content"
                     ]
 
-                    renderTableOfContents tocConfig tocInformation
+                    tocElement
                 ]
             ]
         ]
@@ -381,9 +372,6 @@ type RenderArgs =
 
 let render (args : RenderArgs) =
 
-    let tocInformation =
-        TableOfContentParser.parse args.PageHtml
-
     let tocAttributes =
         Decode.fromValue
             "$"
@@ -396,7 +384,7 @@ let render (args : RenderArgs) =
         | Some sectionMenu ->
             renderPageWithMenuOrTableOfContent
                 (renderMobileMenu args.Config.Navbar args.PageContext sectionMenu)
-                (renderMenu args.Config args.Pages sectionMenu args.PageContext.PageId None tocInformation)
+                (renderMenu args.Config args.Pages sectionMenu args.PageContext.PageId null)
                 args.PageContent
 
         | None ->
@@ -407,20 +395,38 @@ let render (args : RenderArgs) =
         if tocConfig.To < tocConfig.From then
             failwith $"Invalid TOC interval provide for the page %s{args.PageContext.PageId}.\ toc.from muss be less than toc.to"
 
+        let tocInformation =
+            TableOfContentParser.parse args.PageHtml
+            // Keep only the headers that match the requested interval
+            |> List.filter (fun tocElement ->
+                let rank =
+                    match tocElement with
+                    | TableOfContentParser.Header2 _ -> 2
+                    | TableOfContentParser.Header3 _ -> 3
+                    | TableOfContentParser.Header4 _ -> 4
+                    | TableOfContentParser.Header5 _ -> 5
+                    | TableOfContentParser.Header6 _ -> 6
+
+                tocConfig.From <= rank && rank <= tocConfig.To
+            )
+
+        let tocElement =
+            renderTableOfContent tocConfig tocInformation
+
         match args.SectionMenu, tocInformation.IsEmpty with
         // If there is a menu, we render it with the menu
         // The menu renderer will take care of generating the TOC elements if needed
         | Some sectionMenu, _ ->
             renderPageWithMenuOrTableOfContent
                 (renderMobileMenu args.Config.Navbar args.PageContext sectionMenu)
-                (renderMenu args.Config args.Pages sectionMenu args.PageContext.PageId (Some tocConfig) tocInformation)
+                (renderMenu args.Config args.Pages sectionMenu args.PageContext.PageId tocElement)
                 args.PageContent
 
         // There is no menu but there is a table of content
         | None, false ->
             renderPageWithMenuOrTableOfContent
                 null // No breadcrumb because there is no menu
-                (renderTableOfContentOnly (Some tocConfig) tocInformation)
+                (renderTableOfContentOnly tocElement)
                 args.PageContent
 
         // There is no menu neither a table of content
