@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+* Fix #144: `toc: false` disabled the whole menu and not just the TOC
+
 ## 1.4.2 - 2021-11-21
 
 ### Fixed
