@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
     This allows support of RELEASE_NOTES files too.
 
+* Optimize content columns size based on the display
+
 ### Changed
 
 * Change the visual of the Changelog page

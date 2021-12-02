@@ -251,7 +251,7 @@ let private renderPageWithMenuOrTableOfContent
                 ]
 
                 Bulma.column [
-                    column.is8Desktop
+                    column.is9Desktop
                     column.isFullTouch
 
                     prop.children [
@@ -266,8 +266,9 @@ let private renderPageContentOnly (pageContent : ReactElement) =
     Bulma.container [
         Bulma.columns [
             Bulma.column [
-                column.is8Desktop
-                column.isOffset2Desktop
+                column.is10Desktop
+                column.is8Widescreen
+                column.isOffset1Desktop
 
                 prop.children [
                     pageContent
@@ -285,8 +286,8 @@ let private renderPageWithoutMenuOrTableOfContent (pageContent : ReactElement) =
 
             prop.children [
                 Bulma.column [
-                    column.is8Desktop
-                    column.isOffset2Desktop
+                    column.is10Desktop
+                    column.isOffset1Desktop
 
                     prop.children [
                         pageContent
