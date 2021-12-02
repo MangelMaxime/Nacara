@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.4.0 - 2021-12-02
+
 ### Added
 
 * Add a `Improved` category to the changelog
@@ -113,6 +115,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * Simplify the `Page.Minimal.render` function because I was often forgetting to add the new arguments when using JavaScript
 * Simplify the layout names
+
     * `nacara-standard` -> `standard`
     * `nacara-navbar-only` -> `navbar-only`
     * `nacara-changelog` -> `changelog`

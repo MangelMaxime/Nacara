@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.5.0 - 2021-12-02
+
 ### Fixed
 
 * Fix #143: Make the F# literate front-matter less strict
