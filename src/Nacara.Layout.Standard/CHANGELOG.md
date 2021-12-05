@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.4.2 - 2021-12-05
+
+### Fixed
+
+* Fix render of "Other" items category for the changelog
+
 ## 1.4.1 - 2021-12-05
 
 ### Fixed
