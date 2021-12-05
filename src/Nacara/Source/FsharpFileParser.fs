@@ -4,7 +4,7 @@ open System
 open System.Text.RegularExpressions
 
 let private frontMatterPattern =
-    """\(\*(\*)+\n?(?<front_matter>---.*---)\n(\*)+\)"""
+    """\(\*(\*)+\n?(?<front_matter>---((?!\*\)).)*---)\n(\*)+\)"""
 
 let rec processFile (result : string list) (lines : string list) =
     match lines with
