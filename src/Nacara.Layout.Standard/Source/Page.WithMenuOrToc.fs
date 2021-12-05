@@ -269,6 +269,7 @@ let private renderPageContentOnly (pageContent : ReactElement) =
                 column.is10Desktop
                 column.is8Widescreen
                 column.isOffset1Desktop
+                column.isOffset2Widescreen
 
                 prop.children [
                     pageContent
