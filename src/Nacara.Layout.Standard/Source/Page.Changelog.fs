@@ -112,7 +112,6 @@ type ChangelogParser.Types.CategoryType with
 
 let private renderCategoryBody
     (markdownToHml : string -> JS.Promise<string>)
-    (category : ChangelogParser.Types.CategoryType)
     (body : ChangelogParser.Types.CategoryBody) =
         promise {
             match body with
@@ -147,20 +146,6 @@ let private renderOtherItem
             return Html.li [
                 prop.className "changelog-list-item"
                 prop.children [
-                    Bulma.tag [
-                        tag.isMedium
-                        prop.className "no-category"
-                        prop.children [
-                            Bulma.icon [
-                                Fa.i
-                                    [
-                                        Fa.Solid.ChevronRight
-                                    ]
-                                    [ ]
-                            ]
-                        ]
-                    ]
-
                     Html.div [
                         prop.className "changelog-list-item-text"
 
@@ -191,7 +176,7 @@ let renderChangelogItems
                             let! bodyItemsHtml =
                                 bodyItems
                                 |> List.map (fun body ->
-                                    renderCategoryBody markdownToHml categoryType body
+                                    renderCategoryBody markdownToHml body
                                 )
                                 |> Promise.all
 
@@ -242,11 +227,12 @@ let renderChangelogItems
 
                 let otherSection =
                     if otherItems.Length > 0 then
-                        React.fragment [
+                        Html.div [
                             Html.li [
                                 prop.className "changelog-list-item"
                                 prop.children [
                                     Bulma.tag [
+                                        prop.className "changelog-list-item-category"
                                         color.isInfo
                                         tag.isMedium
                                         text.hasTextWeightBold
@@ -257,6 +243,7 @@ let renderChangelogItems
 
                             yield! otherItems
                         ]
+
                     else
                         null
 
