@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.5.1 - 2021-12-05
+
+### Fixed
+
+* Better detect front-matter section in F# literate file to avoid capturing direct next block comment.
+
 ## 1.5.0 - 2021-12-02
 
 ### Fixed

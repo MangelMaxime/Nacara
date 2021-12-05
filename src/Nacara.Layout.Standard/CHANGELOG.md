@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.4.1 - 2021-12-05
+
+### Fixed
+
+* In the `standard` layout, center the content when on widescreen.
+
 ## 1.4.0 - 2021-12-02
 
 ### Added
