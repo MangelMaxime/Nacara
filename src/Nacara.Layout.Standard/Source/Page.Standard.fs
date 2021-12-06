@@ -281,12 +281,13 @@ let rehypePlugins : RehypePlugin array =
                         {|
                             ``type`` = "element"
                             tagName = "span"
-                            properties = {| className = ["anchor"] |}
-                            children = []
-                        |} |> box
-                        {|
-                            ``type`` = "text"
-                            value = "#"
+                            properties = {| className = "anchor" |}
+                            children = [|
+                                {|
+                                    ``type`` = "text"
+                                    value = "#"
+                                |} |> box
+                            |]
                         |} |> box
                     |]
                 |}
