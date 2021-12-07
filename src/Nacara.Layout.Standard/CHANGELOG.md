@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.5.0 - 2021-12-07
+
+### Fixed
+
+* Fix #149: Fix anchor visibility and link display inside headers
+
 ## 1.4.2 - 2021-12-05
 
 ### Fixed
