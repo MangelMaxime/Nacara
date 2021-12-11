@@ -89,6 +89,10 @@ test: build
 	@$(call log_target_info, "Testing...")
 	cd $(NACARA_API_GEN_DIR)/Tests && dotnet run
 
+test-watch:
+	@$(call log_target_info, "Testing...")
+	cd $(NACARA_API_GEN_DIR)/Tests && dotnet watch
+
 
 release: test
 	@$(call log_target_info, "Releasing...")
