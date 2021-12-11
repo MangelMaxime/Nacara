@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="StringBuilder.fs" />
     <Compile Include="Helpers.fs" />
+    <Compile Include="Markdown.fs" />
     <Compile Include="CommentFormatter.fs" />
     <Compile Include="File.fs" />
     <Compile Include="Render.fs" />

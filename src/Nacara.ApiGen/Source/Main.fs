@@ -65,9 +65,6 @@ let main argv =
                     root = baseUrl
                 )
 
-            // Load the XML doc file
-            let xmlFile = Path.Combine(libDir, project + ".xml")
-
             // Clean the output folder
             if Directory.Exists (Path.Combine(output, "reference", project)) then
                 Directory.Delete(Path.Combine(output, "reference", project), true)

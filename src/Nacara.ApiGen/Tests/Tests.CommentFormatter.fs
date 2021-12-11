@@ -2,11 +2,7 @@ module Tests.CommentFormatter
 
 open Expecto
 open Nacara.ApiGen.CommentFormatter
-
-module Expect =
-
-    let equal actual expected =
-        Expect.equal actual expected ""
+open Utils
 
 let tests =
     testList "Tests.CommentFormatter" [

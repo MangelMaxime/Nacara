@@ -5,7 +5,10 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Utils.fs" />
     <Compile Include="Tests.CommentFormatter.fs" />
+    <Compile Include="Tests.Render.fs" />
+    <Compile Include="Tests.Markdown.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
   <ItemGroup>

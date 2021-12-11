@@ -148,6 +148,8 @@ NUGET
       FSharp.Compiler.Service (>= 40.0)
     FSlugify (1.1)
       FSharp.Core (>= 4.7)
+    Giraffe.ViewEngine (1.4)
+      FSharp.Core (>= 5.0)
     Microsoft.Build.Framework (17.0)
       System.Security.Permissions (>= 4.7)
     Microsoft.Build.Tasks.Core (17.0)

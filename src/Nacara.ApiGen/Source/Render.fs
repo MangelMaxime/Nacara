@@ -350,7 +350,6 @@ let rec renderParameterType (isTopLevel : bool) (typ : FSharpType) : TextNode =
                                 ]
 
                         else
-                            let i = 0
                             TextNode.Text "Unkown syntax please open an issue"
                 ]
 
@@ -384,6 +383,8 @@ let rec renderParameterType (isTopLevel : bool) (typ : FSharpType) : TextNode =
                         if arg.IsGenericParameter then
                             TextNode.Tick
                             TextNode.Text arg.GenericParameter.DisplayName
+                        else if arg.IsAbbreviation then
+                            TextNode.Text arg.TypeDefinition.DisplayName
                         else
 
                             let url =
@@ -491,6 +492,10 @@ let renderValueOrFunction
                 { ParamTypesInformation.Empty with
                     MaxNameLength = entity.Name.Length
                 }
+
+            if entity.Name = "markdownToHtml" then
+                let i = 0
+                ()
 
             let paramTypesInfo =
                 extractParamTypesInformation
@@ -690,6 +695,18 @@ let renderNamespace
         sb
         linkGenerator
         apiDoc.Entities
+
+module New =
+
+    open Giraffe.ViewEngine
+
+    let renderNamespace
+        (apiDoc : ApiDocNamespace) =
+
+        h2
+            [ _class "title is-3" ]
+            [ str apiDoc.Name ]
+
 
 let renderIndex
     (sb : StringBuilder)
@@ -950,3 +967,5 @@ let renderUnionType
         sb.WriteLine "</dd>"
 
     sb.WriteLine "</dl>"
+
+let returnTrue = true

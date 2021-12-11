@@ -28,3 +28,4 @@ group ApiGen
     nuget Expecto
     nuget Argu
     nuget FSlugify
+    nuget Giraffe.ViewEngine
