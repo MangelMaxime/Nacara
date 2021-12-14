@@ -1,12 +1,12 @@
 module Tests.Markdown
 
 open Expecto
-open FSharp.Formatting.ApiDocs
 open Utils
 open Markdown
+open Giraffe.ViewEngine
 
 let tests =
-    ftestList "Nacara.ApiGen.Markdown" [
+    testList "Nacara.ApiGen.Markdown" [
 
         testList "formatSpan" [
 
@@ -241,7 +241,9 @@ let tests =
                     ]
 
                 let actual =
-                    InlineHtmlBlock "<div class=\"strong\">Hello world</div>"
+                    div [ _class "strong" ]
+                        [ str "Hello world" ]
+                    |> InlineHtmlBlock
                     |> formatParagraph
 
                 Expect.equal actual expected
@@ -298,7 +300,10 @@ let tests =
                     [
                         YamlFrontmatter [ "title: Hello world" ]
                         Heading (2, [ Literal "Hello "; Strong [ Literal "world" ] ])
-                        InlineHtmlBlock "<div class=\"strong\">Hello world</div>"
+                        InlineHtmlBlock (
+                            div [ _class "strong" ]
+                                [ str "Hello world" ]
+                        )
                         Paragraph [
                             Literal "This is a "
                             Emphasis [ Literal "Paragraph" ]
@@ -340,7 +345,10 @@ let c = add a b
                     [
                         YamlFrontmatter [ "title: Hello world" ]
                         Heading (2, [ Literal "Hello "; Strong [ Literal "world" ] ])
-                        InlineHtmlBlock "<div class=\"strong\">Hello world</div>"
+                        InlineHtmlBlock (
+                            div [ _class "strong" ]
+                                [ str "Hello world" ]
+                        )
                         Paragraph [
                             Literal "This is a "
                             Emphasis [ Literal "Paragraph" ]

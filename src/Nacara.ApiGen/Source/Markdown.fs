@@ -2,6 +2,9 @@ module rec Markdown
 
 open System
 open System.Collections.Generic
+open Giraffe.ViewEngine
+
+let startMarkdownBlock = str "\n\n"
 
 // Code adapted from FSharp.Formatting
 // To make it easier to write Markdown AST in F# and then transform it into a string
@@ -57,7 +60,7 @@ type MarkdownParagraph =
         language: string option
 
     /// A HTML block
-    | InlineHtmlBlock of code: string
+    | InlineHtmlBlock of node : XmlNode
 
     /// A Markdown List block
     | ListBlock of kind: MarkdownListKind * items: list<MarkdownParagraphs>
@@ -155,7 +158,11 @@ let rec formatParagraph (paragraph : MarkdownParagraph) =
             emptyLine
 
         | InlineHtmlBlock html ->
-            yield! html.Replace("\r\n", "\n").Split("\n")
+            let htmlString =
+                html
+                |> RenderView.AsString.htmlNode
+
+            yield! htmlString.Replace("\r\n", "\n").Split("\n")
 
         | ListBlock(kind, items) -> failwith "Not Implemented"
         | QuotedBlock(paragraphs) -> failwith "Not Implemented"

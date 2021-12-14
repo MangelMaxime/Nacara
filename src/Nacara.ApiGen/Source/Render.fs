@@ -10,6 +10,9 @@ open FSharp.Compiler.Symbols
 open FSlugify.SlugGenerator
 open System.Text.RegularExpressions
 open System.Xml.Linq
+open Markdown
+open Giraffe.ViewEngine
+
 
 let slugify text =
     slugify DefaultSlugGeneratorOptions text
@@ -181,6 +184,8 @@ let formatXmlComment
                     else
                         line
                 )
+                // Trim end of the line as the trailing whitespaces are not significant
+                |> List.map String.trimEnd
                 |> String.concat "\n"
 
             CommentFormatter.format content
@@ -451,6 +456,9 @@ let rec extractParamTypesInformation
         | [] ->
             state
 
+// let renderValue
+//     (linkGenerator : string -> string)
+//     (entities : ApiDocMember list) =
 
 let renderValueOrFunction
     (sb : StringBuilder)
@@ -492,10 +500,6 @@ let renderValueOrFunction
                 { ParamTypesInformation.Empty with
                     MaxNameLength = entity.Name.Length
                 }
-
-            if entity.Name = "markdownToHtml" then
-                let i = 0
-                ()
 
             let paramTypesInfo =
                 extractParamTypesInformation
@@ -638,12 +642,9 @@ let renderValueOrFunction
             | None ->
                 ()
 
-
-
             sb.WriteLine "<hr/>"
 
 let renderDeclaredModules
-    (sb : StringBuilder)
     (linkGenerator : string -> string)
     (entities : ApiDocEntity list) =
 
@@ -654,62 +655,77 @@ let renderDeclaredModules
         )
 
     if not moduleDeclarations.IsEmpty then
+        [
+            InlineHtmlBlock (
+                p [ _class "is-size-5" ]
+                    [
+                        strong [ ]
+                            [ str "Declared modules" ]
+                    ]
+            )
 
-        sb.WriteLine """<p class="is-size-5"><strong>Declared modules</strong></p>"""
-        sb.NewLine ()
-        sb.WriteLine "<p>"
-        sb.WriteLine """<table class="table is-bordered docs-modules">"""
-        sb.WriteLine "<thead>"
-        sb.WriteLine "<tr>"
-        sb.WriteLine """<th width="25%">Module</th>"""
-        sb.WriteLine """<th width="75%">Description</th>"""
-        sb.WriteLine "</tr>"
-        sb.WriteLine "</thead>"
+            Paragraph [ HardLineBreak ]
 
-        sb.WriteLine "<tbody>"
+            InlineHtmlBlock (
+                table [ _class "table is-bordered docs-modules" ]
+                    [
+                        thead [ ]
+                            [
+                                tr [ ]
+                                    [
+                                        th [ _width "25%" ]
+                                            [ str "Module" ]
+                                        th [ _width "75%" ]
+                                            [ str "Description" ]
+                                    ]
+                            ]
+                        tbody [ ]
+                            [
+                                for md in moduleDeclarations do
+                                    let url = linkGenerator md.UrlBaseName
 
-        moduleDeclarations
-        |> List.iter (fun md ->
-            let url = linkGenerator md.UrlBaseName
+                                    tr [ ]
+                                        [
+                                            td [ ]
+                                                [
+                                                    a [ _href url ]
+                                                        [ str md.Name ]
+                                                ]
+                                            td [ ]
+                                                [
+                                                    str (formatXmlComment md.Comment.Xml)
+                                                ]
+                                        ]
+                            ]
+                    ]
+            )
 
-            sb.WriteLine "<tr>"
-            sb.WriteLine $"""<td><a href="{url}">{md.Name}</a></td>"""
+        ]
 
-            sb.WriteLine $"""<td>{formatXmlComment md.Comment.Xml}</td>"""
+    else
+        [ ]
 
-            sb.WriteLine "</tr>"
-        )
-
-        sb.WriteLine "</tbody>"
-        sb.WriteLine "</table>"
-        sb.WriteLine "</p>"
 
 let renderNamespace
-    (sb : StringBuilder)
     (linkGenerator : string -> string)
     (apiDoc : ApiDocNamespace) =
 
-    sb.WriteLine $"""<h2 class="title is-3">{apiDoc.Name}</h2>"""
+    [
+        InlineHtmlBlock (
+            h2
+                [ _class "title is-3" ]
+                [ str apiDoc.Name ]
+        )
 
-    renderDeclaredModules
-        sb
-        linkGenerator
-        apiDoc.Entities
+        yield! renderDeclaredModules
+                linkGenerator
+                apiDoc.Entities
 
-module New =
-
-    open Giraffe.ViewEngine
-
-    let renderNamespace
-        (apiDoc : ApiDocNamespace) =
-
-        h2
-            [ _class "title is-3" ]
-            [ str apiDoc.Name ]
+        // TODO: Render declared types
+    ]
 
 
 let renderIndex
-    (sb : StringBuilder)
     (linkGenerator : string -> string)
     (namespaces: list<ApiDocNamespace>) =
 
@@ -719,41 +735,59 @@ let renderIndex
             ns.Name = "global"
         )
 
-    if not standardNamespaces.IsEmpty then
+    [
+        if not standardNamespaces.IsEmpty then
 
-        sb.WriteLine """<p class="is-size-5"><strong>Declared namespaces</strong></p>"""
-        sb.NewLine ()
-        sb.WriteLine "<p>"
-        sb.WriteLine """<table class="table is-bordered docs-modules">"""
-        sb.WriteLine "<thead>"
-        sb.WriteLine "<tr>"
-        sb.WriteLine """<th width="25%">Namespace</th>"""
-        sb.WriteLine """<th width="75%">Description</th>"""
-        sb.WriteLine "</tr>"
-        sb.WriteLine "</thead>"
+            InlineHtmlBlock (
+                p [ _class "is-size-5" ]
+                    [
+                        strong [ ]
+                            [ str "Declared namespaces"]
+                    ]
+            )
 
-        sb.WriteLine "<tbody>"
+            Paragraph [ HardLineBreak ]
 
-        for ns in standardNamespaces do
+            InlineHtmlBlock (
+                table [ _class "table is-bordered docs-modules" ]
+                    [
+                        thead [ ]
+                            [
+                                tr [ ]
+                                    [
+                                        th [ _width "25%" ]
+                                            [ str "Namespace" ]
+                                        th [ _width "75%" ]
+                                            [ str "Description" ]
+                                    ]
+                            ]
+                        tbody [ ]
+                            [
+                                for ns in standardNamespaces do
+                                    let url = linkGenerator ns.UrlBaseName
 
-            // TODO: Support <namespacedoc> tag as supported by F# formatting
-            // Namespace cannot have documentatin so this is a trick to support it
-            let url = linkGenerator ns.UrlBaseName
+                                    tr [ ]
+                                        [
+                                            td [ ]
+                                                [
+                                                    a [ _href url ]
+                                                        [ str ns.Name ]
+                                                ]
+                                            // TODO: Support <namespacedoc> tag as supported by F# formatting
+                                            // Namespace cannot have documentatin so this is a trick to support it
+                                            td [ ] [ ]
+                                        ]
 
-            sb.WriteLine "<tr>"
-            sb.WriteLine $"""<td><a href="{url}">{ns.Name}</a></td>"""
-            sb.WriteLine $"""<td></td>"""
-            sb.WriteLine "</tr>"
+                            ]
+                    ]
+            )
 
-        sb.WriteLine "</tbody>"
-        sb.WriteLine "</table>"
-        sb.WriteLine "</p>"
+        if not globalNamespace.IsEmpty then
+            yield! renderDeclaredModules
+                        linkGenerator
+                        globalNamespace.Head.Entities
+    ]
 
-    if not globalNamespace.IsEmpty then
-        renderDeclaredModules
-            sb
-            linkGenerator
-            globalNamespace.Head.Entities
 
 let renderRecordType
     (sb : StringBuilder)
@@ -968,4 +1002,46 @@ let renderUnionType
 
     sb.WriteLine "</dl>"
 
-let returnTrue = true
+let renderEntity
+    (linkGenerator : string -> string)
+    (entity : ApiDocEntityInfo) =
+
+    [
+        InlineHtmlBlock (
+            div [ _class "is-size-3" ]
+                [ str entity.Entity.Name ]
+        )
+
+        Paragraph [ HardLineBreak ]
+
+        InlineHtmlBlock (
+            p [ ]
+                [
+                    div [ ]
+                        [
+                            strong [ ]
+                                [ str "Namespace:" ]
+                            str " "
+                            a [ _href (linkGenerator entity.Namespace.UrlBaseName) ]
+                                [ str entity.Namespace.Name ]
+                        ]
+
+                    match entity.ParentModule with
+                    | Some parentModule ->
+                        let parentModuleUrl =
+                            linkGenerator parentModule.UrlBaseName
+
+                        div [ ]
+                            [
+                                strong [ ]
+                                    [ str "Parent:"]
+                                str " "
+                                a [ _href parentModuleUrl ]
+                                    [ str parentModule.Symbol.FullName ]
+                            ]
+
+                    | None ->
+                        ()
+                ]
+        )
+    ]

@@ -2,6 +2,7 @@ module Nacara.ApiGen.CommentFormatter
 
 open System
 open System.Text.RegularExpressions
+open Helpers
 
 let inline newLine<'T> = "\n"
 
@@ -596,6 +597,13 @@ let format (text : string) =
     |> typeParamRef
     |> list
     |> unescapeSpecialCharacters
+    // Make a pass to remove trailing whitespaces
+    // This is not really for the Markdown/Html generation
+    // but this helps when writing the tests as missing spaces
+    // are difficult to detect visually
+    |> String.splitLines
+    |> Array.map String.trimEnd
+    |> String.concat "\n"
 
 /// <summary>
 /// Extract and format only the summary tag

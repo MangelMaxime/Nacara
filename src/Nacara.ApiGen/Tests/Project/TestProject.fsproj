@@ -7,5 +7,7 @@
     <Compile Include="PureNamespace.fs" />
     <Compile Include="NamespaceWithModule.fs" />
     <Compile Include="Fixtures.fs" />
+    <Compile Include="GlobalModuleA.fs" />
+    <Compile Include="GlobalModuleB.fs" />
   </ItemGroup>
 </Project>

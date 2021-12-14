@@ -8,14 +8,6 @@ open System.Text
 open System.Text.RegularExpressions
 open Render
 
-
-let minimalApiFileContent =
-    """---
-layout: api
----
-
-"""
-
 let generateIndexPage
     (docsRoot : string)
     (generateLink : string -> string)
@@ -23,14 +15,15 @@ let generateIndexPage
     (destination : string)
     : unit =
 
-    let sb = new StringBuilder(minimalApiFileContent)
+    // let sb = new StringBuilder(minimalApiFileContent)
 
-    renderIndex
-        sb
-        generateLink
-        namespaces
+    // renderIndex
+    //     sb
+    //     generateLink
+    //     namespaces
 
-    File.write docsRoot destination sb
+    // File.write docsRoot destination sb
+    ()
 
 
 let generateNamespacePage
@@ -39,17 +32,18 @@ let generateNamespacePage
     (generateLink : string -> string)
     (ns : ApiDocNamespace) =
 
-    let sb = new StringBuilder(minimalApiFileContent)
+    // let sb = new StringBuilder(minimalApiFileContent)
 
-    renderNamespace
-        sb
-        generateLink
-        ns
+    // renderNamespace
+    //     sb
+    //     generateLink
+    //     ns
 
-    let destination =
-        apiUrl + ns.UrlBaseName + ".md"
+    // let destination =
+    //     apiUrl + ns.UrlBaseName + ".md"
 
-    File.write docsRoot destination sb
+    // File.write docsRoot destination sb
+    ()
 
 
 
@@ -59,84 +53,85 @@ let generateEntityPage
     (generateLink : string -> string)
     (entityInfo : ApiDocEntityInfo) =
 
-    let sb = new StringBuilder(minimalApiFileContent)
+    // let sb = new StringBuilder(minimalApiFileContent)
 
-    let destination =
-        apiUrl + entityInfo.Entity.UrlBaseName + ".md"
+    // let destination =
+    //     apiUrl + entityInfo.Entity.UrlBaseName + ".md"
 
-    sb.WriteLine $"""<div class="is-size-3">{entityInfo.Entity.Name}</div>"""
+    // sb.WriteLine $"""<div class="is-size-3">{entityInfo.Entity.Name}</div>"""
 
-    sb.NewLine ()
+    // sb.NewLine ()
 
-    let nsUrl =
-        generateLink entityInfo.Namespace.UrlBaseName
+    // let nsUrl =
+    //     generateLink entityInfo.Namespace.UrlBaseName
 
-    sb.WriteLine "<p>"
+    // sb.WriteLine "<p>"
 
-    sb.WriteLine "<div>"
-    sb.Write "<strong>Namespace:</strong>"
-    sb.Space 1
-    sb.Write $"""<a href="{nsUrl}">{entityInfo.Namespace.Name}</a>"""
-    sb.WriteLine "</div>"
+    // sb.WriteLine "<div>"
+    // sb.Write "<strong>Namespace:</strong>"
+    // sb.Space 1
+    // sb.Write $"""<a href="{nsUrl}">{entityInfo.Namespace.Name}</a>"""
+    // sb.WriteLine "</div>"
 
-    match entityInfo.ParentModule with
-    | Some parentModule ->
-        let url =
-            generateLink parentModule.UrlBaseName
+    // match entityInfo.ParentModule with
+    // | Some parentModule ->
+    //     let url =
+    //         generateLink parentModule.UrlBaseName
 
-        sb.WriteLine "<div>"
-        sb.Write "<strong>Parent:</strong>"
-        sb.Space 1
-        sb.Write $"""<a href="{url}">{parentModule.Symbol.FullName}</a>"""
-        sb.WriteLine "</div>"
+    //     sb.WriteLine "<div>"
+    //     sb.Write "<strong>Parent:</strong>"
+    //     sb.Space 1
+    //     sb.Write $"""<a href="{url}">{parentModule.Symbol.FullName}</a>"""
+    //     sb.WriteLine "</div>"
 
-    | None ->
-        ()
+    // | None ->
+    //     ()
 
-    sb.WriteLine "</p>"
+    // sb.WriteLine "</p>"
 
-    let symbol = entityInfo.Entity.Symbol
+    // let symbol = entityInfo.Entity.Symbol
 
-    if symbol.IsFSharpRecord then
-        renderRecordType sb entityInfo
+    // if symbol.IsFSharpRecord then
+    //     renderRecordType sb entityInfo
 
-    else if symbol.IsFSharpModule then
+    // else if symbol.IsFSharpModule then
 
-        renderDeclaredTypes
-            sb
-            generateLink
-            entityInfo.Entity.NestedEntities
+    //     renderDeclaredTypes
+    //         sb
+    //         generateLink
+    //         entityInfo.Entity.NestedEntities
 
-        // A module can contains module declarations
-        renderDeclaredModules
-            sb
-            generateLink
-            entityInfo.Entity.NestedEntities
+    //     // A module can contains module declarations
+    //     renderDeclaredModules
+    //         sb
+    //         generateLink
+    //         entityInfo.Entity.NestedEntities
 
-        renderValueOrFunction
-            sb
-            generateLink
-            entityInfo.Entity.ValuesAndFuncs
+    //     renderValueOrFunction
+    //         sb
+    //         generateLink
+    //         entityInfo.Entity.ValuesAndFuncs
 
-    else if symbol.IsNamespace then
+    // else if symbol.IsNamespace then
 
-        printfn "TODO: Namespace"
+    //     printfn "TODO: Namespace"
 
-    else if symbol.IsFSharpUnion then
-        renderUnionType sb entityInfo
+    // else if symbol.IsFSharpUnion then
+    //     renderUnionType sb entityInfo
 
-    else
+    // else
 
-        match entityInfo.Entity.Comment.Xml with
-        | Some _ ->
-            sb.WriteLine """<div class="docs-summary">"""
-            sb.WriteLine "<p><strong>Description</strong></p>"
-            sb.WriteLine "<p>"
-            sb.WriteLine (formatXmlComment entityInfo.Entity.Comment.Xml)
-            sb.WriteLine "</p>"
-            sb.WriteLine "</div>"
+    //     match entityInfo.Entity.Comment.Xml with
+    //     | Some _ ->
+    //         sb.WriteLine """<div class="docs-summary">"""
+    //         sb.WriteLine "<p><strong>Description</strong></p>"
+    //         sb.WriteLine "<p>"
+    //         sb.WriteLine (formatXmlComment entityInfo.Entity.Comment.Xml)
+    //         sb.WriteLine "</p>"
+    //         sb.WriteLine "</div>"
 
-        | None ->
-            ()
+    //     | None ->
+    //         ()
 
-    File.write docsRoot destination sb
+    // File.write docsRoot destination sb
+    ()

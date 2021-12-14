@@ -5,6 +5,7 @@ open System.IO
 open Nacara.ApiGen.Generate
 
 open Argu
+open Markdown
 
 type CliArguments =
     | [<AltCommandLine("-p"); Mandatory>] Project of string
@@ -30,6 +31,13 @@ type CliArguments =
 
 let parser = ArgumentParser.Create<CliArguments>()
 
+let addFrontMatter (paragraphs : MarkdownParagraphs) =
+    [
+        YamlFrontmatter [
+            "layout: api"
+        ]
+        yield! paragraphs
+    ]
 
 [<EntryPoint>]
 let main argv =
@@ -79,27 +87,65 @@ let main argv =
             let indexPageDestination =
                 Path.Combine(output, "reference", project, "index.md")
 
-            generateIndexPage
+            let indexPageDocument =
+                Render.renderIndex
+                    generateLink
+                    apiDocModel.Collection.Namespaces
+                |> addFrontMatter
+                |> MarkdownDocument
+
+            File.writeString
                 output
-                generateLink
-                apiDocModel.Collection.Namespaces
                 indexPageDestination
+                (indexPageDocument.ToMarkdown())
 
-            // Render all the namespaces pages
-            for ns in apiDocModel.Collection.Namespaces do
-                generateNamespacePage
-                    output
-                    apiUrl
-                    generateLink
-                    ns
+            // generateIndexPage
+            //     output
+            //     generateLink
+            //     apiDocModel.Collection.Namespaces
+            //     indexPageDestination
 
-            // Render all the entities pages
+            // // Render all the namespaces pages
+            // for ns in apiDocModel.Collection.Namespaces do
+            //     generateNamespacePage
+            //         output
+            //         apiUrl
+            //         generateLink
+            //         ns
+
+            // // Render all the entities pages
+            // for entity in apiDocModel.EntityInfos do
+            //     generateEntityPage
+            //         output
+            //         apiUrl
+            //         generateLink
+            //         entity
+
             for entity in apiDocModel.EntityInfos do
-                generateEntityPage
+                let document =
+                    Render.renderEntity
+                        generateLink
+                        entity
+                    |> addFrontMatter
+                    |> MarkdownDocument
+
+                File.writeString
                     output
-                    apiUrl
-                    generateLink
-                    entity
+                    (apiUrl + entity.Entity.UrlBaseName + ".md")
+                    (document.ToMarkdown())
+
+            for ns in apiDocModel.Collection.Namespaces do
+                let document =
+                    Render.renderNamespace
+                        generateLink
+                        ns
+                    |> addFrontMatter
+                    |> MarkdownDocument
+
+                File.writeString
+                    output
+                    (apiUrl + ns.UrlBaseName + ".md")
+                    (document.ToMarkdown())
 
             0
 

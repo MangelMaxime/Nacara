@@ -22,6 +22,9 @@ module String =
     let append (value : string) (text : string) =
         text + value
 
+    let trimEnd (value : string) =
+        value.TrimEnd()
+
 module List =
 
     let intersperse (element : 'T) (source : 'T list) =
