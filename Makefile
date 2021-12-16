@@ -85,14 +85,30 @@ generate-docs: build
 			--base-url /Nacara/
 	npx nacara
 
-test: build
+publish-test-project:
+	cd $(NACARA_API_GEN_DIR)/Tests && dotnet publish Project
+
+run-api-gen-against-test-project: publish-test-project
+	dotnet run --project src/Nacara.ApiGen/Source/Nacara.ApiGen.fsproj -- \
+		--project TestProject \
+		-lib src/Nacara.ApiGen/Tests/Project/bin/Debug/net5.0/publish \
+		--output temp \
+		--base-url /test-project/
+
+run-watch-api-gen-against-test-project:
+	dotnet run --project src/Nacara.ApiGen/Source/Nacara.ApiGen.fsproj -- \
+		--project TestProject \
+		-lib src/Nacara.ApiGen/Tests/Project/bin/Debug/net5.0/publish \
+		--output temp \
+		--base-url /test-project/
+
+test: build publish-test-project
 	@$(call log_target_info, "Testing...")
 	cd $(NACARA_API_GEN_DIR)/Tests && dotnet run
 
-test-watch:
+test-watch: publish-test-project
 	@$(call log_target_info, "Testing...")
 	cd $(NACARA_API_GEN_DIR)/Tests && dotnet watch
-
 
 release: test
 	@$(call log_target_info, "Releasing...")

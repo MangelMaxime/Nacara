@@ -11,3 +11,9 @@ let sub a b = a -b
 
 // Test that function partial typed are correctly generated.
 let mul (a : float) b = a * b
+
+type SimpleRecord =
+    {
+        Firstname : string
+        Age : int
+    }

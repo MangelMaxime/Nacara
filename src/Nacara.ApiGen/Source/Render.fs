@@ -788,137 +788,202 @@ let renderIndex
                         globalNamespace.Head.Entities
     ]
 
+let space =
+    rawText "&nbsp;"
+
+let indent =
+    rawText "&nbsp;&nbsp;&nbsp;&nbsp;"
+
+let keyword (text : string) =
+    span [ _class "keyword" ] [ str text ]
 
 let renderRecordType
-    (sb : StringBuilder)
     (info : ApiDocEntityInfo) =
 
     let entity = info.Entity
 
-    sb.WriteLine $"""<div class="api-code">"""
-    sb.WriteLine $"""<div><span class="keyword">type</span>&nbsp;<span class="type">%s{entity.Name}</span>&nbsp;<span class="keyword">=</span></div>"""
-    sb.Indent 1
-    sb.WriteLine """<span class="keyword">{</span>"""
+    div [ _class "api-code" ]
+        [
+            // Render type defintion
+            div [ ]
+                [
+                    keyword "type"
+                    space
+                    span [ _class "type" ]
+                        [ str entity.Name ]
+                    space
+                    keyword "="
+                ]
 
-    for field in entity.RecordFields do
-        match field.ReturnInfo.ReturnType with
-        | Some (_, returnType) ->
-            let escapedReturnType =
-                // Remove the starting <code> and ending </code>
-                returnType.HtmlText.[6 .. returnType.HtmlText.Length - 8]
+            div [ ]
+                [
+                    indent
+                    keyword "{"
+                ]
 
-            sb.Write """<div class="record-field">"""
-            sb.Indent 2
-            sb.Write $"""<a class="record-field-name" href="#{slugify field.Name}" >{field.Name}</a>&nbsp;<span class="keyword">:</span>&nbsp;<span class="record-field-type">{escapedReturnType}</span>"""
-            sb.WriteLine "</div>"
+            for field in entity.RecordFields do
+                match field.ReturnInfo.ReturnType with
+                | Some (fsharpType, _) ->
+                    div [ _class "record-field" ]
+                        [
+                            indent
+                            indent
+                            a
+                                [
+                                    _class "record-field-name"
+                                    _href ("#" + slugify field.Name)
+                                ]
+                                [
+                                    str field.Name
+                                ]
 
-        | None ->
-            ()
+                            space
+                            keyword ":"
+                            space
 
-    sb.Write "<div>"
-    sb.Indent 1
-    sb.WriteLine """<span class="keyword">}</span>"""
-    sb.WriteLine "</div>"
+                            if fsharpType.HasTypeDefinition then
+                                span [ _class "record-field-type" ]
+                                    [
+                                        str fsharpType.TypeDefinition.CompiledName
+                                    ]
+                        ]
 
-    if entity.InstanceMembers.Length <> 0 then
-        sb.WriteLine "<br />"
+                | None ->
+                    ()
 
-    for m in entity.InstanceMembers do
-        match m.Symbol with
-        | :? FSharpMemberOrFunctionOrValue as symbol ->
-            sb.WriteLine "<div>"
-            let nodes =
-                TextNode.Node
-                    [
-                        TextNode.Space
-                        TextNode.Space
-                        TextNode.Space
-                        TextNode.Space
-                        TextNode.Keyword "member"
-                        TextNode.Space
-                        TextNode.Text "this"
-                        TextNode.Dot
-                        TextNode.Property symbol.DisplayName
+            div [ ]
+                [
+                    indent
+                    keyword "}"
+                ]
+        ]
 
-                        match symbol.HasGetterMethod, symbol.HasSetterMethod with
-                        | true, true ->
-                            TextNode.Space
-                            TextNode.Keyword "with"
-                            TextNode.Space
-                            TextNode.Text "get"
-                            TextNode.Comma
-                            TextNode.Space
-                            TextNode.Text "set"
+    // let entity = info.Entity
 
-                        | true, false ->
-                            TextNode.Space
-                            TextNode.Keyword "with"
-                            TextNode.Space
-                            TextNode.Text "get"
+    // sb.WriteLine $"""<div class="api-code">"""
+    // sb.WriteLine $"""<div><span class="keyword">type</span>&nbsp;<span class="type">%s{entity.Name}</span>&nbsp;<span class="keyword">=</span></div>"""
+    // sb.Indent 1
+    // sb.WriteLine """<span class="keyword">{</span>"""
 
-                        | false, true ->
-                            TextNode.Space
-                            TextNode.Keyword "with"
-                            TextNode.Space
-                            TextNode.Text "set"
+    // for field in entity.RecordFields do
+    //     match field.ReturnInfo.ReturnType with
+    //     | Some (_, returnType) ->
+    //         let escapedReturnType =
+    //             // Remove the starting <code> and ending </code>
+    //             returnType.HtmlText.[6 .. returnType.HtmlText.Length - 8]
 
-                        | false, false ->
-                            ()
-                    ]
+    //         sb.Write """<div class="record-field">"""
+    //         sb.Indent 2
+    //         sb.Write $"""<a class="record-field-name" href="#{slugify field.Name}" >{field.Name}</a>&nbsp;<span class="keyword">:</span>&nbsp;<span class="record-field-type">{escapedReturnType}</span>"""
+    //         sb.WriteLine "</div>"
 
-            sb.Write (nodes.Html)
-            sb.WriteLine "</div>"
+    //     | None ->
+    //         ()
 
-        | _ ->
-            ()
+    // sb.Write "<div>"
+    // sb.Indent 1
+    // sb.WriteLine """<span class="keyword">}</span>"""
+    // sb.WriteLine "</div>"
 
-    sb.WriteLine "</div>"
+    // if entity.InstanceMembers.Length <> 0 then
+    //     sb.WriteLine "<br />"
 
-    match entity.Comment.Xml with
-    | Some _ ->
-        sb.WriteLine """<div class="docs-summary">"""
-        sb.WriteLine "<p><strong>Description</strong></p>"
-        sb.WriteLine "<p>"
-        sb.WriteLine (formatXmlComment entity.Comment.Xml)
-        sb.WriteLine "</p>"
-        sb.WriteLine "</div>"
+    // for m in entity.InstanceMembers do
+    //     match m.Symbol with
+    //     | :? FSharpMemberOrFunctionOrValue as symbol ->
+    //         sb.WriteLine "<div>"
+    //         let nodes =
+    //             TextNode.Node
+    //                 [
+    //                     TextNode.Space
+    //                     TextNode.Space
+    //                     TextNode.Space
+    //                     TextNode.Space
+    //                     TextNode.Keyword "member"
+    //                     TextNode.Space
+    //                     TextNode.Text "this"
+    //                     TextNode.Dot
+    //                     TextNode.Property symbol.DisplayName
 
-    | None ->
-        ()
+    //                     match symbol.HasGetterMethod, symbol.HasSetterMethod with
+    //                     | true, true ->
+    //                         TextNode.Space
+    //                         TextNode.Keyword "with"
+    //                         TextNode.Space
+    //                         TextNode.Text "get"
+    //                         TextNode.Comma
+    //                         TextNode.Space
+    //                         TextNode.Text "set"
 
-    sb.WriteLine "<p><strong>Properties</strong></p>"
-    sb.NewLine ()
-    sb.WriteLine """<dl class="docs-parameters">"""
-    sb.NewLine()
+    //                     | true, false ->
+    //                         TextNode.Space
+    //                         TextNode.Keyword "with"
+    //                         TextNode.Space
+    //                         TextNode.Text "get"
 
-    for field in entity.RecordFields do
-        match field.ReturnInfo.ReturnType with
-        | Some (_, returnType) ->
-            let escapedReturnType =
-                // Remove the starting <code> and ending </code>
-                returnType.HtmlText.[6 .. returnType.HtmlText.Length - 8]
+    //                     | false, true ->
+    //                         TextNode.Space
+    //                         TextNode.Keyword "with"
+    //                         TextNode.Space
+    //                         TextNode.Text "set"
 
-            let slug = slugify field.Name
+    //                     | false, false ->
+    //                         ()
+    //                 ]
 
-            sb.WriteLine """<dt class="api-code">"""
-            sb.Write $"""<a id={slug} href="#{slug}" class="property">{field.Name}</a>&nbsp;<span class="keyword">:</span>&nbsp;<span class="return-type">{escapedReturnType}</span>"""
-            sb.WriteLine "</dt>"
+    //         sb.Write (nodes.Html)
+    //         sb.WriteLine "</div>"
 
-            sb.WriteLine """<dd>"""
+    //     | _ ->
+    //         ()
 
-            match field.Comment.Xml with
-            | Some _ ->
-                sb.WriteLine (formatXmlComment entity.Comment.Xml)
+    // sb.WriteLine "</div>"
 
-            | None ->
-                ()
+    // match entity.Comment.Xml with
+    // | Some _ ->
+    //     sb.WriteLine """<div class="docs-summary">"""
+    //     sb.WriteLine "<p><strong>Description</strong></p>"
+    //     sb.WriteLine "<p>"
+    //     sb.WriteLine (formatXmlComment entity.Comment.Xml)
+    //     sb.WriteLine "</p>"
+    //     sb.WriteLine "</div>"
 
-            sb.WriteLine "</dd>"
+    // | None ->
+    //     ()
 
-        | None ->
-            ()
+    // sb.WriteLine "<p><strong>Properties</strong></p>"
+    // sb.NewLine ()
+    // sb.WriteLine """<dl class="docs-parameters">"""
+    // sb.NewLine()
 
-    sb.WriteLine "</dl>"
+    // for field in entity.RecordFields do
+    //     match field.ReturnInfo.ReturnType with
+    //     | Some (_, returnType) ->
+    //         let escapedReturnType =
+    //             // Remove the starting <code> and ending </code>
+    //             returnType.HtmlText.[6 .. returnType.HtmlText.Length - 8]
+
+    //         let slug = slugify field.Name
+
+    //         sb.WriteLine """<dt class="api-code">"""
+    //         sb.Write $"""<a id={slug} href="#{slug}" class="property">{field.Name}</a>&nbsp;<span class="keyword">:</span>&nbsp;<span class="return-type">{escapedReturnType}</span>"""
+    //         sb.WriteLine "</dt>"
+
+    //         sb.WriteLine """<dd>"""
+
+    //         match field.Comment.Xml with
+    //         | Some _ ->
+    //             sb.WriteLine (formatXmlComment entity.Comment.Xml)
+
+    //         | None ->
+    //             ()
+
+    //         sb.WriteLine "</dd>"
+
+    //     | None ->
+    //         ()
+
+    // sb.WriteLine "</dl>"
 
 
 let renderUnionType
@@ -1006,6 +1071,8 @@ let renderEntity
     (linkGenerator : string -> string)
     (entity : ApiDocEntityInfo) =
 
+    let symbol = entity.Entity.Symbol
+
     [
         InlineHtmlBlock (
             div [ _class "is-size-3" ]
@@ -1039,6 +1106,11 @@ let renderEntity
                                 a [ _href parentModuleUrl ]
                                     [ str parentModule.Symbol.FullName ]
                             ]
+
+                        if symbol.IsFSharpRecord then
+                            renderRecordType entity
+                        else
+                            ()
 
                     | None ->
                         ()

@@ -6,6 +6,7 @@ open Nacara.ApiGen.Generate
 
 open Argu
 open Markdown
+open Giraffe.ViewEngine
 
 type CliArguments =
     | [<AltCommandLine("-p"); Mandatory>] Project of string
@@ -38,6 +39,45 @@ let addFrontMatter (paragraphs : MarkdownParagraphs) =
         ]
         yield! paragraphs
     ]
+
+// Function to gain syntax highlighting for CSS thanks to VSCode extension
+// https://marketplace.visualstudio.com/items?itemName=alfonsogarciacaro.vscode-template-fsharp-highlight
+let inline css text = text
+
+let private basicCss =
+    css """
+:root {
+    --keyword-color: #a626a4;
+}
+
+.api-code {
+    font-family: monospace;
+    margin-bottom: 1rem;
+    scroll-margin-top: 5.25rem;
+}
+
+.api-code pre {
+    background-color: transparent;
+}
+
+.api-code .line {
+    white-space: nowrap;
+}
+
+.api-code .keyword {
+    color: var(--keyword-color);
+}
+"""
+
+let private addBasicCss (paragraphs : MarkdownParagraphs) =
+    [
+        InlineHtmlBlock (
+            style [ ]
+                [ str basicCss ]
+        )
+        yield! paragraphs
+    ]
+
 
 [<EntryPoint>]
 let main argv =
@@ -91,6 +131,7 @@ let main argv =
                 Render.renderIndex
                     generateLink
                     apiDocModel.Collection.Namespaces
+                |> addBasicCss
                 |> addFrontMatter
                 |> MarkdownDocument
 
@@ -126,6 +167,7 @@ let main argv =
                     Render.renderEntity
                         generateLink
                         entity
+                    |> addBasicCss
                     |> addFrontMatter
                     |> MarkdownDocument
 
@@ -139,6 +181,7 @@ let main argv =
                     Render.renderNamespace
                         generateLink
                         ns
+                    |> addBasicCss
                     |> addFrontMatter
                     |> MarkdownDocument
 
