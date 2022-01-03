@@ -64,7 +64,7 @@ export const release = async ( options ) => {
 
     if (versionInfo.version === lastPublishedVersion) {
         log(chalk.blue(`Last version has already been published. Skipping...`))
-        process.exit(0)
+        return;
     }
 
     log(chalk.blue("New version detected"))
@@ -84,5 +84,4 @@ export const release = async ( options ) => {
     }
 
     log(chalk.green(`Package published`))
-    process.exit(0)
 }
