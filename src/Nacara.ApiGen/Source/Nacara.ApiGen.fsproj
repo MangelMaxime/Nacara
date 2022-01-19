@@ -12,10 +12,18 @@
     <Compile Include="StringBuilder.fs" />
     <Compile Include="Helpers.fs" />
     <Compile Include="Markdown.fs" />
+    <Compile Include="Html.Extra.fs" />
+    <Compile Include="TextNode.fs" />
     <Compile Include="CommentFormatter.fs" />
+    <Compile Include="ApiDocs.Extensions.fs" />
     <Compile Include="File.fs" />
-    <Compile Include="Render.fs" />
-    <Compile Include="Generate.fs" />
+    <Compile Include="Render.Common.fs" />
+    <Compile Include="Render.Namespace.fs" />
+    <Compile Include="Render.Index.fs" />
+    <Compile Include="Render.Module.fs" />
+    <Compile Include="Render.Record.fs" />
+    <Compile Include="Render.Union.fs" />
+    <Compile Include="Render.Entity.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
   <Import Project="..\..\..\.paket\Paket.Restore.targets" />

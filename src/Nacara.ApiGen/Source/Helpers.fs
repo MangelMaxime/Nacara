@@ -27,9 +27,23 @@ module String =
 
 module List =
 
-    let intersperse (element : 'T) (source : 'T list) =
+    let intersperse (separator : 'T) (source : 'T list) =
         [
-            for item in source do
-                item
+            let mutable notFirst = false
+            for element in source do
+                if notFirst then
+                    separator
                 element
+                notFirst <- true
+        ]
+
+    let intercalate (separator : 'T list) (source : 'T list) =
+        [
+            let mutable notFirst = false
+            for element in source do
+                if notFirst then
+                    yield! separator
+
+                element
+                notFirst <- true
         ]

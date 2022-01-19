@@ -46,6 +46,12 @@ let fixtureModule =
         entity.Name = "Fixtures"
     )
 
+let moduleWithFunctionsAndValues =
+    globalNamespace.Entities
+    |> List.find (fun entity ->
+        entity.Name = "ModuleWithFunctionsAndValues"
+    )
+
 let generateLink (urlBaseName : string) =
     $"/reference/TestProject/{urlBaseName}.html"
 
@@ -282,6 +288,8 @@ let tests =
             test "works for value without a comment" {
                 let actual =
                     Nacara.ApiGen.Render.renderValueOrFunction
+                        generateLink
+                        moduleWithFunctionsAndValues.ValuesAndFuncs
 
                 ()
             }

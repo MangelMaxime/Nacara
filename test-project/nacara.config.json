@@ -1,0 +1,20 @@
+{
+    "serverPort": 8081,
+    "siteMetadata": {
+        "title": "Nacara",
+        "url": "https://mangelmaxime.github.io",
+        "baseUrl": "/test-project/"
+    },
+    "navbar": {
+        "start": [
+            {
+                "section": "reference",
+                "label": "API",
+                "url": "/test-project/reference/TestProject/index.html"
+            }
+        ]
+    },
+    "layouts": [
+        "nacara-layout-standard"
+    ]
+}

@@ -7,6 +7,7 @@ import chalk from 'chalk';
 import concurrently from 'concurrently';
 import releaseNpm from './scripts/release-npm.js';
 import releaseNuget from './scripts/release-nuget.js';
+import { simpleSpawn } from './scripts/await-spawn.js';
 
 const info = chalk.blueBright
 const warn = chalk.yellow
@@ -17,56 +18,41 @@ const log = console.log
 // Crash script on error
 shell.config.fatal = true;
 
-const shellExecNacaraCoreDir = (command) => {
-    shell.exec(
+const spawnInNacaraCoreDir = async (command) => {
+    await simpleSpawn(
         command,
-        {
-            cwd: "./src/Nacara.Core"
-        }
+        "./src/Nacara.Core"
     )
 }
 
-const shellExecNacaraDir = (command) => {
-    shell.exec(
+const spawnInNacaraDir = async (command) => {
+    await simpleSpawn(
         command,
-        {
-            cwd: "./src/Nacara"
-        }
+        "./src/Nacara"
     )
 }
 
-const shellExecNacaraLayoutDir = (command) => {
-    shell.exec(
+const spawnInNacaraLayoutDir = async (command) => {
+    await simpleSpawn(
         command,
-        {
-            cwd: "./src/Nacara.Layout.Standard"
-        }
-    )
-}
-
-const shellExecNacaraApiGenTestsDir = (command) => {
-    shell.exec(
-        command,
-        {
-            cwd: "./src/Nacara.ApiGen/Tests"
-        }
+        "./src/Nacara.Layout.Standard"
     )
 }
 
 const setupDevHandler = async () => {
-    shell.exec("npm install")
-    shell.exec("dotnet tool restore")
-    shellExecNacaraDir("npm install")
-    shellExecNacaraLayoutDir("npm install")
-    shellExecNacaraDir("npm link")
-    shellExecNacaraLayoutDir("npm link")
-    shell.exec("npm link nacara nacara-layout-standard")
+    await simpleSpawn("npm install")
+    await simpleSpawn("dotnet tool restore")
+    await spawnInNacaraDir("npm install")
+    await spawnInNacaraLayoutDir("npm install")
+    await spawnInNacaraDir("npm link")
+    await spawnInNacaraLayoutDir("npm link")
+    await simpleSpawn("npm link nacara nacara-layout-standard")
 }
 
 const unSetupDevHandler = async () => {
-    shell.exec("npm unlink nacara nacara-layout-standard")
-    shellExecNacaraDir("npm -g unlink")
-    shellExecNacaraLayoutDir("npm -g unlink")
+    await simpleSpawn("npm unlink nacara nacara-layout-standard")
+    await spawnInNacaraDir("npm -g unlink")
+    await spawnInNacaraLayoutDir("npm -g unlink")
 }
 
 const cleanHandler = async () => {
@@ -90,7 +76,9 @@ const cleanHandler = async () => {
     shell.rm("-rf", "./src/Nacara.ApiGen/**/bin")
     shell.rm("-rf", "./src/Nacara.ApiGen/**/obj")
 
-    shell.rm("-rf", "./temp")
+    shell.rm("-rf", "./docs/reference")
+
+    shell.rm("-rf", "./test-project/docs/reference")
 
     log(success("Cleaned!"));
 }
@@ -108,6 +96,7 @@ const watchNacaraHandler = async () => {
 
     concurrently(
         [
+            // Restart Nacara on file changes
             {
                 command:
                     'npx nodemon \
@@ -116,10 +105,12 @@ const watchNacaraHandler = async () => {
                         --delay 150ms \
                         --exec "nacara watch"'
             },
+            // Compile Nacara.Layout.Standard on file changes
             {
                 command: "dotnet fable Source --outDir dist --watch --sourceMaps",
                 cwd: "./src/Nacara.Layout.Standard"
             },
+            // Compile Nacara on file changes
             {
                 command: "dotnet fable Source --outDir dist --watch --sourceMaps",
                 cwd: "./src/Nacara"
@@ -132,30 +123,29 @@ const watchNacaraHandler = async () => {
 }
 
 const build = async () => {
-    await cleanHandler();
-
     log(info("Start building..."));
-    shellExecNacaraDir("dotnet fable Source --outDir dist");
-    shellExecNacaraLayoutDir("dotnet fable Source --outDir dist");
+    await spawnInNacaraDir("dotnet fable Source --outDir dist");
+    await spawnInNacaraLayoutDir("dotnet fable Source --outDir dist");
     log(success("Built!"));
 }
 
 const generateDocsHandler = async () => {
+    await cleanHandler();
     await build();
 
     log(info("Generating docs..."));
     // We publish Nacara.Core to all the dll files available in a single folder
     // allowing for ApiGen to works
-    shellExecNacaraCoreDir("dotnet publish");
+    await spawnInNacaraCoreDir("dotnet publish");
     log(info("Generate API reference..."))
-    shell.exec('dotnet run -f net5.0 -- \
+
+    await simpleSpawn(
+        'dotnet run -f net5.0 -- \
 --project Nacara.Core \
 -lib ../../Nacara.Core/bin/Debug/netstandard2.0/publish/ \
 --output ../../../docs/ \
 --base-url /Nacara/',
-        {
-            cwd: "./src/Nacara.ApiGen/Source"
-        }
+        "./src/Nacara.ApiGen/Source"
     )
     log(info("Generating docs files..."));
     shell.exec("npx nacara");
@@ -164,6 +154,8 @@ const generateDocsHandler = async () => {
 }
 
 const releaseHandler = async () => {
+    await testApiGenHandler();
+
     // Remove .fable/.gitignore files otherwise NPM doesn't publish that directory
     shell.rm("-rf", "./src/Nacara/dist/.fable/.gitignore")
     shell.rm("-rf", "./src/Nacara/dist/fable_modules/.gitignore")
@@ -189,30 +181,39 @@ const publishDocsHandler = async () => {
 const runTestApiGenAgainstTestProjectHandler = async (argv) => {
     await cleanHandler();
 
+    log(info("Run tests..."));
+
     if (argv.watch) {
+        log(info("Build local version of Nacara to serve the generated files"));
+        await build();
 
-
-    concurrently(
-        [
-            {
-                command: 'dotnet watch publish',
-                cwd: "./src/Nacara.ApiGen/Tests/Project",
-                name: "Publish project",
-                prefixColor: "magenta"
-            },
-            {
-                command: `
-                    dotnet watch run --project src/Nacara.ApiGen/Source/Nacara.ApiGen.fsproj -- \
-                        --project TestProject \
-                        -lib ../Tests/Project/bin/Debug/net5.0/publish \
-                        --output ../../../temp \
-                        --base-url /test-project/
+        concurrently(
+            [
+                {
+                    command: 'dotnet watch publish',
+                    cwd: "./src/Nacara.ApiGen/Tests/Project",
+                    name: "Publish project",
+                    prefixColor: "magenta"
+                },
+                {
+                    command: `dotnet watch run -- \
+--project TestProject \
+-lib ../Tests/Project/bin/Debug/net5.0/publish \
+--output ../../../test-project/docs \
+--base-url /test-project/
                     `,
-                name: "Generate API reference",
-                prefixColor: "cyan"
-            }
-        ]
-    )
+                    cwd: "./src/Nacara.ApiGen/Source",
+                    name: "Generate API reference",
+                    prefixColor: "cyan"
+                },
+                {
+                    command: 'npx nacara watch',
+                    cwd: "./test-project/",
+                    name: "Nacara",
+                    prefixColor: "green"
+                }
+            ]
+        )
 
     } else {
 
@@ -227,16 +228,40 @@ const runTestApiGenAgainstTestProjectHandler = async (argv) => {
             dotnet run --project src/Nacara.ApiGen/Source/Nacara.ApiGen.fsproj -- \
                 --project TestProject \
                 -lib src/Nacara.ApiGen/Tests/Project/bin/Debug/net5.0/publish \
-                --output temp \
+                --output test-project \
                 --base-url /test-project/
             `
         )
 
     }
+
+    log(success("Tests passed!"));
 }
 
-const testApiGenHandler = async () => {
-    throw "Not implemented yet";
+const testApiGenHandler = async (argv) => {
+    await cleanHandler();
+
+    if (argv.watch) {
+        concurrently([
+            // Publish the test project on changes
+            {
+                command: 'dotnet watch publish',
+                cwd: "./src/Nacara.ApiGen/Tests/Project",
+                name: "Publish project",
+                prefixColor: "magenta"
+            },
+            {
+                command: "dotnet watch",
+                cwd: "./src/Nacara.ApiGen/Tests",
+                name: "Test",
+                prefixColor: "cyan"
+            }
+        ])
+    } else {
+        await simpleSpawn("dotnet publish", "./src/Nacara.ApiGen/Tests/Project");
+
+        await simpleSpawn("dotnet run", "./src/Nacara.ApiGen/Tests");
+    }
 }
 
 yargs(hideBin(process.argv))

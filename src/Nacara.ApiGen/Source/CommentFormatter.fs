@@ -582,7 +582,7 @@ let removeRemarkTag =
 /// </summary>
 /// <param name="text"></param>
 /// <returns></returns>
-let format (text : string) =
+let formatXmlComment (text : string) =
     text
     |> removeSummaryTag
     |> removeParamElement
@@ -620,7 +620,7 @@ let formatSummaryOnly (text : string) =
             ""
         else if m.Groups.["non_void_element"].Success then
             m.Groups.["non_void_innerText"].Value
-            |> format
+            |> formatXmlComment
 
         else
             // Should not happen but we are forced to handle it by F# compiler
@@ -663,7 +663,7 @@ let tryFormatParam (parameterName : string) (text : string) =
     // Extract the inner text of the param tag
     |> Option.map (fun m ->
         m.Groups.["non_void_innerText"].Value
-        |> format
+        |> formatXmlComment
     )
 
 let tryFormatReturnsOnly (text : string) =
@@ -675,7 +675,7 @@ let tryFormatReturnsOnly (text : string) =
             None
         else if m.Groups.["non_void_element"].Success then
             m.Groups.["non_void_innerText"].Value
-            |> format
+            |> formatXmlComment
             |> Some
 
         else

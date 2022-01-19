@@ -163,6 +163,7 @@ let rec formatParagraph (paragraph : MarkdownParagraph) =
                 |> RenderView.AsString.htmlNode
 
             yield! htmlString.Replace("\r\n", "\n").Split("\n")
+            emptyLine
 
         | ListBlock(kind, items) -> failwith "Not Implemented"
         | QuotedBlock(paragraphs) -> failwith "Not Implemented"

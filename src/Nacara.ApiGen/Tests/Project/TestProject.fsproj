@@ -2,6 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <OtherFlags>--sig:signatures.fsi</OtherFlags>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="PureNamespace.fs" />
@@ -9,5 +10,7 @@
     <Compile Include="Fixtures.fs" />
     <Compile Include="GlobalModuleA.fs" />
     <Compile Include="GlobalModuleB.fs" />
+    <Compile Include="ModuleWithFunctionsAndValues.fs" />
+    <Compile Include="ModuleWithRecord.fs" />
   </ItemGroup>
 </Project>
