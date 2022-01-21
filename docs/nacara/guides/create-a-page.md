@@ -31,7 +31,7 @@ This is because you need to provide some information to Nacara via the `menu.jso
 
 Edit the file `docs/documentation/menu.json` to add `"documentation/tutorial/my-page"` to it.
 
-The file should looks like:
+The file should look like:
 
 ```json
 [

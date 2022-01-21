@@ -26,7 +26,7 @@ Here you have **2** sections but only `documentation` has a menu.
 
 ## `menu.json`
 
-The `menu.json` consist in a list of `MenuItem` which can be a `string` or an `object`.
+The `menu.json` consists in a list of `MenuItem` which can be a `string` or an `object`.
 
 ```fsharp
 type MenuItem =
@@ -71,7 +71,7 @@ File: `docs/documentation/menu.json`
 ]
 ```
 
-The `title` front-matter will be used has the text to display in the menu.
+The `title` front-matter will be used as the text to display in the menu.
 
 ### Link: link to any page
 

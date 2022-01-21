@@ -7,7 +7,7 @@ Partials are small components which are used by the layout to give you control o
 
 The most common usage for a partial is to add a footer to your website.
 
-Looks at **your layout documentation** to know which partials are **available**.
+Look at **your layout documentation** to know which partials are **available**.
 
 :::info
 If you are a layout creator, learn more about how to access the partial by [clicking here](nacara/partials).
@@ -15,7 +15,7 @@ If you are a layout creator, learn more about how to access the partial by [clic
 
 ## Structure
 
-To create a partial you need to create file under the `docs/_partials` folder.
+To create a partial you need to create a file under the `docs/_partials` folder.
 
 For example, with the following structure there are two partials available:
 

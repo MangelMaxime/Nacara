@@ -9,4 +9,4 @@ You can use both **F#** and **JavaScript** to do so.
 
 In general, you should prefer **JavaScript** when adapting an existing layout as it is easier to **interop with the NPM packages**.
 
-If you want to write a complex layout, you should prefer **F#** as it Nacara comes with `Nacara.Core` nuget, which includes all the **types definition** and some **helpers**.
+If you want to write a complex layout, you should prefer **F#** as Nacara comes with `Nacara.Core` nuget, which includes all the **types definition** and some **helpers**.

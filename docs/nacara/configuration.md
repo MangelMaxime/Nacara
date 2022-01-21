@@ -45,7 +45,7 @@ It not here is a minimal configuration file:
 
 ## Configuration options
 
-Here is a list of the main category of option your can set within your `nacara.config.json` file:
+Here is a list of the main category of options you can set within your `nacara.config.json` file:
 
 1. [siteMetadata](#sitemetadata) (object)
 1. [navbar](#navbar) (object)
@@ -58,7 +58,7 @@ Here is a list of the main category of option your can set within your `nacara.c
 
 ### siteMetadata
 
-The `siteMetadata` contains configuration common data related to you site like (for example, your site title, favIcon, etc).
+The `siteMetadata` contains common configuration data related to your site, for example: your site title, favIcon, etc.
 
 <table class="table is-narrow is-bordered is-vcentered">
     <thead>
@@ -600,7 +600,7 @@ It consists on a list of `string` which can be:
 
 - A relative path to a `.js` or `.jsx` file.
 
-    Learn more about custom layout [here](/Nacara/documentation/advanced/layout-from-scratch.html)
+    Learn more about custom layout [here](/Nacara/nacara/advanced/layout-from-scratch.html)
 
 **Example**
 
