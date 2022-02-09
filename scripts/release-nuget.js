@@ -1,21 +1,23 @@
 import shell from "shelljs"
 import path from "node:path"
+import chalk from "chalk"
 
 import { release } from "./release-core.js"
 
 const getEnvVariable = function (varName) {
     const value = process.env[varName];
     if (value === undefined) {
-        log(chalk.red(`Missing environnement variable ${varName}`))
+        console.log(chalk.red(`Missing environnement variable ${varName}`))
         process.exit(1)
     } else {
         return value;
     }
 }
 
-const NUGET_KEY = getEnvVariable("NUGET_KEY")
 
 export default async (baseDirectory, relativePathToFsproj) => {
+
+    const NUGET_KEY = getEnvVariable("NUGET_KEY")
 
     const fullPathToFsproj = path.resolve(baseDirectory, relativePathToFsproj)
     const fsprojDirectory = path.dirname(fullPathToFsproj)
