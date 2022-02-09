@@ -2,6 +2,7 @@ module Nacara.ApiGen.CommentFormatter
 
 open System
 open System.Text.RegularExpressions
+open Helpers
 
 let inline newLine<'T> = "\n"
 
@@ -581,7 +582,7 @@ let removeRemarkTag =
 /// </summary>
 /// <param name="text"></param>
 /// <returns></returns>
-let format (text : string) =
+let formatXmlComment (text : string) =
     text
     |> removeSummaryTag
     |> removeParamElement
@@ -596,6 +597,13 @@ let format (text : string) =
     |> typeParamRef
     |> list
     |> unescapeSpecialCharacters
+    // Make a pass to remove trailing whitespaces
+    // This is not really for the Markdown/Html generation
+    // but this helps when writing the tests as missing spaces
+    // are difficult to detect visually
+    |> String.splitLines
+    |> Array.map String.trimEnd
+    |> String.concat "\n"
 
 /// <summary>
 /// Extract and format only the summary tag
@@ -612,7 +620,7 @@ let formatSummaryOnly (text : string) =
             ""
         else if m.Groups.["non_void_element"].Success then
             m.Groups.["non_void_innerText"].Value
-            |> format
+            |> formatXmlComment
 
         else
             // Should not happen but we are forced to handle it by F# compiler
@@ -655,7 +663,7 @@ let tryFormatParam (parameterName : string) (text : string) =
     // Extract the inner text of the param tag
     |> Option.map (fun m ->
         m.Groups.["non_void_innerText"].Value
-        |> format
+        |> formatXmlComment
     )
 
 let tryFormatReturnsOnly (text : string) =
@@ -667,7 +675,7 @@ let tryFormatReturnsOnly (text : string) =
             None
         else if m.Groups.["non_void_element"].Success then
             m.Groups.["non_void_innerText"].Value
-            |> format
+            |> formatXmlComment
             |> Some
 
         else

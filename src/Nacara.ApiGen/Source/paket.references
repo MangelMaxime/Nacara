@@ -4,3 +4,4 @@ group ApiGen
     FSharp.Compiler.Service
     Argu
     FSlugify
+    Giraffe.ViewEngine

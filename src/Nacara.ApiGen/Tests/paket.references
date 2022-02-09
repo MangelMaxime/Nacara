@@ -3,3 +3,4 @@ group ApiGen
     FSharp.Formatting
     FSharp.Compiler.Service
     Expecto
+    Giraffe.ViewEngine

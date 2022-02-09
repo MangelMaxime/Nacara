@@ -16,3 +16,17 @@ let write
 
     use file = new StreamWriter(filePath)
     file.Write(sb.ToString())
+
+let writeString
+    (docsRoot : string)
+    (fileName : string)
+    (content : string) =
+
+    let filePath = Path.Combine(docsRoot, fileName)
+
+    // Ensure that the directory exists
+    Directory.CreateDirectory(Path.GetDirectoryName(filePath))
+    |> ignore
+
+    use file = new StreamWriter(filePath)
+    file.Write(content)

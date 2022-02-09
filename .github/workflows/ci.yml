@@ -17,6 +17,8 @@ jobs:
       - name: Install and use custom npm version
         run: npm i -g npm@7
       - name: Setup workspace
-        run: make setup-dev
+        run: |
+          npm install
+          node build.js setup-dev
       - name: Build site
-        run: make generate-docs
+        run: node build.js generate-docs

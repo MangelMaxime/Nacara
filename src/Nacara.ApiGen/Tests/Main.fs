@@ -5,6 +5,8 @@ open Expecto
 let tests =
     testList "All" [
         Tests.CommentFormatter.tests
+        Tests.Render.tests
+        Tests.Markdown.tests
     ]
 
 [<EntryPoint>]

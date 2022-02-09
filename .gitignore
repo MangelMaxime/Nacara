@@ -268,6 +268,7 @@ demos/Thoth\.Elmish\.Demo/output/
 fableBuild/
 docs_deploy/
 .nacara/
+test-project/docs/reference/
 
 # Ignore generated API file
 docs/reference/
