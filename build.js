@@ -40,7 +40,6 @@ const spawnInNacaraLayoutDir = async (command) => {
 }
 
 const setupDevHandler = async () => {
-    await simpleSpawn("npm install")
     await simpleSpawn("dotnet tool restore")
     await spawnInNacaraDir("npm install")
     await spawnInNacaraLayoutDir("npm install")
