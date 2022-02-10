@@ -92,16 +92,16 @@ exportDefault
 
 <li>
 
-Compile you project to JavaScript using Fable
+Compile your project to JavaScript using Fable.
 
-If you don't already have Fable installed in your project you need to install it
+If you don't have Fable installed in your project you need to install it:
 
 ```
 dotnet new tool-manifest
 dotnet tool install fable
 ```
 
-Launch the compilation
+Launch the compilation:
 
 ```sh
 dotnet fable --outDir dist --watch
@@ -130,9 +130,9 @@ Register your layout in the `nacara.config.json`
 :::info
 You can find type documentation in the API section.
 
-Here are the most important one when working with custom layouts:
+Here are the most important topics when working with custom layouts:
 
 - [RendererContext](/Nacara/reference/Nacara.Core/nacara-core-types-renderercontext.html) : Context accessible when rendering a page.
 - [PageContext](/Nacara/reference/Nacara.Core/nacara-core-types-pagecontext.html) : Represents the context of a page within Nacara.
-- [LayoutInfo](/Nacara/reference/Nacara.Core/nacara-core-types-layoutinfo.html) : Exposed contract of a layout
+- [LayoutInfo](/Nacara/reference/Nacara.Core/nacara-core-types-layoutinfo.html) : Exposed contract of a layout.
 :::

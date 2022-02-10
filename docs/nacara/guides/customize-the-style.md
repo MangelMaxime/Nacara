@@ -13,12 +13,12 @@ Try editing this file and see the site being updated.
 
 ## Special folder
 
-When you website become bigger you will want to split your `style` file into smaller files.
+When your website becomes bigger, you will want to split your `style` file into smaller files.
 
-Nacara has specials folders to deal with that:
+Nacara has special folders to deal with that:
 
-- `docs/scss`: use this folder is you are using SCSS to write your style
-- `docs/sass`: use this folder is you are using SASS to write your style
+- `docs/scss`: use this folder if you are using SCSS to write your style
+- `docs/sass`: use this folder if you are using SASS to write your style
 
 When one of the files of these folders changes, Nacara will recompile your `docs/style.scss` or `docs/style.sass`.
 

@@ -3,7 +3,7 @@ title: Directory structure
 layout: standard
 ---
 
-A basic Nacara site looks to something like that:
+A basic Nacara project have a structure similar to this:
 
 ```
 ├── docs
@@ -23,7 +23,7 @@ A basic Nacara site looks to something like that:
 ├── package.json
 ```
 
-Overview, of what each of those does:
+To understand it better, we present this overview:
 
 <table class="table is-narrow is-bordered is-vcentered">
     <thead>
@@ -51,7 +51,7 @@ Overview, of what each of those does:
                 <code>docs</code>
             </td>
             <td class="fullwidth-cell">
-                Default, folder where you place your website source files likes:
+                Default folder where you place your website source files like:
                 <ul>
                     <li>Static resources</li>
                     <li>Markdown files to convert</li>
@@ -70,7 +70,7 @@ Overview, of what each of those does:
                     Main entry file for styling your application, generated file will be <code>docs_deploy/style.css</code>
                 </p>
                 <p>
-                    Only one of these files can be used at a time.
+                    Only one of those files should be used at a time.
                 </p>
             </td>
         </tr>

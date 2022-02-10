@@ -5,7 +5,7 @@ layout: standard
 
 ## Usage
 
-Nacara has several commands availables.
+Nacara has several commands available.
 
 Here is a list of the commands and their usage:
 
@@ -36,7 +36,7 @@ It is important that you place your command **between** quotes or singles quotes
 
 ## Watcher improvements
 
-If you see an error about too `EMFILE: too many open files`, you can trying setting the `CHOKIDAR_USEPOLLING` environment variable to `true`.
+If you see an error like `EMFILE: too many open files`, you can try setting the `CHOKIDAR_USEPOLLING` environment variable to `true`.
 
 Example: `CHOKIDAR_USEPOLLING=true nacara watch`
 

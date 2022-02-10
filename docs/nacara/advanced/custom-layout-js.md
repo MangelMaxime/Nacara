@@ -4,7 +4,7 @@ layout: standard
 ---
 
 :::primary{title="Note"}
-Creating a layout via JavaScript is the quickest way to extends Nacara because you just need a `.js` or `.jsx` file.
+Creating a layout via JavaScript is the quickest way to extend Nacara because you just need a `.js` or `.jsx` file.
 
 However, for complex layout or creating a layout package, you should prefer F# because it will have all the types definition and helpers available for you via the nuget `Nacara.Core`
 :::
@@ -12,7 +12,7 @@ However, for complex layout or creating a layout package, you should prefer F# b
 ## Setup Babel for JSX support
 
 :::info
-If you used the template to set up Nacara, you can skip this step and go to [Blog page layout](#Blog-page-layout)
+If you used the template to set up Nacara, you can skip this step and go to [Blog page layout](#blog-page-layout)
 :::
 
 <ul class="textual-steps">
@@ -115,11 +115,11 @@ You can learn more about the API by going to the API section.
 
 The API is documented from F# but the properties available are the same in JavaScript.
 
-Here are the most important one when working with custom layouts:
+Here are the most important topics when working with custom layouts:
 
 - [RendererContext](/Nacara/reference/Nacara.Core/nacara-core-types-renderercontext.html) : Context accessible when rendering a page.
 - [PageContext](/Nacara/reference/Nacara.Core/nacara-core-types-pagecontext.html) : Represents the context of a page within Nacara.
-- [LayoutInfo](/Nacara/reference/Nacara.Core/nacara-core-types-layoutinfo.html) : Exposed contract of a layout
+- [LayoutInfo](/Nacara/reference/Nacara.Core/nacara-core-types-layoutinfo.html) : Exposed contract of a layout.
 :::
 
 
@@ -151,9 +151,9 @@ date: 2021-08-20
 
 <li>
 
-In the previous, step we set the layout property to `blog-page`.
+In the previous step we set the layout property to `blog-page`.
 
-In order order to avoid error like:
+In order to avoid errors like:
 
 > Layout renderer 'blog-page' is unknown
 
@@ -161,7 +161,7 @@ We need to register our layout into our Nacara config.
 
 Add `./layouts/blog-page.jsx` to the list of `layouts` in `nacara.config.js`.
 
-You should have something like that:
+You should have something like this:
 
 ```js
 export default {
@@ -177,7 +177,7 @@ export default {
 
 <li>
 
-We now need to update our `blog-page.jsx` script to use the new information.
+Now we need to update our `blog-page.jsx` script to use the new information.
 
 Replace your `render` function with this code:
 
@@ -332,7 +332,7 @@ layout: blog-index
 ---
 ```
 
-As you can see, we are only specifying the layout to use because this page page will be fully generated.
+As you can see, we are only specifying the layout to use because this page will be fully generated.
 
 </li>
 
@@ -342,7 +342,7 @@ Now, we want to modify our render function to generate the index page.
 
 To do that, we are going to:
 
-1. To retrieve the list of `blog-page`
+1. Retrieve the list of `blog-page`
 1. Sort the page per date
 1. Extract the information we want from the page information, for example the title, date
 1. Render the list of blog pages
@@ -432,7 +432,7 @@ const render = async (rendererContext, pageContext) => {
 
 ## Working with async functions
 
-Because, the markdown parser use an `async` function it can happens that you end up with this scenario.
+Because, the markdown parser use an `async` function it can happen that you end up with this scenario.
 
 ```js
 const Abstract = async ({rendererContext, blogPage}) => {
