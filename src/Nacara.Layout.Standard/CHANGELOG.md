@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.6.0 - 2022-02-10
+
+### Fixed
+
+* Fix #157: Make the menu scrollable if it goes out of screen (by @64J0)
+
 ## 1.5.0 - 2021-12-07
 
 ### Fixed
