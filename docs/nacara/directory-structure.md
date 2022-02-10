@@ -23,7 +23,7 @@ A basic Nacara project have a structure similar to this:
 ├── package.json
 ```
 
-To understand it better, we present this overview describing each configuration:
+To understand it better, we present this overview:
 
 <table class="table is-narrow is-bordered is-vcentered">
     <thead>
