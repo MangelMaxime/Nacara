@@ -266,6 +266,7 @@ demos/Thoth\.Elmish\.Demo/output/
 
 \.ionide/
 fableBuild/
+docs_deploy/
 .nacara/
 
 # Ignore generated API file
