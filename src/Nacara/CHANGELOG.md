@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
     Prior to this fix, the url was being redirected twice and ended up to `/introduction.html` instead of `/Fable.Form/introduction.html`.
 
+### Added
+
+* Fix #156: Create a `gitignore` file in the destination folder
+
 ## 1.5.1 - 2021-12-05
 
 ### Fixed
