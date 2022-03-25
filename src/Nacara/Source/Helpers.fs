@@ -195,11 +195,16 @@ module Server =
             app.``use``(fun (req : Request) (res : Response) (next : NextFunction) ->
                 let segments = req.url.Split('/').[1..]
                 let sanitizeBaseUrl = config.SiteMetadata.BaseUrl.Replace("/", "")
-                if segments.Length > 1 && segments.[0] = sanitizeBaseUrl then
+                let hasBeenRedirected = req.query.["nacara-redirected"] = Some (U4.Case1 "true")
+
+                if not hasBeenRedirected && segments.Length > 1 && segments.[0] = sanitizeBaseUrl then
                     let newUrl = System.String.Join("/", segments.[1..])
                     res.writeHead(
                         307,
-                        {| Location = "http://" + req.headers?host + "/" + newUrl |}
+                        {|
+                            Location = "http://" + req.headers?host + "/" + newUrl + "?nacara-redirected=true"
+                            NacaraRedirected = true
+                        |}
                     )
                     res.``end``()
                 else
