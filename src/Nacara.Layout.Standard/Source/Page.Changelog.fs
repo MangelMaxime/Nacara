@@ -259,10 +259,23 @@ let renderChangelogItems
             Promise.lift null
     )
 
-let private changelogContainer (changelogItems : ReactElement array) =
+let private changelogContainer
+    (pageContext : PageContext)
+    (changelogItems : ReactElement array) =
 
-    Bulma.content [
-        Html.section [
+    Bulma.section [
+        match pageContext.Title with
+        | Some title ->
+            Html.header [
+                prop.className "page-header"
+                prop.children [
+                        Bulma.title.h2 title
+                ]
+            ]
+        | None ->
+            ()
+
+        Bulma.content [
             prop.className "changelog"
             prop.children [
                 Html.ul [
@@ -309,7 +322,7 @@ let render (rendererContext : RendererContext) (pageContext : PageContext) =
                         Pages = rendererContext.Pages
                         PageContext = pageContext
                         PageHtml = "" // Pass no content to the `render` function, as there is no interesting information in it for the changelog
-                        PageContent = changelogContainer changelogItems
+                        PageContent = changelogContainer pageContext changelogItems
                     }
 
                 return Minimal.render rendererContext pageContext content

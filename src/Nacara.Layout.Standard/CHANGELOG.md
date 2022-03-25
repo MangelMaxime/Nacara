@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+
+* Fix #168: If a title is set a changelog entry, then display it at the top of the page
+
 ## 1.6.0 - 2022-02-10
 
 ### Fixed
