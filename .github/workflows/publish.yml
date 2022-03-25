@@ -26,4 +26,3 @@ jobs:
         with:
           personal_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs_deploy
-          exclude_assets: ./docs_deploy/.gitignore

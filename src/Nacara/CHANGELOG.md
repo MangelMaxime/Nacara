@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.6.1 - 2021-03-25
+
+* Revert Fix #156: Don't generate a `.gitignore` in the destination folder because some tools like
+`peaceiris/actions-gh-pages` use git to publish to GH Pages and this cause the tool to push no files..
+
 ## 1.6.0 - 2022-03-25
 
 ### Changed

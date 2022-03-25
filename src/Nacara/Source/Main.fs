@@ -55,9 +55,6 @@ let private buildOrWatch
         // Make sure that the destination folder exist before doing anything else
         // This is required to attach chokidar watcher
         do! Directory.create config.DestinationFolder
-        // Add the .gitignore file to the destination folder
-        let gitIgnoreDestination = path.join(config.DestinationFolder, ".gitignore")
-        do! File.write gitIgnoreDestination "**/*"
 
         if not (String.IsNullOrEmpty argv.afterClean) then
             let infos = argv.afterClean.Split(' ')
