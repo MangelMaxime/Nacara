@@ -66,6 +66,7 @@ const connect = () => {
         }
 
         setTimeout(() => {
+            console.clear();
             console.log("Reconnecting to Nacara server...");
             connect();
         }, 5000);

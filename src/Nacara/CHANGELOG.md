@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
     Prior to this fix, the url was being redirected twice and ended up to `/introduction.html` instead of `/Fable.Form/introduction.html`.
 
+* Fix #154: Clear the console when the live reload websocket is trying to reconnect
+
 ### Added
 
 * Fix #156: Create a `gitignore` file in the destination folder
