@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Log.fs" />
+    <Compile Include="Extensions/List.Extensions.fs" />
+    <Compile Include="Extensions/Array.Extensions.fs" />
+    <Compile Include="Extensions/AspNetCore.NacaraLoggerExtensions.fs" />
+    <Compile Include="Watcher.fs" />
+    <Compile Include="FSIRefs.fs" />
+    <Compile Include="Evaluator/EvaluatorHelpers.fs" />
+    <Compile Include="Evaluator/ConfigEvaluator.fs" />
+    <Compile Include="Evaluator/LoaderEvaluator.fs" />
+    <Compile Include="Evaluator/RendererEvaluator.fs" />
+    <Compile Include="LiveReloadWebSockets.fs" />
+    <Compile Include="Arguments.fs" />
+    <Compile Include="Sass.fs" />
+    <Compile Include="Commands/Version.fs" />
+    <Compile Include="Commands\Shared.fs" />
+    <Compile Include="Commands\Clean.fs" />
+    <Compile Include="Commands\Build.fs" />
+    <Compile Include="Commands\Watch.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nacara.Core\Nacara.Core.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="sass-runtimes\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <PropertyGroup>
+    <!-- dotnet watch change the CWD -->
+    <RunWorkingDirectory>$(MSBuildProjectDirectory)/../..</RunWorkingDirectory>
+  </PropertyGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
+</Project>

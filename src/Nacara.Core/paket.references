@@ -1,9 +1,4 @@
-Fable.Core
-Fable.FontAwesome
-Fable.FontAwesome.Free
-Fable.Node
-Fable.Promise
-Glutinum.Chalk
-Thoth.Json
-FSharp.Core
-Microsoft.SourceLink.GitHub
+group FSharp.Static
+    FSharp.Core
+    Legivel
+    BlackFox.CommandLine

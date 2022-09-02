@@ -1,0 +1,10 @@
+group FSharp.Static
+    FSharp.Core
+    Argu
+    Spectre.Console
+    Saturn
+    FSharp.Compiler.Service
+    FsToolkit.ErrorHandling
+    FSharp.Quotations.Evaluator
+    Legivel
+    BlackFox.CommandLine
