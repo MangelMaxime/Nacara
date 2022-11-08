@@ -42,6 +42,6 @@
     },
     "comments": "I don't know why but if we include gatsby-remark-vscode to the root package.json then there is a bug when building the documentation with the linked version of Nacara... Adding it to this package.json as a devDependencies helps mitigates the issues. I checked and the problem doesn't happen when using Nacara from the NPM package as a user would",
     "devDependencies": {
-        "gatsby-remark-vscode": "^3.3.0"
+        "gatsby-remark-vscode": "^3.3.1"
     }
 }
