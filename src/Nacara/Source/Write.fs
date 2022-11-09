@@ -9,7 +9,7 @@ open Node
 // While waiting for React 18
 // Adding .js to the import fix the ESM import issue
 // https://github.com/facebook/react/issues/20235#issuecomment-861836181
-[<Import("default", "react-dom/server.js")>]
+[<Import("default", "react-dom/server")>]
 let ReactDomServer: IReactDomServer = jsNative
 
 let sassFile (outputStyle : Sass.OutputStyle, destinationFolder : string, sourceFolder : string, relativeFilePath : string) =

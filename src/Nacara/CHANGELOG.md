@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.7.0 - 2022-11-09
+
+* Update to React 18
+
 ## 1.6.1 - 2021-03-25
 
 * Revert Fix #156: Don't generate a `.gitignore` in the destination folder because some tools like
