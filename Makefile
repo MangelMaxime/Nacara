@@ -78,7 +78,7 @@ generate-docs: build
 	dotnet publish $(NACARA_CORE_DIR)
 	@# Generate the API reference files
 	cd $(NACARA_API_GEN_DIR)/Source \
-		&& dotnet run -f net5.0 -- \
+		&& dotnet run -f net6.0 -- \
 			--project Nacara.Core \
 			-lib ../../Nacara.Core/bin/Debug/netstandard2.0/publish/ \
 			--output ../../../docs/ \
