@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## 1.8.0 - 2022-12-20
+
+* Fix FSharpFileParser to support Windows end of line
+
 ## 1.7.0 - 2022-11-09
 
 * Update to React 18
