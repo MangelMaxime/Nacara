@@ -35,7 +35,7 @@
         "remark-rehype": "^9.1.0",
         "remark-slug": "^7.0.0",
         "sass": "1.42.1",
-        "semver": "^7.3.5",
+        "semver": "^7.5.2",
         "unified": "^10.1.0",
         "ws": "^8.2.2",
         "yargs": "^17.2.1"
