@@ -23,7 +23,7 @@ They are really handy because:
 :::info
 To keep, the implementation simple, Nacara **doesn't** test the literate files against the F# compiler.
 
-So if there is a syntax error Nacara will style transform the file.
+So if there is a syntax error Nacara will still transform the file.
 :::
 
 ## Commands
