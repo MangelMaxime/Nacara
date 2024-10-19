@@ -20,7 +20,7 @@
         "@babel/core": "^7.15.5",
         "chalk": "^4.1.2",
         "chokidar": "^3.5.2",
-        "express": "^4.21.0",
+        "express": "^4.21.1",
         "front-matter": "^4.0.2",
         "nodemon": "^2.0.20",
         "react": "^18.0.0",
