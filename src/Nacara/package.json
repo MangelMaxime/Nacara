@@ -17,7 +17,7 @@
         "npm": ">=7.0.0"
     },
     "dependencies": {
-        "@babel/core": "^7.15.5",
+        "@babel/core": "^7.29.6",
         "chalk": "^4.1.2",
         "chokidar": "^3.5.2",
         "express": "^4.22.2",
