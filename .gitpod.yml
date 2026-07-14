@@ -5,7 +5,7 @@ ports:
   - port: 8080
 
 tasks:
-  - init: npm install
+  - init: make setup-dev
 
 github:
   prebuilds:
