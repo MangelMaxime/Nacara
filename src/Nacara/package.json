@@ -22,7 +22,7 @@
         "chokidar": "^3.5.2",
         "express": "^4.22.2",
         "front-matter": "^4.0.2",
-        "nodemon": "^2.0.20",
+        "nodemon": "^3.1.14",
         "react": "^18.0.0",
         "react-dom": "^18.0.0",
         "rehype-autolink-headings": "^6.1.0",
