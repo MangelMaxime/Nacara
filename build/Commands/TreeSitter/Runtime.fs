@@ -212,15 +212,7 @@ type RuntimeCommand() =
                         core
                     ]
 
-            let engineLibrary =
-                Path.Combine(
-                    engine,
-                    (if windows then
-                         "bin"
-                     else
-                         "lib"),
-                    target.Engine
-                )
+            let engineLibrary = Path.Combine(library, target.Engine)
 
             File.Copy(engineLibrary, Path.Combine(destination, target.Engine), true)
 
