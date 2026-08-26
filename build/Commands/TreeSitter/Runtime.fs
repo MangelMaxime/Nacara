@@ -128,7 +128,11 @@ type RuntimeCommand() =
 
         let destination =
             if isNull settings.Output then
-                Path.Combine(TreeSitter.runtimes, target.Rid, "native")
+                Path.Combine(
+                    VirtualWorkspace.src.``Nacara.Plugin.Highlight.TreeSitter``.runtimes.``.``,
+                    target.Rid,
+                    "native"
+                )
             else
                 settings.Output
 

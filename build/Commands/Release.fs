@@ -11,24 +11,24 @@ open EasyBuild.Workspace
 
 let private packages =
     [
-        "src/Nacara.Core"
-        "src/Nacara.Plugin.Assets.Esbuild"
-        "src/Nacara.Plugin.Assets.LightningCss"
-        "src/Nacara.Plugin.Assets.Nuglify"
-        "src/Nacara.Plugin.Changelog"
-        "src/Nacara.Plugin.FSharpApi"
-        "src/Nacara.Plugin.Highlight.TextMate"
-        "src/Nacara.Plugin.Highlight.TreeSitter"
-        "src/Nacara.Plugin.LinkValidator"
-        "src/Nacara.Plugin.Linter.Rumdl"
-        "src/Nacara.Plugin.Literate"
-        "src/Nacara.Plugin.Markdown"
-        "src/Nacara.Plugin.Search"
-        "src/Nacara.Plugin.Sitemap"
-        "src/Nacara.Plugin.Versions"
-        "src/Nacara.Theme.Default"
-        "src/Nacara.Plugin.LiveExample"
-        "templates"
+        Workspace.src.``Nacara.Core``.``.``
+        Workspace.src.``Nacara.Plugin.Assets.Esbuild``.``.``
+        Workspace.src.``Nacara.Plugin.Assets.LightningCss``.``.``
+        Workspace.src.``Nacara.Plugin.Assets.Nuglify``.``.``
+        Workspace.src.``Nacara.Plugin.Changelog``.``.``
+        Workspace.src.``Nacara.Plugin.FSharpApi``.``.``
+        Workspace.src.``Nacara.Plugin.Highlight.TextMate``.``.``
+        Workspace.src.``Nacara.Plugin.Highlight.TreeSitter``.``.``
+        Workspace.src.``Nacara.Plugin.LinkValidator``.``.``
+        Workspace.src.``Nacara.Plugin.Linter.Rumdl``.``.``
+        Workspace.src.``Nacara.Plugin.Literate``.``.``
+        Workspace.src.``Nacara.Plugin.Markdown``.``.``
+        Workspace.src.``Nacara.Plugin.Search``.``.``
+        Workspace.src.``Nacara.Plugin.Sitemap``.``.``
+        Workspace.src.``Nacara.Plugin.Versions``.``.``
+        Workspace.src.``Nacara.Theme.Default``.``.``
+        Workspace.src.``Nacara.Plugin.LiveExample``.``.``
+        Workspace.templates.``.``
     ]
 
 type ReleaseSettings() =
@@ -46,12 +46,11 @@ type ReleaseCommand() =
             Log.error "NUGET_KEY is not set"
             1
         else
-            // The theme and the live example bundle their JavaScript while they pack.
-            Npm.install root
+            Npm.install Workspace.``.``
 
             packages
             |> List.iter (fun package ->
-                let nupkg = DotNet.pack (Path.Combine(root, package))
+                let nupkg = DotNet.pack package
 
                 DotNet.nugetPush (nupkg, apiKey = apiKey, skipDuplicate = true)
 

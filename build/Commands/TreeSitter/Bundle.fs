@@ -132,7 +132,7 @@ type BundleCommand() =
     override _.Execute(_, settings, _) =
         let destination =
             if isNull settings.Output then
-                TreeSitter.grammars
+                Workspace.src.``Nacara.Plugin.Highlight.TreeSitter``.grammars.``.``
             else
                 settings.Output
 

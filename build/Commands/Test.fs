@@ -18,16 +18,15 @@ type TestCommand() =
     interface ICommandLimiter<TestSettings>
 
     override _.Execute(_, settings, _) =
-        // The theme and the live example bundle their JavaScript while they build.
-        Npm.install root
+        Npm.install Workspace.``.``
 
         Command.Run(
             "dotnet",
             CmdLine.empty
             |> CmdLine.appendRaw "run"
-            |> CmdLine.appendPrefix "--project" tests
+            |> CmdLine.appendPrefix "--project" Workspace.tests.``Nacara.Tests``.``.``
             |> CmdLine.toString,
-            workingDirectory = root,
+            workingDirectory = Workspace.``.``,
             configureEnvironment =
                 fun environment ->
                     if settings.UpdateSnapshots then

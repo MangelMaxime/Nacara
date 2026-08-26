@@ -85,7 +85,12 @@ type PublishCommand() =
             else
                 settings.Rid
 
-        let native = Path.Combine(TreeSitter.runtimes, rid, "native")
+        let native =
+            Path.Combine(
+                VirtualWorkspace.src.``Nacara.Plugin.Highlight.TreeSitter``.runtimes.``.``,
+                rid,
+                "native"
+            )
 
         if not (Directory.Exists native) then
             Log.error $"'%s{native}' is empty - build that platform's runtime first"

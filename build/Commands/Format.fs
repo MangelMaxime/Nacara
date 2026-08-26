@@ -21,7 +21,7 @@ type FormatCommand() =
     interface ICommandLimiter<FormatSettings>
 
     override _.Execute(_, settings, _) =
-        Npm.install root
+        Npm.install Workspace.``.``
 
         Command.Run(
             "dotnet",
@@ -33,7 +33,7 @@ type FormatCommand() =
             |> CmdLine.appendRaw "docs"
             |> CmdLine.appendIf settings.Check "--check"
             |> CmdLine.toString,
-            workingDirectory = root
+            workingDirectory = Workspace.``.``
         )
 
         Command.Run(
@@ -44,7 +44,7 @@ type FormatCommand() =
             |> CmdLine.appendIf (not settings.Check) "--write"
             |> CmdLine.appendRaw "."
             |> CmdLine.toString,
-            workingDirectory = root
+            workingDirectory = Workspace.``.``
         )
 
         0

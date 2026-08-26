@@ -21,6 +21,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="BlackFox.CommandLine" Version="1.0.0" />
+        <PackageReference Include="EasyBuild.FileSystemProvider" Version="1.1.0" />
         <PackageReference Include="EasyBuild.Tools" Version="6.0.0" />
         <PackageReference Include="FSharp.Core" Version="10.1.400" />
         <PackageReference Include="SimpleExec" Version="13.0.0" />

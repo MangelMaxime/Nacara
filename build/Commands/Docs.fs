@@ -47,8 +47,7 @@ let private forwarded (context: CommandContext) =
 
 /// <summary>Runs the site with a command of its own, and whatever else was asked for.</summary>
 let private site (command: string) (watch: bool) (settings: DocsSettings) (extra: string seq) =
-    // The theme and the live example bundle their JavaScript while they build.
-    Npm.install root
+    Npm.install Workspace.``.``
 
     let program, before =
         if watch then
@@ -64,7 +63,7 @@ let private site (command: string) (watch: bool) (settings: DocsSettings) (extra
     let arguments =
         before
         |> List.fold (fun line argument -> CmdLine.appendRaw argument line) CmdLine.empty
-        |> CmdLine.appendPrefix "--project" docs
+        |> CmdLine.appendPrefix "--project" Workspace.docs.``Docs.fsproj``
         |> CmdLine.appendRaw "--"
         |> CmdLine.appendRaw command
         |> fun line ->
@@ -75,7 +74,7 @@ let private site (command: string) (watch: bool) (settings: DocsSettings) (extra
         |> fun line -> extra |> Seq.fold (fun line argument -> CmdLine.appendRaw argument line) line
         |> CmdLine.toString
 
-    Command.Run(program, arguments, workingDirectory = root)
+    Command.Run(program, arguments, workingDirectory = Workspace.``.``)
     0
 
 type BuildCommand() =
