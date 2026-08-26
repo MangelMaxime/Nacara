@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- What live examples on this site can open. Everything referenced here, and everything
+         declared below, reaches a snippet - and this project is type-checked by the ordinary
+         build, so the helpers cannot rot without somebody noticing. -->
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <!-- Nothing ships from here: it exists to be compiled into what the snippets reference. -->
+        <IsPackable>false</IsPackable>
+        <!-- Versions are written here rather than centrally, so this reads the way it would in
+             somebody else's repository. -->
+        <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="RandomUser.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- The repository adds this to every project and expects central versioning to supply the
+             number; this project opts out of that, so it says which one. -->
+        <PackageReference Update="FSharp.Core" Version="10.1.400" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Thoth.Json.Core" Version="0.9.1" />
+        <PackageReference Include="Thoth.Json.Core.Auto" Version="0.1.1" />
+        <PackageReference Include="Thoth.Json.JavaScript" Version="0.5.0" />
+        <PackageReference Include="Fable.Promise" Version="3.2.0" />
+        <PackageReference Include="Fable.Fetch" Version="2.7.0" />
+        <PackageReference Include="Fable.Browser.Dom" Version="2.18.1" />
+    </ItemGroup>
+</Project>

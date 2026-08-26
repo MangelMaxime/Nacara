@@ -271,3 +271,17 @@ docs_deploy/
 
 # Ignore generated API file
 docs/reference/
+templates/nacara-docs/output/
+templates/nacara-docs/bin/
+templates/nacara-docs/obj/
+dist/
+
+# Built sites
+docs/output/
+
+# Native libraries are built by build/tree-sitter, never committed.
+*.so
+*.dylib
+
+# Built by build/tree-sitter/Runtime, never committed.
+src/Nacara.Plugin.Highlight.TreeSitter/runtimes/

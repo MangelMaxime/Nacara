@@ -1,0 +1,90 @@
+# Releasing, in two halves.
+#
+# The first half runs after CI passes on v3: EasyBuild.ShipIt reads the commits since each
+# package's last release, works out the version each one deserves, and opens a pull request
+# updating their CHANGELOG.md files. Reviewing that pull request is the decision to release.
+#
+# The second half runs when the merge lands: the commit ShipIt writes starts with
+# `chore: release `, and that is what publishes the packages. Their versions and release
+# notes come from the changelogs the same pull request updated, through
+# EasyBuild.PackageReleaseNotes.Tasks - so nothing carries a version by hand.
+name: EasyBuild ShipIt
+
+on:
+  workflow_run:
+    workflows: ["Test"]
+    types:
+      - completed
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  shipit-pr:
+    name: ShipIt - Pull Request
+    runs-on: ubuntu-latest
+    if: "github.event.workflow_run.conclusion == 'success' && !startsWith(github.event.workflow_run.head_commit.message, 'chore: release ')"
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          # The changelog is written from the commit history, so one commit is not enough.
+          fetch-depth: 200
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Restore tools
+        run: dotnet tool restore
+
+      - name: ShipIt (Pull Request)
+        run: dotnet shipit --pre-release beta
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    # Only the commit ShipIt writes publishes anything.
+    if: "startsWith(github.event.workflow_run.head_commit.message, 'chore: release ')"
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      # Packing bundles the JavaScript that ships inside Nacara.Theme.Default and
+      # Nacara.Plugin.LiveExample, so esbuild has to be here before dotnet pack runs.
+      # Installing it here rather than leaving the projects to shell out to `npm ci`
+      # mid-pack is what lets the download be cached and the version be pinned.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install the bundler
+        run: npm ci
+
+      # Trusted publishing: NuGet hands out a short-lived key in exchange for this run's
+      # OIDC token, so the repository holds no API key. Set the NUGET_USER secret to your
+      # nuget.org username and register this repository as a trusted publisher there.
+      - name: NuGet login (OIDC → temporary API key)
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: MangelMaxime
+
+      - name: Pack
+        run: dotnet pack Nacara.slnx --configuration Release --output ./nupkgs
+
+      - name: Push
+        run: ./build.sh release
+        env:
+          NUGET_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}

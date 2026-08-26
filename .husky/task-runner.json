@@ -1,0 +1,36 @@
+{
+   "$schema": "https://alirezanet.github.io/Husky.Net/schema.json",
+   "tasks": [
+      {
+         "name": "format",
+         "group": "pre-commit",
+         "command": "dotnet",
+         "args": [
+            "fantomas",
+            "--check",
+            "${staged}"
+         ],
+         "include": [
+            "**/*.fs",
+            "**/*.fsx"
+         ]
+      },
+      {
+         "name": "format-assets",
+         "group": "pre-commit",
+         "command": "npx",
+         "args": [
+            "biome",
+            "format",
+            "${staged}"
+         ],
+         "include": [
+            "**/*.css",
+            "**/*.js"
+         ],
+         "windows": {
+            "command": "npx.cmd"
+         }
+      }
+   ]
+}

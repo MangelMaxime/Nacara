@@ -1,0 +1,50 @@
+=== Build > rendered pages > a page with code blocks renders as expected ===
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Getting started · Fixture</title></head><body><nav><ul><li><a href="/">Home</a></li><li><a href="/guide/advanced/">Advanced</a></li><li><a href="/guide/getting-started/">Getting started</a></li></ul></nav><main><h1>Getting started</h1><div class="content"><h2 id="install">Install<a class="nacara-heading-anchor"
+                       href="#install"
+                       aria-label="Link to this section"
+                       data-pagefind-ignore></a></h2>
+<p>Back to the <a href="/">home page</a>, or straight to <a href="/guide/advanced/#going-further">the deep end</a>.</p>
+<pre><code class="language-fsharp"><span class="tok-keyword">let</span> <span class="tok-variable">site</span> <span class="tok-keyword">=</span>
+    Site.create <span class="tok-punctuation">"</span><span class="tok-string">Nacara</span><span class="tok-punctuation">"</span>
+    <span class="tok-keyword">|&gt;</span> Site.baseUrl <span class="tok-punctuation">"</span><span class="tok-string">/</span><span class="tok-punctuation">"</span>
+</code></pre><h2 id="inline-code">Inline code<a class="nacara-heading-anchor"
+                       href="#inline-code"
+                       aria-label="Link to this section"
+                       data-pagefind-ignore></a></h2>
+<p>Inside the backticks: <code>Site.create <span class="tok-punctuation">"</span><span class="tok-string">Nacara</span><span class="tok-punctuation">"</span></code>. Outside them:
+<code>Site.baseUrl <span class="tok-punctuation">"</span><span class="tok-string">/</span><span class="tok-punctuation">"</span></code> and <code>Site.output <span class="tok-punctuation">"</span><span class="tok-string">out</span><span class="tok-punctuation">"</span></code>. Left as
+written: <code>{:js}</code> and <code disabled="">plain</code>.</p>
+<h2 id="next-steps">Next steps<a class="nacara-heading-anchor"
+                       href="#next-steps"
+                       aria-label="Link to this section"
+                       data-pagefind-ignore></a></h2>
+<p>Nothing else for now.</p>
+</div></main><aside class="toc"><a href="#install">Install</a><a href="#inline-code">Inline code</a><a href="#next-steps">Next steps</a></aside></body></html>
+=== end-snapshot ===
+
+=== Build > rendered pages > frames, line numbers and collapsing render as expected ===
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Advanced · Fixture</title></head><body><nav><ul><li><a href="/">Home</a></li><li><a href="/guide/advanced/">Advanced</a></li><li><a href="/guide/getting-started/">Getting started</a></li></ul></nav><main><h1>Advanced</h1><div class="content"><h2 id="going-further">Going further<a class="nacara-heading-anchor"
+                       href="#going-further"
+                       aria-label="Link to this section"
+                       data-pagefind-ignore></a></h2>
+<p>A terminal block:</p>
+<pre><code class="language-bash">dotnet run -- build
+dotnet run -- watch
+</code></pre>
+<p>And a collapsed one:</p>
+<pre><code class="language-json"><span class="tok-punctuation">{</span>
+  <span class="tok-punctuation">"</span><span class="tok-type">a</span><span class="tok-punctuation">"</span><span class="tok-punctuation">:</span> <span class="tok-number">1</span><span class="tok-punctuation">,</span>
+  <span class="tok-punctuation">"</span><span class="tok-type">b</span><span class="tok-punctuation">"</span><span class="tok-punctuation">:</span> <span class="tok-number">2</span><span class="tok-punctuation">,</span>
+  <span class="tok-punctuation">"</span><span class="tok-type">c</span><span class="tok-punctuation">"</span><span class="tok-punctuation">:</span> <span class="tok-number">3</span>
+<span class="tok-punctuation">}</span>
+</code></pre></div></main><aside class="toc"><a href="#going-further">Going further</a></aside></body></html>
+=== end-snapshot ===
+
+=== Build > rendered pages > the home page renders as expected ===
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Home · Fixture</title><meta name="description" content="The fixture site"></head><body><nav><ul><li><a href="/">Home</a></li><li><a href="/guide/advanced/">Advanced</a></li><li><a href="/guide/getting-started/">Getting started</a></li></ul></nav><main><h1>Home</h1><div class="content"><p>Welcome to the <a href="/guide/getting-started/">getting started guide</a>.</p>
+<aside class="nacara-callout" data-kind="note" data-title="Heads up"><p>Directives render as semantic HTML plus a web component.</p>
+</aside></div></main><aside class="toc"></aside></body></html>
+=== end-snapshot ===

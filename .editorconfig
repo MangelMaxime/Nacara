@@ -1,18 +1,34 @@
-# EditorConfig is awesome: http://EditorConfig.org
-
-# top-most EditorConfig file
 root = true
 
-# Unix-style newlines with a newline ending every file
 [*]
+end_of_line = lf
 insert_final_newline = true
-charset = utf-8
-trim_trailing_whitespace = true
 indent_style = space
 indent_size = 4
+trim_trailing_whitespace = true
 
-[Makefile]
-indent_style = tab
+[*.{fs,fsx}]
+max_line_length = 100
+fsharp_alternative_long_member_definitions = true
+fsharp_multi_line_lambda_closing_newline = true
+fsharp_multiline_bracket_style = aligned
+fsharp_keep_max_number_of_blank_lines = 1
+fsharp_align_function_signature_to_indentation = true
+fsharp_max_if_then_else_short_width = 0
+fsharp_max_record_number_of_items = 0
+fsharp_record_multiline_formatter = number_of_items
+fsharp_array_or_list_multiline_formatter = number_of_items
 
 [*.yml]
 indent_size = 2
+indent_style = space
+
+# Verify
+[*.{received,verified}.{json,md,mdx,txt,yml}]
+charset = utf-8-bom
+end_of_line = lf
+indent_size = unset
+indent_style = unset
+insert_final_newline = false
+tab_width = unset
+trim_trailing_whitespace = false

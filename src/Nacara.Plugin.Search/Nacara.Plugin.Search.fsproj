@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Plugin.Search</PackageId>
+        <Description>Static search for Nacara, powered by pagefind.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Binary.fs" />
+        <Compile Include="Search.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="assets/search.css" />
+        <EmbeddedResource Include="assets/search.js" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+    </ItemGroup>
+</Project>

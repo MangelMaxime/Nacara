@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Plugin.Sitemap</PackageId>
+        <Description>A sitemap and robots.txt for a Nacara site, with translations cross-referenced.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Sitemap.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+    </ItemGroup>
+</Project>

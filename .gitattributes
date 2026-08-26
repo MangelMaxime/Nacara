@@ -7,6 +7,7 @@
 *.yml text eol=lf crlf=input
 *.sh text eol=lf crlf=input
 *.cmd text eol=lf crlf=input
+*.bat text eol=lf crlf=input
 *.csproj text eol=lf crlf=input
 *.fsproj text eol=lf crlf=input
 *.sln text eol=lf crlf=input

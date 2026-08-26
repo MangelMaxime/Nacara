@@ -1,0 +1,35 @@
+<Project>
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    </PropertyGroup>
+    <PropertyGroup>
+        <!-- FSharp.Compiler.Service pins FSharp.Core to an exact version. Only the projects that
+             take FCS use this; everything else ships against the version below, so a site that
+             does not reference the API plugin needs no FSharp.Core line of its own. -->
+        <FSharpCoreWithFcs>10.1.400</FSharpCoreWithFcs>
+    </PropertyGroup>
+    <ItemGroup>
+        <!-- What the SDK in global.json ships. -->
+        <PackageVersion Include="FSharp.Core" Version="10.1.300" />
+        <!-- Used only by experiments/tree-sitter, which is not part of the solution. -->
+        <PackageVersion Include="TreeSitter.DotNet" Version="1.3.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageVersion Include="Markdig" Version="1.3.2" />
+        <PackageVersion Include="NUglify" Version="1.21.15" />
+        <PackageVersion Include="YamlDotNet" Version="18.1.0" />
+        <PackageVersion Include="Microsoft.Extensions.FileSystemGlobbing" Version="10.0.11" />
+        <PackageVersion Include="Feliz.ViewEngine" Version="1.0.3" />
+        <PackageVersion Include="Thoth.Json.Core" Version="0.9.1" />
+        <PackageVersion Include="Thoth.Json.System.Text.Json" Version="0.4.0" />
+        <PackageVersion Include="FSharp.Compiler.Service" Version="43.12.400" />
+        <PackageVersion Include="TextMateSharp" Version="2.0.4" />
+        <PackageVersion Include="TextMateSharp.Grammars" Version="2.0.4" />
+        <PackageVersion Include="EasyBuild.PackageReleaseNotes.Tasks" Version="2.1.0" />
+        <PackageVersion Include="Scriptorium.Quill" Version="0.5.1" />
+        <PackageVersion Include="Scriptorium.Nib" Version="0.4.1" />
+        <PackageVersion Include="Scriptorium.Nib.Snapshot" Version="0.4.0" />
+        <!-- Exact: later versions are not F# compatible. -->
+        <PackageVersion Include="Spectre.Console.Cli" Version="[0.55.0]" />
+    </ItemGroup>
+</Project>

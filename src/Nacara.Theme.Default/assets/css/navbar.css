@@ -1,0 +1,150 @@
+.nacara-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: var(--nacara-space-4);
+    height: var(--nacara-navbar-height);
+    padding: 0 var(--nacara-space-4);
+    background: color-mix(in srgb, var(--nacara-bg) 85%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--nacara-border);
+}
+.nacara-navbar__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--nacara-space-2);
+    font-weight: 650;
+    color: var(--nacara-text);
+}
+.nacara-navbar__items {
+    display: flex;
+    align-items: center;
+    gap: var(--nacara-space-1);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.nacara-navbar__items--end {
+    margin-left: auto;
+}
+.nacara-navbar__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nacara-space-2);
+    padding: var(--nacara-space-2) var(--nacara-space-3);
+    border-radius: var(--nacara-radius-sm);
+    color: var(--nacara-text-muted);
+    font-size: 0.9375rem;
+    font-weight: 500;
+}
+.nacara-navbar__link:hover {
+    background: var(--nacara-bg-subtle);
+    color: var(--nacara-text);
+    text-decoration: none;
+}
+.nacara-navbar__link[aria-current="page"],
+.nacara-navbar__link[data-active="true"] {
+    color: var(--nacara-primary);
+    background: var(--nacara-primary-subtle);
+}
+
+/*
+    Dropdowns
+*/
+
+.nacara-dropdown {
+    position: relative;
+}
+.nacara-dropdown__panel {
+    position: absolute;
+    top: calc(100% + var(--nacara-space-2));
+    left: 0;
+    min-width: 15rem;
+    margin: 0;
+    padding: var(--nacara-space-2);
+    background: var(--nacara-bg-raised);
+    border: 1px solid var(--nacara-border);
+    border-radius: var(--nacara-radius);
+    box-shadow: var(--nacara-shadow);
+    list-style: none;
+}
+.nacara-dropdown:not([data-open="true"]) .nacara-dropdown__panel {
+    display: none;
+}
+.nacara-dropdown__item {
+    display: block;
+    padding: var(--nacara-space-2) var(--nacara-space-3);
+    border-radius: var(--nacara-radius-sm);
+    color: var(--nacara-text);
+}
+.nacara-dropdown__item:hover {
+    background: var(--nacara-bg-subtle);
+    text-decoration: none;
+}
+.nacara-dropdown__description {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--nacara-text-muted);
+}
+.nacara-dropdown__divider {
+    height: 1px;
+    margin: var(--nacara-space-2) 0;
+    background: var(--nacara-border);
+}
+
+/*
+    Colour scheme
+*/
+
+.nacara-theme-select {
+    height: var(--nacara-control-height);
+    padding: 0 var(--nacara-space-2);
+    border: 1px solid var(--nacara-border);
+    border-radius: var(--nacara-control-radius);
+    background: var(--nacara-bg-subtle);
+    color: var(--nacara-text-muted);
+    font: inherit;
+    font-size: 0.875rem;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--nacara-text);
+    }
+}
+
+/*
+    Icon buttons
+*/
+
+.nacara-icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--nacara-control-height);
+    height: var(--nacara-control-height);
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: var(--nacara-control-radius);
+    background: none;
+    color: var(--nacara-text-muted);
+    cursor: pointer;
+}
+.nacara-icon-button:hover {
+    background: var(--nacara-bg-subtle);
+    color: var(--nacara-text);
+}
+/* An inline box sits on the text baseline, so both are made block-level for the flex centring to reach the icon. */
+.nacara-icon-button > * {
+    display: flex;
+}
+.nacara-icon-button svg {
+    display: block;
+    width: 1.125rem;
+    height: 1.125rem;
+}
+
+[data-nacara-menu-toggle] {
+    display: none;
+}

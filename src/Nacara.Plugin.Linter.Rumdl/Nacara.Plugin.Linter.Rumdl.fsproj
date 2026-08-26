@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Plugin.Linter.Rumdl</PackageId>
+        <Description>Lint a Nacara site's markdown with rumdl.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Binary.fs" />
+        <Compile Include="Linter.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+    </ItemGroup>
+</Project>

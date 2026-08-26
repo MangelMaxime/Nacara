@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Templates</PackageId>
+        <Description>dotnet new templates for Nacara documentation sites.</Description>
+        <PackageTags>dotnet-new;templates;fsharp;documentation;nacara</PackageTags>
+        <PackageType>Template</PackageType>
+        <TargetFramework>net10.0</TargetFramework>
+        <IncludeContentInPack>true</IncludeContentInPack>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <ContentTargetFolders>content</ContentTargetFolders>
+        <NoDefaultExcludes>true</NoDefaultExcludes>
+        <EnableDefaultItems>false</EnableDefaultItems>
+        <NoWarn>$(NoWarn);NU5128</NoWarn>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <Content Include="nacara-docs/**/*" Exclude="nacara-docs/**/bin/**;nacara-docs/**/obj/**" />
+    </ItemGroup>
+</Project>

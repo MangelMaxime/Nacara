@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        <!-- The build project pins its own tools: what builds this repository is not part of
+             what it publishes, and central package management is for the latter. -->
+        <ManagePackageVersionsCentrally>False</ManagePackageVersionsCentrally>
+        <ContinuousIntegrationBuild>false</ContinuousIntegrationBuild>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Workspace.fs" />
+        <Compile Include="Commands/Test.fs" />
+        <Compile Include="Commands/Format.fs" />
+        <Compile Include="Commands/Docs.fs" />
+        <Compile Include="Commands/Release.fs" />
+        <Compile Include="Commands/TreeSitter/Runtime.fs" />
+        <Compile Include="Commands/TreeSitter/Bundle.fs" />
+        <Compile Include="Commands/TreeSitter/Publish.fs" />
+        <Compile Include="Main.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="BlackFox.CommandLine" Version="1.0.0" />
+        <PackageReference Include="EasyBuild.Tools" Version="6.0.0" />
+        <PackageReference Include="FSharp.Core" Version="10.1.400" />
+        <PackageReference Include="SimpleExec" Version="13.0.0" />
+        <PackageReference Include="Spectre.Console.Cli" Version="0.55.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- The tree-sitter commands build what this plugin loads, through the plugin's own
+             code: one way of building a grammar, not two. -->
+        <ProjectReference Include="../src/Nacara.Plugin.Highlight.TreeSitter/Nacara.Plugin.Highlight.TreeSitter.fsproj" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Plugin.Changelog</PackageId>
+        <Description>Publish Keep a Changelog files as pages of a Nacara site.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Parser.fs" />
+        <Compile Include="Changelog.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="assets/changelog.css" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+    </ItemGroup>
+</Project>

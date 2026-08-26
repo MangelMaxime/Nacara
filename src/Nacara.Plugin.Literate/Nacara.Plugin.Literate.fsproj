@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Plugin.Literate</PackageId>
+        <Description>Publish F# source files as documentation pages, prose in comments and code as code.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Literate.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,34 @@
+<Solution>
+  <Folder Name="/build/">
+    <Project Path="build/EasyBuild.fsproj" />
+  </Folder>
+  <Folder Name="/docs/">
+    <Project Path="docs/Docs.fsproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Nacara.Core/Nacara.Core.fsproj" />
+    <Project Path="src/Nacara.Plugin.Markdown/Nacara.Plugin.Markdown.fsproj" />
+    <Project Path="src/Nacara.Plugin.Highlight.TextMate/Nacara.Plugin.Highlight.TextMate.fsproj" />
+    <Project Path="src/Nacara.Plugin.Highlight.TreeSitter/Nacara.Plugin.Highlight.TreeSitter.fsproj" />
+    <Project Path="src/Nacara.Plugin.Changelog/Nacara.Plugin.Changelog.fsproj" />
+    <Project Path="src/Nacara.Plugin.Search/Nacara.Plugin.Search.fsproj" />
+    <Project Path="src/Nacara.Plugin.Versions/Nacara.Plugin.Versions.fsproj" />
+    <Project Path="src/Nacara.Plugin.Literate/Nacara.Plugin.Literate.fsproj" />
+    <Project Path="src/Nacara.Plugin.Sitemap/Nacara.Plugin.Sitemap.fsproj" />
+    <Project Path="src/Nacara.Plugin.Assets.Esbuild/Nacara.Plugin.Assets.Esbuild.fsproj" />
+    <Project Path="src/Nacara.Plugin.Assets.LightningCss/Nacara.Plugin.Assets.LightningCss.fsproj" />
+    <Project Path="src/Nacara.Plugin.Assets.Nuglify/Nacara.Plugin.Assets.Nuglify.fsproj" />
+    <Project Path="src/Nacara.Plugin.LiveExample/Nacara.Plugin.LiveExample.fsproj" />
+    <Project Path="src/Nacara.Plugin.LinkValidator/Nacara.Plugin.LinkValidator.fsproj" />
+    <Project Path="src/Nacara.Plugin.Linter.Rumdl/Nacara.Plugin.Linter.Rumdl.fsproj" />
+    <Project Path="src/Nacara.Plugin.FSharpApi/Nacara.Plugin.FSharpApi.fsproj" />
+    <Project Path="src/Nacara.Theme.Default/Nacara.Theme.Default.fsproj" />
+  </Folder>
+  <Folder Name="/templates/">
+    <Project Path="templates/Nacara.Templates.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Nacara.Tests/Nacara.Tests.fsproj" />
+    <Project Path="tests/fixture-api/Fixture.Library.fsproj" />
+  </Folder>
+</Solution>

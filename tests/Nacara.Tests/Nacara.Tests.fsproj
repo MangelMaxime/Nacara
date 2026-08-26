@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Fixture.fs" />
+        <Compile Include="Tests.Core.fs" />
+        <Compile Include="Tests.Tool.fs" />
+        <Compile Include="Tests.Build.fs" />
+        <Compile Include="Tests.Locale.fs" />
+        <Compile Include="Tests.CodeBlock.fs" />
+        <Compile Include="Tests.Changelog.fs" />
+        <Compile Include="Tests.Versions.fs" />
+        <Compile Include="Tests.Literate.fs" />
+        <Compile Include="Tests.Sitemap.fs" />
+        <Compile Include="Tests.LinkValidator.fs" />
+        <Compile Include="Tests.Rumdl.fs" />
+        <Compile Include="Tests.Nuglify.fs" />
+        <Compile Include="Tests.FSharpApi.fs" />
+        <Compile Include="Tests.TreeSitter.fs" />
+        <Compile Include="Tests.LiveExample.fs" />
+        <Compile Include="Main.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Scriptorium.Quill" />
+        <PackageReference Include="Scriptorium.Nib" />
+        <PackageReference Include="Scriptorium.Nib.Snapshot" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../../src/Nacara.Core/Nacara.Core.fsproj" />
+        <ProjectReference Include="../../src/Nacara.Plugin.Markdown/Nacara.Plugin.Markdown.fsproj" />
+        <ProjectReference Include="../../src/Nacara.Plugin.Highlight.TextMate/Nacara.Plugin.Highlight.TextMate.fsproj" />
+        <ProjectReference Include="../../src/Nacara.Plugin.Changelog/Nacara.Plugin.Changelog.fsproj" />
+        <ProjectReference Include="../../src/Nacara.Plugin.Versions/Nacara.Plugin.Versions.fsproj" />
+        <ProjectReference Include="../../src/Nacara.Plugin.Literate/Nacara.Plugin.Literate.fsproj" />
+        <ProjectReference Include="../../src/Nacara.Plugin.Sitemap/Nacara.Plugin.Sitemap.fsproj" />
+        <ProjectReference Include="../../src/Nacara.Plugin.LinkValidator/Nacara.Plugin.LinkValidator.fsproj" />
+        <ProjectReference Include="../../src/Nacara.Plugin.Linter.Rumdl/Nacara.Plugin.Linter.Rumdl.fsproj" />
+        <ProjectReference Include="../../src/Nacara.Plugin.FSharpApi/Nacara.Plugin.FSharpApi.fsproj" />
+        <ProjectReference Include="../../src/Nacara.Plugin.Assets.LightningCss/Nacara.Plugin.Assets.LightningCss.fsproj" />
+        <ProjectReference Include="../../src/Nacara.Plugin.Assets.Nuglify/Nacara.Plugin.Assets.Nuglify.fsproj" />
+        <ProjectReference Include="../../src/Nacara.Plugin.LiveExample/Nacara.Plugin.LiveExample.fsproj" />
+        <ProjectReference Include="../../src/Nacara.Theme.Default/Nacara.Theme.Default.fsproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- The API tests read this assembly from disk; referencing it without using it is how
+             MSBuild is told to build it first. -->
+        <ProjectReference Include="../fixture-api/Fixture.Library.fsproj" ReferenceOutputAssembly="false" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../../src/Nacara.Plugin.Highlight.TreeSitter/Nacara.Plugin.Highlight.TreeSitter.fsproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageVersion Update="FSharp.Core" Version="$(FSharpCoreWithFcs)" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Plugin.Assets.Nuglify</PackageId>
+        <Description>Minify a Nacara site's HTML, JavaScript and CSS with NUglify.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Nuglify.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="NUglify" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+    </ItemGroup>
+</Project>

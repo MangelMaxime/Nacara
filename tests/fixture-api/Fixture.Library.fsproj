@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <!-- A library that exists to be documented: what matters is its surface, so the bodies
+             are `failwith`. -->
+        <IsPackable>false</IsPackable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <NoWarn>$(NoWarn);FS0044;FS3370</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Library.fs" />
+        <Compile Include="Shapes.fs" />
+        <Compile Include="Root.fs" />
+    </ItemGroup>
+</Project>

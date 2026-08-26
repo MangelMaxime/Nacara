@@ -1,0 +1,7 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Conventional Commits, with the types EasyBuild.CommitParser knows by default - no
+# configuration file, so the convention is the tool's own rather than one more thing to
+# keep in step. EasyBuild.ShipIt reads these messages to write the changelogs.
+dotnet commit-linter "$1"
