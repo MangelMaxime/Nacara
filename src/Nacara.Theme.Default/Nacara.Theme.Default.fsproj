@@ -3,7 +3,6 @@
         <PackageId>Nacara.Theme.Default</PackageId>
         <Description>Default documentation theme for Nacara: layout, design tokens and web components.</Description>
         <JsOutputPath>$(BaseIntermediateOutputPath)js/</JsOutputPath>
-        <RepositoryRoot>$(MSBuildThisFileDirectory)../../</RepositoryRoot>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="Types.fs" />
@@ -23,17 +22,11 @@
         <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
     </ItemGroup>
 
-    <Target Name="RestoreThemeDependencies" Condition="!Exists('$(RepositoryRoot)node_modules/esbuild')">
-        <Message Importance="high" Text="Installing the JavaScript dependencies of $(PackageId)" />
-        <Exec Command="npm ci" WorkingDirectory="$(RepositoryRoot)" />
-    </Target>
-
     <!--
         Separate from EmbedThemeAssets so Inputs/Outputs can skip bundling without skipping the
         EmbeddedResource items.
     -->
     <Target Name="BundleTheme"
-            DependsOnTargets="RestoreThemeDependencies"
             Inputs="@(ThemeSource)"
             Outputs="$(JsOutputPath)nacara.js;$(JsOutputPath)theme-bootstrap.js">
         <MakeDir Directories="$(JsOutputPath)" />

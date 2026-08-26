@@ -12,6 +12,7 @@ open System.ComponentModel
 open Spectre.Console.Cli
 open SimpleExec
 open BlackFox.CommandLine
+open EasyBuild.Tools.Npm
 open EasyBuild.Workspace
 
 /// <summary>What every one of these takes: the port, and anything the site knows that this
@@ -46,6 +47,9 @@ let private forwarded (context: CommandContext) =
 
 /// <summary>Runs the site with a command of its own, and whatever else was asked for.</summary>
 let private site (command: string) (watch: bool) (settings: DocsSettings) (extra: string seq) =
+    // The theme and the live example bundle their JavaScript while they build.
+    Npm.install root
+
     let program, before =
         if watch then
             // Without this, dotnet watch hot-reloads the running site in place instead of restarting it.

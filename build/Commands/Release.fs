@@ -5,6 +5,7 @@ open System
 open System.IO
 open Spectre.Console.Cli
 open EasyBuild.Tools.DotNet
+open EasyBuild.Tools.Npm
 open Nacara.Core
 open EasyBuild.Workspace
 
@@ -45,6 +46,9 @@ type ReleaseCommand() =
             Log.error "NUGET_KEY is not set"
             1
         else
+            // The theme and the live example bundle their JavaScript while they pack.
+            Npm.install root
+
             packages
             |> List.iter (fun package ->
                 let nupkg = DotNet.pack (Path.Combine(root, package))

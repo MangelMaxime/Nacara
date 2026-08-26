@@ -3,6 +3,7 @@ module EasyBuild.Commands.Format
 open Spectre.Console.Cli
 open SimpleExec
 open BlackFox.CommandLine
+open EasyBuild.Tools.Npm
 open EasyBuild.Workspace
 
 type FormatSettings() =
@@ -20,6 +21,8 @@ type FormatCommand() =
     interface ICommandLimiter<FormatSettings>
 
     override _.Execute(_, settings, _) =
+        Npm.install root
+
         Command.Run(
             "dotnet",
             CmdLine.empty

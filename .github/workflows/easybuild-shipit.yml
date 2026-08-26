@@ -62,8 +62,8 @@ jobs:
 
       # Packing bundles the JavaScript that ships inside Nacara.Theme.Default and
       # Nacara.Plugin.LiveExample, so esbuild has to be here before dotnet pack runs.
-      # Installing it here rather than leaving the projects to shell out to `npm ci`
-      # mid-pack is what lets the download be cached and the version be pinned.
+      # `dotnet pack` is run directly here rather than through ./build.sh release,
+      # which is what installs it everywhere else.
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*

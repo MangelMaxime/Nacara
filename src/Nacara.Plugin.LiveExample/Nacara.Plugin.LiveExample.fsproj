@@ -5,7 +5,6 @@
         <!-- Where the bundler writes. Under obj, so a generated file is never mistaken for a source
              one, never committed, and cleaned with everything else. -->
         <JsOutputPath>$(BaseIntermediateOutputPath)js/</JsOutputPath>
-        <RepositoryRoot>$(MSBuildThisFileDirectory)../../</RepositoryRoot>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="Project.fs" />
@@ -48,16 +47,9 @@
         <ProjectReference Include="../Nacara.Plugin.Highlight.TreeSitter/Nacara.Plugin.Highlight.TreeSitter.fsproj" />
     </ItemGroup>
 
-    <!-- Make sure NPM dependencies are restored -->
-    <Target Name="RestoreLiveExampleDependencies" Condition="!Exists('$(RepositoryRoot)node_modules/esbuild')">
-        <Message Importance="high" Text="Installing the JavaScript dependencies of $(PackageId)" />
-        <Exec Command="npm ci" WorkingDirectory="$(RepositoryRoot)" />
-    </Target>
-
     <!-- Kept apart from the target below so that Inputs/Outputs can skip the bundling without also
          skipping the EmbeddedResource items, which every build needs. -->
     <Target Name="BundleLiveExample"
-            DependsOnTargets="RestoreLiveExampleDependencies"
             Inputs="@(LiveExampleSource)"
             Outputs="$(JsOutputPath).bundled">
         <MakeDir Directories="$(JsOutputPath)" />

@@ -18,6 +18,14 @@ jobs:
         with:
           global-json-file: global.json
 
+      # Bundling the JavaScript that ships inside Nacara.Theme.Default and
+      # Nacara.Plugin.LiveExample needs esbuild, and Biome formats the css and the javascript.
+      # ./build.sh installs them itself; this is what pins node and caches the download.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
       - name: Restore
         run: dotnet restore Nacara.slnx
 
@@ -44,17 +52,8 @@ jobs:
         # errors; `--strict` would fail on warnings too, which the docs do not pass yet.
         run: ./build.sh docs check
 
-      # Fantomas the F#, Biome the css and the javascript. Biome is pinned in package.json,
-      # and that is the only thing node is here for - a site is built without it.
-      - uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-          cache: npm
-
-      - name: Install the formatters
-        run: |
-          dotnet tool restore
-          npm ci
+      - name: Restore the formatters
+        run: dotnet tool restore
 
       - name: Check formatting
         run: ./build.sh format --check

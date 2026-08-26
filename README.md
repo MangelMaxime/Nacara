@@ -54,10 +54,12 @@ cd docs && dotnet run -- watch
 ## Working on it
 
 Requirements: the .NET SDK pinned in `global.json`, and Node. `build.sh` and `build.bat` are the
-same entry point on either platform. `npm ci` once: `package.json` pins esbuild, which bundles the
-JavaScript that ships inside `Nacara.Theme.Default` and `Nacara.Plugin.LiveExample`, and Biome,
-which formats the css and the javascript. Node builds *this repository*; a site needs none of it,
-because the packages ship the bundles already built.
+same entry point on either platform, and they install the Node dependencies themselves.
+`package.json` pins esbuild, which bundles the JavaScript that ships inside
+`Nacara.Theme.Default` and `Nacara.Plugin.LiveExample`, and Biome, which formats the css and the
+javascript. Building the solution with `dotnet build` rather than through `build.sh` wants them
+already installed: `npm ci`. Node builds *this repository*; a site needs none of it, because the
+packages ship the bundles already built.
 
 ```bash
 dotnet build Nacara.slnx        # build everything
