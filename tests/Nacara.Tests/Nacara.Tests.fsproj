@@ -3,6 +3,7 @@
         <OutputType>Exe</OutputType>
         <IsPackable>false</IsPackable>
         <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        <ContinuousIntegrationBuild>false</ContinuousIntegrationBuild>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="Fixture.fs" />
