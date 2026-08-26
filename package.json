@@ -1,23 +1,16 @@
 {
-    "name": "nacara-root",
-    "private": "true",
-    "license": "Apache-2.0",
-    "type": "module",
+    "name": "nacara-dev-tools",
+    "private": true,
+    "description": "Development tools, and the bundler for the JavaScript that ships inside the packages. Biome formats it; esbuild bundles the default theme's scripts and the live-example client. Nothing here is needed to build a site.",
+    "scripts": {
+        "format": "biome format --write .",
+        "format:check": "biome format ."
+    },
     "devDependencies": {
-        "chalk": "^4.1.2",
-        "changelog-parser": "^2.8.0",
-        "concurrently": "^6.2.2",
-        "nodemon": "^2.0.20",
-        "shelljs": "^0.8.5"
+        "@biomejs/biome": "2.5.9",
+        "esbuild": "0.28.2"
     },
-    "engines": {
-        "node": ">=14.0.0",
-        "npm": ">=7.0.0"
-    },
-    "dependencies": {
-        "@babel/preset-react": "^7.14.5",
-        "bulma": "^0.9.3",
-        "remark-github": "^11.1.0",
-        "vscode-theme-onelight": "github:akamud/vscode-theme-onelight"
-    }
+    "workspaces": [
+        "src/Nacara.Plugin.LiveExample"
+    ]
 }

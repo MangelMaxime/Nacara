@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Plugin.Versions</PackageId>
+        <Description>Publish several versions of a Nacara site side by side, with a switcher.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Versions.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="assets/versions.js" />
+        <EmbeddedResource Include="assets/versions.css" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Thoth.Json.Core" />
+        <PackageReference Include="Thoth.Json.System.Text.Json" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+    </ItemGroup>
+</Project>

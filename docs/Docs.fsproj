@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Site.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../src/Nacara.Core/Nacara.Core.fsproj" />
+        <ProjectReference Include="../src/Nacara.Plugin.Markdown/Nacara.Plugin.Markdown.fsproj" />
+        <ProjectReference Include="../src/Nacara.Plugin.Highlight.TextMate/Nacara.Plugin.Highlight.TextMate.fsproj" />
+        <ProjectReference Include="../src/Nacara.Plugin.Highlight.TreeSitter/Nacara.Plugin.Highlight.TreeSitter.fsproj" />
+        <ProjectReference Include="../src/Nacara.Plugin.Changelog/Nacara.Plugin.Changelog.fsproj" />
+        <ProjectReference Include="../src/Nacara.Plugin.Search/Nacara.Plugin.Search.fsproj" />
+        <ProjectReference Include="../src/Nacara.Plugin.Versions/Nacara.Plugin.Versions.fsproj" />
+        <ProjectReference Include="../src/Nacara.Plugin.Literate/Nacara.Plugin.Literate.fsproj" />
+        <ProjectReference Include="../src/Nacara.Plugin.Sitemap/Nacara.Plugin.Sitemap.fsproj" />
+        <ProjectReference Include="../src/Nacara.Plugin.LinkValidator/Nacara.Plugin.LinkValidator.fsproj" />
+        <ProjectReference Include="../src/Nacara.Plugin.Linter.Rumdl/Nacara.Plugin.Linter.Rumdl.fsproj" />
+        <ProjectReference Include="../src/Nacara.Plugin.FSharpApi/Nacara.Plugin.FSharpApi.fsproj" />
+        <ProjectReference Include="../src/Nacara.Plugin.Assets.Esbuild/Nacara.Plugin.Assets.Esbuild.fsproj" />
+        <ProjectReference Include="../src/Nacara.Plugin.Assets.LightningCss/Nacara.Plugin.Assets.LightningCss.fsproj" />
+        <ProjectReference Include="../src/Nacara.Plugin.Assets.Nuglify/Nacara.Plugin.Assets.Nuglify.fsproj" />
+        <ProjectReference Include="../src/Nacara.Plugin.LiveExample/Nacara.Plugin.LiveExample.fsproj" />
+        <ProjectReference Include="../src/Nacara.Theme.Default/Nacara.Theme.Default.fsproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageVersion Update="FSharp.Core" Version="$(FSharpCoreWithFcs)" />
+    </ItemGroup>
+</Project>

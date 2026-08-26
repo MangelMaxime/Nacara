@@ -1,0 +1,26 @@
+body {
+    margin: 0;
+    padding: 1rem;
+    font:
+        15px / 1.5 system-ui,
+        sans-serif;
+    color: #1a2129;
+}
+
+#app {
+    max-width: 28rem;
+}
+
+img {
+    border-radius: 50%;
+}
+
+h2 {
+    margin: 0.6rem 0 0.2rem;
+    font-size: 1.1rem;
+}
+
+p {
+    margin: 0.15rem 0;
+    color: #4a5560;
+}

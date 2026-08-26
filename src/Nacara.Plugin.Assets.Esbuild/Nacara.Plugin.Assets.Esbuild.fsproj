@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Plugin.Assets.Esbuild</PackageId>
+        <Description>Bundle and minify a Nacara site's JavaScript with esbuild.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Binary.fs" />
+        <Compile Include="Esbuild.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+    </ItemGroup>
+</Project>

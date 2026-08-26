@@ -1,0 +1,316 @@
+/*
+    Callouts
+*/
+
+.nacara-callout {
+    --callout-color: var(--nacara-note);
+    margin: 0 0 var(--nacara-space-4);
+    padding: var(--nacara-space-3) var(--nacara-space-4);
+    border: 1px solid color-mix(in srgb, var(--callout-color) 35%, var(--nacara-border));
+    border-left-width: 3px;
+    border-left-color: var(--callout-color);
+    border-radius: var(--nacara-radius);
+    background: color-mix(in srgb, var(--callout-color) 6%, var(--nacara-bg));
+}
+.nacara-callout[data-kind="tip"] {
+    --callout-color: var(--nacara-tip);
+}
+.nacara-callout[data-kind="warning"],
+.nacara-callout[data-kind="caution"] {
+    --callout-color: var(--nacara-warning);
+}
+.nacara-callout[data-kind="danger"] {
+    --callout-color: var(--nacara-danger);
+}
+.nacara-callout > :last-child {
+    margin-bottom: 0;
+}
+.nacara-callout[data-title]::before {
+    content: attr(data-title);
+    display: block;
+    margin-bottom: var(--nacara-space-1);
+    font-weight: 650;
+    color: var(--callout-color);
+}
+
+/*
+    Steps
+*/
+
+.nacara-steps {
+    margin: 0 0 var(--nacara-space-4);
+}
+.nacara-steps > ol {
+    counter-reset: nacara-step;
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+}
+.nacara-steps > ol > li {
+    counter-increment: nacara-step;
+    position: relative;
+    padding-left: var(--nacara-space-8);
+    padding-bottom: var(--nacara-space-6);
+}
+.nacara-steps > ol > li:last-child {
+    padding-bottom: 0;
+}
+.nacara-steps > ol > li::before {
+    content: counter(nacara-step);
+    position: absolute;
+    left: 0;
+    top: -0.1rem;
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background: var(--nacara-primary);
+    color: var(--nacara-primary-contrast);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+.nacara-steps > ol > li::after {
+    content: "";
+    position: absolute;
+    left: calc(0.875rem - 1px);
+    top: 2rem;
+    bottom: 0;
+    width: 2px;
+    border-radius: 1px;
+    background: color-mix(in srgb, var(--nacara-primary) 35%, var(--nacara-border));
+}
+.nacara-steps > ol > li:last-child:not(:has(> :nth-child(2)))::after {
+    display: none;
+}
+.nacara-steps > ol > li > :first-child {
+    margin-top: 0;
+}
+.nacara-steps > ol > li > :last-child {
+    margin-bottom: 0;
+}
+
+/*
+    Tabs
+*/
+
+nacara-tabs {
+    display: block;
+    margin: 0 0 var(--nacara-space-4);
+    border: 1px solid var(--nacara-border);
+    border-radius: var(--nacara-radius);
+    overflow: hidden;
+}
+.nacara-tabs__list {
+    display: flex;
+    gap: var(--nacara-space-1);
+    padding: var(--nacara-space-1);
+    background: var(--nacara-bg-subtle);
+    border-bottom: 1px solid var(--nacara-border);
+    overflow-x: auto;
+}
+.nacara-tabs__tab {
+    padding: var(--nacara-space-2) var(--nacara-space-3);
+    border: none;
+    border-radius: var(--nacara-radius-sm);
+    background: none;
+    color: var(--nacara-text-muted);
+    font: inherit;
+    font-size: 0.9375rem;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.nacara-tabs__tab[aria-selected="true"] {
+    background: var(--nacara-bg);
+    color: var(--nacara-text);
+    font-weight: 600;
+    box-shadow: var(--nacara-shadow);
+}
+nacara-tab {
+    display: block;
+    padding: var(--nacara-space-4);
+}
+nacara-tab[hidden] {
+    display: none;
+}
+nacara-tab > :last-child {
+    margin-bottom: 0;
+}
+
+/*
+    Previews
+*/
+
+.nacara-preview {
+    margin: var(--nacara-space-6) 0;
+    border: 1px solid var(--nacara-border);
+    border-radius: var(--nacara-radius);
+    overflow: hidden;
+}
+.nacara-preview > .nacara-code {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+}
+.nacara-preview > pre {
+    margin: 0;
+    border-radius: 0;
+}
+.nacara-preview__result {
+    padding: var(--nacara-space-4);
+    border-top: 1px solid var(--nacara-border);
+    background: var(--nacara-bg);
+}
+.nacara-preview__result::before {
+    content: "Preview";
+    display: block;
+    margin-bottom: var(--nacara-space-3);
+    color: var(--nacara-text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+.nacara-preview__result > :first-child {
+    margin-top: 0;
+}
+.nacara-preview__result > :last-child {
+    margin-bottom: 0;
+}
+
+/*
+    Disclosures
+*/
+
+.nacara-details {
+    margin: 0 0 var(--nacara-space-4);
+    border: 1px solid var(--nacara-border);
+    border-radius: var(--nacara-radius);
+    background: var(--nacara-bg-subtle);
+}
+.nacara-details > summary {
+    display: flex;
+    align-items: center;
+    gap: var(--nacara-space-2);
+    padding: var(--nacara-space-2) var(--nacara-space-4);
+    border-radius: var(--nacara-radius);
+    color: var(--nacara-text);
+    list-style: none;
+    cursor: pointer;
+}
+.nacara-details > summary::-webkit-details-marker {
+    display: none;
+}
+.nacara-details > summary::before {
+    content: "";
+    flex: none;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(-45deg);
+    transition: transform 0.15s ease;
+    opacity: 0.6;
+}
+.nacara-details[open] > summary::before {
+    transform: rotate(45deg);
+}
+.nacara-details > summary:hover {
+    background: var(--nacara-bg);
+}
+.nacara-details[open] > summary {
+    border-bottom: 1px solid var(--nacara-border);
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+}
+.nacara-details > :not(summary) {
+    margin-inline: var(--nacara-space-4);
+}
+.nacara-details > summary + * {
+    margin-top: var(--nacara-space-3);
+}
+.nacara-details > :last-child {
+    margin-bottom: var(--nacara-space-3);
+}
+
+/*
+    File trees
+*/
+
+.nacara-file-tree {
+    margin: 0 0 var(--nacara-space-4);
+    padding: var(--nacara-space-3) var(--nacara-space-4);
+    border: 1px solid var(--nacara-border);
+    border-radius: var(--nacara-radius);
+    background: var(--nacara-bg-subtle);
+    font-family: var(--nacara-font-mono);
+    font-size: 0.875rem;
+    line-height: 1.7;
+}
+/* This has to out-weigh the prose rules for lists. */
+.nacara-file-tree .nacara-file-tree__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.nacara-file-tree li,
+.nacara-file-tree li + li {
+    margin: 0;
+}
+.nacara-file-tree__list .nacara-file-tree__list {
+    margin-left: 0.55rem;
+    padding-left: var(--nacara-space-4);
+    border-left: 1px solid var(--nacara-border);
+}
+.nacara-file-tree__folder > summary {
+    list-style: none;
+    cursor: pointer;
+}
+.nacara-file-tree__folder > summary::-webkit-details-marker {
+    display: none;
+}
+.nacara-file-tree__folder > summary::after {
+    content: "";
+    flex: none;
+    width: 0.75rem;
+    height: 0.75rem;
+    background: currentColor;
+    opacity: 0.5;
+    transition: transform 0.15s ease;
+    mask:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+}
+.nacara-file-tree__folder:not([open]) > summary::after {
+    transform: rotate(-90deg);
+}
+.nacara-file-tree__name {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nacara-space-2);
+}
+.nacara-file-tree__name::before {
+    content: "";
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    background: currentColor;
+    opacity: 0.65;
+}
+[data-kind="directory"] .nacara-file-tree__name::before {
+    mask:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2Z'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+    color: var(--nacara-primary);
+    opacity: 0.85;
+}
+[data-kind="file"] .nacara-file-tree__name::before {
+    mask:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z'/%3E%3Cpath d='M14 3v5h5'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+}
+.nacara-file-tree strong {
+    color: var(--nacara-primary);
+    font-weight: 700;
+}

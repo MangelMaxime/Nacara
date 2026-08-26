@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Maxime Mangel",
+  "classifications": [ "Documentation", "F#", "Static site" ],
+  "identity": "Nacara.Docs.FSharp",
+  "name": "Nacara documentation site",
+  "shortName": "nacara-docs",
+  "tags": {
+    "language": "F#",
+    "type": "project"
+  },
+  "sourceName": "NacaraDocs",
+  "preferNameDirectory": true,
+  "symbols": {
+    "title": {
+      "type": "parameter",
+      "datatype": "string",
+      "defaultValue": "My library",
+      "replaces": "SITE_TITLE",
+      "description": "Title of the site"
+    },
+    "baseUrl": {
+      "type": "parameter",
+      "datatype": "string",
+      "defaultValue": "/",
+      "replaces": "SITE_BASE_URL",
+      "description": "Path the site is served from, for example /MyLibrary/"
+    },
+    "repository": {
+      "type": "parameter",
+      "datatype": "string",
+      "defaultValue": "owner/repository",
+      "replaces": "SITE_REPOSITORY",
+      "description": "GitHub repository, used for the source link and edit links"
+    }
+  },
+  "sources": [
+    {
+      "modifiers": [
+        { "exclude": [ "**/output/**", "**/bin/**", "**/obj/**" ] }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+/* Last, because these override what is above. */
+
+@media (min-width: 1600px) {
+    :root {
+        --nacara-content-width: 88ch;
+        --nacara-layout-gap: var(--nacara-space-12);
+    }
+}
+
+@media (max-width: 1200px) {
+    .nacara-layout {
+        grid-template-columns:
+            var(--nacara-sidebar-width)
+            minmax(0, var(--nacara-content-width));
+    }
+    .nacara-toc {
+        display: none;
+    }
+}
+
+@media (max-width: 860px) {
+    .nacara-layout {
+        grid-template-columns: minmax(0, 1fr);
+        padding: var(--nacara-space-4);
+    }
+    .nacara-sidebar {
+        position: static;
+        max-height: none;
+    }
+    .nacara-sidebar:not([data-open="true"]) {
+        display: none;
+    }
+    .nacara-sidebar[data-open="true"] {
+        position: fixed;
+        inset: var(--nacara-navbar-height) 0 auto 0;
+        z-index: 20;
+        max-height: calc(100dvh - var(--nacara-navbar-height));
+        padding: var(--nacara-space-4);
+        background: var(--nacara-bg);
+        border-bottom: 1px solid var(--nacara-border);
+        box-shadow: var(--nacara-shadow);
+        overflow-y: auto;
+    }
+    .nacara-sidebar[data-open="true"]:has(.nacara-sidebar__widgets) {
+        padding-bottom: 0;
+    }
+
+    .nacara-navbar__items:not(.nacara-navbar__items--end) {
+        display: none;
+    }
+
+    .nacara-sidebar__widgets {
+        position: sticky;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        gap: var(--nacara-space-3);
+        list-style: none;
+        margin: 0 calc(-1 * var(--nacara-space-4));
+        padding: var(--nacara-space-4);
+        border-top: 1px solid var(--nacara-border);
+        background: var(--nacara-bg);
+    }
+    .nacara-sidebar__widgets > li:first-child {
+        margin-right: auto;
+    }
+    [data-nacara-menu-toggle] {
+        display: inline-flex;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}

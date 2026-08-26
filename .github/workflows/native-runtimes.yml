@@ -1,0 +1,109 @@
+# The two native libraries Nacara.Plugin.Highlight.TreeSitter loads: tree-sitter built with
+# TREE_SITTER_FEATURE_WASM, which nobody publishes, and the wasmtime that gives it a wasm store.
+#
+# One job per platform, on that platform: a cross-built library that loads a wasm store is one
+# nobody has run. Each job builds the pair, runs the test suite against it - which is what loads
+# both libraries and colours real code - and, when asked, publishes that platform's package to
+# npm. A site fetches the one it is built on, so nobody downloads six.
+#
+# Publishing is a manual decision, taken about once a year: when tree-sitter moves, bump the
+# version in the plugin's Runtime.fs and run this with `publish` ticked.
+name: Native runtimes
+
+on:
+  workflow_call:
+    inputs:
+      publish:
+        type: boolean
+        default: false
+    secrets:
+      NPM_TOKEN:
+        required: false
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish each platform's runtime to npm
+        type: boolean
+        default: false
+  push:
+    branches: [ v3 ]
+    paths:
+      - build/Commands/TreeSitter/**
+      - src/Nacara.Plugin.Highlight.TreeSitter/Runtime.fs
+      - .github/workflows/native-runtimes.yml
+  pull_request:
+    branches: [ v3 ]
+    paths:
+      - build/Commands/TreeSitter/**
+      - src/Nacara.Plugin.Highlight.TreeSitter/Runtime.fs
+      - .github/workflows/native-runtimes.yml
+
+# The Windows runners default to pwsh, which will not run ./build.sh; bash is on every image.
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: ${{ matrix.rid }}
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      # npm exchanges this for a short-lived credential, so no token is stored for publishing.
+      id-token: write
+    strategy:
+      # One platform failing to build is a fact about that platform, and the others are
+      # still worth knowing.
+      fail-fast: false
+      matrix:
+        include:
+          - rid: linux-x64
+            os: ubuntu-latest
+          - rid: linux-arm64
+            os: ubuntu-24.04-arm
+          - rid: osx-x64
+            os: macos-15-intel
+          - rid: osx-arm64
+            os: macos-latest
+          - rid: win-x64
+            os: windows-latest
+          - rid: win-arm64
+            os: windows-11-arm
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          registry-url: https://registry.npmjs.org
+
+      # Trusted publishing needs npm 11.5.1 or later; the LTS images do not all carry one.
+      - name: npm that can use OIDC
+        if: ${{ inputs.publish }}
+        run: npm install -g npm@^11.5.1
+
+      # cl.exe is installed on the Windows images but not on PATH.
+      - name: Visual C++ environment
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{ matrix.rid == 'win-arm64' && 'arm64' || 'amd64' }}
+
+      - name: Build the runtime
+        run: ./build.sh tree-sitter runtime
+
+      - name: Verify that everything works
+        run: ./build.sh test
+
+      # NODE_AUTH_TOKEN is only for the first publish of a package: a trusted publisher is
+      # configured on a package that exists, so there is nothing to configure until then.
+      - name: Publish it
+        if: ${{ inputs.publish }}
+        run: ./build.sh tree-sitter publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

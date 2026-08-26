@@ -1,0 +1,15 @@
+{
+    "name": "@nacara/plugin-live-example",
+    "private": true,
+    "type": "module",
+    "description": "The browser side of Nacara.Plugin.LiveExample. Bundled by the project's MSBuild targets and embedded into the package: a site never installs any of this.",
+    "devDependencies": {
+        "@codemirror/autocomplete": "6.20.3",
+        "@codemirror/commands": "6.11.0",
+        "@codemirror/language": "6.12.4",
+        "@codemirror/legacy-modes": "6.5.3",
+        "@codemirror/lint": "6.9.7",
+        "@codemirror/state": "6.7.1",
+        "@codemirror/view": "6.43.9"
+    }
+}

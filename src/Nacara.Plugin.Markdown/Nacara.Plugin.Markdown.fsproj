@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Plugin.Markdown</PackageId>
+        <Description>Markdown content for Nacara: Markdig pipeline, directives, table of contents and link resolution.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Renderers.fs" />
+        <Compile Include="Markdown.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Markdig" />
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+    </ItemGroup>
+</Project>

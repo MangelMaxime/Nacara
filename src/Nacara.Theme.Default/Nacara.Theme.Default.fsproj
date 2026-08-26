@@ -1,0 +1,53 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Theme.Default</PackageId>
+        <Description>Default documentation theme for Nacara: layout, design tokens and web components.</Description>
+        <JsOutputPath>$(BaseIntermediateOutputPath)js/</JsOutputPath>
+        <RepositoryRoot>$(MSBuildThisFileDirectory)../../</RepositoryRoot>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Types.fs" />
+        <Compile Include="CodeBlocks.fs" />
+        <Compile Include="Icons.fs" />
+        <Compile Include="Components.fs" />
+        <Compile Include="Theme.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <ThemeSource Include="js/**/*.js" />
+        <None Include="@(ThemeSource)" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="assets/css/*.css" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+    </ItemGroup>
+
+    <Target Name="RestoreThemeDependencies" Condition="!Exists('$(RepositoryRoot)node_modules/esbuild')">
+        <Message Importance="high" Text="Installing the JavaScript dependencies of $(PackageId)" />
+        <Exec Command="npm ci" WorkingDirectory="$(RepositoryRoot)" />
+    </Target>
+
+    <!--
+        Separate from EmbedThemeAssets so Inputs/Outputs can skip bundling without skipping the
+        EmbeddedResource items.
+    -->
+    <Target Name="BundleTheme"
+            DependsOnTargets="RestoreThemeDependencies"
+            Inputs="@(ThemeSource)"
+            Outputs="$(JsOutputPath)nacara.js;$(JsOutputPath)theme-bootstrap.js">
+        <MakeDir Directories="$(JsOutputPath)" />
+        <Exec WorkingDirectory="$(MSBuildThisFileDirectory)"
+              Command="npx --no-install esbuild js/nacara.js --bundle --minify --format=iife --outfile=&quot;$(JsOutputPath)nacara.js&quot;" />
+        <Exec WorkingDirectory="$(MSBuildThisFileDirectory)"
+              Command="npx --no-install esbuild js/theme-bootstrap.js --bundle --minify --format=iife --outfile=&quot;$(JsOutputPath)theme-bootstrap.js&quot;" />
+    </Target>
+
+    <!-- AssignTargetPaths walks @(EmbeddedResource); an item added after it has run is dropped. -->
+    <Target Name="EmbedThemeAssets" BeforeTargets="AssignTargetPaths" DependsOnTargets="BundleTheme">
+        <ItemGroup>
+            <EmbeddedResource Include="$(JsOutputPath)nacara.js" LogicalName="Nacara.Theme.Default.assets.nacara.js" />
+            <EmbeddedResource Include="$(JsOutputPath)theme-bootstrap.js" LogicalName="Nacara.Theme.Default.assets.theme-bootstrap.js" />
+        </ItemGroup>
+    </Target>
+</Project>

@@ -1,0 +1,86 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* On the root, not on body: `ch` in the tokens resolves against this. */
+html {
+    font-family: var(--nacara-font-sans);
+}
+
+body {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--nacara-text);
+    background: var(--nacara-bg);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* The navbar is sticky, so anything jumped to reserves its height. */
+.nacara-content :where(h1, h2, h3, h4, h5, h6, [id]),
+.nacara-content,
+:target {
+    scroll-margin-top: calc(var(--nacara-navbar-height) + var(--nacara-space-4));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+a {
+    color: var(--nacara-primary);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+:where(a, button, select, summary, input, [tabindex]):focus-visible {
+    outline: 2px solid var(--nacara-primary);
+    outline-offset: 2px;
+    border-radius: var(--nacara-radius-sm);
+}
+
+kbd {
+    padding: 0.1em 0.4em;
+    font-family: var(--nacara-font-mono);
+    font-size: 0.8125em;
+    line-height: 1;
+    color: var(--nacara-text);
+    background: var(--nacara-bg-subtle);
+    border: 1px solid var(--nacara-border);
+    border-bottom-width: 2px;
+    border-radius: var(--nacara-radius-sm);
+}
+
+.nacara-skip-link {
+    position: absolute;
+    left: var(--nacara-space-2);
+    top: var(--nacara-space-2);
+    z-index: 100;
+    padding: var(--nacara-space-2) var(--nacara-space-4);
+    color: var(--nacara-primary-contrast);
+    background: var(--nacara-primary);
+    border-radius: var(--nacara-radius-sm);
+    transform: translateY(-200%);
+}
+.nacara-skip-link:focus {
+    transform: translateY(0);
+    text-decoration: none;
+}
+
+.nacara-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}

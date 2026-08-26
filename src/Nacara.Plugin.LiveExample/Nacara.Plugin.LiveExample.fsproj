@@ -1,0 +1,96 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Plugin.LiveExample</PackageId>
+        <Description>Run F# snippets in the browser, compiled by Fable as the reader edits them.</Description>
+        <!-- Where the bundler writes. Under obj, so a generated file is never mistaken for a source
+             one, never committed, and cleaned with everything else. -->
+        <JsOutputPath>$(BaseIntermediateOutputPath)js/</JsOutputPath>
+        <RepositoryRoot>$(MSBuildThisFileDirectory)../../</RepositoryRoot>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Project.fs" />
+        <Compile Include="Vendor.fs" />
+        <Compile Include="Types.fs" />
+        <Compile Include="Config.fs" />
+        <Compile Include="Fences.fs" />
+        <Compile Include="Presets.fs" />
+        <Compile Include="LiveExample.fs" />
+    </ItemGroup>
+    <!-- What the bundler reads, so MSBuild can tell when a bundle has gone stale. -->
+    <ItemGroup>
+        <LiveExampleSource Include="js/**/*.js" />
+        <LiveExampleSource Include="css/**/*.css" />
+        <LiveExampleSource Include="package.json" />
+        <None Include="@(LiveExampleSource)" />
+        <!--
+            Track LiveExampleSource so anything changes to them trigger dotnet watch
+
+            Use full paths, so this work even when Nacara.Plugin.LiveExample.fsproj is a ProjectReference
+        -->
+        <Watch Include="@(LiveExampleSource->'%(FullPath)')" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- What a project is made of is worked out by asking MSBuild, which is testable on its own
+             and would otherwise need a Fable run to observe. -->
+        <InternalsVisibleTo Include="Nacara.Tests" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Thoth.Json.Core" />
+        <PackageReference Include="Thoth.Json.System.Text.Json" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+        <!--
+            We need tree-sitter grammars, queries, etc.
+
+            So we re-use another plugin information instead of duplicating the logic
+        -->
+        <ProjectReference Include="../Nacara.Plugin.Highlight.TreeSitter/Nacara.Plugin.Highlight.TreeSitter.fsproj" />
+    </ItemGroup>
+
+    <!-- Make sure NPM dependencies are restored -->
+    <Target Name="RestoreLiveExampleDependencies" Condition="!Exists('$(RepositoryRoot)node_modules/esbuild')">
+        <Message Importance="high" Text="Installing the JavaScript dependencies of $(PackageId)" />
+        <Exec Command="npm ci" WorkingDirectory="$(RepositoryRoot)" />
+    </Target>
+
+    <!-- Kept apart from the target below so that Inputs/Outputs can skip the bundling without also
+         skipping the EmbeddedResource items, which every build needs. -->
+    <Target Name="BundleLiveExample"
+            DependsOnTargets="RestoreLiveExampleDependencies"
+            Inputs="@(LiveExampleSource)"
+            Outputs="$(JsOutputPath).bundled">
+        <MakeDir Directories="$(JsOutputPath)" />
+        <!-- A classic script: the theme emits plugin scripts with defer, and the entry reads
+             document.currentScript to find the assets sitting beside it. -->
+        <Exec WorkingDirectory="$(MSBuildThisFileDirectory)"
+              Command="npx --no-install esbuild js/live-example.js --bundle --minify --format=iife --outfile=&quot;$(JsOutputPath)live-example.js&quot;" />
+        <!-- A module worker: tree-sitter cannot be instantiated on the main thread. web-tree-sitter
+             is left external because it is a runtime asset served beside the worker, fetched once
+             per machine like the compiler rather than bundled into the package. -->
+        <Exec WorkingDirectory="$(MSBuildThisFileDirectory)"
+              Command="npx --no-install esbuild js/highlight-worker.js --bundle --minify --format=esm --external:./web-tree-sitter.js --outfile=&quot;$(JsOutputPath)highlight-worker.js&quot;" />
+        <!-- Bundled on its own, because it is imported only once someone presses Run. -->
+        <Exec WorkingDirectory="$(MSBuildThisFileDirectory)"
+              Command="npx --no-install esbuild js/codemirror.js --bundle --minify --format=esm --outfile=&quot;$(JsOutputPath)codemirror.js&quot;" />
+        <Copy SourceFiles="css/live-example.css" DestinationFolder="$(JsOutputPath)" />
+        <!-- A stamp rather than the files themselves: Copy preserves the source's timestamp, so
+             the copied stylesheet would look older than the sources on every build and this target
+             would never be considered up to date. -->
+        <Touch Files="$(JsOutputPath).bundled" AlwaysCreate="true" />
+    </Target>
+
+    <!-- Before AssignTargetPaths, not before PrepareResources: AssignTargetPaths is what walks
+         @(EmbeddedResource) to work out where each one goes, and an item added after it has run is
+         quietly dropped rather than embedded. -->
+    <Target Name="EmbedLiveExampleAssets" BeforeTargets="AssignTargetPaths" DependsOnTargets="BundleLiveExample">
+        <ItemGroup>
+            <!-- LogicalName is given explicitly so a resource name does not depend on where the
+                 bundler happened to write, and LiveExample.fs keeps asking for the same names. -->
+            <EmbeddedResource Include="$(JsOutputPath)live-example.js" LogicalName="Nacara.Plugin.LiveExample.assets.live-example.js" />
+            <EmbeddedResource Include="$(JsOutputPath)highlight-worker.js" LogicalName="Nacara.Plugin.LiveExample.assets.highlight-worker.js" />
+            <EmbeddedResource Include="$(JsOutputPath)codemirror.js" LogicalName="Nacara.Plugin.LiveExample.assets.codemirror.js" />
+            <EmbeddedResource Include="$(JsOutputPath)live-example.css" LogicalName="Nacara.Plugin.LiveExample.assets.live-example.css" />
+        </ItemGroup>
+    </Target>
+</Project>

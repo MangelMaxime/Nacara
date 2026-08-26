@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Plugin.LinkValidator</PackageId>
+        <Description>Checks every link a Nacara site published: pages, assets, anchors, and the ones that leave the site.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="LinkValidator.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- The pure parts - what counts as a link, and which file a url names - are tested
+             directly, so the suite does not have to build a site to check a string. -->
+        <InternalsVisibleTo Include="Nacara.Tests" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+    </ItemGroup>
+</Project>

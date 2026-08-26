@@ -1,0 +1,93 @@
+.nacara-search__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nacara-space-2);
+    min-width: 12rem;
+    height: var(--nacara-control-height);
+    padding: 0 var(--nacara-space-3);
+    border: 1px solid var(--nacara-border);
+    border-radius: var(--nacara-control-radius);
+    background: var(--nacara-bg-subtle);
+    color: var(--nacara-text-muted);
+    font: inherit;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+.nacara-search__trigger:hover {
+    color: var(--nacara-text);
+}
+.nacara-search__trigger svg {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+}
+.nacara-search__kbd {
+    margin-left: auto;
+    padding: 0.05rem 0.35rem;
+    border: 1px solid var(--nacara-border);
+    border-radius: var(--nacara-radius-sm);
+    background: var(--nacara-bg);
+    font-family: var(--nacara-font-mono);
+    font-size: 0.75rem;
+}
+/* The breakpoint is the theme's, where the navbar gives up its middle. */
+@media (max-width: 860px) {
+    .nacara-search__trigger {
+        min-width: auto;
+        width: var(--nacara-control-height);
+        padding: 0;
+        justify-content: center;
+    }
+    .nacara-search__trigger span {
+        display: none;
+    }
+}
+
+/* Pagefind gives focus back to this on close, so where it sits is where the page jumps to. */
+.nacara-search__opener {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+}
+
+/*
+    Pagefind's modal
+*/
+
+/* The doubled selector beats Pagefind's defaults, declared on :root in a stylesheet loaded after this one. */
+:root:root {
+    --pf-font: var(--nacara-font-sans);
+    --pf-text: var(--nacara-text);
+    --pf-text-secondary: var(--nacara-text-muted);
+    --pf-text-muted: var(--nacara-text-muted);
+    --pf-background: var(--nacara-bg-raised);
+    --pf-border: var(--nacara-border);
+    --pf-border-focus: var(--nacara-primary);
+    --pf-hover: var(--nacara-bg-subtle);
+    --pf-mark: var(--nacara-text);
+    --pf-skeleton: var(--nacara-bg-subtle);
+    --pf-skeleton-shine: var(--nacara-bg);
+    --pf-outline-focus: var(--nacara-primary);
+    --pf-border-radius: var(--nacara-radius-sm);
+    --pf-shadow-sm: var(--nacara-shadow);
+    --pf-shadow-md: var(--nacara-shadow);
+    --pf-shadow-lg: var(--nacara-shadow);
+    --pf-scroll-shadow: color-mix(in srgb, var(--nacara-text) 12%, transparent);
+    --pf-error-bg: color-mix(in srgb, var(--nacara-danger) 14%, transparent);
+    --pf-error-border: color-mix(in srgb, var(--nacara-danger) 40%, transparent);
+    --pf-error-text: var(--nacara-danger);
+    --pf-error-text-secondary: var(--nacara-danger);
+    --pf-modal-backdrop: rgb(0 0 0 / 45%);
+    --pf-modal-max-width: 40rem;
+    --pf-input-height: var(--nacara-control-height);
+}
+
+/* Pagefind's own elements start from `all: initial`, which drops the inherited colour scheme. */
+:root pagefind-modal,
+:root pagefind-modal * {
+    color-scheme: inherit;
+}

@@ -1,26 +1,47 @@
 <Project>
-	<PropertyGroup>
-		<!-- Make all the projects use the highest warning level -->
-		<WarningLevel>5</WarningLevel>
-	</PropertyGroup>
-	<!-- NuGet Metadata -->
-	<PropertyGroup>
-        <PackageProjectUrl>https://mangelmaxime.github.io/Nacara/</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/MangelMaxime/Nacara</RepositoryUrl>
-        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<Authors>Maxime Mangel</Authors>
-	</PropertyGroup>
-	<!-- For SourceLink. See: https://github.com/dotnet/sourcelink#using-source-link-in-net-projects -->
-	<PropertyGroup>
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
-        <EmbedUntrackedSources>true</EmbedUntrackedSources>
-        <IncludeSymbols>true</IncludeSymbols>
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-	</PropertyGroup>
-	<ItemGroup>
-		<None Include="$(MSBuildThisFileDirectory)\LICENSE.txt" Pack="true" PackagePath="$(PackageLicenseFile)" />
-	</ItemGroup>
+    <!-- Make F# support Central Package Management -->
+    <PropertyGroup>
+        <DisableImplicitSystemValueTupleReference>true</DisableImplicitSystemValueTupleReference>
+        <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+    </PropertyGroup>
+    <!-- Use lock files, locked on CI -->
+    <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+    <PropertyGroup>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+        <RestoreLockedMode Condition="'$(ContinuousIntegrationBuild)' == 'true'">true</RestoreLockedMode>
+    </PropertyGroup>
+    <!-- The SDK offers its own copy of FSharp.Core as a package source, and a runner with an
+         empty cache restores that one rather than nuget.org's. Same version, different build,
+         different content hash - which a locked restore rejects. -->
+    <PropertyGroup>
+        <DisableImplicitLibraryPacksFolder>true</DisableImplicitLibraryPacksFolder>
+    </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <WarnOn>3390;$(WarnOn)</WarnOn>
+        <Authors>Maxime Mangel</Authors>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageOutputPath>$(MSBuildThisFileDirectory)dist</PackageOutputPath>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/MangelMaxime/Nacara</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/MangelMaxime/Nacara.git</RepositoryUrl>
+    </PropertyGroup>
+    <!-- Every package shows the same front page on NuGet -->
+    <ItemGroup Condition="'$(IsPackable)' != 'false'">
+        <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="/" Visible="false" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(PackageId)'!='EasyBuild'">
+        <PackageReference Include="FSharp.Core" />
+    </ItemGroup>
+    <!--
+        Each package's version and release notes come from the CHANGELOG.md beside its project,
+        which EasyBuild.ShipIt writes from the commits that touched that package.
+    -->
+    <ItemGroup Condition="'$(IsPackable)' != 'false'">
+        <PackageReference Include="EasyBuild.PackageReleaseNotes.Tasks" PrivateAssets="all" />
+    </ItemGroup>
 </Project>

@@ -1,0 +1,117 @@
+@property --nacara-content-width {
+    syntax: "<length>";
+    inherits: true;
+    initial-value: 600px;
+}
+
+:root {
+    color-scheme: light dark;
+
+    --nacara-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --nacara-font-mono:
+        ui-monospace, "JetBrains Mono", "Fira Code", "SFMono-Regular", Menlo, monospace;
+
+    --nacara-space-1: 0.25rem;
+    --nacara-space-2: 0.5rem;
+    --nacara-space-3: 0.75rem;
+    --nacara-space-4: 1rem;
+    --nacara-space-6: 1.5rem;
+    --nacara-space-8: 2rem;
+    --nacara-space-12: 3rem;
+
+    --nacara-radius: 0.5rem;
+    --nacara-radius-sm: 0.25rem;
+
+    --nacara-content-width: 75ch;
+    --nacara-layout-gap: var(--nacara-space-8);
+    --nacara-sidebar-width: 17rem;
+    --nacara-toc-width: 15rem;
+    --nacara-navbar-height: 3.5rem;
+
+    --nacara-control-height: 2.25rem;
+    --nacara-control-radius: var(--nacara-radius-sm);
+
+    --nacara-bg: #ffffff;
+    --nacara-bg-subtle: #f6f7f9;
+    --nacara-bg-raised: #ffffff;
+    --nacara-border: #e3e6ea;
+    --nacara-text: #1b1f24;
+    --nacara-text-muted: #5a6470;
+    --nacara-primary: #2f6feb;
+    --nacara-primary-contrast: #ffffff;
+    --nacara-primary-subtle: #eaf1ff;
+    --nacara-shadow: 0 1px 2px rgb(16 24 40 / 6%), 0 4px 12px rgb(16 24 40 / 6%);
+
+    --nacara-note: #2f6feb;
+    --nacara-tip: #17935f;
+    --nacara-warning: #b5730c;
+    --nacara-danger: #cf3b3b;
+
+    --tok-comment: #a0a1a7;
+    --tok-string: #50a14f;
+    --tok-number: #986801;
+    --tok-constant: #986801;
+    --tok-constructor: #4078f2;
+    --tok-property: #e45649;
+    --tok-escape: #0184bc;
+    --tok-keyword: #a626a4;
+    --tok-operator: #0184bc;
+    --tok-function: #4078f2;
+    --tok-type: #c18401;
+    --tok-namespace: #4078f2;
+    --tok-variable: #383a42;
+    --tok-parameter: #383a42;
+    --tok-punctuation: #383a42;
+    --tok-tag: #e45649;
+    --tok-attribute: #986801;
+    --tok-preprocessor: #a626a4;
+    --tok-invalid: #e45649;
+    --tok-inserted: #50a14f;
+    --tok-deleted: #e45649;
+}
+
+:root[data-theme="light"] {
+    color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+
+    --nacara-bg: #0f1419;
+    --nacara-bg-subtle: #161c23;
+    --nacara-bg-raised: #1a2129;
+    --nacara-border: #2a333d;
+    --nacara-text: #e6edf3;
+    --nacara-text-muted: #9aa7b4;
+    --nacara-primary: #6ea8fe;
+    --nacara-primary-contrast: #0f1419;
+    --nacara-primary-subtle: #182742;
+    --nacara-shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 4px 14px rgb(0 0 0 / 35%);
+
+    --nacara-note: #6ea8fe;
+    --nacara-tip: #56d4a0;
+    --nacara-warning: #e2b23c;
+    --nacara-danger: #ff7b72;
+
+    --tok-comment: #7f848e;
+    --tok-string: #98c379;
+    --tok-number: #d19a66;
+    --tok-constant: #d19a66;
+    --tok-constructor: #61afef;
+    --tok-property: #e06c75;
+    --tok-escape: #56b6c2;
+    --tok-keyword: #c678dd;
+    --tok-operator: #56b6c2;
+    --tok-function: #61afef;
+    --tok-type: #e5c07b;
+    --tok-namespace: #61afef;
+    --tok-variable: #abb2bf;
+    --tok-parameter: #abb2bf;
+    --tok-punctuation: #abb2bf;
+    --tok-tag: #e06c75;
+    --tok-attribute: #d19a66;
+    --tok-preprocessor: #c678dd;
+    --tok-invalid: #e06c75;
+    --tok-inserted: #98c379;
+    --tok-deleted: #e06c75;
+}

@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Plugin.Highlight.TreeSitter</PackageId>
+        <Description>Syntax highlighting for Nacara, backed by tree-sitter grammars compiled to wasm.</Description>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Runtime.fs" />
+        <Compile Include="Toolchain.fs" />
+        <Compile Include="Native.fs" />
+        <Compile Include="Grammar.fs" />
+        <Compile Include="TreeSitter.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- Bundled languages -->
+        <EmbeddedResource Include="grammars/**/grammar.wasm.gz;grammars/**/highlights.scm">
+            <LogicalName>grammars/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+        </EmbeddedResource>
+        <!-- Their licences travel in the package, where a reader can find them. -->
+        <None Include="grammars/**/LICENSE;grammars/NOTICES.md" Pack="true" PackagePath="grammars/" Visible="false" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- The native side is published to npm, one package per platform, and fetched for the
+             platform a site is built on - so it is not packed here. What is in this directory is
+             copied beside the build, which is how Nacara's own docs and tests find it without
+             fetching anything. The build project's `tree-sitter runtime` command puts it there. -->
+        <None Include="runtimes/**/*" Pack="false" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,297 @@
+/*
+    The block
+*/
+
+.nacara-code {
+    margin: 0 0 var(--nacara-space-4);
+    border: 1px solid var(--nacara-border);
+    border-radius: var(--nacara-radius);
+    background: var(--nacara-bg-subtle);
+    overflow: hidden;
+}
+.nacara-code[data-frame="none"] {
+    border: none;
+    background: none;
+}
+.nacara-code__title {
+    padding: var(--nacara-space-2) var(--nacara-space-4);
+    border-bottom: 1px solid var(--nacara-border);
+    color: var(--nacara-text-muted);
+    font-family: var(--nacara-font-mono);
+    font-size: 0.8125rem;
+}
+.nacara-code__body {
+    position: relative;
+    /* A block that folds lines is drawn as several <pre>. */
+    padding: var(--nacara-space-4) 0;
+}
+.nacara-code pre {
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+}
+/* A ligature font draws |> as one arrow, and the bar is then not there to copy or find. */
+.nacara-code code {
+    display: block;
+    font-family: var(--nacara-font-mono);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    font-variant-ligatures: none;
+}
+
+.nacara-code[data-frame="terminal"] .nacara-code__title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--nacara-space-2);
+    position: relative;
+    padding-left: 4.25rem;
+    padding-right: 4.25rem;
+    font-family: var(--nacara-font-sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+}
+.nacara-code[data-frame="terminal"] .nacara-code__title::before {
+    content: "";
+    position: absolute;
+    left: var(--nacara-space-4);
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--nacara-danger);
+    box-shadow:
+        0.95rem 0 0 var(--nacara-warning),
+        1.9rem 0 0 var(--nacara-tip);
+    opacity: 0.75;
+}
+.nacara-code[data-frame="terminal"] .nacara-code__body {
+    background: var(--nacara-bg);
+}
+.nacara-code[data-frame="terminal"] pre {
+    padding-left: var(--nacara-space-2);
+}
+
+/*
+    Lines, markers and words
+*/
+
+.nacara-code__line {
+    position: relative;
+    display: block;
+    padding: 0 var(--nacara-space-4);
+    border-left: 2px solid transparent;
+}
+.nacara-code[data-line-numbers="true"] .nacara-code__line::before {
+    content: attr(data-line);
+    display: inline-block;
+    width: 2.5em;
+    margin-left: -1em;
+    padding-right: var(--nacara-space-3);
+    text-align: right;
+    color: var(--nacara-text-muted);
+    user-select: none;
+}
+.nacara-code[data-wrap="true"] .nacara-code__line {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+.nacara-code__line[data-marker="mark"] {
+    background: color-mix(in srgb, var(--nacara-primary) 12%, transparent);
+    border-left-color: var(--nacara-primary);
+}
+.nacara-code__line[data-marker="ins"] {
+    background: color-mix(in srgb, var(--nacara-tip) 14%, transparent);
+    border-left-color: var(--nacara-tip);
+}
+.nacara-code__line[data-marker="del"] {
+    background: color-mix(in srgb, var(--nacara-danger) 14%, transparent);
+    border-left-color: var(--nacara-danger);
+}
+.nacara-code__line[data-marker="ins"]::after,
+.nacara-code__line[data-marker="del"]::after {
+    position: absolute;
+    top: 0;
+    right: var(--nacara-space-2);
+    font-weight: 700;
+}
+.nacara-code__line[data-marker="ins"]::after {
+    content: "+";
+    color: var(--nacara-tip);
+}
+.nacara-code__line[data-marker="del"]::after {
+    content: "−";
+    color: var(--nacara-danger);
+}
+.nacara-code__word {
+    padding: 0.1em 0.2em;
+    border-radius: var(--nacara-radius-sm);
+    background: color-mix(in srgb, var(--nacara-primary) 18%, transparent);
+    color: inherit;
+}
+.nacara-code__word[data-marker="ins"] {
+    background: color-mix(in srgb, var(--nacara-tip) 22%, transparent);
+}
+.nacara-code__word[data-marker="del"] {
+    background: color-mix(in srgb, var(--nacara-danger) 22%, transparent);
+}
+.nacara-code__collapsed summary {
+    padding: var(--nacara-space-1) var(--nacara-space-4);
+    border-top: 1px solid var(--nacara-border);
+    border-bottom: 1px solid var(--nacara-border);
+    background: var(--nacara-border);
+    color: var(--nacara-text);
+    font-size: 0.8125rem;
+    cursor: pointer;
+
+    &:hover {
+        background: color-mix(in srgb, var(--nacara-text-muted) 25%, var(--nacara-border));
+    }
+}
+.nacara-code__collapsed[open] summary {
+    border-bottom-color: transparent;
+}
+.nacara-code__collapsed[open] pre {
+    border-bottom: 1px solid var(--nacara-border);
+    background: color-mix(in srgb, var(--nacara-border) 50%, transparent);
+}
+
+/*
+    Copy button
+*/
+
+.nacara-code__copy {
+    position: absolute;
+    top: var(--nacara-space-2);
+    right: var(--nacara-space-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--nacara-border);
+    border-radius: var(--nacara-radius-sm);
+    background: var(--nacara-bg);
+    color: var(--nacara-text-muted);
+    opacity: 0;
+    transition: opacity 0.12s ease;
+    cursor: pointer;
+}
+.nacara-code__body:hover .nacara-code__copy,
+.nacara-code__copy:focus-visible {
+    opacity: 1;
+}
+.nacara-code__copy:hover {
+    color: var(--nacara-text);
+}
+.nacara-code__copy svg {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+.nacara-code__copy .nacara-code__copy-done,
+.nacara-code__copy[data-copied="true"] .nacara-code__copy-idle {
+    display: none;
+}
+.nacara-code__copy[data-copied="true"] .nacara-code__copy-done {
+    display: block;
+    color: var(--nacara-tip);
+}
+.nacara-code__copy[data-copied] {
+    opacity: 1;
+}
+.nacara-code__copy[data-copied="false"] {
+    color: var(--nacara-danger, var(--nacara-text));
+}
+
+.nacara-code__copy[data-feedback]::after {
+    content: attr(data-feedback);
+    position: absolute;
+    right: calc(100% + var(--nacara-space-2));
+    padding: 0.125rem 0.5rem;
+    border: 1px solid var(--nacara-border);
+    border-radius: var(--nacara-radius-sm);
+    background: var(--nacara-bg);
+    color: var(--nacara-text);
+    font-size: 0.75rem;
+    line-height: 1.6;
+    white-space: nowrap;
+}
+
+/*
+    Tokens
+*/
+
+.tok-comment {
+    color: var(--tok-comment);
+    font-style: italic;
+}
+.tok-string {
+    color: var(--tok-string);
+}
+.tok-number {
+    color: var(--tok-number);
+}
+.tok-constant {
+    color: var(--tok-constant);
+}
+.tok-constructor {
+    color: var(--tok-constructor);
+}
+.tok-property {
+    color: var(--tok-property);
+}
+.tok-escape {
+    color: var(--tok-escape);
+}
+.tok-keyword {
+    color: var(--tok-keyword);
+}
+.tok-operator {
+    color: var(--tok-operator);
+}
+.tok-function {
+    color: var(--tok-function);
+}
+.tok-type {
+    color: var(--tok-type);
+}
+.tok-namespace {
+    color: var(--tok-namespace);
+}
+.tok-variable {
+    color: var(--tok-variable);
+}
+.tok-parameter {
+    color: var(--tok-parameter);
+}
+.tok-punctuation {
+    color: var(--tok-punctuation);
+}
+.tok-tag {
+    color: var(--tok-tag);
+}
+.tok-attribute {
+    color: var(--tok-attribute);
+}
+.tok-preprocessor {
+    color: var(--tok-preprocessor);
+}
+.tok-invalid {
+    color: var(--tok-invalid);
+    text-decoration: underline wavy;
+}
+.tok-inserted {
+    color: var(--tok-inserted);
+}
+.tok-deleted {
+    color: var(--tok-deleted);
+}
+.tok-bold {
+    font-weight: 700;
+}
+.tok-italic {
+    font-style: italic;
+}
+.tok-heading {
+    font-weight: 700;
+    color: var(--nacara-primary);
+}

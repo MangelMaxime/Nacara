@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Plugin.Assets.LightningCss</PackageId>
+        <Description>Bundle and minify a Nacara site's CSS with Lightning CSS, for the browsers it names.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Binary.fs" />
+        <Compile Include="LightningCss.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+    </ItemGroup>
+</Project>

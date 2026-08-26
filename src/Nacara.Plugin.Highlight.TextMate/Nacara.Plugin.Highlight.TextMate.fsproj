@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Plugin.Highlight.TextMate</PackageId>
+        <Description>Syntax highlighting for Nacara, backed by TextMate grammars and rendered as CSS classes.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Scopes.fs" />
+        <Compile Include="TextMate.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="TextMateSharp" />
+        <PackageReference Include="TextMateSharp.Grammars" />
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+    </ItemGroup>
+</Project>

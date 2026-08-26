@@ -1,0 +1,7 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Checks the formatting of the F# files being committed - the same check CI runs, so a
+# pull request cannot fail on something a commit could have caught. `dotnet fantomas src
+# tests docs` fixes what it reports.
+dotnet husky run --group pre-commit
