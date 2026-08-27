@@ -8,7 +8,19 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      # Every platform reports, so one failing does not hide what the others would have said.
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    # ./build.sh is the entry point everywhere; on Windows that is the runner's git bash.
+    defaults:
+      run:
+        shell: bash
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,6 +37,12 @@ jobs:
         with:
           node-version: lts/*
           cache: npm
+
+      # cl.exe and link.exe, for the tree-sitter runtime. This exports Platform=x64, which
+      # MSBuild takes as a global property and adds to the output path - hence bin/x64/.
+      - name: Set up MSVC
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
 
       - name: Restore
         run: dotnet restore Nacara.slnx
@@ -55,5 +73,6 @@ jobs:
       - name: Restore the formatters
         run: dotnet tool restore
 
+      # Runs everywhere on purpose: a checkout that brings carriage returns fails here first.
       - name: Check formatting
         run: ./build.sh format --check
