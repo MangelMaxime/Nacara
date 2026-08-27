@@ -16,9 +16,6 @@ on:
       publish:
         type: boolean
         default: false
-    secrets:
-      NPM_TOKEN:
-        required: false
   workflow_dispatch:
     inputs:
       publish:
@@ -100,10 +97,8 @@ jobs:
       - name: Verify that everything works
         run: ./build.sh test
 
-      # NODE_AUTH_TOKEN is only for the first publish of a package: a trusted publisher is
-      # configured on a package that exists, so there is nothing to configure until then.
+      # No token: each package names this workflow as its trusted publisher, so npm
+      # exchanges the OIDC token above for a credential that lasts one publish.
       - name: Publish it
         if: ${{ inputs.publish }}
         run: ./build.sh tree-sitter publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
