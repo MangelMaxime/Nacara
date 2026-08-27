@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Plugin.Deploy.GitHubPages</PackageId>
+        <Description>Publish a Nacara site to the branch GitHub Pages serves, one version at a time.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Git.fs" />
+        <Compile Include="GitHubPages.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="FsToolkit.ErrorHandling" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+    </ItemGroup>
+</Project>

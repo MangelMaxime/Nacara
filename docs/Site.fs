@@ -201,7 +201,6 @@ let site =
     |> Site.description "A documentation engine for F#, where the site is an F# program"
     |> Site.baseUrl "/Nacara/"
     |> Site.origin "https://mangelmaxime.github.io"
-    |> Site.output "output"
     |> Site.staticFiles "static"
     |> Markdown.register
     |> TreeSitter.register
@@ -232,6 +231,7 @@ let site =
     |> Nuglify.minifyHtml
     |> Esbuild.register
     |> Versions.register versions
+    |> GitHubPages.register
     |> Theme.register theme
     |> Site.collection content
     |> Site.collection changelog

@@ -51,6 +51,14 @@
           "Nacara.Core": "[1.0.0, )"
         }
       },
+      "nacara.plugin.deploy.githubpages": {
+        "type": "Project",
+        "dependencies": {
+          "FSharp.Core": "[10.1.300, )",
+          "FsToolkit.ErrorHandling": "[5.2.0, )",
+          "Nacara.Core": "[1.0.0, )"
+        }
+      },
       "nacara.plugin.fsharpapi": {
         "type": "Project",
         "dependencies": {
@@ -160,6 +168,15 @@
         "contentHash": "Ydo8HRHMewaGL6N1jFwFunI6aqyrv0Ndy1en3tT2jq3rGEDX53H2xqihD6mvbuIODB9TtLZi5hB2BZa2nVDnXg==",
         "dependencies": {
           "FSharp.Core": "[10.1.400]"
+        }
+      },
+      "FsToolkit.ErrorHandling": {
+        "type": "CentralTransitive",
+        "requested": "[5.2.0, )",
+        "resolved": "5.2.0",
+        "contentHash": "Y7NfN1gDJ5eOANmi8/aEjGHTWrJOYyqwmgtdA3BIZggd0Ph0IIsbewtgNaLkDYFGgkKw6mGlk0iw4RZ2ZRKZhA==",
+        "dependencies": {
+          "FSharp.Core": "9.0.300"
         }
       },
       "Markdig": {

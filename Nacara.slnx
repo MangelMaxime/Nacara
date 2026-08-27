@@ -21,6 +21,7 @@
     <Project Path="src/Nacara.Plugin.LiveExample/Nacara.Plugin.LiveExample.fsproj" />
     <Project Path="src/Nacara.Plugin.LinkValidator/Nacara.Plugin.LinkValidator.fsproj" />
     <Project Path="src/Nacara.Plugin.Linter.Rumdl/Nacara.Plugin.Linter.Rumdl.fsproj" />
+    <Project Path="src/Nacara.Plugin.Deploy.GitHubPages/Nacara.Plugin.Deploy.GitHubPages.fsproj" />
     <Project Path="src/Nacara.Plugin.FSharpApi/Nacara.Plugin.FSharpApi.fsproj" />
     <Project Path="src/Nacara.Theme.Default/Nacara.Theme.Default.fsproj" />
   </Folder>

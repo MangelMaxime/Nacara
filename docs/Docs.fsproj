@@ -19,6 +19,7 @@
         <ProjectReference Include="../src/Nacara.Plugin.Sitemap/Nacara.Plugin.Sitemap.fsproj" />
         <ProjectReference Include="../src/Nacara.Plugin.LinkValidator/Nacara.Plugin.LinkValidator.fsproj" />
         <ProjectReference Include="../src/Nacara.Plugin.Linter.Rumdl/Nacara.Plugin.Linter.Rumdl.fsproj" />
+        <ProjectReference Include="../src/Nacara.Plugin.Deploy.GitHubPages/Nacara.Plugin.Deploy.GitHubPages.fsproj" />
         <ProjectReference Include="../src/Nacara.Plugin.FSharpApi/Nacara.Plugin.FSharpApi.fsproj" />
         <ProjectReference Include="../src/Nacara.Plugin.Assets.Esbuild/Nacara.Plugin.Assets.Esbuild.fsproj" />
         <ProjectReference Include="../src/Nacara.Plugin.Assets.LightningCss/Nacara.Plugin.Assets.LightningCss.fsproj" />

@@ -25,6 +25,7 @@
         <PackageVersion Include="FSharp.Compiler.Service" Version="43.12.400" />
         <PackageVersion Include="TextMateSharp" Version="2.0.4" />
         <PackageVersion Include="TextMateSharp.Grammars" Version="2.0.4" />
+        <PackageVersion Include="FsToolkit.ErrorHandling" Version="5.2.0" />
         <PackageVersion Include="EasyBuild.PackageReleaseNotes.Tasks" Version="2.1.0" />
         <PackageVersion Include="Scriptorium.Quill" Version="0.6.0" />
         <PackageVersion Include="Scriptorium.Nib" Version="0.4.1" />
