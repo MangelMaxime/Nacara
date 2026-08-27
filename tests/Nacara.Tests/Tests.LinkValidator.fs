@@ -60,7 +60,7 @@ let private serve (answer: string -> HttpListenerResponse -> unit) =
     port, requests, (fun () -> http.Stop())
 
 let all =
-    testList (
+    testSequenced (
         "Links",
         [
             test (

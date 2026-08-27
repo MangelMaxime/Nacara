@@ -56,7 +56,7 @@ let private engine =
         "Nacara.Core.dll"
 
 let all =
-    testList (
+    testSequenced (
         "Api",
         [
             test (

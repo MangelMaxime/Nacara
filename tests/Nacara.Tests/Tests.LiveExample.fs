@@ -16,7 +16,7 @@ let private read (root: AbsolutePath) (path: string) =
     File.ReadAllText(Path.Combine(AbsolutePath.value root, path))
 
 let all =
-    testList (
+    testSequenced (
         "LiveExample",
         [
             test (

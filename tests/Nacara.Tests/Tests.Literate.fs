@@ -2,7 +2,6 @@ module Nacara.Tests.Literate
 
 open Scriptorium.Nib.Assertion
 open type Scriptorium.Quill.Test
-open Scriptorium.Quill
 open System.IO
 open Nacara.Core
 open Nacara.Plugins
@@ -31,9 +30,8 @@ printfn "%i" answer
 let private blocks = Literate.parse source
 
 let all =
-    testList (
+    testSequenced (
         "Literate",
-        timeout 30000,
         [
             test (
                 "an example that does not compile fails the build",
