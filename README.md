@@ -17,8 +17,7 @@ let main argv = Nacara.run site argv
 
 Nacara runs on .NET, needs no Node.js, and type-checks your configuration. Front matter is decoded
 into types you declare, links are resolved against the route table so a broken one fails the build,
-and markdown, highlighting, search, changelogs, versions, literate F#, link checking and the API
-reference of your library are all plugins on a small core.
+and everything else - from markdown to your library's API reference - is a plugin on a small core.
 
 ```bash
 dotnet new install Nacara.Templates
