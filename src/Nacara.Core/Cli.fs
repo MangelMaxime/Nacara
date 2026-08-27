@@ -391,7 +391,20 @@ NOTE
                             printfn $"From %s{command.Source}, which documents no arguments."
 
                         0
-                    | rest -> command.Run options.ProjectRoot rest
+                    | rest ->
+                        command.Run
+                            {
+                                Site =
+                                    { Site.toInfo site with
+                                        PageAssets = Registry.extras<PageAsset> registry.Value
+                                    }
+                                ProjectRoot = options.ProjectRoot
+                                OutputDirectory =
+                                    AbsolutePath.combine
+                                        options.ProjectRoot
+                                        [ site.OutputDirectory ]
+                                Arguments = rest
+                            }
                 | [] ->
                     Log.error $"Unknown command '%s{name}'"
                     printfn ""

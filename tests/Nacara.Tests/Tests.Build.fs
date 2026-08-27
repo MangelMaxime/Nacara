@@ -423,8 +423,8 @@ let all =
                                     PluginCommand.create
                                         "greet"
                                         "Say hello"
-                                        (fun _ arguments ->
-                                            ran.AddRange arguments
+                                        (fun context ->
+                                            ran.AddRange context.Arguments
                                             0
                                         )
                                 )
@@ -448,13 +448,20 @@ let all =
                         (command |> PluginCommand.help "greet [name]" |> _.Help)
                         (tag "which a plugin fills in" >> isEqualTo (Some "greet [name]"))
 
+                    let root = AbsolutePath.create "/tmp"
+
                     assertThat
                         (command.Run
-                            (AbsolutePath.create "/tmp")
-                            [
-                                "--loudly"
-                                "world"
-                            ])
+                            {
+                                Site = Site.toInfo (Site.create "Greeting")
+                                ProjectRoot = root
+                                OutputDirectory = AbsolutePath.combine root [ "output" ]
+                                Arguments =
+                                    [
+                                        "--loudly"
+                                        "world"
+                                    ]
+                            })
                         (tag "and running it returns its exit code" >> isEqualTo 0)
 
                     assertThat

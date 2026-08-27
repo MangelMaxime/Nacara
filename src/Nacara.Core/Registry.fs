@@ -193,6 +193,17 @@ and HookContext =
 /// <c>Extras</c> is how plugins extend <em>each other</em> with the core knowing about neither: the
 /// markdown plugin reads every <c>MarkdigExtension</c> registered, a theme every <c>NavbarItem</c>.
 /// </remarks>
+/// <summary>What a plugin's command is given when it runs.</summary>
+and CommandContext =
+    {
+        Site: SiteInfo
+        ProjectRoot: AbsolutePath
+        /// Where a build of this site writes, whether or not one has run.
+        OutputDirectory: AbsolutePath
+        /// Everything typed after the command's name.
+        Arguments: string list
+    }
+
 /// <summary>A subcommand a plugin adds to the site's command line.</summary>
 /// <remarks>
 /// For work a build should not be doing: rewriting your sources, clearing a cache, printing what a
@@ -204,9 +215,9 @@ and PluginCommand =
         Name: string
         /// One line, shown in <c>--help</c> beside the name.
         Summary: string
-        /// <summary>What it does. Anything after the command name is passed through.</summary>
+        /// <summary>What it does, given the site it was run in.</summary>
         /// <returns>The process's exit code: <c>0</c> when it worked.</returns>
-        Run: AbsolutePath -> string list -> int
+        Run: CommandContext -> int
         /// <summary>What <c>&lt;command&gt; --help</c> prints.</summary>
         /// <remarks>The summary is all a reader gets without this, which does not tell them what
         /// the command takes. Say what the arguments are and show a line of it being used.</remarks>
@@ -258,8 +269,8 @@ module PluginCommand =
     /// <summary>A subcommand, ready to register.</summary>
     /// <param name="name">What a reader types.</param>
     /// <param name="summary">One line, for the help.</param>
-    /// <param name="run">Given the project root and everything typed after the name, the exit
-    /// code.</param>
+    /// <param name="run">Given the site, where it writes and what was typed after the name, the
+    /// exit code.</param>
     let create name summary run =
         {
             Name = name

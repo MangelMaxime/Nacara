@@ -204,9 +204,11 @@ module Rumdl =
 
     /// <summary>Let rumdl fix what it can, in place.</summary>
     /// <param name="options">What the site configured the plugin with.</param>
-    /// <param name="root">Where to look when nothing is named.</param>
-    /// <param name="arguments">Paths to fix.</param>
-    let private fix (options: RumdlOptions) (root: AbsolutePath) (arguments: string list) =
+    /// <param name="context">The site it was run in, and the paths to fix.</param>
+    let private fix (options: RumdlOptions) (context: CommandContext) =
+        let root = context.ProjectRoot
+        let arguments = context.Arguments
+
         match (binary options).Value with
         | Error message ->
             Log.error $"rumdl is not available: %s{message}"
