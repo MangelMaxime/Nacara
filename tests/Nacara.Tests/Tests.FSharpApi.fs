@@ -9,22 +9,30 @@ open Nacara.Plugins
 open Nacara.Plugins.Internal
 open Nacara.Tests
 
+// Walk up to the bin folder, so whatever MSBuild put in between comes with us: a developer
+// command prompt exports Platform, and that adds a level - bin/x64/Debug/net10.0.
+let private outputTail =
+    let rec walk (directory: DirectoryInfo) (tail: string list) =
+        if Operators.isNull directory then
+            failwith $"'%s{AppContext.BaseDirectory}' is not under a bin directory"
+        elif directory.Name = "bin" then
+            tail
+        else
+            walk directory.Parent (directory.Name :: tail)
+
+    walk (DirectoryInfo AppContext.BaseDirectory) []
+
 /// <summary>
 /// Where a sibling project put its assembly, in whichever configuration this test is running in.
 /// </summary>
 let private built (segments: string list) (assembly: string) =
-    let here = DirectoryInfo AppContext.BaseDirectory
-    let framework = here.Name
-    let configuration = here.Parent.Name
-
     Path.Combine(
         [|
             __SOURCE_DIRECTORY__
             ".."
             yield! segments
             "bin"
-            configuration
-            framework
+            yield! outputTail
             assembly
         |]
     )
