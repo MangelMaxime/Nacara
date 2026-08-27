@@ -38,12 +38,6 @@ jobs:
           node-version: lts/*
           cache: npm
 
-      # cl.exe and link.exe, for the tree-sitter runtime. This exports Platform=x64, which
-      # MSBuild takes as a global property and adds to the output path - hence bin/x64/.
-      - name: Set up MSVC
-        if: runner.os == 'Windows'
-        uses: ilammy/msvc-dev-cmd@v1
-
       - name: Restore
         run: dotnet restore Nacara.slnx
 
@@ -56,6 +50,17 @@ jobs:
         with:
           path: src/Nacara.Plugin.Highlight.TreeSitter/runtimes
           key: tree-sitter-runtime-${{ runner.os }}-${{ runner.arch }}-${{ env.ImageOS }}-${{ hashFiles('build/Commands/TreeSitter/Runtime.fs', 'src/Nacara.Plugin.Highlight.TreeSitter/Runtime.fs') }}
+
+      # Only when there is C to compile.
+      - name: Set up MSVC
+        if: runner.os == 'Windows' && steps.runtime.outputs.cache-hit != 'true'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      # vcvars exports Platform=x64, which MSBuild reads as a global property and then looks for
+      # a Debug|x64 no solution here has. Empty reads as unset; cl.exe goes by INCLUDE and LIB.
+      - name: Keep MSVC's Platform away from MSBuild
+        if: runner.os == 'Windows' && steps.runtime.outputs.cache-hit != 'true'
+        run: echo "Platform=" >> "$GITHUB_ENV"
 
       - name: Build the tree-sitter runtime
         if: steps.runtime.outputs.cache-hit != 'true'
