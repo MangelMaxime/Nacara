@@ -51,60 +51,79 @@ cd docs && dotnet run -- watch
 
 `docs/` is this repository's own site, built by the engine it documents.
 
-## Working on it
+## Development
 
-Requirements: the .NET SDK pinned in `global.json`, and Node. `build.sh` and `build.bat` are the
-same entry point on either platform, and they install the Node dependencies themselves.
-`package.json` pins esbuild, which bundles the JavaScript that ships inside
-`Nacara.Theme.Default` and `Nacara.Plugin.LiveExample`, and Biome, which formats the css and the
-javascript. Building the solution with `dotnet build` rather than through `build.sh` wants them
-already installed: `npm ci`. Node builds *this repository*; a site needs none of it, because the
-packages ship the bundles already built.
+You need the .NET SDK pinned in `global.json`, and Node. After cloning:
 
 ```bash
-dotnet build Nacara.slnx        # build everything
-./build.sh test                 # run the tests (--update-snapshots accepts them)
-./build.sh format               # format the F#, the css and the javascript
-./build.sh docs watch           # the documentation, served and live-reloading
-./build.sh docs watch --host    # the same, reachable from another machine
-./build.sh docs check           # build it all, write none of it
-./build.sh --help               # everything else the build project does
+dotnet tool restore
+dotnet husky install     # commit-message hook
 ```
 
-[`ARCHITECTURE.md`](ARCHITECTURE.md) records the decisions and why they were made.
-[`ROADMAP.md`](ROADMAP.md) is the durable state of the effort.
+`build.sh` and `build.bat` are the same entry point on either platform, and they install the Node
+dependencies themselves. Run `npm ci` yourself if you build with `dotnet build` instead.
 
-## Status
+```bash
+./build.sh test                 # the test suite (-u accepts new snapshots)
+./build.sh format               # Fantomas the F#, Biome the css and the javascript
+./build.sh docs watch           # this repository's site, served and live-reloading
+./build.sh docs check           # build every page, write nothing, fail on anything wrong
+./build.sh --help               # everything else
+```
 
-Version 3 is under development on this branch. Version 2 - a Fable and Node.js generator with a
-different architecture - lives on `master` and is in maintenance.
+`test` and `docs check` both run in CI on every push, so run them before opening a pull request.
 
-## Licence
+Commits follow [Conventional Commits](https://www.conventionalcommits.org), checked by a git hook
+and again in CI. The changelogs are written from them.
 
-Apache-2.0
+### The tree-sitter runtime
+
+`Nacara.Plugin.Highlight.TreeSitter` needs two native libraries - tree-sitter built with wasm
+support, and wasmtime. They are looked for in this order:
+
+1. `src/Nacara.Plugin.Highlight.TreeSitter/runtimes/<rid>/native`, copied beside whatever you build
+2. `~/.cache/nacara/tree-sitter-runtime/<version>`
+3. `@nacara/tree-sitter-runtime-<rid>` on npm, downloaded into that cache
+
+On a fresh clone you do nothing: the first build that colours code fetches them.
+
+Build them yourself after bumping `Runtime.Version` in
+`src/Nacara.Plugin.Highlight.TreeSitter/Runtime.fs`, since npm has nothing under the new version
+until CI publishes it:
+
+```bash
+./build.sh tree-sitter runtime           # needs a C compiler; cl.exe on Windows
+./build.sh tree-sitter bundle            # the grammars that ship in the package
+./build.sh tree-sitter publish --dry-run
+```
+
+A copy in `runtimes/` wins over the cache and over npm whatever its version, so delete it when you
+want to check what a user gets.
+
+The `Native runtimes` workflow builds all six platforms and publishes them to npm when dispatched
+with `publish=true`.
 
 ## Releasing
 
 Each package carries its own `CHANGELOG.md` beside its project, written by
 [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt) from the commits that touched
-that package - so a change to the search plugin releases the search plugin, and nothing else.
+that package.
 
 ```bash
-dotnet shipit --dry-run --allow-branch v3 --skip-merge-commit --skip-invalid-commit
+dotnet shipit --dry-run --allow-branch main --skip-merge-commit --skip-invalid-commit
 ```
 
-That prints the version each package would get and the pull request it would open. CI does the same
-thing after a green build on `v3`; merging that pull request writes a `chore: release …` commit, and
-that commit is what publishes. Versions and release notes come from the changelogs through
-[EasyBuild.PackageReleaseNotes.Tasks](https://github.com/easybuild-org/EasyBuild.PackageReleaseNotes.Tasks),
-so no version is written by hand anywhere.
+CI runs the same after a green build on `main` and opens a pull request updating the changelogs.
+Merging it writes a `chore: release …` commit, and that commit publishes.
 
-Commit messages are [Conventional Commits](https://www.conventionalcommits.org), checked by
-`EasyBuild.CommitLinter` in a git hook and again in CI - because they are what the changelogs are
-made of. `dotnet husky install` sets the hooks up after a fresh clone.
+The first release of a package needs `force_version` in its changelog's front matter. Remove the
+line once it has been released.
 
-The first release of a package needs `force_version` in its changelog's front matter, since the
-version ShipIt would work out on its own starts from zero. Each package carries its own line:
-`Nacara.Core` continues the one already on NuGet and starts at `2.0.0-beta.1`, and every other
-package is new and starts at `1.0.0-beta.1`. Remove the line once a package has been released -
-it is applied on every run, not only the first.
+## Status
+
+Version 3 is under development. Version 2 - a Fable and Node.js generator with a different
+architecture - lives on `master` and is in maintenance.
+
+## Licence
+
+Apache-2.0
