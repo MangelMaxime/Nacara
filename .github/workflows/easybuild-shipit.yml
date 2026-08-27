@@ -29,13 +29,13 @@ jobs:
     runs-on: ubuntu-latest
     if: "github.event.workflow_run.conclusion == 'success' && !startsWith(github.event.workflow_run.head_commit.message, 'chore: release ')"
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           # The changelog is written from the commit history, so one commit is not enough.
           fetch-depth: 200
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
 
@@ -53,10 +53,10 @@ jobs:
     # Only the commit ShipIt writes publishes anything.
     if: "startsWith(github.event.workflow_run.head_commit.message, 'chore: release ')"
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
 
@@ -64,7 +64,7 @@ jobs:
       # Nacara.Plugin.LiveExample, so esbuild has to be here before dotnet pack runs.
       # `dotnet pack` is run directly here rather than through ./build.sh release,
       # which is what installs it everywhere else.
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: lts/*
           cache: npm

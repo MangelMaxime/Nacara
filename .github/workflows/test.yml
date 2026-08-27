@@ -22,18 +22,18 @@ jobs:
         shell: bash
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 1000
 
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json
 
       # Bundling the JavaScript that ships inside Nacara.Theme.Default and
       # Nacara.Plugin.LiveExample needs esbuild, and Biome formats the css and the javascript.
       # ./build.sh installs them itself; this is what pins node and caches the download.
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: lts/*
           cache: npm
@@ -46,7 +46,7 @@ jobs:
       # decide their contents. Every platform is built by .github/workflows/native-runtimes.yml.
       - name: Cache the tree-sitter runtime
         id: runtime
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: src/Nacara.Plugin.Highlight.TreeSitter/runtimes
           key: tree-sitter-runtime-${{ runner.os }}-${{ runner.arch }}-${{ env.ImageOS }}-${{ hashFiles('build/Commands/TreeSitter/Runtime.fs', 'src/Nacara.Plugin.Highlight.TreeSitter/Runtime.fs') }}
