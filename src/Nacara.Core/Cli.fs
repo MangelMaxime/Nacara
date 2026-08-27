@@ -249,6 +249,21 @@ NOTE
             Log.success $"Built %s{summary}"
             0
 
+    let private emptyOutput (options: Options) (site: Site) =
+        let output = AbsolutePath.combine options.ProjectRoot [ site.OutputDirectory ]
+        let path = AbsolutePath.value output
+
+        // Somewhere above the project is not this site's to empty.
+        if
+            path = AbsolutePath.value options.ProjectRoot
+            || not (path.StartsWith(AbsolutePath.value options.ProjectRoot + "/"))
+        then
+            Log.warn
+                $"'%s{site.OutputDirectory}' is not inside the project, so it was left as it was"
+        elif Directory.Exists path then
+            Directory.Delete(path, true)
+            Log.debug $"Emptied %s{site.OutputDirectory}"
+
     let private watch (options: Options) (site: Site) =
         let cache = BuildCache()
 
@@ -364,7 +379,9 @@ NOTE
                         Log.success $"Removed %s{Tool.cache} (%.1f{megabytes} MB)"
 
                 0
-            | "build" -> report options (Build.run options.ProjectRoot site)
+            | "build" ->
+                emptyOutput options site
+                report options (Build.run options.ProjectRoot site)
             | "check" -> report options (Build.check options.ProjectRoot site)
             | "watch"
             | "serve" -> watch options site
