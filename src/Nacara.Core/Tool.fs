@@ -117,16 +117,31 @@ module Tool =
             )
         )
 
-    /// <summary>Where a tool of this version lives, whether or not it is there yet.</summary>
-    /// <param name="request">The tool being asked about.</param>
-    let directory (request: ToolRequest) =
+    /// <summary>Where every tool this machine has fetched is kept.</summary>
+    let cache =
         Path.Combine(
             Environment.GetFolderPath Environment.SpecialFolder.UserProfile,
             ".cache",
-            "nacara",
-            request.Name,
-            request.Version
+            "nacara"
         )
+
+    /// <summary>Where a tool of this version lives, whether or not it is there yet.</summary>
+    /// <param name="request">The tool being asked about.</param>
+    let directory (request: ToolRequest) =
+        Path.Combine(cache, request.Name, request.Version)
+
+    /// <summary>Delete everything cached, whichever tool put it there.</summary>
+    /// <returns>How many bytes were freed.</returns>
+    let clearCache () =
+        if Directory.Exists cache then
+            let size =
+                Directory.EnumerateFiles(cache, "*", SearchOption.AllDirectories)
+                |> Seq.sumBy (fun file -> FileInfo(file).Length)
+
+            Directory.Delete(cache, true)
+            size
+        else
+            0L
 
     let private runnable (path: string) =
         if not (RuntimeInformation.IsOSPlatform OSPlatform.Windows) then

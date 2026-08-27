@@ -16,6 +16,7 @@ module Nacara =
             Host: string
             Verbose: bool
             Strict: bool
+            Global: bool
             Version: string option
             /// Everything after a command the engine does not know, kept for whichever plugin does.
             Rest: string list
@@ -46,6 +47,7 @@ COMMANDS
     watch, serve    Build, serve on localhost and rebuild on change
     check           Build without writing anything, for CI
     clean           Delete the output directory and the build cache beside it
+                    --global also empties the shared cache of downloaded tools
     version         Print the engine version
 
 OPTIONS
@@ -54,6 +56,7 @@ OPTIONS
     --host [name]   Address watch listens on (default: localhost; bare '--host' listens on all)
     --version <v>   Deploy this build under a version prefix
     --strict        Treat warnings as errors, for build and check alike
+    --global        With clean, also empty ~/.cache/nacara
     --verbose       Log what the build is doing
     --help          Show this help
 
@@ -134,6 +137,12 @@ NOTE
                         Strict = true
                     }
                     rest
+            | "--global" :: rest ->
+                loop
+                    { options with
+                        Global = true
+                    }
+                    rest
             | "--verbose" :: rest ->
                 loop
                     { options with
@@ -169,6 +178,7 @@ NOTE
                 Host = "localhost"
                 Verbose = false
                 Strict = false
+                Global = false
                 Version = None
                 Rest = []
             }
@@ -345,6 +355,13 @@ NOTE
 
                 Log.success
                     $"Removed %s{site.OutputDirectory} and %s{ProjectCache.PROJECT_CACHE_DIR_NAME}"
+
+                if options.Global then
+                    match Tool.clearCache () with
+                    | 0L -> Log.info $"Nothing cached in %s{Tool.cache}"
+                    | freed ->
+                        let megabytes = float freed / 1_048_576.0
+                        Log.success $"Removed %s{Tool.cache} (%.1f{megabytes} MB)"
 
                 0
             | "build" -> report options (Build.run options.ProjectRoot site)
