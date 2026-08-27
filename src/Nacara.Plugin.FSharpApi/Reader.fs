@@ -3,6 +3,8 @@ namespace Nacara.Plugins.Internal
 open System
 open Nacara.Plugins
 open System.IO
+open System.Reflection.Metadata
+open System.Reflection.PortableExecutable
 open FSharp.Compiler.CodeAnalysis
 open FSharp.Compiler.Symbols
 open Nacara.Core
@@ -457,6 +459,19 @@ module Reader =
         )
         |> List.sortBy _.Name
 
+    /// <summary>Whether a file is a managed assembly, and so worth handing to the compiler.</summary>
+    /// <remarks>
+    /// The shared framework keeps coreclr.dll beside System.Runtime.dll, and one native library
+    /// offered as a reference is not skipped - it fails the whole project.
+    /// </remarks>
+    let private isManagedAssembly (path: string) =
+        try
+            use file = File.OpenRead path
+            use pe = new PEReader(file)
+            pe.HasMetadata && pe.GetMetadataReader().IsAssembly
+        with _ ->
+            false
+
     /// <summary>
     /// Every public declaration of an assembly, grouped by namespace.
     /// </summary>
@@ -492,6 +507,8 @@ module Reader =
                 |> List.collect (fun directory ->
                     Directory.GetFiles(directory, "*.dll") |> List.ofArray
                 )
+                // Before the de-duplication, so a native library cannot shadow a managed one.
+                |> List.filter isManagedAssembly
                 |> List.sortBy (fun dll ->
                     if List.contains dll present then
                         0
@@ -523,14 +540,18 @@ module Reader =
                     )
 
                 let results = checker.ParseAndCheckProject options |> Async.RunSynchronously
-                let loaded = results.ProjectContext.GetReferencedAssemblies()
+
+                // Reading a project the compiler gave up on throws, without saying what went wrong.
+                let loaded = lazy results.ProjectContext.GetReferencedAssemblies()
 
                 let readOne (path: string) =
                     let docs = XmlDocs.read path
                     let name = Path.GetFileNameWithoutExtension path
                     let name' = name
 
-                    match loaded |> List.tryFind (fun assembly -> assembly.SimpleName = name) with
+                    match
+                        loaded.Value |> List.tryFind (fun assembly -> assembly.SimpleName = name)
+                    with
                     | None -> Error $"The compiler could not load %s{name}"
                     | Some assembly ->
                         let namespaces =
@@ -602,7 +623,15 @@ module Reader =
                                     )
                             }
 
-                present |> List.map readOne
+                if results.HasCriticalErrors then
+                    let reported = results.Diagnostics |> Array.map _.Message |> String.concat "; "
+
+                    present
+                    |> List.map (fun path ->
+                        Error $"The compiler rejected the references for %s{path}: %s{reported}"
+                    )
+                else
+                    present |> List.map readOne
             finally
                 try
                     File.Delete source
