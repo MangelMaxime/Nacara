@@ -26,7 +26,7 @@
         <PackageVersion Include="TextMateSharp" Version="2.0.4" />
         <PackageVersion Include="TextMateSharp.Grammars" Version="2.0.4" />
         <PackageVersion Include="EasyBuild.PackageReleaseNotes.Tasks" Version="2.1.0" />
-        <PackageVersion Include="Scriptorium.Quill" Version="0.5.1" />
+        <PackageVersion Include="Scriptorium.Quill" Version="0.6.0" />
         <PackageVersion Include="Scriptorium.Nib" Version="0.4.1" />
         <PackageVersion Include="Scriptorium.Nib.Snapshot" Version="0.4.0" />
         <!-- Exact: later versions are not F# compatible. -->

@@ -30,7 +30,7 @@ printfn "%i" answer
 let private blocks = Literate.parse source
 
 let all =
-    testSequenced (
+    testList (
         "Literate",
         [
             test (

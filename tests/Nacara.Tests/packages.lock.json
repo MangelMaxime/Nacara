@@ -32,9 +32,9 @@
       },
       "Scriptorium.Quill": {
         "type": "Direct",
-        "requested": "[0.5.1, )",
-        "resolved": "0.5.1",
-        "contentHash": "8NkECE6yT5xUd1B2aPK+GopWhlWSp6ApiwhT02FvMDqeCjIbeGqhZOWD8LJpSw9b2j762wWz4ps2Ueu2N/1f2g==",
+        "requested": "[0.6.0, )",
+        "resolved": "0.6.0",
+        "contentHash": "lykFYTKKPMY0zZLIhKuGWU26ntXaVaK71sq5jIJuoCP1x2213HW+pebNDlDFjwJBNU3J2A5xOQ/x/YxomGWxzw==",
         "dependencies": {
           "FSharp.Core": "10.0.101",
           "Fable.Core": "5.2.0",
