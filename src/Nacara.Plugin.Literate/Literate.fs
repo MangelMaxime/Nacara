@@ -130,7 +130,8 @@ module Literate =
         let mutable index = 0
 
         let flushCode () =
-            let code = pending.ToString().Trim('\n')
+            // Not about the file: trimming \n off a \r\n leaves the \r inside the snippet.
+            let code = pending.ToString().Replace("\r\n", "\n").Trim('\n')
             pending.Clear() |> ignore
 
             if code.Trim() <> "" then

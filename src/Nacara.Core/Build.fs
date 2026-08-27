@@ -110,6 +110,11 @@ type BuildCache(writes: bool) =
     /// <param name="content">What it should contain.</param>
     member _.WriteIfChanged(path: AbsolutePath, content: string) =
         let key = AbsolutePath.value path
+
+        // The view engine ends its doctype with Environment.NewLine. Settle it here for whatever
+        // wrote it, before the hash, so a site and its cache are the same on every platform.
+        let content = content.Replace("\r\n", "\n")
+
         let hash = BuildCache.Hash content
 
         let upToDate =
@@ -373,6 +378,12 @@ module Build =
                             Diagnostics = sink
                         }
                         page
+
+                // Every plugin's body arrives here, and AppendLine ends a line the machine's way.
+                let page =
+                    { page with
+                        Body = page.Body.Replace("\r\n", "\n")
+                    }
 
                 run sink (applied.Add transform.Name) page
 
