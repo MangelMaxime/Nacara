@@ -12,6 +12,11 @@ open Nacara.Core
 [<RequireQualifiedAccess>]
 module Render =
 
+    /// <summary>What a builder built, with the \n endings AppendLine does not give it.</summary>
+    /// <remarks>These pages are public API, returned to callers that have no pipeline.</remarks>
+    let private built (builder: StringBuilder) =
+        builder.ToString().Replace("\r\n", "\n")
+
     /// F# words that are not types, so a signature does not offer a link to them.
     let private keywords =
         set
@@ -105,7 +110,7 @@ module Render =
                 builder.Append $"""<span class="%s{cssClass}">%s{escapeHtml run}</span>"""
                 |> ignore
 
-        builder.ToString()
+        built builder
 
     let private word = Regex(@"[A-Za-z_][A-Za-z0-9_.\']*", RegexOptions.Compiled)
 
@@ -227,7 +232,7 @@ module Render =
 
         builder.Append(between (text.Substring last)) |> ignore
         builder.Append "</code></pre>" |> ignore
-        builder.ToString()
+        built builder
 
     /// <summary>A signature of a member or a type, with the types in it linked.</summary>
     let signature (resolve: string -> string option) (text: string) =
@@ -575,7 +580,7 @@ module Render =
         if not (List.isEmpty members) then
             details entity.Name resolve members builder
 
-        crossLinks resolve (builder.ToString())
+        crossLinks resolve (built builder)
 
     /// <summary>The page of one namespace: what it declares, and nothing about the insides.</summary>
     let ``namespace``
@@ -619,7 +624,7 @@ module Render =
 
             builder.AppendLine "" |> ignore
 
-        crossLinks resolve (builder.ToString())
+        crossLinks resolve (built builder)
 
     /// <summary>How many declarations, said the way a table cell wants it.</summary>
     let private counted (entities: int) =
@@ -644,7 +649,7 @@ module Render =
             |> ignore
 
         builder.AppendLine "" |> ignore
-        crossLinks (fun _ -> None) (builder.ToString())
+        crossLinks (fun _ -> None) (built builder)
 
     /// <summary>
     /// The way in: the packages documented, or their namespaces when there is only one package.
@@ -681,4 +686,4 @@ module Render =
 
         builder.AppendLine "" |> ignore
 
-        crossLinks (fun _ -> None) (builder.ToString())
+        crossLinks (fun _ -> None) (built builder)

@@ -89,6 +89,7 @@ module Sitemap =
                 builder.AppendLine "  </url>" |> ignore
 
         builder.AppendLine "</urlset>" |> ignore
+
         builder.ToString()
 
     type private SitemapPlugin(options: SitemapOptions) =

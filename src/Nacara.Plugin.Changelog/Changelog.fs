@@ -195,7 +195,8 @@ module Changelog =
                 builder.AppendLine version.Body |> ignore
                 builder.AppendLine "" |> ignore
 
-        builder.ToString()
+        // Public, and callable without a pipeline to normalize what comes back.
+        builder.ToString().Replace("\r\n", "\n")
 
     /// <summary>
     /// A collection whose pages are generated from changelog files.
