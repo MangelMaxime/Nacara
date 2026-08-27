@@ -90,6 +90,22 @@ let private run (program: string) (arguments: string list) =
     if running.ExitCode <> 0 then
         failwith $"%s{program} failed: %s{complaint.Trim()}"
 
+/// <summary>Runs a program the same way, and hands back what it printed.</summary>
+let private capture (program: string) (arguments: string list) =
+    let start =
+        ProcessStartInfo(program, RedirectStandardError = true, RedirectStandardOutput = true)
+
+    arguments |> List.iter start.ArgumentList.Add
+    use running = Process.Start start
+    let said = running.StandardOutput.ReadToEnd()
+    let complaint = running.StandardError.ReadToEnd()
+    running.WaitForExit()
+
+    if running.ExitCode <> 0 then
+        failwith $"%s{program} failed: %s{complaint.Trim()}"
+
+    said
+
 /// <summary>Unpacks what upstream publishes, in the format it publishes it in.</summary>
 let private unpack (archive: string) (into: string) =
     Directory.CreateDirectory into |> ignore
@@ -177,20 +193,62 @@ type RuntimeCommand() =
             let unit = Path.Combine(sources, "lib", "src", "lib.c")
 
             if windows then
+                // tree-sitter's headers carry no __declspec, so MSVC exports nothing at all. Read
+                // the names off the object, as tree-sitter's own WINDOWS_EXPORT_ALL_SYMBOLS does.
+                let object' = Path.Combine(work, "tree-sitter.obj")
+
                 run
                     "cl.exe"
                     [
                         "/nologo"
+                        "/c"
                         "/O2"
-                        "/LD"
                         "/DTREE_SITTER_FEATURE_WASM"
                         $"/I%s{include'}"
                         $"/I%s{internals}"
                         $"/I%s{headers}"
                         unit
-                        "/link"
+                        $"/Fo%s{object'}"
+                    ]
+
+                let exported =
+                    capture
+                        "dumpbin.exe"
+                        [
+                            "/nologo"
+                            "/symbols"
+                            object'
+                        ]
+                    |> _.Split('\n')
+                    // 00A 00000000 SECT4 notype () External | ts_parser_new
+                    |> Array.filter (fun line ->
+                        line.Contains "External" && not (line.Contains "UNDEF")
+                    )
+                    |> Array.choose (fun line ->
+                        match line.Split '|' with
+                        | [| _; name |] -> Some(name.Trim().Split(' ').[0])
+                        | _ -> None
+                    )
+                    |> Array.filter _.StartsWith("ts_")
+                    |> Array.distinct
+                    |> Array.sort
+
+                if Array.isEmpty exported then
+                    failwith "No tree-sitter symbols to export: dumpbin said nothing usable"
+
+                let definition = Path.Combine(work, "tree-sitter.def")
+
+                File.WriteAllLines(definition, Array.append [| "EXPORTS" |] exported)
+                Log.info $"%i{exported.Length} symbols to export"
+
+                run
+                    "link.exe"
+                    [
+                        "/nologo"
                         "/DLL"
+                        $"/DEF:%s{definition}"
                         $"/OUT:%s{core}"
+                        object'
                         Path.Combine(library, "wasmtime.dll.lib")
                     ]
             else
