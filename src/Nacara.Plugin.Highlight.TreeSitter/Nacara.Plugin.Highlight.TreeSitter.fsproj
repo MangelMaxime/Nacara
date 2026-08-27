@@ -12,9 +12,10 @@
         <Compile Include="TreeSitter.fs" />
     </ItemGroup>
     <ItemGroup>
-        <!-- Bundled languages -->
+        <!-- Bundled languages. RecursiveDir keeps the platform's separator, so it is spelled
+             here: on Windows it would otherwise name them "grammars/fsharp\grammar.wasm.gz". -->
         <EmbeddedResource Include="grammars/**/grammar.wasm.gz;grammars/**/highlights.scm">
-            <LogicalName>grammars/%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+            <LogicalName>grammars/$([MSBuild]::ValueOrDefault('%(RecursiveDir)', '').Replace('\', '/'))%(Filename)%(Extension)</LogicalName>
         </EmbeddedResource>
         <!-- Their licences travel in the package, where a reader can find them. -->
         <None Include="grammars/**/LICENSE;grammars/NOTICES.md" Pack="true" PackagePath="grammars/" Visible="false" />
