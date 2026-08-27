@@ -98,6 +98,13 @@ type CleanCommand() =
     override _.Execute(context, settings, _) =
         site "clean" false settings (forwarded context)
 
+type DeployCommand() =
+    inherit Command<DocsSettings>()
+    interface ICommandLimiter<CommandSettings>
+
+    override _.Execute(context, settings, _) =
+        site "gh-pages" false settings (forwarded context)
+
 type WatchSettings() =
     inherit DocsSettings()
 

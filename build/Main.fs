@@ -64,6 +64,13 @@ let main args =
                     .WithDescription("Remove what a build wrote")
                     .WithExample("docs clean")
                 |> ignore
+
+                docs
+                    .AddCommand<DeployCommand>("deploy")
+                    .WithDescription("Publish the last build to the gh-pages branch")
+                    .WithExample("docs deploy --dry-run")
+                    .WithExample("docs deploy")
+                |> ignore
         )
         |> ignore
 

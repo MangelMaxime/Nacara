@@ -1,0 +1,54 @@
+# Publishes the site to the gh-pages branch, which is what GitHub Pages serves.
+#
+# A version is a build of its own, deployed into a directory of its own. The deploy plugin writes
+# the new tree from the published one, so publishing one version leaves the others as they are -
+# which actions/deploy-pages could not do, its artifact being the whole site every time.
+name: Documentation
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version prefix to build. Empty builds the current version, served at the root.
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+
+# Two deploys writing the branch at once would lose one of them.
+concurrency:
+  group: gh-pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # The changelog plugin reads the history of each package, and the deploy pushes with the
+          # credentials this leaves behind.
+          fetch-depth: 1000
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Build the site
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          if [ -n "$VERSION" ]; then
+            ./build.sh docs build --version "$VERSION"
+          else
+            ./build.sh docs build
+          fi
+
+      - name: Publish it
+        run: ./build.sh docs deploy
