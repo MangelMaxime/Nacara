@@ -334,12 +334,16 @@ so build before deploying."""
                 )
 
     /// <summary>The branch GitHub Pages serves. Defaults to <c>gh-pages</c>.</summary>
+    /// <param name="value">The value to use.</param>
+    /// <param name="options">The options so far.</param>
     let branch value (options: GitHubPagesOptions) =
         { options with
             Branch = value
         }
 
     /// <summary>The remote it is pushed to. Defaults to <c>origin</c>.</summary>
+    /// <param name="value">The value to use.</param>
+    /// <param name="options">The options so far.</param>
     let remote value (options: GitHubPagesOptions) =
         { options with
             Remote = value

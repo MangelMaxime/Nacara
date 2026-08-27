@@ -42,6 +42,7 @@ cd docs && dotnet run -- watch
 | `Nacara.Plugin.LinkValidator` | Every link the site published, checked - anchors and external ones too |
 | `Nacara.Plugin.Linter.Rumdl` | The site's markdown linted by rumdl, reported as build diagnostics |
 | `Nacara.Plugin.Sitemap` | `sitemap.xml` and `robots.txt`, with `hreflang` cross-references |
+| `Nacara.Plugin.Deploy.GitHubPages` | The build published to the branch GitHub Pages serves, one version at a time |
 | `Nacara.Plugin.Assets.LightningCss` | CSS compiled for the browsers you name, bundled and minified |
 | `Nacara.Plugin.Assets.Esbuild` | JavaScript bundled from what it imports, and minified |
 | `Nacara.Plugin.Assets.Nuglify` | HTML, JavaScript and CSS minified through NUglify |

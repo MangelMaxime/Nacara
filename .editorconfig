@@ -22,13 +22,3 @@ fsharp_array_or_list_multiline_formatter = number_of_items
 [*.yml]
 indent_size = 2
 indent_style = space
-
-# Verify
-[*.{received,verified}.{json,md,mdx,txt,yml}]
-charset = utf-8-bom
-end_of_line = lf
-indent_size = unset
-indent_style = unset
-insert_final_newline = false
-tab_width = unset
-trim_trailing_whitespace = false

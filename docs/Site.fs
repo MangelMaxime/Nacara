@@ -34,6 +34,7 @@ let apiOptions =
                         "Nacara.Plugin.Search"
                         "Nacara.Plugin.Sitemap"
                         "Nacara.Plugin.Versions"
+                        "Nacara.Plugin.Deploy.GitHubPages"
                         "Nacara.Plugin.Assets.LightningCss"
                         "Nacara.Plugin.Assets.Esbuild"
                         "Nacara.Plugin.Assets.Nuglify"
@@ -116,6 +117,7 @@ let theme =
                     Menu.page "plugins/search.md"
                     Menu.page "plugins/sitemap.md"
                     Menu.page "plugins/versions.md"
+                    Menu.page "plugins/github-pages.md"
                     Menu.section
                         "Assets"
                         [
