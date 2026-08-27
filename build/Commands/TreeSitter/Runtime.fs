@@ -237,18 +237,25 @@ type RuntimeCommand() =
                     failwith "No tree-sitter symbols to export: dumpbin said nothing usable"
 
                 let definition = Path.Combine(work, "tree-sitter.def")
+                // Or the import library and its exports are left in the current directory.
+                let implib = Path.Combine(work, "tree-sitter.lib")
 
                 File.WriteAllLines(definition, Array.append [| "EXPORTS" |] exported)
                 Log.info $"%i{exported.Length} symbols to export"
 
+                // Linked through cl.exe, which knows its own linker: git bash puts coreutils on
+                // the path first, and its `link` answers to link.exe long before MSVC's does.
                 run
-                    "link.exe"
+                    "cl.exe"
                     [
                         "/nologo"
+                        "/LD"
+                        object'
+                        "/link"
                         "/DLL"
                         $"/DEF:%s{definition}"
                         $"/OUT:%s{core}"
-                        object'
+                        $"/IMPLIB:%s{implib}"
                         Path.Combine(library, "wasmtime.dll.lib")
                     ]
             else
