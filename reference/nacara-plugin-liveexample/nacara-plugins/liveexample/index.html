@@ -1,0 +1,739 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>LiveExample · Nacara</title><meta name="description" content="F# snippets a reader can run and edit, compiled in their browser" /><link rel="canonical" href="https://mangelmaxime.github.io/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexample/" /><meta property="og:url" content="https://mangelmaxime.github.io/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexample/" /><meta property="og:site_name" content="Nacara" /><meta property="og:locale" content="en" /><meta name="twitter:card" content="summary_large_image" /><meta property="og:description" content="F# snippets a reader can run and edit, compiled in their browser" /><meta property="og:title" content="LiveExample" /><meta property="og:type" content="article" /><link rel="stylesheet" href="/Nacara/assets/css/nacara.6ce1c6f9.css" /><script>(()=>{var o="nacara-theme",s=matchMedia("(prefers-color-scheme: dark)"),a=()=>{try{return localStorage.getItem(o)||"system"}catch{return"system"}},c=e=>{let t=document.documentElement;t.dataset.themeSetting=e,t.dataset.theme=e==="system"?s.matches?"dark":"light":e};c(a());})();
+</script><link rel="stylesheet" href="/Nacara/assets/changelog.css" /><link rel="stylesheet" href="/Nacara/assets/search.css" /><link rel="stylesheet" href="/Nacara/assets/fsharp-api.css" /><link rel="stylesheet" href="/Nacara/assets/live-example/live-example.css" /><link rel="stylesheet" href="/Nacara/assets/versions.css" /><style>[data-section="reference"] { --nacara-sidebar-width: 20rem; }</style></head><body data-section="reference"><a class="nacara-skip-link" href="#nacara-content">Skip to content</a><header class="nacara-navbar" role="banner"><button class="nacara-icon-button" type="button" data-nacara-menu-toggle aria-label="Open the menu"><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg></span></button><a class="nacara-navbar__brand" href="/Nacara/">Nacara</a><ul class="nacara-navbar__items" role="navigation" aria-label="Main"><li><a class="nacara-navbar__link" href="/Nacara/guide/getting-started/" data-active="false">Guide</a></li><li><a class="nacara-navbar__link" href="/Nacara/plugins/overview/" data-active="false">Plugins</a></li><li><a class="nacara-navbar__link" href="/Nacara/reference/" data-active>Reference</a></li><li><a class="nacara-navbar__link" href="/Nacara/changelog/nacara-core/" data-active="false">Changelog</a></li></ul><ul class="nacara-navbar__items nacara-navbar__items--end"><li><button class="nacara-search__trigger" type="button" data-nacara-search data-bundle="/Nacara/pagefind/" aria-label="Search"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg><span>Search</span><span class="nacara-search__kbd" data-nacara-search-shortcut>Ctrl K</span></button></li><li><nacara-version-switcher data-base="/Nacara/" data-versions='[{"label":"3.0-dev","prefix":"","latest":true,"current":true}]'></nacara-version-switcher></li><li><a class="nacara-icon-button" href="https://github.com/MangelMaxime/Nacara" aria-label="GitHub" title="GitHub"><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" /></svg></span></a></li><li><select class="nacara-theme-select" data-nacara-theme aria-label="Colour scheme"><option value="light">Light</option><option value="dark">Dark</option><option value="system">System</option></select></li></ul></header><div class="nacara-layout"><nav class="nacara-sidebar" aria-label="Section" data-nacara-menu-memory="false"><input type="search" class="nacara-sidebar__filter" data-nacara-menu-filter aria-label="Filter this menu" placeholder="Filter" /><ul class="nacara-sidebar__list"><li><details class="nacara-sidebar__group" data-nacara-menu-group="Nacara.Core"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-core/"><span>Nacara.Core</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/absolutepath/"><span>AbsolutePath</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/asset/"><span>Asset</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/assetbundlecontext/"><span>AssetBundleContext</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/assetbundler/"><span>AssetBundler</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/assettransform/"><span>AssetTransform</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/assettransformcontext/"><span>AssetTransformContext</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/build/"><span>Build</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/buildcache/"><span>BuildCache</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/buildresult/"><span>BuildResult</span></a></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="CodeBlock"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-core/nacara-core/codeblock/"><span>CodeBlock</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/codeblock/diff/"><span>Diff</span></a></li></ul></details></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/codeblockcheck/"><span>CodeBlockCheck</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/codeblockcontext/"><span>CodeBlockContext</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/codeblockmeta/"><span>CodeBlockMeta</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/codeline/"><span>CodeLine</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/codepiece/"><span>CodePiece</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/collection/"><span>Collection</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/collectiondefinition/"><span>CollectionDefinition</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/commandcontext/"><span>CommandContext</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/contentsource/"><span>ContentSource</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/contenttransform/"><span>ContentTransform</span></a></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Decode"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-core/nacara-core/decode/"><span>Decode</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/decode/igetters/"><span>IGetters</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/decode/ioptionalgetter/"><span>IOptionalGetter</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/decode/irequiredgetter/"><span>IRequiredGetter</span></a></li></ul></details></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/decodeerror/"><span>DecodeError</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/decoder/"><span>Decoder</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/devserver/"><span>DevServer</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/diagnostic/"><span>Diagnostic</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/diagnosticbag/"><span>DiagnosticBag</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/diagnosticsink/"><span>DiagnosticSink</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/frame/"><span>Frame</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/frontmatter/"><span>FrontMatter</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/frontmatterblock/"><span>FrontMatterBlock</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/frontmatterformat/"><span>FrontMatterFormat</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/generatedcontent/"><span>GeneratedContent</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/glob/"><span>Glob</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/heading/"><span>Heading</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/hookcontext/"><span>HookContext</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/icodeblockrenderer/"><span>ICodeBlockRenderer</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/ihighlighter/"><span>IHighlighter</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/iplugin/"><span>IPlugin</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/loadrequest/"><span>LoadRequest</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/locale/"><span>Locale</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/log/"><span>Log</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/marker/"><span>Marker</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/menuoutline/"><span>MenuOutline</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/menuoutlineitem/"><span>MenuOutlineItem</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/nacara/"><span>Nacara</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/page/"><span>Page</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/pageasset/"><span>PageAsset</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/pagecontext/"><span>PageContext</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/pagedata/"><span>PageData</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/pageinfo/"><span>PageInfo</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/pagesource/"><span>PageSource</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/plugincommand/"><span>PluginCommand</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/preparedcodeblock/"><span>PreparedCodeBlock</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/producercontext/"><span>ProducerContext</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/projectcache/"><span>ProjectCache</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/registry/"><span>Registry</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/relativepath/"><span>RelativePath</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/renderrequest/"><span>RenderRequest</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/resource/"><span>Resource</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/route/"><span>Route</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/severity/"><span>Severity</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/site/"><span>Site</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/siteinfo/"><span>SiteInfo</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/siteurl/"><span>SiteUrl</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/slug/"><span>Slug</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/sourcespan/"><span>SourceSpan</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/textdirection/"><span>TextDirection</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/tocrange/"><span>TocRange</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/token/"><span>Token</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/tool/"><span>Tool</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/toolarchive/"><span>ToolArchive</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/toolplatform/"><span>ToolPlatform</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/toolrequest/"><span>ToolRequest</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/transformcontext/"><span>TransformContext</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/url/"><span>Url</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/watcher/"><span>Watcher</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-core/nacara-core/yaml/"><span>Yaml</span></a></li></ul></details></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Nacara.Plugin.Assets.Esbuild"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-assets-esbuild/"><span>Nacara.Plugin.Assets.Esbuild</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-assets-esbuild/nacara-plugins/esbuild/"><span>Esbuild</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-assets-esbuild/nacara-plugins/esbuildoptions/"><span>EsbuildOptions</span></a></li></ul></details></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Nacara.Plugin.Assets.LightningCss"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-assets-lightningcss/"><span>Nacara.Plugin.Assets.LightningCss</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-assets-lightningcss/nacara-plugins/lightningcss/"><span>LightningCss</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-assets-lightningcss/nacara-plugins/lightningcssoptions/"><span>LightningCssOptions</span></a></li></ul></details></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Nacara.Plugin.Assets.Nuglify"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-assets-nuglify/"><span>Nacara.Plugin.Assets.Nuglify</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-assets-nuglify/nacara-plugins/nuglify/"><span>Nuglify</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-assets-nuglify/nacara-plugins/nuglifycssoptions/"><span>NuglifyCssOptions</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-assets-nuglify/nacara-plugins/nuglifyhtmloptions/"><span>NuglifyHtmlOptions</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-assets-nuglify/nacara-plugins/nuglifyjsoptions/"><span>NuglifyJsOptions</span></a></li></ul></details></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Nacara.Plugin.Changelog"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-changelog/"><span>Nacara.Plugin.Changelog</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-changelog/nacara-plugins/changelog/"><span>Changelog</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-changelog/nacara-plugins/changelogdocument/"><span>ChangelogDocument</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-changelog/nacara-plugins/changelogparser/"><span>ChangelogParser</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-changelog/nacara-plugins/changelogsource/"><span>ChangelogSource</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-changelog/nacara-plugins/changelogversion/"><span>ChangelogVersion</span></a></li></ul></details></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Nacara.Plugin.Deploy.GitHubPages"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-deploy-githubpages/"><span>Nacara.Plugin.Deploy.GitHubPages</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-deploy-githubpages/nacara-plugins/githubpages/"><span>GitHubPages</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-deploy-githubpages/nacara-plugins/githubpagesoptions/"><span>GitHubPagesOptions</span></a></li></ul></details></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Nacara.Plugin.FSharpApi"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-fsharpapi/"><span>Nacara.Plugin.FSharpApi</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-fsharpapi/nacara-plugins/fsharpapi/"><span>FSharpApi</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-fsharpapi/nacara-plugins/fsharpapiassembly/"><span>FSharpApiAssembly</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-fsharpapi/nacara-plugins/fsharpapidoc/"><span>FSharpApiDoc</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-fsharpapi/nacara-plugins/fsharpapientity/"><span>FSharpApiEntity</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-fsharpapi/nacara-plugins/fsharpapientitykind/"><span>FSharpApiEntityKind</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-fsharpapi/nacara-plugins/fsharpapimember/"><span>FSharpApiMember</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-fsharpapi/nacara-plugins/fsharpapimemberkind/"><span>FSharpApiMemberKind</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-fsharpapi/nacara-plugins/fsharpapinamespace/"><span>FSharpApiNamespace</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-fsharpapi/nacara-plugins/fsharpapioptions/"><span>FSharpApiOptions</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-fsharpapi/nacara-plugins/fsharpapioutlineentry/"><span>FSharpApiOutlineEntry</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-fsharpapi/nacara-plugins/fsharpapioutlinenamespace/"><span>FSharpApiOutlineNamespace</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-fsharpapi/nacara-plugins/fsharpapioutlinepackage/"><span>FSharpApiOutlinePackage</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-fsharpapi/nacara-plugins/fsharpapiparameter/"><span>FSharpApiParameter</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-fsharpapi/nacara-plugins/fsharpapisource/"><span>FSharpApiSource</span></a></li></ul></details></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Nacara.Plugin.Highlight.TextMate"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-highlight-textmate/"><span>Nacara.Plugin.Highlight.TextMate</span></a></summary><ul class="nacara-sidebar__list"><li><details class="nacara-sidebar__group" data-nacara-menu-group="TextMate"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-highlight-textmate/nacara-plugins/textmate/"><span>TextMate</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-highlight-textmate/nacara-plugins/textmate/textmatehighlighter/"><span>TextMateHighlighter</span></a></li></ul></details></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-highlight-textmate/nacara-plugins/textmateoptions/"><span>TextMateOptions</span></a></li></ul></details></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Nacara.Plugin.Highlight.TreeSitter"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-highlight-treesitter/"><span>Nacara.Plugin.Highlight.TreeSitter</span></a></summary><ul class="nacara-sidebar__list"><li><details class="nacara-sidebar__group" data-nacara-menu-group="TreeSitter"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-highlight-treesitter/nacara-plugins/treesitter/"><span>TreeSitter</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-highlight-treesitter/nacara-plugins/treesitter/treesitterhighlighter/"><span>TreeSitterHighlighter</span></a></li></ul></details></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-highlight-treesitter/nacara-plugins/treesittergrammar/"><span>TreeSitterGrammar</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-highlight-treesitter/nacara-plugins/treesittergrammarsource/"><span>TreeSitterGrammarSource</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-highlight-treesitter/nacara-plugins/treesitteroptions/"><span>TreeSitterOptions</span></a></li></ul></details></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Nacara.Plugin.LinkValidator"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-linkvalidator/"><span>Nacara.Plugin.LinkValidator</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-linkvalidator/nacara-plugins/linkoutcome/"><span>LinkOutcome</span></a></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="LinkValidator"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-linkvalidator/nacara-plugins/linkvalidator/"><span>LinkValidator</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-linkvalidator/nacara-plugins/linkvalidator/o/"><span>O</span></a></li></ul></details></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-linkvalidator/nacara-plugins/linkvalidatoroptions/"><span>LinkValidatorOptions</span></a></li></ul></details></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Nacara.Plugin.Linter.Rumdl"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-linter-rumdl/"><span>Nacara.Plugin.Linter.Rumdl</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-linter-rumdl/nacara-plugins/lintseverity/"><span>LintSeverity</span></a></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Rumdl"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-linter-rumdl/nacara-plugins/rumdl/"><span>Rumdl</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-linter-rumdl/nacara-plugins/rumdl/finding/"><span>Finding</span></a></li></ul></details></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-linter-rumdl/nacara-plugins/rumdloptions/"><span>RumdlOptions</span></a></li></ul></details></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Nacara.Plugin.Literate"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-literate/"><span>Nacara.Plugin.Literate</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-literate/nacara-plugins/literate/"><span>Literate</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-literate/nacara-plugins/literateblock/"><span>LiterateBlock</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-literate/nacara-plugins/literateoptions/"><span>LiterateOptions</span></a></li></ul></details></li><li><details class="nacara-sidebar__group" open="" data-nacara-menu-group="Nacara.Plugin.LiveExample"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-liveexample/"><span>Nacara.Plugin.LiveExample</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/fablecli/"><span>FableCli</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/fablerelease/"><span>FableRelease</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexample/" aria-current="page"><span>LiveExample</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexamplehighlighting/"><span>LiveExampleHighlighting</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"><span>LiveExampleOptions</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexamplepreset/"><span>LiveExamplePreset</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampletab/"><span>LiveExampleTab</span></a></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="LiveExampleTarget"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampletarget/"><span>LiveExampleTarget</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampletarget/description/"><span>Description</span></a></li></ul></details></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Vendor"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/vendor/"><span>Vendor</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/vendor/layout/"><span>Layout</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/vendor/precompiled/"><span>Precompiled</span></a></li></ul></details></li></ul></details></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Nacara.Plugin.Markdown"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-markdown/"><span>Nacara.Plugin.Markdown</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-markdown/nacara-plugins/markdown/"><span>Markdown</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-markdown/nacara-plugins/markdownoptions/"><span>MarkdownOptions</span></a></li></ul></details></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Nacara.Plugin.Search"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-search/"><span>Nacara.Plugin.Search</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-search/nacara-plugins/search/"><span>Search</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-search/nacara-plugins/searchoptions/"><span>SearchOptions</span></a></li></ul></details></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Nacara.Plugin.Sitemap"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-sitemap/"><span>Nacara.Plugin.Sitemap</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-sitemap/nacara-plugins/sitemap/"><span>Sitemap</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-sitemap/nacara-plugins/sitemapoptions/"><span>SitemapOptions</span></a></li></ul></details></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Nacara.Plugin.Versions"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-plugin-versions/"><span>Nacara.Plugin.Versions</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-versions/nacara-plugins/siteversion/"><span>SiteVersion</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-versions/nacara-plugins/versions/"><span>Versions</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-plugin-versions/nacara-plugins/versionsoptions/"><span>VersionsOptions</span></a></li></ul></details></li><li><details class="nacara-sidebar__group" data-nacara-menu-group="Nacara.Theme.Default"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/Nacara/reference/nacara-theme-default/"><span>Nacara.Theme.Default</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-theme-default/nacara-theme/components/"><span>Components</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-theme-default/nacara-theme/docfrontmatter/"><span>DocFrontMatter</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-theme-default/nacara-theme/docpage/"><span>DocPage</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-theme-default/nacara-theme/icons/"><span>Icons</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-theme-default/nacara-theme/menu/"><span>Menu</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-theme-default/nacara-theme/menubadge/"><span>MenuBadge</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-theme-default/nacara-theme/menuentry/"><span>MenuEntry</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-theme-default/nacara-theme/menuitem/"><span>MenuItem</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-theme-default/nacara-theme/nacaracodeblockrenderer/"><span>NacaraCodeBlockRenderer</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-theme-default/nacara-theme/navbaritem/"><span>NavbarItem</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-theme-default/nacara-theme/offeredmenus/"><span>OfferedMenus</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-theme-default/nacara-theme/theme/"><span>Theme</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/nacara-theme-default/nacara-theme/themeoptions/"><span>ThemeOptions</span></a></li></ul></details></li></ul></nav><main id="nacara-content" tabindex="-1" class="nacara-content" data-nacara-generated-by="fsharp-api"><h1>LiveExample</h1><div class="nacara-prose"><pre class="nacara-api__signature nacara-api__signature--hanging"><code><span class="tok-keyword">module</span> <span class="tok-type">LiveExample</span></code></pre><table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>Assembly</td><td><code>Nacara.Plugin.LiveExample</code></td></tr><tr><td>Attributes</td><td><code>[&lt;RequireQualifiedAccess>]</code></td></tr></tbody></table><p>F# snippets a reader can run and edit, compiled in their browser.</p><p>A live block is an ordinary code block until someone presses Run, so a reader who never does - or who has JavaScript off - loses nothing. Run fetches the compiler once for the page and the result runs in a frame of its own.</p><p>Mark a block with <code>live</code>, and name a preset when it needs one:</p><figure class="nacara-code" data-language="markdown" data-frame="code" data-source='```fsharp live
+printfn "hello"'><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-punctuation">```</span>fsharp live
+</span><span class="nacara-code__line">printfn "hello"
+</span></code></pre><button class="nacara-code__copy" type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><figure class="nacara-code" data-language="fsharp" data-frame="code" data-meta="live preset=elmish" data-source="open Elmish"><div class="nacara-code__body"><pre><code><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Elmish</span>
+</span></code></pre><button class="nacara-code__copy" type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><figure class="nacara-code" data-language="text" data-frame="code" data-source='
+## Functions and values
+
+&lt;div class="nacara-api__entry" id="create"&gt;
+&lt;a class="nacara-api__anchor"
+                           href="#create"
+                           aria-label="Link to create"
+                           data-pagefind-ignore&gt;&lt;/a&gt;
+&lt;details class="nacara-api__member"&gt;
+&lt;summary&gt;
+&lt;pre class="nacara-api__signature nacara-api__signature--hanging"&gt;&lt;code&gt;&lt;span class="tok-function"&gt;create&lt;/span&gt; &lt;span class="tok-punctuation"&gt;()&lt;/span&gt; &lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-core/nacara-core/iplugin/"&gt;IPlugin&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/summary&gt;
+&lt;div class="nacara-api__body"&gt;
+
+The plugin, with its options as they are.
+
+
+&lt;/div&gt;
+&lt;/details&gt;
+&lt;/div&gt;
+
+&lt;div class="nacara-api__entry" id="createwith"&gt;
+&lt;a class="nacara-api__anchor"
+                           href="#createwith"
+                           aria-label="Link to createWith"
+                           data-pagefind-ignore&gt;&lt;/a&gt;
+&lt;details class="nacara-api__member"&gt;
+&lt;summary&gt;
+&lt;pre class="nacara-api__signature nacara-api__signature--hanging"&gt;&lt;code&gt;&lt;span class="tok-function"&gt;createWith&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;configure&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt; &lt;span class="tok-operator"&gt;-&amp;gt;&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-core/nacara-core/iplugin/"&gt;IPlugin&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/summary&gt;
+&lt;div class="nacara-api__body"&gt;
+
+The plugin, with its options changed.
+
+| Parameter | |
+|---|---|
+| `configure` | What to change about them. |
+
+
+&lt;/div&gt;
+&lt;/details&gt;
+&lt;/div&gt;
+
+&lt;div class="nacara-api__entry" id="defaultcss"&gt;
+&lt;a class="nacara-api__anchor"
+                           href="#defaultcss"
+                           aria-label="Link to defaultCss"
+                           data-pagefind-ignore&gt;&lt;/a&gt;
+&lt;details class="nacara-api__member"&gt;
+&lt;summary&gt;
+&lt;pre class="nacara-api__signature nacara-api__signature--hanging"&gt;&lt;code&gt;&lt;span class="tok-function"&gt;defaultCss&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;value&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;span class="tok-type"&gt;string&lt;/span&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;options&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/summary&gt;
+&lt;div class="nacara-api__body"&gt;
+
+The stylesheet used by a preset that names none of its own.
+
+| Parameter | |
+|---|---|
+| `value` | The CSS file, relative to the project root. |
+| `options` | The options so far. |
+
+
+&lt;/div&gt;
+&lt;/details&gt;
+&lt;/div&gt;
+
+&lt;div class="nacara-api__entry" id="defaulttemplate"&gt;
+&lt;a class="nacara-api__anchor"
+                           href="#defaulttemplate"
+                           aria-label="Link to defaultTemplate"
+                           data-pagefind-ignore&gt;&lt;/a&gt;
+&lt;details class="nacara-api__member"&gt;
+&lt;summary&gt;
+&lt;pre class="nacara-api__signature nacara-api__signature--hanging"&gt;&lt;code&gt;&lt;span class="tok-function"&gt;defaultTemplate&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;value&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;span class="tok-type"&gt;string&lt;/span&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;options&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/summary&gt;
+&lt;div class="nacara-api__body"&gt;
+
+The page used by a preset that names none of its own.
+
+| Parameter | |
+|---|---|
+| `value` | The HTML file, relative to the project root. |
+| `options` | The options so far. |
+
+
+&lt;/div&gt;
+&lt;/details&gt;
+&lt;/div&gt;
+
+&lt;div class="nacara-api__entry" id="defaults"&gt;
+&lt;a class="nacara-api__anchor"
+                           href="#defaults"
+                           aria-label="Link to defaults"
+                           data-pagefind-ignore&gt;&lt;/a&gt;
+&lt;details class="nacara-api__member"&gt;
+&lt;summary&gt;
+&lt;pre class="nacara-api__signature nacara-api__signature--hanging"&gt;&lt;code&gt;&lt;span class="tok-function"&gt;defaults&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/summary&gt;
+&lt;div class="nacara-api__body"&gt;
+
+The options a site starts from.
+
+
+&lt;/div&gt;
+&lt;/details&gt;
+&lt;/div&gt;
+
+&lt;div class="nacara-api__entry" id="fable"&gt;
+&lt;a class="nacara-api__anchor"
+                           href="#fable"
+                           aria-label="Link to fable"
+                           data-pagefind-ignore&gt;&lt;/a&gt;
+&lt;details class="nacara-api__member"&gt;
+&lt;summary&gt;
+&lt;pre class="nacara-api__signature nacara-api__signature--hanging"&gt;&lt;code&gt;&lt;span class="tok-function"&gt;fable&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;value&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/fablerelease/"&gt;FableRelease&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;options&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/summary&gt;
+&lt;div class="nacara-api__body"&gt;
+
+Set which build of the Fable compiler snippets are compiled by.
+
+Pinned by default, to the pair this plugin was built against. `Latest` follows
+Fable without waiting for a release of this plugin, so two builds of the same commit can
+differ; the log says which Fable it found.
+
+| Parameter | |
+|---|---|
+| `value` | The value to use. |
+| `options` | The options so far. |
+
+
+&lt;/div&gt;
+&lt;/details&gt;
+&lt;/div&gt;
+
+&lt;div class="nacara-api__entry" id="fabletool"&gt;
+&lt;a class="nacara-api__anchor"
+                           href="#fabletool"
+                           aria-label="Link to fableTool"
+                           data-pagefind-ignore&gt;&lt;/a&gt;
+&lt;details class="nacara-api__member"&gt;
+&lt;summary&gt;
+&lt;pre class="nacara-api__signature nacara-api__signature--hanging"&gt;&lt;code&gt;&lt;span class="tok-function"&gt;fableTool&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;value&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;span class="tok-type"&gt;string&lt;/span&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;options&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/summary&gt;
+&lt;div class="nacara-api__body"&gt;
+
+Precompile with a Fable of your own instead of the one that matches.
+
+You do not normally want this. Left alone, the build fetches the Fable the compiler in
+the browser was built from and precompiles with that, so the two agree whatever is installed
+on the machine - or nothing at all.
+
+
+
+It is here for working on Fable itself: point it at a local build and the snippets are
+precompiled with that one. Keeping the two in step is then yours, and the build says when
+they have drifted rather than leaving a reader with a snippet that never answers.
+
+| Parameter | |
+|---|---|
+| `value` | The `fable` executable to run. |
+| `options` | The options so far. |
+
+
+&lt;/div&gt;
+&lt;/details&gt;
+&lt;/div&gt;
+
+&lt;div class="nacara-api__entry" id="highlighting"&gt;
+&lt;a class="nacara-api__anchor"
+                           href="#highlighting"
+                           aria-label="Link to highlighting"
+                           data-pagefind-ignore&gt;&lt;/a&gt;
+&lt;details class="nacara-api__member"&gt;
+&lt;summary&gt;
+&lt;pre class="nacara-api__signature nacara-api__signature--hanging"&gt;&lt;code&gt;&lt;span class="tok-function"&gt;highlighting&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;value&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexamplehighlighting/"&gt;LiveExampleHighlighting&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;options&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/summary&gt;
+&lt;div class="nacara-api__body"&gt;
+
+Set how an edited snippet colours itself.
+
+| Parameter | |
+|---|---|
+| `value` | The value to use. |
+| `options` | The options so far. |
+
+
+&lt;/div&gt;
+&lt;/details&gt;
+&lt;/div&gt;
+
+&lt;div class="nacara-api__entry" id="outputgrammar"&gt;
+&lt;a class="nacara-api__anchor"
+                           href="#outputgrammar"
+                           aria-label="Link to outputGrammar"
+                           data-pagefind-ignore&gt;&lt;/a&gt;
+&lt;details class="nacara-api__member"&gt;
+&lt;summary&gt;
+&lt;pre class="nacara-api__signature nacara-api__signature--hanging"&gt;&lt;code&gt;&lt;span class="tok-function"&gt;outputGrammar&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;value&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-highlight-treesitter/nacara-plugins/treesittergrammar/"&gt;TreeSitterGrammar&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;options&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/summary&gt;
+&lt;div class="nacara-api__body"&gt;
+
+Add a grammar for colouring the output of a target.
+
+Every language Fable targets is coloured already, so name a grammar here only to
+override one, or to colour a language Fable does not target. Declared the same way the
+highlighting plugin declares one, so a site that already colours Gleam blocks can hand over
+the grammar it has.
+
+| Parameter | |
+|---|---|
+| `value` | The grammar, named after the language it colours. |
+| `options` | The options so far. |
+
+
+&lt;/div&gt;
+&lt;/details&gt;
+&lt;/div&gt;
+
+&lt;div class="nacara-api__entry" id="preset"&gt;
+&lt;a class="nacara-api__anchor"
+                           href="#preset"
+                           aria-label="Link to preset"
+                           data-pagefind-ignore&gt;&lt;/a&gt;
+&lt;details class="nacara-api__member"&gt;
+&lt;summary&gt;
+&lt;pre class="nacara-api__signature nacara-api__signature--hanging"&gt;&lt;code&gt;&lt;span class="tok-function"&gt;preset&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;value&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexamplepreset/"&gt;LiveExamplePreset&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;options&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/summary&gt;
+&lt;div class="nacara-api__body"&gt;
+
+Add a preset a fence can name.
+
+Built with [`LiveExamplePreset`](/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexamplepreset/) and handed over
+whole.
+
+| Parameter | |
+|---|---|
+| `value` | The preset, as `create` and its setters made it. |
+| `options` | The options so far. |
+
+
+&lt;/div&gt;
+&lt;/details&gt;
+&lt;/div&gt;
+
+&lt;div class="nacara-api__entry" id="register"&gt;
+&lt;a class="nacara-api__anchor"
+                           href="#register"
+                           aria-label="Link to register"
+                           data-pagefind-ignore&gt;&lt;/a&gt;
+&lt;details class="nacara-api__member"&gt;
+&lt;summary&gt;
+&lt;pre class="nacara-api__signature nacara-api__signature--hanging"&gt;&lt;code&gt;&lt;span class="tok-function"&gt;register&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;site&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-core/nacara-core/site/"&gt;Site&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-core/nacara-core/site/"&gt;Site&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/summary&gt;
+&lt;div class="nacara-api__body"&gt;
+
+Let a site run its F# snippets in the browser.
+
+| Parameter | |
+|---|---|
+| `site` | The site being described. |
+
+
+&lt;/div&gt;
+&lt;/details&gt;
+&lt;/div&gt;
+
+&lt;div class="nacara-api__entry" id="registerwith"&gt;
+&lt;a class="nacara-api__anchor"
+                           href="#registerwith"
+                           aria-label="Link to registerWith"
+                           data-pagefind-ignore&gt;&lt;/a&gt;
+&lt;details class="nacara-api__member"&gt;
+&lt;summary&gt;
+&lt;pre class="nacara-api__signature nacara-api__signature--hanging"&gt;&lt;code&gt;&lt;span class="tok-function"&gt;registerWith&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;configure&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt; &lt;span class="tok-operator"&gt;-&amp;gt;&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;site&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-core/nacara-core/site/"&gt;Site&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-core/nacara-core/site/"&gt;Site&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/summary&gt;
+&lt;div class="nacara-api__body"&gt;
+
+Let a site run its F# snippets in the browser, configured.
+
+| Parameter | |
+|---|---|
+| `configure` | Given the defaults, the options to use. Anything it leaves alone keeps its default. |
+| `site` | The site being described. |
+
+
+&lt;/div&gt;
+&lt;/details&gt;
+&lt;/div&gt;
+
+&lt;div class="nacara-api__entry" id="stats"&gt;
+&lt;a class="nacara-api__anchor"
+                           href="#stats"
+                           aria-label="Link to stats"
+                           data-pagefind-ignore&gt;&lt;/a&gt;
+&lt;details class="nacara-api__member"&gt;
+&lt;summary&gt;
+&lt;pre class="nacara-api__signature nacara-api__signature--hanging"&gt;&lt;code&gt;&lt;span class="tok-function"&gt;stats&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;value&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;span class="tok-type"&gt;bool&lt;/span&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;options&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/summary&gt;
+&lt;div class="nacara-api__body"&gt;
+
+Show what each compile cost, in a tab of its own.
+
+Off by default: it is for whoever is tuning the site, not for whoever is reading
+it. Rows accumulate rather than replacing each other, so an edit can be compared with the
+run before it.
+
+| Parameter | |
+|---|---|
+| `value` | Whether to show it. |
+| `options` | The options so far. |
+
+
+&lt;/div&gt;
+&lt;/details&gt;
+&lt;/div&gt;
+
+&lt;div class="nacara-api__entry" id="tab"&gt;
+&lt;a class="nacara-api__anchor"
+                           href="#tab"
+                           aria-label="Link to tab"
+                           data-pagefind-ignore&gt;&lt;/a&gt;
+&lt;details class="nacara-api__member"&gt;
+&lt;summary&gt;
+&lt;pre class="nacara-api__signature nacara-api__signature--hanging"&gt;&lt;code&gt;&lt;span class="tok-function"&gt;tab&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;value&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampletab/"&gt;LiveExampleTab&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;options&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/summary&gt;
+&lt;div class="nacara-api__body"&gt;
+
+Set which tab a snippet opens on once it has run.
+
+Left alone it opens on the console, or on the result when the snippet drew
+something and printed nothing.
+
+| Parameter | |
+|---|---|
+| `value` | The value to use. |
+| `options` | The options so far. |
+
+
+&lt;/div&gt;
+&lt;/details&gt;
+&lt;/div&gt;
+
+&lt;div class="nacara-api__entry" id="target"&gt;
+&lt;a class="nacara-api__anchor"
+                           href="#target"
+                           aria-label="Link to target"
+                           data-pagefind-ignore&gt;&lt;/a&gt;
+&lt;details class="nacara-api__member"&gt;
+&lt;summary&gt;
+&lt;pre class="nacara-api__signature nacara-api__signature--hanging"&gt;&lt;code&gt;&lt;span class="tok-function"&gt;target&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;value&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampletarget/"&gt;LiveExampleTarget&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;(&lt;/span&gt;&lt;span class="tok-parameter"&gt;options&lt;/span&gt;&lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;span class="tok-punctuation"&gt;)&lt;/span&gt; &lt;span class="tok-punctuation"&gt;:&lt;/span&gt; &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/"&gt;LiveExampleOptions&lt;/a&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/summary&gt;
+&lt;div class="nacara-api__body"&gt;
+
+Set what a snippet is compiled to when its fence does not say.
+
+Only `JavaScript` runs in a browser. Any other target compiles and shows its
+code.
+
+| Parameter | |
+|---|---|
+| `value` | The value to use. |
+| `options` | The options so far. |
+
+
+&lt;/div&gt;
+&lt;/details&gt;
+&lt;/div&gt;'><div class="nacara-code__body"><pre><code><span class="nacara-code__line">
+</span><span class="nacara-code__line">## Functions and values
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;div class="nacara-api__entry" id="create">
+</span><span class="nacara-code__line">&lt;a class="nacara-api__anchor"
+</span><span class="nacara-code__line">                           href="#create"
+</span><span class="nacara-code__line">                           aria-label="Link to create"
+</span><span class="nacara-code__line">                           data-pagefind-ignore>&lt;/a>
+</span><span class="nacara-code__line">&lt;details class="nacara-api__member">
+</span><span class="nacara-code__line">&lt;summary>
+</span><span class="nacara-code__line">&lt;pre class="nacara-api__signature nacara-api__signature--hanging">&lt;code>&lt;span class="tok-function">create&lt;/span> &lt;span class="tok-punctuation">()&lt;/span> &lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-core/nacara-core/iplugin/">IPlugin&lt;/a>&lt;/code>&lt;/pre>
+</span><span class="nacara-code__line">&lt;/summary>
+</span><span class="nacara-code__line">&lt;div class="nacara-api__body">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">The plugin, with its options as they are.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">&lt;/details>
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;div class="nacara-api__entry" id="createwith">
+</span><span class="nacara-code__line">&lt;a class="nacara-api__anchor"
+</span><span class="nacara-code__line">                           href="#createwith"
+</span><span class="nacara-code__line">                           aria-label="Link to createWith"
+</span><span class="nacara-code__line">                           data-pagefind-ignore>&lt;/a>
+</span><span class="nacara-code__line">&lt;details class="nacara-api__member">
+</span><span class="nacara-code__line">&lt;summary>
+</span><span class="nacara-code__line">&lt;pre class="nacara-api__signature nacara-api__signature--hanging">&lt;code>&lt;span class="tok-function">createWith&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">configure&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a> &lt;span class="tok-operator">-&amp;gt;&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-core/nacara-core/iplugin/">IPlugin&lt;/a>&lt;/code>&lt;/pre>
+</span><span class="nacara-code__line">&lt;/summary>
+</span><span class="nacara-code__line">&lt;div class="nacara-api__body">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">The plugin, with its options changed.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">| Parameter | |
+</span><span class="nacara-code__line">|---|---|
+</span><span class="nacara-code__line">| `configure` | What to change about them. |
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">&lt;/details>
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;div class="nacara-api__entry" id="defaultcss">
+</span><span class="nacara-code__line">&lt;a class="nacara-api__anchor"
+</span><span class="nacara-code__line">                           href="#defaultcss"
+</span><span class="nacara-code__line">                           aria-label="Link to defaultCss"
+</span><span class="nacara-code__line">                           data-pagefind-ignore>&lt;/a>
+</span><span class="nacara-code__line">&lt;details class="nacara-api__member">
+</span><span class="nacara-code__line">&lt;summary>
+</span><span class="nacara-code__line">&lt;pre class="nacara-api__signature nacara-api__signature--hanging">&lt;code>&lt;span class="tok-function">defaultCss&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">value&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;span class="tok-type">string&lt;/span>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">options&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;/code>&lt;/pre>
+</span><span class="nacara-code__line">&lt;/summary>
+</span><span class="nacara-code__line">&lt;div class="nacara-api__body">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">The stylesheet used by a preset that names none of its own.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">| Parameter | |
+</span><span class="nacara-code__line">|---|---|
+</span><span class="nacara-code__line">| `value` | The CSS file, relative to the project root. |
+</span><span class="nacara-code__line">| `options` | The options so far. |
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">&lt;/details>
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;div class="nacara-api__entry" id="defaulttemplate">
+</span><span class="nacara-code__line">&lt;a class="nacara-api__anchor"
+</span><span class="nacara-code__line">                           href="#defaulttemplate"
+</span><span class="nacara-code__line">                           aria-label="Link to defaultTemplate"
+</span><span class="nacara-code__line">                           data-pagefind-ignore>&lt;/a>
+</span><span class="nacara-code__line">&lt;details class="nacara-api__member">
+</span><span class="nacara-code__line">&lt;summary>
+</span><span class="nacara-code__line">&lt;pre class="nacara-api__signature nacara-api__signature--hanging">&lt;code>&lt;span class="tok-function">defaultTemplate&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">value&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;span class="tok-type">string&lt;/span>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">options&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;/code>&lt;/pre>
+</span><span class="nacara-code__line">&lt;/summary>
+</span><span class="nacara-code__line">&lt;div class="nacara-api__body">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">The page used by a preset that names none of its own.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">| Parameter | |
+</span><span class="nacara-code__line">|---|---|
+</span><span class="nacara-code__line">| `value` | The HTML file, relative to the project root. |
+</span><span class="nacara-code__line">| `options` | The options so far. |
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">&lt;/details>
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;div class="nacara-api__entry" id="defaults">
+</span><span class="nacara-code__line">&lt;a class="nacara-api__anchor"
+</span><span class="nacara-code__line">                           href="#defaults"
+</span><span class="nacara-code__line">                           aria-label="Link to defaults"
+</span><span class="nacara-code__line">                           data-pagefind-ignore>&lt;/a>
+</span><span class="nacara-code__line">&lt;details class="nacara-api__member">
+</span><span class="nacara-code__line">&lt;summary>
+</span><span class="nacara-code__line">&lt;pre class="nacara-api__signature nacara-api__signature--hanging">&lt;code>&lt;span class="tok-function">defaults&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;/code>&lt;/pre>
+</span><span class="nacara-code__line">&lt;/summary>
+</span><span class="nacara-code__line">&lt;div class="nacara-api__body">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">The options a site starts from.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">&lt;/details>
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;div class="nacara-api__entry" id="fable">
+</span><span class="nacara-code__line">&lt;a class="nacara-api__anchor"
+</span><span class="nacara-code__line">                           href="#fable"
+</span><span class="nacara-code__line">                           aria-label="Link to fable"
+</span><span class="nacara-code__line">                           data-pagefind-ignore>&lt;/a>
+</span><span class="nacara-code__line">&lt;details class="nacara-api__member">
+</span><span class="nacara-code__line">&lt;summary>
+</span><span class="nacara-code__line">&lt;pre class="nacara-api__signature nacara-api__signature--hanging">&lt;code>&lt;span class="tok-function">fable&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">value&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/fablerelease/">FableRelease&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">options&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;/code>&lt;/pre>
+</span><span class="nacara-code__line">&lt;/summary>
+</span><span class="nacara-code__line">&lt;div class="nacara-api__body">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">Set which build of the Fable compiler snippets are compiled by.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">Pinned by default, to the pair this plugin was built against. `Latest` follows
+</span><span class="nacara-code__line">Fable without waiting for a release of this plugin, so two builds of the same commit can
+</span><span class="nacara-code__line">differ; the log says which Fable it found.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">| Parameter | |
+</span><span class="nacara-code__line">|---|---|
+</span><span class="nacara-code__line">| `value` | The value to use. |
+</span><span class="nacara-code__line">| `options` | The options so far. |
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">&lt;/details>
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;div class="nacara-api__entry" id="fabletool">
+</span><span class="nacara-code__line">&lt;a class="nacara-api__anchor"
+</span><span class="nacara-code__line">                           href="#fabletool"
+</span><span class="nacara-code__line">                           aria-label="Link to fableTool"
+</span><span class="nacara-code__line">                           data-pagefind-ignore>&lt;/a>
+</span><span class="nacara-code__line">&lt;details class="nacara-api__member">
+</span><span class="nacara-code__line">&lt;summary>
+</span><span class="nacara-code__line">&lt;pre class="nacara-api__signature nacara-api__signature--hanging">&lt;code>&lt;span class="tok-function">fableTool&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">value&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;span class="tok-type">string&lt;/span>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">options&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;/code>&lt;/pre>
+</span><span class="nacara-code__line">&lt;/summary>
+</span><span class="nacara-code__line">&lt;div class="nacara-api__body">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">Precompile with a Fable of your own instead of the one that matches.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">You do not normally want this. Left alone, the build fetches the Fable the compiler in
+</span><span class="nacara-code__line">the browser was built from and precompiles with that, so the two agree whatever is installed
+</span><span class="nacara-code__line">on the machine - or nothing at all.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">It is here for working on Fable itself: point it at a local build and the snippets are
+</span><span class="nacara-code__line">precompiled with that one. Keeping the two in step is then yours, and the build says when
+</span><span class="nacara-code__line">they have drifted rather than leaving a reader with a snippet that never answers.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">| Parameter | |
+</span><span class="nacara-code__line">|---|---|
+</span><span class="nacara-code__line">| `value` | The `fable` executable to run. |
+</span><span class="nacara-code__line">| `options` | The options so far. |
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">&lt;/details>
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;div class="nacara-api__entry" id="highlighting">
+</span><span class="nacara-code__line">&lt;a class="nacara-api__anchor"
+</span><span class="nacara-code__line">                           href="#highlighting"
+</span><span class="nacara-code__line">                           aria-label="Link to highlighting"
+</span><span class="nacara-code__line">                           data-pagefind-ignore>&lt;/a>
+</span><span class="nacara-code__line">&lt;details class="nacara-api__member">
+</span><span class="nacara-code__line">&lt;summary>
+</span><span class="nacara-code__line">&lt;pre class="nacara-api__signature nacara-api__signature--hanging">&lt;code>&lt;span class="tok-function">highlighting&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">value&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexamplehighlighting/">LiveExampleHighlighting&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">options&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;/code>&lt;/pre>
+</span><span class="nacara-code__line">&lt;/summary>
+</span><span class="nacara-code__line">&lt;div class="nacara-api__body">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">Set how an edited snippet colours itself.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">| Parameter | |
+</span><span class="nacara-code__line">|---|---|
+</span><span class="nacara-code__line">| `value` | The value to use. |
+</span><span class="nacara-code__line">| `options` | The options so far. |
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">&lt;/details>
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;div class="nacara-api__entry" id="outputgrammar">
+</span><span class="nacara-code__line">&lt;a class="nacara-api__anchor"
+</span><span class="nacara-code__line">                           href="#outputgrammar"
+</span><span class="nacara-code__line">                           aria-label="Link to outputGrammar"
+</span><span class="nacara-code__line">                           data-pagefind-ignore>&lt;/a>
+</span><span class="nacara-code__line">&lt;details class="nacara-api__member">
+</span><span class="nacara-code__line">&lt;summary>
+</span><span class="nacara-code__line">&lt;pre class="nacara-api__signature nacara-api__signature--hanging">&lt;code>&lt;span class="tok-function">outputGrammar&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">value&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-highlight-treesitter/nacara-plugins/treesittergrammar/">TreeSitterGrammar&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">options&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;/code>&lt;/pre>
+</span><span class="nacara-code__line">&lt;/summary>
+</span><span class="nacara-code__line">&lt;div class="nacara-api__body">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">Add a grammar for colouring the output of a target.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">Every language Fable targets is coloured already, so name a grammar here only to
+</span><span class="nacara-code__line">override one, or to colour a language Fable does not target. Declared the same way the
+</span><span class="nacara-code__line">highlighting plugin declares one, so a site that already colours Gleam blocks can hand over
+</span><span class="nacara-code__line">the grammar it has.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">| Parameter | |
+</span><span class="nacara-code__line">|---|---|
+</span><span class="nacara-code__line">| `value` | The grammar, named after the language it colours. |
+</span><span class="nacara-code__line">| `options` | The options so far. |
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">&lt;/details>
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;div class="nacara-api__entry" id="preset">
+</span><span class="nacara-code__line">&lt;a class="nacara-api__anchor"
+</span><span class="nacara-code__line">                           href="#preset"
+</span><span class="nacara-code__line">                           aria-label="Link to preset"
+</span><span class="nacara-code__line">                           data-pagefind-ignore>&lt;/a>
+</span><span class="nacara-code__line">&lt;details class="nacara-api__member">
+</span><span class="nacara-code__line">&lt;summary>
+</span><span class="nacara-code__line">&lt;pre class="nacara-api__signature nacara-api__signature--hanging">&lt;code>&lt;span class="tok-function">preset&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">value&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexamplepreset/">LiveExamplePreset&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">options&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;/code>&lt;/pre>
+</span><span class="nacara-code__line">&lt;/summary>
+</span><span class="nacara-code__line">&lt;div class="nacara-api__body">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">Add a preset a fence can name.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">Built with [`LiveExamplePreset`](/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexamplepreset/) and handed over
+</span><span class="nacara-code__line">whole.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">| Parameter | |
+</span><span class="nacara-code__line">|---|---|
+</span><span class="nacara-code__line">| `value` | The preset, as `create` and its setters made it. |
+</span><span class="nacara-code__line">| `options` | The options so far. |
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">&lt;/details>
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;div class="nacara-api__entry" id="register">
+</span><span class="nacara-code__line">&lt;a class="nacara-api__anchor"
+</span><span class="nacara-code__line">                           href="#register"
+</span><span class="nacara-code__line">                           aria-label="Link to register"
+</span><span class="nacara-code__line">                           data-pagefind-ignore>&lt;/a>
+</span><span class="nacara-code__line">&lt;details class="nacara-api__member">
+</span><span class="nacara-code__line">&lt;summary>
+</span><span class="nacara-code__line">&lt;pre class="nacara-api__signature nacara-api__signature--hanging">&lt;code>&lt;span class="tok-function">register&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">site&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-core/nacara-core/site/">Site&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-core/nacara-core/site/">Site&lt;/a>&lt;/code>&lt;/pre>
+</span><span class="nacara-code__line">&lt;/summary>
+</span><span class="nacara-code__line">&lt;div class="nacara-api__body">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">Let a site run its F# snippets in the browser.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">| Parameter | |
+</span><span class="nacara-code__line">|---|---|
+</span><span class="nacara-code__line">| `site` | The site being described. |
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">&lt;/details>
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;div class="nacara-api__entry" id="registerwith">
+</span><span class="nacara-code__line">&lt;a class="nacara-api__anchor"
+</span><span class="nacara-code__line">                           href="#registerwith"
+</span><span class="nacara-code__line">                           aria-label="Link to registerWith"
+</span><span class="nacara-code__line">                           data-pagefind-ignore>&lt;/a>
+</span><span class="nacara-code__line">&lt;details class="nacara-api__member">
+</span><span class="nacara-code__line">&lt;summary>
+</span><span class="nacara-code__line">&lt;pre class="nacara-api__signature nacara-api__signature--hanging">&lt;code>&lt;span class="tok-function">registerWith&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">configure&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a> &lt;span class="tok-operator">-&amp;gt;&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">site&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-core/nacara-core/site/">Site&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-core/nacara-core/site/">Site&lt;/a>&lt;/code>&lt;/pre>
+</span><span class="nacara-code__line">&lt;/summary>
+</span><span class="nacara-code__line">&lt;div class="nacara-api__body">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">Let a site run its F# snippets in the browser, configured.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">| Parameter | |
+</span><span class="nacara-code__line">|---|---|
+</span><span class="nacara-code__line">| `configure` | Given the defaults, the options to use. Anything it leaves alone keeps its default. |
+</span><span class="nacara-code__line">| `site` | The site being described. |
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">&lt;/details>
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;div class="nacara-api__entry" id="stats">
+</span><span class="nacara-code__line">&lt;a class="nacara-api__anchor"
+</span><span class="nacara-code__line">                           href="#stats"
+</span><span class="nacara-code__line">                           aria-label="Link to stats"
+</span><span class="nacara-code__line">                           data-pagefind-ignore>&lt;/a>
+</span><span class="nacara-code__line">&lt;details class="nacara-api__member">
+</span><span class="nacara-code__line">&lt;summary>
+</span><span class="nacara-code__line">&lt;pre class="nacara-api__signature nacara-api__signature--hanging">&lt;code>&lt;span class="tok-function">stats&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">value&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;span class="tok-type">bool&lt;/span>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">options&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;/code>&lt;/pre>
+</span><span class="nacara-code__line">&lt;/summary>
+</span><span class="nacara-code__line">&lt;div class="nacara-api__body">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">Show what each compile cost, in a tab of its own.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">Off by default: it is for whoever is tuning the site, not for whoever is reading
+</span><span class="nacara-code__line">it. Rows accumulate rather than replacing each other, so an edit can be compared with the
+</span><span class="nacara-code__line">run before it.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">| Parameter | |
+</span><span class="nacara-code__line">|---|---|
+</span><span class="nacara-code__line">| `value` | Whether to show it. |
+</span><span class="nacara-code__line">| `options` | The options so far. |
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">&lt;/details>
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;div class="nacara-api__entry" id="tab">
+</span><span class="nacara-code__line">&lt;a class="nacara-api__anchor"
+</span><span class="nacara-code__line">                           href="#tab"
+</span><span class="nacara-code__line">                           aria-label="Link to tab"
+</span><span class="nacara-code__line">                           data-pagefind-ignore>&lt;/a>
+</span><span class="nacara-code__line">&lt;details class="nacara-api__member">
+</span><span class="nacara-code__line">&lt;summary>
+</span><span class="nacara-code__line">&lt;pre class="nacara-api__signature nacara-api__signature--hanging">&lt;code>&lt;span class="tok-function">tab&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">value&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampletab/">LiveExampleTab&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">options&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;/code>&lt;/pre>
+</span><span class="nacara-code__line">&lt;/summary>
+</span><span class="nacara-code__line">&lt;div class="nacara-api__body">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">Set which tab a snippet opens on once it has run.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">Left alone it opens on the console, or on the result when the snippet drew
+</span><span class="nacara-code__line">something and printed nothing.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">| Parameter | |
+</span><span class="nacara-code__line">|---|---|
+</span><span class="nacara-code__line">| `value` | The value to use. |
+</span><span class="nacara-code__line">| `options` | The options so far. |
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">&lt;/details>
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;div class="nacara-api__entry" id="target">
+</span><span class="nacara-code__line">&lt;a class="nacara-api__anchor"
+</span><span class="nacara-code__line">                           href="#target"
+</span><span class="nacara-code__line">                           aria-label="Link to target"
+</span><span class="nacara-code__line">                           data-pagefind-ignore>&lt;/a>
+</span><span class="nacara-code__line">&lt;details class="nacara-api__member">
+</span><span class="nacara-code__line">&lt;summary>
+</span><span class="nacara-code__line">&lt;pre class="nacara-api__signature nacara-api__signature--hanging">&lt;code>&lt;span class="tok-function">target&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">value&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampletarget/">LiveExampleTarget&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">(&lt;/span>&lt;span class="tok-parameter">options&lt;/span>&lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;span class="tok-punctuation">)&lt;/span> &lt;span class="tok-punctuation">:&lt;/span> &lt;a class="tok-type" href="/Nacara/reference/nacara-plugin-liveexample/nacara-plugins/liveexampleoptions/">LiveExampleOptions&lt;/a>&lt;/code>&lt;/pre>
+</span><span class="nacara-code__line">&lt;/summary>
+</span><span class="nacara-code__line">&lt;div class="nacara-api__body">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">Set what a snippet is compiled to when its fence does not say.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">Only `JavaScript` runs in a browser. Any other target compiles and shows its
+</span><span class="nacara-code__line">code.
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">| Parameter | |
+</span><span class="nacara-code__line">|---|---|
+</span><span class="nacara-code__line">| `value` | The value to use. |
+</span><span class="nacara-code__line">| `options` | The options so far. |
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">&lt;/div>
+</span><span class="nacara-code__line">&lt;/details>
+</span><span class="nacara-code__line">&lt;/div>
+</span></code></pre><button class="nacara-code__copy" type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure></div></main></div><footer class="nacara-footer"><p>Nacara is built with F# · <a href="https://github.com/MangelMaxime/Nacara">Source</a></p></footer><script src="/Nacara/assets/nacara.308bc7ae.js" defer="defer"></script><script src="/Nacara/assets/search.js" defer="defer"></script><script src="/Nacara/assets/fsharp-api.js" defer="defer"></script><script src="/Nacara/assets/live-example/live-example.js" defer="defer"></script><script src="/Nacara/assets/versions.js" defer="defer"></script></body></html>
