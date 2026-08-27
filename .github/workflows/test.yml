@@ -38,6 +38,14 @@ jobs:
           node-version: lts/*
           cache: npm
 
+      # Defender scans every file the compilers write, and the Fable ones write a lot.
+      - name: Keep Defender away from the build
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Add-MpPreference -ExclusionPath $env:GITHUB_WORKSPACE, "$env:USERPROFILE\.nuget", "$env:USERPROFILE\.cache"
+          (Get-MpPreference).ExclusionPath
+
       - name: Restore
         run: dotnet restore Nacara.slnx
 
