@@ -37,7 +37,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: src/Nacara.Plugin.Highlight.TreeSitter/runtimes
-          key: tree-sitter-runtime-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('build/Commands/TreeSitter/Runtime.fs', 'src/Nacara.Plugin.Highlight.TreeSitter/Runtime.fs') }}
+          key: tree-sitter-runtime-${{ runner.os }}-${{ runner.arch }}-${{ env.ImageOS }}-${{ hashFiles('build/Commands/TreeSitter/Runtime.fs', 'src/Nacara.Plugin.Highlight.TreeSitter/Runtime.fs') }}
 
       - name: Build the tree-sitter runtime
         if: steps.runtime.outputs.cache-hit != 'true'
