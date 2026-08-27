@@ -261,13 +261,16 @@ let diagnostics =
             test (
                 "Diagnostic.render uses the editor-friendly shape",
                 fun _ ->
+                    // Windows answers a leading slash with a drive, and the shape is the point.
+                    let file = AbsolutePath.create "/tmp/site/docs/guide.md"
+
                     assertThat
                         (Diagnostic.error "nacara/front-matter-invalid" "Missing 'title'"
-                         |> Diagnostic.at (AbsolutePath.create "/tmp/site/docs/guide.md") 3 1
+                         |> Diagnostic.at file 3 1
                          |> Diagnostic.render)
                         (tag "file(line,column): severity code: message"
                          >> isEqualTo
-                             "/tmp/site/docs/guide.md(3,1): error nacara/front-matter-invalid: Missing 'title'")
+                             $"%s{AbsolutePath.value file}(3,1): error nacara/front-matter-invalid: Missing 'title'")
             )
             test (
                 "Diagnostic.render appends the hint",
