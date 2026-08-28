@@ -8,8 +8,9 @@ open System.Threading
 /// Watches the project for changes and coalesces them into rebuilds.
 /// </summary>
 /// <remarks>
-/// <para>Editors write files in bursts, so changes are debounced. Output, <c>.nacara</c>,
-/// <c>obj</c> and <c>bin</c> are ignored, or the build would trigger itself forever.</para>
+/// <para>Editors write files in bursts, so changes are debounced. Output, <c>obj</c>, <c>bin</c>
+/// and every dotted directory - <c>.nacara</c>, <c>.git</c>, the cache a linter keeps - are
+/// ignored, or the build would trigger itself forever.</para>
 /// <para>The project is what is watched by default, and <see cref="M:Nacara.Core.Watcher.Follow" />
 /// adds the files a build said it read from somewhere else - a changelog in a sibling directory,
 /// an assembly an API reference is generated from.</para>
@@ -31,21 +32,29 @@ type Watcher
     let mutable followedFiles = Set.empty<string>
     let mutable followedDirectories: Map<string, FileSystemWatcher> = Map.empty
 
+    let root = (AbsolutePath.value projectRoot).Replace('\\', '/').TrimEnd('/') + "/"
+
     let isIgnored (path: string) =
         let normalized = path.Replace('\\', '/')
+
+        // Only what is under the project is read for dots: a checkout inside one - ~/.local/share -
+        // would otherwise ignore every file it holds.
+        let segments =
+            if normalized.StartsWith root then
+                normalized.Substring(root.Length).Split '/'
+            else
+                [| Path.GetFileName normalized |]
 
         ignoredDirectories
         |> List.exists (fun ignored ->
             let ignored = ignored.Replace('\\', '/').TrimEnd('/')
             normalized.StartsWith(ignored + "/") || normalized = ignored
         )
-        || normalized.Contains "/.git/"
-        || normalized.Contains $"/%s{ProjectCache.PROJECT_CACHE_DIR_NAME}/"
+        || segments |> Array.exists (fun segment -> segment.StartsWith ".")
         || normalized.Contains "/obj/"
         || normalized.Contains "/bin/"
         || normalized.Contains "/node_modules/"
         || normalized.EndsWith "~"
-        || Path.GetFileName(normalized).StartsWith "."
 
     /// Hand over what has piled up, and start again empty.
     let fire () =
@@ -103,8 +112,6 @@ type Watcher
     /// </remarks>
     /// <param name="paths">Files a build read from outside the project.</param>
     member _.Follow(paths: AbsolutePath list) =
-        let root = (AbsolutePath.value projectRoot).Replace('\\', '/').TrimEnd('/') + "/"
-
         let wanted =
             paths
             |> List.map (fun path -> (AbsolutePath.value path).Replace('\\', '/'))

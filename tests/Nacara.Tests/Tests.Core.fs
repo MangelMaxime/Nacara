@@ -557,6 +557,60 @@ let watcher =
             )
 
             test (
+                "what a tool cached in a dotted directory does not ask for another build",
+                fun _ ->
+                    let temporary =
+                        Path.Combine(
+                            Path.GetTempPath(),
+                            "nacara-tests",
+                            Guid.NewGuid().ToString "N"
+                        )
+
+                    Directory.CreateDirectory temporary |> ignore
+                    let root = AbsolutePath.create temporary
+
+                    let cache = Path.Combine(temporary, ".rumdl_cache")
+                    Directory.CreateDirectory cache |> ignore
+                    let index = Path.Combine(cache, "workspace_index.bin")
+                    File.WriteAllText(index, "1\n")
+
+                    let seen = System.Collections.Concurrent.ConcurrentBag<string>()
+
+                    use watcher =
+                        new Watcher(
+                            root,
+                            [],
+                            TimeSpan.FromMilliseconds 20.,
+                            fun changes -> changes |> List.iter seen.Add
+                        )
+
+                    watcher.Start()
+                    File.WriteAllText(index, "2\n")
+
+                    let page = Path.Combine(temporary, "index.md")
+                    File.WriteAllText(page, "# Hello\n")
+
+                    let deadline = DateTime.UtcNow.AddSeconds 5.
+
+                    let arrived () =
+                        seen |> Seq.exists (fun path -> Path.GetFileName path = "index.md")
+
+                    while not (arrived ()) && DateTime.UtcNow < deadline do
+                        Thread.Sleep 25
+
+                    assertThat (arrived ()) (tag "a page the site is made of is reported" >> isTrue)
+
+                    Thread.Sleep 400
+
+                    assertThat
+                        (seen
+                         |> Seq.exists (fun path -> Path.GetFileName path = "workspace_index.bin"))
+                        (tag "and the linter's own index is not" >> isEqualTo false)
+
+                    Directory.Delete(temporary, true)
+            )
+
+            test (
                 "a file already inside the project is not followed twice",
                 fun _ ->
                     let temporary =
