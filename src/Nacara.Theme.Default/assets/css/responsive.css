@@ -44,6 +44,14 @@
     .nacara-sidebar[data-open="true"]:has(.nacara-sidebar__widgets) {
         padding-bottom: 0;
     }
+    /* What the drawer covers, dimmed. The navbar stays clear of it, burger included. */
+    .nacara-layout:has(.nacara-sidebar[data-open="true"])::before {
+        content: "";
+        position: fixed;
+        inset: var(--nacara-navbar-height) 0 0;
+        z-index: 19;
+        background: rgb(0 0 0 / 0.4);
+    }
 
     .nacara-navbar__items:not(.nacara-navbar__items--end) {
         display: none;
