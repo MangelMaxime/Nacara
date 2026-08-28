@@ -27,15 +27,6 @@
     text-align: center;
 }
 
-.landing-hero__eyebrow {
-    margin: 0;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--nacara-text-muted);
-}
-
 .landing-hero__title {
     margin: 0;
     max-width: 20ch;
@@ -86,6 +77,31 @@
 .landing-button--primary:hover {
     background: color-mix(in srgb, var(--nacara-primary) 85%, var(--nacara-text));
     color: var(--nacara-primary-contrast);
+}
+
+.landing-lede {
+    margin: 0;
+    max-width: 68ch;
+    color: var(--nacara-text-muted);
+    line-height: 1.6;
+}
+
+/* A line of introduction above what it introduces. */
+.landing-intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--nacara-space-3);
+    margin-bottom: calc(var(--nacara-space-8) * -1);
+    text-align: center;
+}
+
+.landing-intro .landing-section__title {
+    margin: 0;
+}
+
+.landing-intro .landing-lede {
+    max-width: 62ch;
 }
 
 .landing-grid {

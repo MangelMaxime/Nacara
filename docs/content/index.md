@@ -7,11 +7,9 @@ layout: bare
 <div class="landing">
 <section class="landing-hero">
 
-<p class="landing-hero__eyebrow">Documentation engine for F#</p>
+<h1 class="landing-hero__title">Broken documentation fails the build</h1>
 
-<h1 class="landing-hero__title">Documentation the compiler checks</h1>
-
-<p class="landing-hero__lede">Nacara turns markdown into a documentation site, and your site is an F# program. Front matter is decoded into types you declare, links are resolved against the route table, and a page that would ship broken fails the build instead.</p>
+<p class="landing-hero__lede">Nacara turns markdown into a documentation site, and your site is an F# program. Front matter is decoded into types you declare, links are resolved against the route table, and anchors are checked against the headings they name.</p>
 
 <p class="landing-actions">
 <a class="landing-button landing-button--primary" href="/Nacara/guide/getting-started/">Get started</a>
@@ -26,6 +24,16 @@ dotnet new nacara-docs -o docs
 cd docs && dotnet run -- watch
 ```
 
+<div class="landing-intro">
+
+<h2 class="landing-section__title">Your editor already knows it</h2>
+
+<p class="landing-lede">The site is F#, so describing it comes with completion, type errors and any
+features your IDE supports. A plugin you spelled wrong is a squiggle under your cursor, not a
+surprise in CI.</p>
+
+</div>
+
 ```fsharp title="docs/Site.fs"
 let site =
     Site.create "My library"
@@ -38,6 +46,46 @@ let site =
 
 [<EntryPoint>]
 let main argv = Nacara.run site argv
+```
+
+<div class="landing-intro">
+
+<h2 class="landing-section__title">Your documentation can be interactive</h2>
+
+<p class="landing-lede">A code block marked <code>live</code> becomes an editor. Fable compiles it
+in the browser against your library, so the example on the page can be modified, executed and
+does not drift from the code it documents.</p>
+
+</div>
+
+```fsharp live
+open Browser.Dom
+open Demo
+
+// Point and distance come from this site's preset, so the type-checker answers for them.
+let route =
+    [
+        { X = 10.0; Y = 60.0 }
+        { X = 70.0; Y = 20.0 }
+        { X = 130.0; Y = 75.0 }
+        { X = 190.0; Y = 30.0 }
+    ]
+    
+let travelled = route |> List.pairwise |> List.sumBy (fun (a, b) -> distance a b)
+
+let line = route |> List.map (fun p -> $"%.0f{p.X},%.0f{p.Y}") |> String.concat " "
+
+let dots =
+    route
+    |> List.map (fun p -> $"<circle cx='%.0f{p.X}' cy='%.0f{p.Y}' r='6' fill='#6669d7' />")
+    |> String.concat ""
+
+document.getElementById("app").innerHTML <-
+    $"<h2>%.1f{travelled} units travelled</h2>"
+    + "<svg viewBox='0 0 200 90' width='320' height='144'>"
+    + $"<polyline points='%s{line}' fill='none' stroke='#6669d7' stroke-width='2' />"
+    + dots
+    + "</svg>"
 ```
 
 <section>
