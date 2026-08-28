@@ -3,6 +3,8 @@ namespace Nacara.Plugins
 open System
 open System.Diagnostics
 open System.IO
+open System.Security.Cryptography
+open System.Text
 open System.Text.Json
 open Nacara.Core
 open Nacara.Plugins.Internal
@@ -139,12 +141,33 @@ module Rumdl =
                 }
         ]
 
+    /// <summary>Where rumdl keeps its index of what it has already read.</summary>
+    /// <remarks>
+    /// Out of the site, where rumdl would put it: a <c>.rumdl_cache</c> beside the content is a
+    /// file a watch build writes and then rebuilds on, forever. One directory per project, so two
+    /// sites do not share an index.
+    /// </remarks>
+    let private cacheDirectory (root: AbsolutePath) =
+        let key =
+            (AbsolutePath.value root).Replace('\\', '/')
+            |> Encoding.UTF8.GetBytes
+            |> SHA256.HashData
+            |> Convert.ToHexString
+            |> _.Substring(0, 16)
+            |> _.ToLowerInvariant()
+
+        Path.Combine(Tool.cache, "rumdl-cache", key)
+
     /// <summary>Runs rumdl over a batch of files and reads what it says.</summary>
     /// <summary>The rules, added to a command line.</summary>
     let private configure
         (options: RumdlOptions)
+        (root: AbsolutePath)
         (arguments: Collections.ObjectModel.Collection<string>)
         =
+        arguments.Add "--cache-dir"
+        arguments.Add(cacheDirectory root)
+
         if options.Isolated then
             arguments.Add "--no-config"
 
@@ -166,7 +189,12 @@ module Rumdl =
             arguments.Add "--config"
             arguments.Add setting
 
-    let private run (binary: string) (options: RumdlOptions) (files: string list) =
+    let private run
+        (binary: string)
+        (options: RumdlOptions)
+        (root: AbsolutePath)
+        (files: string list)
+        =
         let arguments =
             ProcessStartInfo(binary, RedirectStandardOutput = true, RedirectStandardError = true)
 
@@ -177,7 +205,7 @@ module Rumdl =
         arguments.ArgumentList.Add "never"
         arguments.ArgumentList.Add "--quiet"
 
-        configure options arguments.ArgumentList
+        configure options root arguments.ArgumentList
 
         for file in files do
             arguments.ArgumentList.Add file
@@ -216,7 +244,7 @@ module Rumdl =
         | Ok path ->
             let start = ProcessStartInfo(path)
             start.ArgumentList.Add "fmt"
-            configure options start.ArgumentList
+            configure options root start.ArgumentList
 
             for target in
                 (if List.isEmpty arguments then
@@ -300,7 +328,7 @@ it writes is what the build then accepts."""
                                 let batches = files |> List.chunkBySize 100
 
                                 for batch in batches do
-                                    match run binary options batch with
+                                    match run binary options context.ProjectRoot batch with
                                     | Error message ->
                                         context.Diagnostics.Add(
                                             Diagnostic.warning
