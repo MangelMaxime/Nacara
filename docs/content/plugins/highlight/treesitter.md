@@ -19,12 +19,11 @@ let site =
     |> Theme.register theme
 ```
 
-That is the whole of it for most sites: **twelve languages come inside the package**, and nothing is
-compiled to colour any of them.
+**Twelve languages come inside the package**, and nothing is compiled to colour them.
 
-The parser itself is native, and nobody publishes a build of tree-sitter that can load a grammar
-compiled to wasm, so Nacara publishes one per platform. The first build on a machine fetches the
-pair it needs - about 8 MB, kept in `~/.cache/nacara` and shared by every site you build there.
+The parser is native, and Nacara publishes one build per platform. The first build on a machine
+fetches the pair it needs - about 8 MB, kept in `~/.cache/nacara` and shared by every site built
+there.
 
 | | |
 |---|---|
@@ -118,17 +117,15 @@ the first one brings a toolchain with it: the tree-sitter CLI and the wasi-sdk i
 some 150 MB to download and around 600 MB unpacked. It all lands in `~/.cache/nacara/tree-sitter/`,
 so you pay it once per machine. A grammar itself takes seconds and under a megabyte.
 
-Nacara ignores whatever tree-sitter you have installed, even when it is exactly the right version:
-a grammar built by one tree-sitter and loaded by another fails in ways you never want to debug.
+Nacara ignores whatever tree-sitter you have installed, even at the right version: a grammar built
+by one tree-sitter and loaded by another fails at run time.
 
 ### Building on CI
 
-Cache `~/.cache/nacara` and the toolchain is fetched once rather than once per run - the difference
-between a two-minute build and a two-second one.
+Cache `~/.cache/nacara` and the toolchain is fetched once instead of once per run.
 
 Set `AutoBuild = false` for a build that must fetch nothing. A grammar already in the cache is still
-used; one that is not becomes an error naming where it was looked for, instead of a runner quietly
-downloading 600 MB.
+used; one that is not becomes an error naming where it was looked for.
 
 ### Incomplete snippets
 
@@ -150,7 +147,7 @@ Every capture a grammar's queries make - `keyword`, `variable.parameter`, `const
 one of the theme's [token classes](index.md#colours), the same ones TextMate produces. Recolour a
 token there and it changes everywhere, whichever highlighter drew it.
 
-To change what is captured rather than how it is coloured, point `queriesAt` at a `highlights.scm`
+To change what is captured, rather than how it is coloured, point `queriesAt` at a `highlights.scm`
 of your own.
 
 ## Options

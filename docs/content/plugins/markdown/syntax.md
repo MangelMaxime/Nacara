@@ -71,9 +71,8 @@ order of appearance - `#options`, `#options-1` - so every link has exactly one t
 Write `{#anchor}` yourself when you want an anchor to survive a rewording. Links are checked
 against these ids - see [the link validator](../checks/link-validator.md).
 
-Every heading below the title carries a link to itself in the margin, shown when you hover it, so a
-reader can send someone the section rather than the page. The search index ignores it, and a screen
-reader reads it as "Link to this section".
+Every heading below the title carries a link to itself in the margin, shown on hover. The search
+index ignores it, and a screen reader reads it as "Link to this section".
 
 ## Table of contents
 

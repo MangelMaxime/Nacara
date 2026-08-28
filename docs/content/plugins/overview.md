@@ -2,8 +2,8 @@
 title: All plugins
 ---
 
-The engine reads nothing and renders nothing on its own. Markdown, highlighting, search - you add
-each of them as a plugin, so your site carries what it uses and nothing else.
+Markdown, highlighting, search: each is a plugin you add, so your site carries what it uses and
+nothing else.
 
 Every plugin is a NuGet package and one line in your pipeline:
 
@@ -21,8 +21,8 @@ let site =
     |> Site.collection (Theme.docs theme "content")
 ```
 
-Order does not matter, except that the last plugin to claim something wins. That is how you replace
-a piece rather than add to it.
+Order does not matter, except that the last plugin to claim something wins, which is how one
+plugin replaces another.
 
 ## Content
 
@@ -59,7 +59,7 @@ a piece rather than add to it.
 
 | Package | What it gives you |
 |---|---|
-| [`Nacara.Theme.Default`](themes/default/index.md) | The layout this site wears: navbar, sidebar, table of contents, dark mode |
+| [`Nacara.Theme.Default`](themes/default/index.md) | The layout this site uses: navbar, sidebar, table of contents, dark mode |
 
 Its own pages cover [customising](themes/default/customising.md) it,
 [the navbar](themes/default/navbar.md), [menus](themes/default/menu.md), and the

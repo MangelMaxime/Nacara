@@ -26,7 +26,7 @@ You get `note`, `tip`, `info`, `warning`, `danger` and `caution`. They differ in
 title, and the theme decides both.
 
 :::tip
-A callout is for something a reader would otherwise miss. Three in a row is a sign the prose needs
+A callout is for something a reader would otherwise miss. Three in a row means the prose needs
 rewriting.
 :::
 
@@ -166,8 +166,8 @@ let main argv = 0
     hint: A container nested in another one needs fewer colons than its parent: ::::tabs around :::tab
 ```
 
-An unknown directive is reported rather than quietly dropped, with the position of the line at
-fault - rendering `:::note` as a paragraph is how a page ships with a callout nobody sees.
+An unknown directive is reported, with the position of the line at fault, instead of rendering as a
+paragraph.
 
 ## Adding your own
 

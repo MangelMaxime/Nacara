@@ -3,8 +3,8 @@ title: Search
 ---
 
 A search box in the navbar and a modal behind it, over an index [Pagefind](https://pagefind.app)
-builds from your pages. It runs in the reader's browser, so you have no service to pay for, no
-account to create and nothing to keep running.
+builds from your pages. It runs in the reader's browser: no service, no account, nothing to keep
+running.
 
 ## Add it
 
@@ -24,9 +24,8 @@ let site =
     |> Theme.register theme
 ```
 
-Two lines, because they answer different questions. `Search.register` builds the index and ships
-the modal; `Search.trigger` says where the box goes. Put the trigger anywhere the theme takes a
-widget.
+Two lines: `Search.register` builds the index and ships the modal, `Search.trigger` says where the
+box goes. Put the trigger anywhere the theme takes a widget.
 
 Then build. The first build fetches the pinned Pagefind release into `~/.cache/nacara` and indexes
 the output:
@@ -44,17 +43,14 @@ section within it: a click anywhere on a row follows it, <kbd>↑</kbd> <kbd>↓
 <kbd>↵</kbd> opens the one they are on, <kbd>esc</kbd> closes. The modal lists these keys along its
 bottom.
 
-The button shows the chord that belongs to their keyboard, decided in their browser rather than at
-build time.
+The button shows the chord for the reader's keyboard, decided in their browser.
 
-Nothing is downloaded until someone searches - not the index, not the modal's own code - so search
-costs a page view nothing.
+Nothing is downloaded until someone searches: not the index, not the modal's own code.
 
 ## How it looks
 
-The modal is Pagefind's own, dressed in the theme's tokens: its surfaces, text, borders, focus ring
-and shadow are the ones the rest of your site uses, so it follows the reader's light or dark choice
-and you have no second design to keep in step.
+The modal is Pagefind's own, drawn with the theme's tokens: the same surfaces, text, borders, focus
+ring and shadow as the rest of your site, so it follows the reader's light or dark choice.
 
 Set Pagefind's own variables when you want something else - `--pf-background`, `--pf-text`,
 `--pf-border`, `--pf-hover`, `--pf-modal-max-width`, and the rest of what
@@ -67,9 +63,9 @@ Set Pagefind's own variables when you want something else - `--pf-background`, `
 }
 ```
 
-Copy the doubled `:root:root`. Pagefind's stylesheet is loaded the first time a reader opens the
-modal, which is after yours, and it declares its defaults on a plain `:root` - so a plain `:root` of
-your own loses to it and appears to do nothing.
+Copy the doubled `:root:root`. Pagefind's stylesheet loads the first time a reader opens the modal,
+after yours, and declares its defaults on a plain `:root`, which a plain `:root` of your own would
+lose to.
 
 ## Options
 
@@ -83,8 +79,8 @@ content somewhere else.
 
 ## Using your own pagefind
 
-Pagefind is fetched once per machine and kept, so the download happens on your first build and
-never again. Point `BinaryPath` at your own copy and nothing is fetched at all:
+Pagefind is fetched once per machine and kept, so only the first build downloads it. Point
+`BinaryPath` at your own copy and nothing is fetched:
 
 ```fsharp
 |> Search.registerWith (fun options ->
@@ -96,7 +92,7 @@ never again. Point `BinaryPath` at your own copy and nothing is fetched at all:
 
 ## Deploying
 
-The index lives in `pagefind/` beside your pages and deploys with them. You need nothing else - no
+The index lives in `pagefind/` beside your pages and deploys with them. Nothing else is needed: no
 server-side component, no external service.
 
 A site served from a subdirectory finds its index there too: the trigger is rendered from your site,

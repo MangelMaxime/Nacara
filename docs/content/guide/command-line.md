@@ -31,13 +31,12 @@ Layouts and plugins are F# code, so changing them means recompiling. Let the SDK
 dotnet watch --no-hot-reload run -- watch
 ```
 
-`--no-hot-reload` matters: without it the SDK patches the running site in place, which is not what a
-changed layout means. The site has to be built and started again.
+`--no-hot-reload` is required: without it the SDK patches the running process instead of building
+and starting the site again.
 
 ### Reaching it from another machine
 
-`watch` listens on loopback, so nobody else can reach what you are writing. Use `--host` when you
-want them to:
+`watch` listens on loopback only. Use `--host` to serve it on the network:
 
 ```bash frame="terminal"
 dotnet run -- watch --host             # every interface
@@ -49,16 +48,15 @@ Use `--host` on its own to reach the site from a phone on the same network, or o
 ## Check
 
 `check` does everything `build` does except the last step: it renders every page, resolves every
-link and anchor, runs every plugin, and writes nothing. That makes it the command to run in CI,
-where you want an answer about the site rather than the site itself:
+link and anchor, runs every plugin, and writes nothing. Run it in CI:
 
 ```yaml title=".github/workflows/docs.yml"
 - run: dotnet run --project docs -- check
 ```
 
-It fails on errors, like `build` does. **You decide how much each thing matters**, where you
-configure it: `StrictLinks` for a dead link, `WarnOnUndocumented` for an undocumented parameter,
-`Severity` for a lint finding. `--strict` overrules all of them at once, on either command:
+It fails on errors, like `build` does. How much each finding matters is set where you configure it:
+`StrictLinks` for a dead link, `WarnOnUndocumented` for an undocumented parameter, `Severity` for a
+lint finding. `--strict` overrules all of them at once, on either command:
 
 ```bash frame="terminal"
 dotnet run -- check --strict     # nothing questionable gets through
@@ -74,13 +72,12 @@ A diagnostic says who raised it, what rule was broken, where, and what to do:
     hint: A page has to match the collection's front matter type
 ```
 
-The prefix names whoever raised it - `nacara` for the engine, the plugin's own name otherwise - so
-you know where to look without a table of codes to look it up in.
+The prefix names whoever raised it: `nacara` for the engine, the plugin's own name otherwise.
 
 ### Clicking through to the file
 
-On a terminal, the path is a link. Clicking it opens the file, and `path(line,column)` is also the
-shape editors and CI already parse, so a problem matcher keeps working either way.
+On a terminal the path is a link, and `path(line,column)` is the shape editors and CI parse, so
+problem matchers keep working.
 
 `file://` opens the file but not the line. Point it at your editor to land on the line as well:
 

@@ -124,8 +124,7 @@ rather write it all yourself.
 ## What ends up on the page
 
 The versions, and only the versions. Everything above the first one - the file's own front matter,
-its `# Changelog` title, the sentence about Keep a Changelog - describes the file rather than the
-releases, so the plugin drops it.
+its `# Changelog` title, the sentence about Keep a Changelog - is dropped.
 
 Everything it keeps, it keeps exactly as you wrote it. An entry with a paragraph, two code blocks
 and an issue reference under one bullet arrives with all of it:
@@ -152,8 +151,7 @@ The table of contents lists the versions only, since their sections are right th
 Set `Collection.toc` on the collection if you want something else.
 
 Each version gets an anchor of its own: `## 2.1.0` becomes `#v2-1-0`, so you can send someone
-straight to a release. Markdown would have called every one of them `section`, because a version
-number has no letter to start an HTML id with.
+straight to a release.
 
 ## Which headings count as versions
 
@@ -161,13 +159,12 @@ number has no letter to start an HTML id with.
 the number, brackets are optional, and the separator before a date may be spaced however you like.
 
 That covers everything [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt)
-writes, so a changelog it generates needs nothing done to it. The section names inside a version
-are your file's own - `Added` in a Keep a Changelog file, `🐞 Bug Fixes` in one ShipIt wrote - and
-they are all styled alike, rather than colour-coded by the few names we would recognise.
+writes, so a changelog it generates needs nothing done to it. The section names inside a version are
+your file's own - `Added` in a Keep a Changelog file, `🐞 Bug Fixes` in one ShipIt wrote - and they
+are all styled alike.
 
 If no heading in a file looks like a version, the plugin publishes the file whole and the build
-warns you, rather than serving a blank page. A path that does not exist is an error naming the
-file.
+warns you. A path that does not exist is an error naming the file.
 
 ## Keeping it up to date
 

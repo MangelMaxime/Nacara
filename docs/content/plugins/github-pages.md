@@ -36,10 +36,10 @@ It publishes what the last build wrote, so build first. Then, from inside your r
 4. pushes it
 
 Nothing is checked out and nothing is copied: the other versions' directories are carried across as
-they were published, which is why publishing one version leaves the rest alone.
+they were published, so publishing one version leaves the rest alone.
 
-The commit is attributed to whoever `git config user.email` says, or to Nacara when nobody is
-configured - which is the case on a CI runner.
+The commit is attributed to whoever `git config user.email` says, or to Nacara when nothing is
+configured, as on a CI runner.
 
 ## Versioned sites
 

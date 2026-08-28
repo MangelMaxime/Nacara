@@ -19,17 +19,17 @@ docs/
 
 ## The site is the program
 
-There is no `nacara` binary deciding how your site is built. The engine is a library, your project
-references it, and `Nacara.run` gives that project a command line:
+There is no `nacara` binary. The engine is a library, your project references it, and `Nacara.run`
+gives that project a command line:
 
 ```fsharp
 [<EntryPoint>]
 let main argv = Nacara.run site argv
 ```
 
-That gives you two things. The engine version is a package reference, so the tool and the site
-cannot drift apart. And your configuration is ordinary F#: you can split it across files, share it
-between sites, generate it, or test it.
+The engine version is a package reference, so the tool and the site cannot drift apart, and your
+configuration is ordinary F#: split it across files, share it between sites, generate it, or test
+it.
 
 ## Where things are resolved from
 

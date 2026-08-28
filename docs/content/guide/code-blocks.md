@@ -2,11 +2,10 @@
 title: Code blocks
 ---
 
-Nacara treats a code block as a list of lines, each a list of tokens, with annotations on top. That
-is why highlighting, markers and line numbers compose instead of fighting each other.
+Nacara treats a code block as a list of lines, each a list of tokens, with annotations on top, so
+highlighting, markers and line numbers compose.
 
-The meta syntax follows [Expressive Code](https://expressive-code.com), so it is the one you
-probably already know.
+The meta syntax follows [Expressive Code](https://expressive-code.com).
 
 ## Title
 
@@ -102,12 +101,12 @@ Write the markers the same way down the block: `-printfn` and `+printfn`, or a s
 one of them. Only the marker comes off, so a space after `-` on one line and none after `+` on the
 next leaves the two a column apart.
 
-A diff you pasted from `git diff` is left exactly as it is, headers and all: `---` and `+++` open
-the same way a deleted and an added line do, and eating them would take the filenames with them.
+A diff pasted from `git diff` is left exactly as it is, headers and all: `---` and `+++` are kept
+with their filenames.
 
-A deleted line is drawn, but it is not part of what the block leaves you with, so copying gives you
-the code after the change rather than both sides of it. The same goes for a line `del=` names, and
-for [live examples](../plugins/live-example.md) - Run compiles what survives.
+A deleted line is drawn but left out of what the block gives you, so copying returns the code after
+the change. The same goes for a line `del=` names, and for
+[live examples](../plugins/live-example.md): Run compiles what survives.
 
 ## Marking words
 
@@ -182,8 +181,7 @@ Call `Site.baseUrl "/"`{lang=fsharp} before anything else.
 
 :::warning
 Keep the attribute on the same line as the text that follows it. A `{…}` at the end of a line eats
-the line break, so the next word runs into the snippet - a markdown quirk, not something Nacara can
-fix from where it stands.
+the line break, so the next word runs into the snippet.
 :::
 
 A bare `{word}` is only read as a language when a highlighter claims it, so `` `x`{disabled} ``
@@ -201,10 +199,6 @@ is wrong:
 | The colours of the tokens | A **highlighter plugin** | [Highlighting](../plugins/highlight/index.md), or a plugin taking one language |
 | The markup around it - the frame, the copy button, the fold | The **theme** | Registering your own `ICodeBlockRenderer`; the last one wins |
 
-The meta belongs to the engine rather than to the markdown plugin because it is not markdown's:
-literate F# writes the same annotations as `(*** title="Greeting.fs" {2} ***)`, and any other format
-plugin would want them too. The engine owns the *vocabulary* - what a block contains - and nothing
-about how it looks.
-
-That is also why a fence with no highlighter still gets its title, its markers and its copy button:
-none of those ever depended on colour.
+The meta is the engine's, not the markdown plugin's: literate F# writes the same annotations as
+`(*** title="Greeting.fs" {2} ***)`. So a fence with no highlighter still gets its title, its
+markers and its copy button.

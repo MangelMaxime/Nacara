@@ -16,26 +16,26 @@ whichever one produced it, and switching is one line of your site.
 **TextMate** knows about fifty languages the moment you register it, and most languages that are
 not in the box have a `.tmLanguage.json` published somewhere - VS Code extensions are full of them.
 
-**tree-sitter** parses instead of matching patterns, so it can tell a type from a function from a
+**tree-sitter** parses instead of matching patterns, so it tells a type from a function from a
 parameter where a pattern sees three identifiers. Twelve languages come inside the package, and you
-name any other by its repository - it is built once. For F# the difference is plain: types,
-functions, parameters and union cases each get their own colour.
+name any other by its repository. In F#, types, functions, parameters and union cases each get their
+own colour.
 
-Both are one line in your site and emit identical classes, so trying the other one costs you a line
-and your theme needs no changes either way.
+Both are one line in your site and emit identical classes, so swapping one for the other needs no
+change to your theme.
 
 ## Or both
 
-Registering both is a real option, and a good one: the last you register is asked first, and the one
-before it covers whatever the later one does not know.
+Register both: the last one registered is asked first, and the one before it covers whatever the
+later one does not know.
 
 ```fsharp
 |> TextMate.register     // fifty languages
 |> TreeSitter.register   // twelve, done properly
 ```
 
-tree-sitter colours F#, JSON, YAML and the rest of its twelve; a Python snippet falls through to
-TextMate rather than coming out grey. Swap the two lines and you get the opposite preference.
+tree-sitter colours F#, JSON, YAML and the rest of its twelve, and a Python snippet falls through to
+TextMate. Swap the two lines for the opposite preference.
 
 ## Colours
 

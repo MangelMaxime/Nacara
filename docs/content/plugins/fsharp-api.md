@@ -48,7 +48,7 @@ content. `register` ships their styling and offers the menu.
 
 :::warning Two things to get right
 Point it at a **built** assembly - the plugin compiles nothing for you. And build with
-`GenerateDocumentationFile`, because the prose comes from the `.xml` file beside the assembly.
+`GenerateDocumentationFile`: the prose comes from the `.xml` file beside the assembly.
 :::
 
 ## What you get

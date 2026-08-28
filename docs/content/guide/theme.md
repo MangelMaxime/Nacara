@@ -2,8 +2,7 @@
 title: Theming
 ---
 
-A theme is a package like any other: it contributes layouts and assets. The engine has no opinion
-about what a page looks like, and no theme gets special treatment.
+A theme is a package like any other: it contributes layouts and assets.
 
 ## How a page gets its look
 
@@ -36,8 +35,7 @@ Site.create "My library"
 
 `Nacara.Theme.Default` is the one this site uses, and what `dotnet new nacara-docs` starts you with:
 navbar, sidebar, table of contents, dark mode, and the components for tabs, callouts and code
-frames. Everything about it - the tokens you override, the navbar and menu options, the front matter
-it reads, the pieces you can compose - is documented with the other packages:
+frames. It is documented with the other packages:
 
 - [Default theme](../plugins/themes/default/index.md) - what you get, and how to add it
 - [Customising](../plugins/themes/default/customising.md) - colours, spacing, fonts, your own CSS
@@ -55,13 +53,12 @@ stylesheet is loaded after the theme's, so yours wins.
 functions. Your own layout can use them and arrange the middle differently - a landing page, a
 reference page with two columns.
 
-**Write a theme.** A layout function, a stylesheet, and `register`; nothing else is required. If you
-publish it, it is an ordinary NuGet package other sites can use, exactly like the default one.
+**Write a theme.** A layout function, a stylesheet, and `register`; nothing else is required.
+Publish it and it is an ordinary NuGet package, like the default one.
 
 ## What the engine owns
 
-However far you go, some things stay with the engine rather than the theme, and are the same
-whichever theme you use:
+Some things stay with the engine whichever theme you use:
 
 | The engine decides | The theme decides |
 |---|---|
@@ -73,5 +70,5 @@ whichever theme you use:
 | That a page carries its headings, whichever plugin read them out of it | Whether a table of contents is shown, and where |
 | That an asset is written once, and only when its bytes changed | Which stylesheets and scripts a page carries |
 
-That division is why swapping themes does not change your content, and why a plugin can ship a
-widget - a search box, a version switcher - without knowing which theme will draw it.
+So swapping themes does not change your content, and a plugin can ship a widget - a search box, a
+version switcher - without knowing which theme draws it.

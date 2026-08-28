@@ -2,9 +2,9 @@
 title: Default theme
 ---
 
-The layout this site is wearing: a navbar with sections and dropdowns, a sidebar built from your
-pages, a table of contents, previous and next links, dark mode, and web components for tabs,
-callouts and code frames.
+The layout this site uses: a navbar with sections and dropdowns, a sidebar built from your pages, a
+table of contents, previous and next links, dark mode, and web components for tabs, callouts and
+code frames.
 
 ## Add it
 
@@ -12,7 +12,7 @@ callouts and code frames.
 dotnet add package Nacara.Theme.Default --prerelease
 ```
 
-```fsharp
+```fsharp ins={9-10}
 open Nacara.Theme
 
 let theme = Theme.defaults
@@ -26,28 +26,7 @@ let site =
 ```
 
 `Theme.register` ships the stylesheet and the components. `Theme.docs` is a ready-made collection
-that uses the theme's own front matter and layout - point it at the directory your markdown lives in
-and you have a site.
-
-## What a page gets
-
-```text
-┌──────────────────────────────────────────────────────────────────┐
-│ My library   Guide  Plugins            🔍 Search  ⌘K   3.0 ▾  ☀  │  navbar
-├────────────┬────────────────────────────────────┬────────────────┤
-│ GETTING    │  Writing content                   │ ON THIS PAGE   │
-│  Started   │                                    │  Front matter  │
-│  Layout    │  Every collection declares the …   │  Links         │
-│ WRITING    │                                    │  Anchors       │
-│  Content   │                                    │                │
-│  ▸ Themes  │  ← a group a reader folds          │                │
-├────────────┴────────────────────────────────────┴────────────────┤
-│  ← Project layout                          Code blocks →         │  page nav
-└──────────────────────────────────────────────────────────────────┘
-```
-
-Nothing above needs configuring. The navbar is empty until you fill it, and every other part is
-built from your pages.
+using the theme's own front matter and layout; point it at the directory holding your markdown.
 
 ## Configuring it
 
@@ -81,10 +60,9 @@ let theme =
 
 ## Using another theme
 
-A theme is a package that registers layouts and assets, and nothing about this one is privileged.
-To swap it for your own, register yours instead - [Theming](../../../guide/theme.md) in the guide
-explains what a theme has to provide.
+Register your own theme instead. [Theming](../../../guide/theme.md) explains what a theme has to
+provide.
 
 ## Reference
 
-Every function and option of it, signature by signature: [`Theme`](../../../reference/nacara-theme-default/nacara-theme/theme.md).
+Every function and option, signature by signature: [`Theme`](../../../reference/nacara-theme-default/nacara-theme/theme.md).

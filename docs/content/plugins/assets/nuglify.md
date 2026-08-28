@@ -30,7 +30,7 @@ CSS in a `<style>` block or the code in a `<script>`, so whatever you registered
 them, once.
 
 There is a `Nuglify.minifyCss` too. Use it *or* [`LightningCss`](lightningcss.md), never both.
-Lightning CSS is the better choice if your CSS is modern, because it compiles as well as minifies.
+Lightning CSS compiles as well as minifies, so prefer it for modern CSS.
 
 ## Is it safe?
 

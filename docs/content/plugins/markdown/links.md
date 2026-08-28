@@ -3,8 +3,7 @@ title: Links
 ---
 
 You write links between **files**, the way you do on GitHub, and the engine resolves them against
-the built site. A rename cannot leave a link behind, because nothing in your content spells out a
-URL.
+the built site. Nothing in your content spells out a URL, so a rename cannot leave a link behind.
 
 ## Writing them
 

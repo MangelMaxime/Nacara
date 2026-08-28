@@ -28,9 +28,9 @@ cd docs && dotnet run -- watch
 
 <h2 class="landing-section__title">Your editor already knows it</h2>
 
-<p class="landing-lede">The site is F#, so describing it comes with completion, type errors and any
-features your IDE supports. A plugin you spelled wrong is a squiggle under your cursor, not a
-surprise in CI.</p>
+<p class="landing-lede">The site is F#, so describing it comes with completion, go to definition
+and type errors. A plugin you spelled wrong is a squiggle under your cursor, not a surprise in
+CI.</p>
 
 </div>
 
@@ -53,8 +53,8 @@ let main argv = Nacara.run site argv
 <h2 class="landing-section__title">Your documentation can be interactive</h2>
 
 <p class="landing-lede">A code block marked <code>live</code> becomes an editor. Fable compiles it
-in the browser against your library, so the example on the page can be modified, executed and
-does not drift from the code it documents.</p>
+in the browser against your library, so a reader can change the example and run it, and it cannot
+drift from the code it documents.</p>
 
 </div>
 
@@ -121,7 +121,7 @@ document.getElementById("app").innerHTML <-
 
 <article class="landing-card">
 <h3>Published from the same program</h3>
-<p>Build it, then <code>dotnet run -- gh-pages</code> puts it on the branch GitHub Pages serves, one version at a time.</p>
+<p>Build it, then <code>dotnet run -- gh-pages</code> puts it on the branch GitHub Pages serves, leaving the other versions where they are.</p>
 </article>
 
 </div>
@@ -132,7 +132,7 @@ document.getElementById("app").innerHTML <-
 
 <h2 class="landing-hero__title">Start with a page and a menu</h2>
 
-<p class="landing-hero__lede">The template sets up a site you can deploy, with the plugins a published one wants.</p>
+<p class="landing-hero__lede">The template sets up a site you can deploy, with the plugins a published site needs.</p>
 
 <p class="landing-actions">
 <a class="landing-button landing-button--primary" href="/Nacara/guide/getting-started/">Get started</a>

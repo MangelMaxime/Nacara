@@ -52,8 +52,7 @@ Whatever it finds, it tells you where and what to do about it:
     hint: A link names a file: one beside this page, or one from the project root with a leading '/'.
 ```
 
-Every diagnostic carries a code, a position your editor can jump to, and a hint. We list none of
-them here, because the message itself is the documentation and a list would go stale.
+Every diagnostic carries a code, a position your editor can jump to, and a hint.
 
 ## Under the hood
 

@@ -28,12 +28,11 @@ takes the stylesheet from 22.5 KB to 17.7 KB, and a browser sees less again over
 Every stylesheet the build writes goes through it: the theme's, the plugins', and your own static
 CSS.
 
-It has a sibling: [`Nuglify`](nuglify.md) takes the HTML and the JavaScript, and leaves `<style>`
-blocks exactly as it found them. Each format is handled once, by a tool that understands it.
+[`Nuglify`](nuglify.md) takes the HTML and the JavaScript, and leaves `<style>` blocks as it found
+them, so each format is handled once.
 
-`Nuglify` can minify CSS too. Register one or the other, never both - two minifiers on one
-stylesheet is two sets of rules deciding what it means. This one is the better choice whenever your
-CSS is modern, because it compiles as well as minifies.
+`Nuglify` can minify CSS too. Register one or the other, never both. This one compiles as well as
+minifies, so prefer it for modern CSS.
 
 ## Browsers to compile for
 
@@ -44,7 +43,7 @@ them:
 |> LightningCss.registerWith (fun options -> { options with Targets = "> 0.5%, last 2 versions" })
 ```
 
-Write it here rather than in a `.browserslistrc` - a file in your repository is ignored.
+Write it here: a `.browserslistrc` in your repository is ignored.
 
 | Option | Default | Effect |
 |---|---|---|

@@ -43,12 +43,12 @@ checks that need no network:
 
 ## Links that leave the site
 
-These are checked too, and a failure is a **warning**: a link dies on someone else's schedule, and a
-build that stops because a server was down for a minute teaches everyone to ignore the result.
+These are checked too, and a failure is a **warning** rather than an error, since an external link
+dies on someone else's schedule.
 
-Answers are cached under `~/.cache/nacara` for a week, so most builds ask nobody anything. It sends
-`HEAD` first because that costs a server nothing, and retries a refusal as a `GET` before believing
-it - plenty of sites answer `HEAD` with 405 while serving the page perfectly.
+Answers are cached under `~/.cache/nacara` for a week, so most builds send no requests at all. A
+check sends `HEAD` first and retries a refusal as a `GET`, since plenty of sites answer `HEAD` with
+405 while serving the page.
 
 Turn it off where you have no network, and turn failures into errors where you want the build to
 stop:

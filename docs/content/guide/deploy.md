@@ -14,21 +14,18 @@ Site.create "Nacara"
 |> Site.origin "https://mangelmaxime.github.io"   // where that path lives
 ```
 
-The base URL goes through every URL the engine emits - pages, assets, menus - which is what a site
-served from a subdirectory needs. The origin is there for
-[canonical links and the sitemap](../plugins/sitemap.md); if you do not declare it, Nacara leaves
-them out rather than guessing.
+The base URL goes through every URL the engine emits: pages, assets, menus. The origin is used by
+[canonical links and the sitemap](../plugins/sitemap.md), which are left out when it is not
+declared.
 
 ## The page for everything else
 
 Every static host - GitHub Pages, GitLab Pages, Netlify, Cloudflare Pages, Vercel - serves
-`404.html` from the root of your output when a URL matches nothing. The default theme writes one
-for you, in every locale, so a reader who mistypes a URL lands on your site rather than on the
-host's bare page. You do not have to do anything for that.
+`404.html` from the root of your output when a URL matches nothing. The default theme writes one for
+you, in every locale.
 
 Write your own when you want it to say something specific. Add `404.md` to a collection and route
-it as a file: Nacara writes pages as `somewhere/index.html` so their URLs end in a slash, and that
-is wrong for this one file - a host will not look for `404/index.html`:
+it as a file, since a host looks for `404.html` and not `404/index.html`:
 
 ```fsharp
 Theme.docs theme "content"
@@ -40,14 +37,12 @@ Theme.docs theme "content"
 )
 ```
 
-The theme stands down wherever a page of yours already claims that path, so you have no conflict to
-resolve and nothing to turn off. Use `Route.file` for anything else a host expects at a literal
-path.
+The theme writes its own only where no page of yours claims that path. Use `Route.file` for
+anything else a host expects at a literal path.
 
-Either way the page is ordinary content, so it has your theme, your navbar and your search box.
-Its links go through the route table like any others, which matters more here than elsewhere: a
-reader who hits the 404 page is at some arbitrary deep URL, where relative links would break. The
-development server serves this page too, so you see locally what a reader gets.
+Either way the page is ordinary content: your theme, your navbar, your search box, and links
+resolved through the route table - which matters here, since a reader hits this page at an
+arbitrary deep URL. The development server serves it too.
 
 ## GitHub Pages
 
@@ -91,9 +86,8 @@ from a branch*.
 
 ## Versions
 
-A version is a **build**, not a dimension of your content. You keep no versioned content in your
-repository: you have the site your sources describe now, and older builds of it sitting in their own
-directories.
+A version is a **build**, not a dimension of your content. Your repository holds the site your
+sources describe now; older versions are earlier builds sitting in their own directories.
 
 `--version` tells a build where it will be served from, so every URL it writes points there:
 
@@ -102,9 +96,8 @@ dotnet run -- build --version 1.0
 ```
 
 That build's links, assets, canonical URLs and sitemap all sit under `/1.0/`. The output directory
-itself does not change - there is no `1.0/` inside it - because you decide where the files go, not
-the build. Leave the flag out and the build addresses the root, which is what you want for the
-current version.
+itself does not change - there is no `1.0/` inside it. Leave the flag out and the build addresses
+the root.
 
 ### Building one
 
@@ -118,22 +111,18 @@ dotnet run -- build                      # → copy output/ to <host>/
 ```
 
 Each build is self-contained: the 1.0 tag pins its own `Site.fs`, its own plugins and its own
-Nacara. Rebuilding it a year later gives the same site, because the source it is built from is a
-tag and tags do not move.
+Nacara, so rebuilding it a year later gives the same site.
 
-### Nothing is frozen
+### Rebuilding an old version
 
-An old version is not a one-way door. It is a directory of files, and you replace it the same way
-you made it: check out the tag, build it, copy `output/` over `<host>/1.0/`. To fix a typo in the
-1.0 docs, commit to a `1.0` maintenance branch and rebuild from it - the other versions are
-untouched, because that build addresses nothing outside `/1.0/`.
-
-So what keeps an old version stable is a habit rather than a lock: you rebuild it when you mean to,
-and its sources do not change on their own in between.
+A version is a directory of files, and you replace it the way you made it: check out the tag, build
+it, copy `output/` over `<host>/1.0/`. To fix a typo in the 1.0 docs, commit to a `1.0` maintenance
+branch and rebuild from it. The other versions are untouched, since that build addresses nothing
+outside `/1.0/`.
 
 ### Deploying them side by side
 
-Deploying is a copy into a directory. Versions never overwrite each other, because their prefixes
+Deploying is a copy into a directory. Versions never overwrite each other, since their prefixes
 differ:
 
 ```bash frame="terminal"

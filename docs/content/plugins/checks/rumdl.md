@@ -37,17 +37,15 @@ to pick one for both.
 
 ## Two rules it turns off, and why
 
-The defaults this plugin ships are not rumdl's. Two rules ask questions Nacara already answers, and
-answers with more than a linter can know:
+The defaults this plugin ships are not rumdl's. Two rules are off:
 
 | Rule | Why it is off |
 |---|---|
 | `MD057` relative link exists | Links are resolved against [the route table](../../guide/content.md#links-follow-files-not-urls), which knows the pages a plugin generates. A file-system check calls every one of those broken. |
 | `MD033` inline HTML | `<kbd>` and friends are how a documentation page says what it means. |
 
-The rest of the defaults are what prose wants rather than source: 100 columns instead of 80, and
-neither code blocks nor tables measured at all, because you cannot wrap a terminal transcript to any
-width.
+The rest are set for prose: 100 columns instead of 80, and neither code blocks nor tables measured
+at all.
 
 ```fsharp
 // What ships, and what a site can drop with UseDefaults = false.

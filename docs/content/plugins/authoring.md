@@ -294,7 +294,7 @@ let loud value (options: MyPluginOptions) =
     }
 ```
 
-Two rules worth following, because every plugin here does:
+Two rules every plugin here follows:
 
 - **Booleans take the value.** `loud true`, not a bare `loud` that only switches on. A bare toggle
   reads well until a shared setup turns something on and a site needs it off.
@@ -378,10 +378,8 @@ context.Diagnostics.Add(
 ```
 
 A reader sees `rss/site-url-missing`: you name the rule, and the engine stamps your plugin's name on
-it. You allocate nothing and coordinate with nobody, because the prefix is your plugin's name and
-that is already yours alone - and whoever reads the output knows at once which plugin to go and look
-at. Anything you register while your plugin is being configured reports under it, transforms and
-hooks alike.
+it, so nothing has to be allocated or coordinated. Anything you register while your plugin is being
+configured reports under it, transforms and hooks alike.
 
 Name a rule after the situation, not the remedy: `link-target-missing`, `pagefind-failed`,
 `css-not-minified`. Keep it once you have published it - it is what a user searches for, and what CI

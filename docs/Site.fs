@@ -62,7 +62,6 @@ let theme =
             // NavbarDynamicWidget(Versions.switcher (Versions.versions versions Versions.defaults))
             NavbarLocalePicker
             NavbarIcon("GitHub", "https://github.com/MangelMaxime/Nacara", Icons.github)
-            NavbarDivider
         ]
     |> Theme.menu
         "guide"

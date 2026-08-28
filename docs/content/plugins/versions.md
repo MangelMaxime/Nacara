@@ -9,9 +9,8 @@ notice on pages that are no longer current.
 
 A version is a **build**, not a dimension of your content. You build the docs from a tag and deploy
 that build into a directory of its own, so building the current docs costs the same whether you keep
-two versions or twenty. An old version stays as you published it because its sources are a tag and
-tags do not move - nothing here locks it, and you rebuild one with the same checkout and copy that
-made it. This is how mike does it for MkDocs, and Read the Docs for Sphinx.
+two versions or twenty. An old version stays as you published it, and you rebuild one with the same
+checkout and copy that made it.
 
 ```text
 example.com/          ← the current version, built from main
@@ -71,7 +70,7 @@ Site.create "My library" |> Site.version "2.0"
 ```
 
 Deploying is then a copy: the current version's output at the root, and each older build in its own
-directory. They never overwrite each other, because their prefixes differ.
+directory. Their prefixes differ, so they never overwrite each other.
 
 ## What a reader gets
 

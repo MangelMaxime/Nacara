@@ -307,8 +307,8 @@ You can also always take the newest of each:
 |> LiveExample.registerWith (LiveExample.fable Latest)
 ```
 
-This asks npm on every build, so two builds of the same commit can differ - that is the point of
-choosing it, and why it is not the default. The versions it picked are written to the build log.
+This asks npm on every build, so two builds of the same commit can differ. The versions it picked
+are written to the build log.
 
 ## Reference
 

@@ -25,8 +25,7 @@ published. Leave it out and nothing is written, and the build tells you why:
     hint: Declare it with Site.origin "https://example.com"
 ```
 
-A sitemap full of URLs from the wrong origin is worse than no sitemap, so you get a warning and no
-file rather than a guess.
+The origin is never guessed: without it you get the warning and no file.
 
 ## What you get
 
@@ -39,12 +38,10 @@ file rather than a guess.
 ```
 
 Translations cross-reference each other, so a search engine can offer a reader the language they
-asked for instead of picking one. You get that from [locales](../guide/i18n.md) with nothing to
-configure.
+asked for. That comes from [locales](../guide/i18n.md) with nothing to configure.
 
-The origin you declared here also lets the default theme put `<link rel="canonical">` on every page,
-so a site published under several locales does not compete with itself in results. That part belongs
-to the theme, and it happens whether or not you register this plugin.
+The origin also lets the default theme put `<link rel="canonical">` on every page. That part is the
+theme's, and happens whether or not this plugin is registered.
 
 ## Options
 

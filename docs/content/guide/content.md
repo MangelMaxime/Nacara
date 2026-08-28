@@ -41,8 +41,8 @@ let decoder: Decoder<DocFrontMatter> =
 ✗ content/guide/writing.md(2,1): error nacara/front-matter-invalid: Missing required field 'title' (at 'title')
 ```
 
-The line it names is the line in your file, not in some intermediate. From there, a layout reads
-`context.FrontMatter.Title` and knows it is there.
+The line it names is the line in your file. A layout then reads `context.FrontMatter.Title` and
+knows it is there.
 
 `Theme.docs` uses the front-matter type that comes with the default theme - see
 [its fields](../plugins/themes/default/front-matter.md). Write your own when you need more
@@ -61,10 +61,9 @@ beside its pages, for example:
 |> Collection.source "content" [ "**/*.md" ]     // only markdown, even with literate registered
 ```
 
-**The formats themselves come from plugins.** The engine knows nothing about markdown: the
-[markdown plugin](../plugins/markdown/index.md) claims `.md`, the [literate plugin](../plugins/literate/index.md)
-claims `.fs` and `.fsx`, and a file whose extension nothing claims fails the build rather than being
-guessed at:
+**The formats come from plugins.** The [markdown plugin](../plugins/markdown/index.md) claims
+`.md`, the [literate plugin](../plugins/literate/index.md) claims `.fs` and `.fsx`, and a file whose
+extension nothing claims fails the build:
 
 ```text frame="terminal"
 ✗ error nacara/unknown-front-matter-format: Nothing knows how to read front matter for '.md'
@@ -150,8 +149,7 @@ instead of written out:
 ```
 
 Anchors are checked too - `markdown/anchor-missing` when the heading a link names is not on the
-page it points at. Set `StrictLinks` to turn both warnings into errors, which is what you usually
-want for a release build.
+page it points at. Set `StrictLinks` to turn both warnings into errors.
 
 ## Ordering
 
@@ -169,9 +167,8 @@ declare menus for their two sections and use none.
 
 ## Content that is not on disk
 
-A collection can generate its pages instead of reading them - that is how the
-[changelog plugin](../plugins/changelogs.md) publishes `CHANGELOG.md` files, and how an API
-reference would work:
+A collection can generate its pages instead of reading them. That is how the
+[changelog plugin](../plugins/changelogs.md) publishes `CHANGELOG.md` files:
 
 ```fsharp
 |> Collection.producer "api" (fun context ->
@@ -188,7 +185,7 @@ layout. Use `dependsOn` so watch mode rebuilds them when their source changes.
 
 ## Table of contents
 
-Headings are collected while a page renders and handed to the layout - that is where the
+Headings are collected while a page renders and handed to the layout, which is where the
 right-hand column of this page comes from. The markdown plugin decides which levels are collected,
 and how a page overrules the site's choice - see
 [the markdown plugin](../plugins/markdown/syntax.md#table-of-contents).

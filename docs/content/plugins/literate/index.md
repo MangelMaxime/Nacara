@@ -29,7 +29,7 @@ without this plugin implementing any of them.
 ## Writing one
 
 Put your prose in `(** … *)`, and everything else is code. Your front matter goes in the comment the
-file opens with, because a file that starts with `---` does not compile:
+file opens with, since a file starting with `---` does not compile:
 
 ```fsharp
 (**
@@ -75,8 +75,8 @@ happened.
 ```
 
 Nothing is run: a page that documents `deleteEverything ()` should not delete everything. Checking
-is skipped while you watch, because starting a compiler on every save would be felt and your editor
-already tells you. Set `TypeCheck = false` to turn it off entirely.
+is skipped while you watch, since it starts a compiler per file. Set `TypeCheck = false` to turn it
+off entirely.
 
 ## Options
 
