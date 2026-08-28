@@ -80,6 +80,37 @@ module OfferedMenus =
     let forSection (section: string) =
         offered |> List.tryFind (fun outline -> outline.Section = section)
 
+/// <summary>
+/// The badge kinds this theme paints.
+/// </summary>
+/// <remarks>
+/// A kind is only a styling hook, and any string is one: a site that styles
+/// <c>[data-kind="internal"]</c> in a stylesheet of its own passes <c>"internal"</c> and it works.
+/// These are the five the theme already has colours for.
+/// </remarks>
+[<RequireQualifiedAccess>]
+module Badge =
+
+    /// <summary>Something that was not here before. Drawn in the tip colour.</summary>
+    [<Literal>]
+    let New = "new"
+
+    /// <summary>Something that changed. Drawn in the tip colour.</summary>
+    [<Literal>]
+    let Updated = "updated"
+
+    /// <summary>Something that may still move. Drawn in the warning colour.</summary>
+    [<Literal>]
+    let Experimental = "experimental"
+
+    /// <summary>Something released ahead of being settled. Drawn in the warning colour.</summary>
+    [<Literal>]
+    let Beta = "beta"
+
+    /// <summary>Something on its way out. Drawn in the danger colour.</summary>
+    [<Literal>]
+    let Deprecated = "deprecated"
+
 /// <summary>Menu entries, built by pipeline.</summary>
 [<RequireQualifiedAccess>]
 module Menu =
@@ -141,8 +172,8 @@ module Menu =
         }
 
     /// <summary>Mark an entry, choosing the styling hook rather than deriving it.</summary>
-    /// <param name="kind">What the theme styles it as - <c>new</c>, <c>experimental</c>,
-    /// <c>deprecated</c> - whatever the label happens to read.</param>
+    /// <param name="kind">What the theme styles it as, whatever the label happens to read.
+    /// <see cref="T:Nacara.Theme.Badge" /> holds the ones it has colours for.</param>
     /// <param name="label">What the badge reads.</param>
     /// <param name="item">The entry to mark.</param>
     let badgeOf (kind: string) (label: string) (item: MenuItem) =
