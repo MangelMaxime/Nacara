@@ -93,6 +93,19 @@
     margin: var(--nacara-space-2) 0;
     background: var(--nacara-border);
 }
+/* The same divider in the navbar row, where it separates items side by side. */
+.nacara-navbar__items > .nacara-dropdown__divider {
+    height: 2rem;
+    margin: 0 var(--nacara-space-2);
+    background: none;
+    border-inline-end: 1px solid var(--nacara-border);
+}
+/* An icon button is a square around a smaller glyph, so it already carries the space the
+   divider would add. Taken back on whichever side the icon is. */
+.nacara-navbar__items > .nacara-dropdown__divider + li:has(> .nacara-icon-button),
+.nacara-navbar__items > li:has(> .nacara-icon-button) + .nacara-dropdown__divider {
+    margin-inline-start: calc(var(--nacara-space-2) * -1);
+}
 
 /*
     Colour scheme
