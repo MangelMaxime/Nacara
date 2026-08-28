@@ -48,6 +48,12 @@
     .nacara-navbar__items:not(.nacara-navbar__items--end) {
         display: none;
     }
+    .nacara-sidebar__sections {
+        display: flex;
+    }
+    .nacara-sidebar--drawer[data-open="true"] {
+        display: block;
+    }
 
     .nacara-sidebar__widgets {
         position: sticky;

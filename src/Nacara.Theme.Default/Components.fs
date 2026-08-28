@@ -500,11 +500,60 @@ module Components =
                         ]
         )
 
+    /// <summary>A navbar item, as the drawer lists it on a screen too narrow for the bar.</summary>
+    /// <remarks>
+    /// A dropdown becomes a titled group: nothing hovers in a drawer, and the drawer is a list
+    /// already. What sits at the end of the bar is moved down here by the theme's script instead,
+    /// so a widget is left where it is rather than rendered twice.
+    /// </remarks>
+    /// <param name="page">The page being rendered, which says which section is the current one.</param>
+    /// <param name="item">The navbar item to render.</param>
+    let rec private drawerItem (page: Page) (item: NavbarItem) =
+        let link (label: string) (url: string) (current: bool) =
+            Html.li
+                [
+                    Html.a
+                        [
+                            prop.className "nacara-sidebar__link"
+                            prop.href url
+                            if current then
+                                prop.custom ("aria-current", "true")
+                            prop.text label
+                        ]
+                ]
+
+        match item with
+        | NavbarLink(label, url) -> link label url false
+        | NavbarSection(label, section, url) -> link label url (section = sectionOf page)
+        | NavbarIcon(label, url, _) -> link label url false
+        | NavbarDescribed(label, _, url) -> link label url false
+        | NavbarDropdown(label, items) ->
+            Html.li
+                [
+                    Html.p
+                        [
+                            prop.className "nacara-sidebar__title"
+                            prop.text label
+                        ]
+                    Html.ul
+                        [
+                            prop.className "nacara-sidebar__list"
+                            prop.children [ for item in items -> drawerItem page item ]
+                        ]
+                ]
+        | NavbarDivider
+        | NavbarLocalePicker
+        | NavbarWidget _
+        | NavbarDynamicWidget _ -> Html.none
+
     /// <summary>
     /// The sidebar of the current section.
     /// </summary>
     /// <remarks>
-    /// An explicit menu wins; otherwise the section's own pages are listed in front-matter order.
+    /// <para>An explicit menu wins; otherwise the section's own pages are listed in front-matter
+    /// order.</para>
+    /// <para>It is rendered even when a page asks for no menu, because it is also the drawer the
+    /// navbar's sections fold into once the bar is too narrow to hold them.</para>
     /// </remarks>
     /// <param name="options">The theme's configuration, whose <c>Menus</c> this renders. A section
     /// with no menu declared falls back to its pages in their own order.</param>
@@ -513,6 +562,13 @@ module Components =
     /// <param name="context">The page being rendered, and the site around it.</param>
     let sidebar (options: ThemeOptions) (doc: DocPage) (context: PageContext<'FrontMatter>) =
         let section = sectionOf context.Page
+
+        let sections =
+            Html.ul
+                [
+                    prop.className "nacara-sidebar__sections"
+                    prop.children [ for item in options.Navbar -> drawerItem context.Page item ]
+                ]
 
         let declared =
             match Map.tryFind section options.Menus with
@@ -559,12 +615,20 @@ module Components =
 
         Html.nav
             [
-                prop.className "nacara-sidebar"
+                prop.className (
+                    if doc.ShowMenu then
+                        "nacara-sidebar"
+                    else
+                        // Nothing to show beside the page, and the sections still to offer on a phone.
+                        "nacara-sidebar nacara-sidebar--drawer"
+                )
                 prop.ariaLabel "Section"
                 if not doc.MenuMemory then
                     prop.custom ("data-nacara-menu-memory", "false")
                 prop.children
                     [
+                        sections
+
                         if filtered then
                             Html.input
                                 [
@@ -575,11 +639,12 @@ module Components =
                                     prop.placeholder "Filter"
                                 ]
 
-                        Html.ul
-                            [
-                                prop.className "nacara-sidebar__list"
-                                prop.children entries
-                            ]
+                        if doc.ShowMenu then
+                            Html.ul
+                                [
+                                    prop.className "nacara-sidebar__list"
+                                    prop.children entries
+                                ]
                     ]
             ]
 

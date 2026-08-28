@@ -312,8 +312,10 @@ module Theme =
                                                 prop.className layoutClass
                                                 prop.children
                                                     [
-                                                        if doc.ShowMenu then
-                                                            Components.sidebar options doc context
+                                                        // Rendered even with no menu to show: on a
+                                                        // narrow screen it is what the navbar's
+                                                        // sections fold into.
+                                                        Components.sidebar options doc context
                                                         Html.main
                                                             [
                                                                 prop.id "nacara-content"

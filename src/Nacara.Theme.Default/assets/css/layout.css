@@ -56,6 +56,32 @@
     outline-offset: 1px;
 }
 
+/* The bar's own sections, for the screens the bar has no room on. */
+.nacara-sidebar__sections {
+    display: none;
+    flex-direction: column;
+    gap: 1px;
+    list-style: none;
+    margin: 0 0 var(--nacara-space-4);
+    padding: 0 0 var(--nacara-space-4);
+    border-bottom: 1px solid var(--nacara-border);
+}
+.nacara-sidebar__sections .nacara-sidebar__link[aria-current] {
+    background: var(--nacara-primary-subtle);
+    color: var(--nacara-primary);
+    font-weight: 600;
+}
+
+/* A page with no menu carries the drawer anyway, and nothing else - so nothing to divide from. */
+.nacara-sidebar--drawer {
+    display: none;
+}
+.nacara-sidebar--drawer .nacara-sidebar__sections {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
 .nacara-sidebar__section {
     margin-bottom: var(--nacara-space-6);
 }
