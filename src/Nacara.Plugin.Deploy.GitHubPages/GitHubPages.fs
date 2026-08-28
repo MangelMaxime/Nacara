@@ -170,6 +170,8 @@ module GitHubPages =
 
             let branch = $"%s{options.Remote}/%s{options.Branch}"
 
+            Log.info $"Fetching %s{options.Branch} from %s{options.Remote}"
+
             // A branch nobody has published to yet has nothing to carry across.
             let published =
                 let fetched =
@@ -192,6 +194,7 @@ module GitHubPages =
 
             let plan =
                 result {
+                    Log.info "Reading the build into a tree"
                     let! written = tree root branch published output currentPrefix
 
                     let where =
@@ -200,10 +203,10 @@ module GitHubPages =
                         else
                             $"%s{currentPrefix}/"
 
-                    Log.info
-                        $"%s{written} is what %s{options.Branch} would hold, with this build at %s{where}"
-
                     if dryRun then
+                        Log.info
+                            $"%s{written} is what %s{options.Branch} would hold, with this build at %s{where}"
+
                         let! changes =
                             Git.read
                                 root
@@ -285,6 +288,8 @@ module GitHubPages =
                                         else
                                             []))
 
+                            Log.info $"Pushing %s{commit} to %s{options.Remote}/%s{options.Branch}"
+
                             do!
                                 Git.exec
                                     root
@@ -296,7 +301,7 @@ module GitHubPages =
                                     ]
 
                             Log.success
-                                $"Published %s{commit} to %s{options.Remote}/%s{options.Branch}"
+                                $"Published this build at %s{where} of %s{options.Branch}, as %s{commit}"
                 }
 
             match plan with
