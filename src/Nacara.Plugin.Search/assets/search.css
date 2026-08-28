@@ -2,7 +2,7 @@
     display: inline-flex;
     align-items: center;
     gap: var(--nacara-space-2);
-    min-width: 12rem;
+    min-width: 18rem;
     height: var(--nacara-control-height);
     padding: 0 var(--nacara-space-3);
     border: 1px solid var(--nacara-border);
