@@ -44,8 +44,8 @@ The defaults this plugin ships are not rumdl's. Two rules are off:
 | `MD057` relative link exists | Links are resolved against [the route table](../../guide/content.md#links-follow-files-not-urls), which knows the pages a plugin generates. A file-system check calls every one of those broken. |
 | `MD033` inline HTML | `<kbd>` and friends are how a documentation page says what it means. |
 
-The rest are set for prose: 100 columns instead of 80, and neither code blocks nor tables measured
-at all.
+The rest are set for prose: 100 columns instead of 80, and neither code blocks nor tables are
+measured.
 
 ```fsharp
 // What ships, and what a site can drop with UseDefaults = false.

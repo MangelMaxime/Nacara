@@ -103,8 +103,8 @@ module Site =
     /// Where the site is published, for the URLs that have to be absolute.
     /// </summary>
     /// <remarks>
-    /// Canonical links, sitemaps and social cards need a full URL. Left out, they are left out
-    /// too.
+    /// Canonical links, sitemaps and social cards need a full URL; without it they are left
+    /// out.
     /// </remarks>
     /// <param name="value">The scheme and host you deploy under, with no trailing slash:
     /// <c>https://example.github.io</c>.</param>

@@ -63,8 +63,8 @@ module Literate =
 
     /// <remarks>
     /// A file that starts with <c>---</c> does not compile, so the same block sits inside a
-    /// comment. The inner delimiters stay, and are what tell a front matter comment apart from a
-    /// prose comment.
+    /// comment. The inner delimiters stay, which is what tells a front matter comment apart from
+    /// a prose comment.
     /// </remarks>
     /// <summary>How front matter is carried by a source file rather than a markdown one.</summary>
     /// <param name="options">Which extensions the plugin claims, and what its fences are written

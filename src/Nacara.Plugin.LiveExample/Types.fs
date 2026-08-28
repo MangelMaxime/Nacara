@@ -4,8 +4,8 @@ namespace Nacara.Plugins
 type LiveExampleHighlighting =
     /// <summary>The grammar the rest of the site is coloured with.</summary>
     /// <remarks>An edited snippet looks exactly like the block it replaced: the same grammar, the
-    /// same queries, the same classes. Costs the grammar - 728 KB, fetched with the compiler when a
-    /// reader first runs something.</remarks>
+    /// same queries, the same classes. The grammar costs 728 KB, fetched with the compiler the
+    /// first time a reader runs something.</remarks>
     | TreeSitterHighlighting
     /// <summary>The editor's own F# mode.</summary>
     /// <remarks>Already inside the editor, so nothing is fetched. Colours a little differently
@@ -212,7 +212,7 @@ module LiveExamplePreset =
         }
 
     /// <summary>The one a fence naming no preset gets.</summary>
-    /// <remarks>Say it on one preset: two defaults is a build error.</remarks>
+    /// <remarks>Say it on one preset: a second default is a build error.</remarks>
     /// <param name="preset">The preset so far.</param>
     let asDefault (preset: LiveExamplePreset) =
         { preset with

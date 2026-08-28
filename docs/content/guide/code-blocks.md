@@ -101,8 +101,8 @@ Write the markers the same way down the block: `-printfn` and `+printfn`, or a s
 one of them. Only the marker comes off, so a space after `-` on one line and none after `+` on the
 next leaves the two a column apart.
 
-A diff pasted from `git diff` is left exactly as it is, headers and all: `---` and `+++` are kept
-with their filenames.
+A diff pasted from `git diff` is left exactly as it is: the `---` and `+++` headers are kept,
+filenames and all.
 
 A deleted line is drawn but left out of what the block gives you, so copying returns the code after
 the change. The same goes for a line `del=` names, and for

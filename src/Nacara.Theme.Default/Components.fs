@@ -6,7 +6,7 @@ open Nacara.Core
 /// <summary>The building blocks of the default theme.</summary>
 /// <remarks>
 /// Exposed one by one, so a layout of your own can keep the navbar and the sidebar and replace
-/// only the part it needs to.
+/// only what it needs to.
 /// </remarks>
 [<RequireQualifiedAccess>]
 module Components =

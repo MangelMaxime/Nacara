@@ -31,8 +31,8 @@ Layouts and plugins are F# code, so changing them means recompiling. Let the SDK
 dotnet watch --no-hot-reload run -- watch
 ```
 
-`--no-hot-reload` is required: without it the SDK patches the running process instead of building
-and starting the site again.
+`--no-hot-reload` is required: without it the SDK patches the running process instead of restarting
+the site.
 
 ### Reaching it from another machine
 

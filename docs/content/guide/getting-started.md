@@ -87,8 +87,8 @@ There are two, and a site can have both:
 ```
 
 The last one registered is asked first, so tree-sitter takes F#, JSON and its others, and TextMate
-covers the rest. Register tree-sitter alone to have an unknown language reported instead of
-covered.
+covers the rest. Register tree-sitter alone if you want an unknown language reported rather than
+covered by TextMate.
 
 ## Write a page
 

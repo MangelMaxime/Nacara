@@ -417,8 +417,8 @@ module CodeBlock =
         let private location = Regex(@"^\d+(,\d+)?[acd]\d+(,\d+)?$")
 
         /// <summary>Whether this is a diff someone pasted rather than one they wrote inline.</summary>
-        /// <remarks>Its headers begin with the same characters as its changes, so they are
-        /// kept.</remarks>
+        /// <remarks>Its headers begin with the same characters as its changes, and are kept
+        /// rather than stripped with them.</remarks>
         let isFile (lines: string list) =
             lines
             |> List.exists (fun line ->

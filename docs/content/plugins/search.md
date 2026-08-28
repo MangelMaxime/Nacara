@@ -64,8 +64,8 @@ Set Pagefind's own variables when you want something else - `--pf-background`, `
 ```
 
 Copy the doubled `:root:root`. Pagefind's stylesheet loads the first time a reader opens the modal,
-after yours, and declares its defaults on a plain `:root`, which a plain `:root` of your own would
-lose to.
+after yours, and declares its defaults on a plain `:root`, so a plain `:root` of your own loses to
+it.
 
 ## Options
 
