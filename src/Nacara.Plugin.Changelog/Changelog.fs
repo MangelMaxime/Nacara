@@ -167,9 +167,8 @@ module Changelog =
     /// <summary>Turn a parsed changelog into a page, versions only.</summary>
     /// <remarks>
     /// Everything above the first version - front matter, title, the note about Keep a Changelog -
-    /// belongs to the file rather than to a page about releases, and is left out. What is kept goes
-    /// through unchanged, so a version's markdown gets the same highlighting, link resolution and
-    /// anchors as any hand-written page. Which is why the plugin ships no layout.
+    /// is left out. What is kept goes through unchanged, so a version's markdown gets the same
+    /// highlighting, link resolution and anchors as any hand-written page.
     /// </remarks>
     /// <param name="label">The page's title.</param>
     /// <param name="document">The parsed changelog. A file with no version heading is published

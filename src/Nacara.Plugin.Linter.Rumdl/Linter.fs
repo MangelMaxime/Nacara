@@ -41,8 +41,7 @@ type RumdlOptions =
         /// Whether a finding is a warning or an error.
         Severity: LintSeverity
         /// <summary>Lint while watching too.</summary>
-        /// <remarks>On: it is milliseconds, and a warning is worth having while you write rather
-        /// than when you deploy.</remarks>
+        /// <remarks>On by default: a lint pass costs milliseconds.</remarks>
         LintWhileWatching: bool
     }
 
@@ -53,8 +52,7 @@ type RumdlOptions =
 /// <para>The pages of the build are what it reads - the files a collection actually publishes -
 /// so a note kept beside your content is not linted, and a generated page has nothing to lint.</para>
 /// <para>What it finds becomes ordinary diagnostics, with a position an editor can jump to. A
-/// linter that cannot run is a warning rather than a failure - markdown style is never worth being
-/// the reason a site does not build.</para>
+/// linter that cannot run is reported as a warning, not a failure.</para>
 /// </remarks>
 [<RequireQualifiedAccess>]
 module Rumdl =

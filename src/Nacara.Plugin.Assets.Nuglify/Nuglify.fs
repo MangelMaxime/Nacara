@@ -64,7 +64,7 @@ type NuglifyCssOptions =
 /// </code>
 /// <para>Each touches its own format: minifying the HTML leaves <c>style</c> and <c>script</c> as
 /// it found them. Nothing is downloaded, and a file that cannot be parsed is written as it was and
-/// reported rather than failing the build.</para>
+/// reported as a warning.</para>
 /// </remarks>
 [<RequireQualifiedAccess>]
 module Nuglify =

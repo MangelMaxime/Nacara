@@ -11,11 +11,10 @@ open Nacara.Plugins.Internal
 
 /// <summary>Which build of the Fable compiler a site's snippets are compiled by.</summary>
 /// <remarks>
-/// <para>A pair, because the two packages are coupled without saying so: they declare no dependency
-/// on each other, but the compiler holds a list of the assemblies it expects and the metadata
-/// package has to ship them.</para>
-/// <para><c>Latest</c> asks npm at every build, so two builds of the same commit can differ - the
-/// point of choosing it, and why it is not the default. What it picked is logged.</para>
+/// <para>A pair: the packages declare no dependency on each other, but the compiler holds a list
+/// of the assemblies it expects and the metadata package has to ship them.</para>
+/// <para><c>Latest</c> asks npm at every build, so two builds of the same commit can differ. What
+/// it picked is logged.</para>
 /// </remarks>
 type FableRelease =
     /// A pair that was released and tried together.
@@ -26,8 +25,7 @@ type FableRelease =
 /// <summary>Which Fable precompiles a library, and how it is started.</summary>
 /// <remarks>
 /// <para>A precompiled library is only readable by the Fable that wrote it, so the default fetches
-/// the one the compiler in the browser was built from rather than trusting whatever is installed -
-/// the same bargain the rest of this plugin makes with pagefind, esbuild and the rest.</para>
+/// the one the browser's compiler was built from rather than trusting whatever is installed.</para>
 /// <para>A site that names its own is then the one keeping the two in step, and is told when they
 /// have drifted.</para>
 /// </remarks>
@@ -58,8 +56,8 @@ type FableCli =
 /// <para>Three npm packages, fetched once per machine by <see cref="T:Nacara.Core.Tool" /> and
 /// copied into the site: the Fable compiler built for the browser, the assemblies it type-checks
 /// against, and - when snippets colour with tree-sitter - the browser build of tree-sitter.</para>
-/// <para>Emitted into the output rather than loaded from a CDN, so a site works offline, works
-/// behind a proxy, and hands no third party a record of who read which page.</para>
+/// <para>Emitted into the output rather than loaded from a CDN, so a site works offline and
+/// behind a proxy.</para>
 /// </remarks>
 [<RequireQualifiedAccess>]
 module Vendor =

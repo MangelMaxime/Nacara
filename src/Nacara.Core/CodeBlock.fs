@@ -308,8 +308,7 @@ module CodeBlock =
         text.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;")
 
     /// <summary>The same, for text going inside an attribute rather than between tags.</summary>
-    /// <remarks>A quote is harmless between tags and ends the value early inside one, so the two are
-    /// not the same job.</remarks>
+    /// <remarks>A quote is harmless between tags and ends the value early inside one.</remarks>
     let escapeAttribute (text: string) =
         (escapeHtml text).Replace("\"", "&quot;").Replace("'", "&#39;")
 
@@ -383,8 +382,7 @@ module CodeBlock =
     /// <summary>
     /// Fence languages that mean "this is not a language".
     /// </summary>
-    /// <remarks>A block labelled <c>text</c> or <c>console</c> is saying it wants no colour, so
-    /// nothing is missing when nothing colours it.</remarks>
+    /// <remarks>A block labelled <c>text</c> or <c>console</c> asks for no colour.</remarks>
     let plain =
         set
             [
@@ -419,8 +417,8 @@ module CodeBlock =
         let private location = Regex(@"^\d+(,\d+)?[acd]\d+(,\d+)?$")
 
         /// <summary>Whether this is a diff someone pasted rather than one they wrote inline.</summary>
-        /// <remarks>Its headers begin with the same characters as its changes, so stripping them
-        /// would eat the part that says which files these are.</remarks>
+        /// <remarks>Its headers begin with the same characters as its changes, so they are
+        /// kept.</remarks>
         let isFile (lines: string list) =
             lines
             |> List.exists (fun line ->
@@ -606,8 +604,8 @@ module CodeBlock =
     /// <summary>
     /// What the block leaves you with: the code after the change it describes.
     /// </summary>
-    /// <remarks>A folded line is kept; a deleted one is not, so what a reader copies or runs is what
-    /// is left rather than both sides of the change.</remarks>
+    /// <remarks>A folded line is kept, a deleted one is not, so a reader copies the code after
+    /// the change.</remarks>
     /// <param name="block">The block, prepared.</param>
     let source (block: PreparedCodeBlock) =
         block.Lines

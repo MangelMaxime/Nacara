@@ -33,10 +33,8 @@ type ChangelogDocument =
 /// Reads changelogs written in the Keep a Changelog style.
 /// </summary>
 /// <remarks>
-/// Which versions exist and when they were released - and deliberately nothing else. A version's
-/// own markdown is carried through untouched, because a changelog entry is prose and anything that
-/// rewrites prose eventually mangles some of it. A file following no convention still renders, as
-/// one preamble.
+/// Reads which versions exist and when they were released. A version's own markdown is carried
+/// through untouched, and a file following no convention still renders, as one preamble.
 /// </remarks>
 [<RequireQualifiedAccess>]
 module ChangelogParser =

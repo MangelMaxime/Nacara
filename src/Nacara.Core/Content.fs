@@ -116,8 +116,7 @@ type SiteInfo =
     /// <summary>
     /// Absolute URL of a route, when the site knows where it is published.
     /// </summary>
-    /// <remarks><c>None</c> when the site was given no origin: only the site knows where it is
-    /// deployed, and a canonical link pointing at the wrong one is worse than none.</remarks>
+    /// <remarks><c>None</c> when the site was given no origin.</remarks>
     member this.AbsoluteUrlOf(route: Route) =
         this.Origin |> Option.map (fun origin -> origin + this.UrlOf route)
 
@@ -147,10 +146,10 @@ module PageData =
 
     /// <summary>The heading levels this page puts in its table of contents.</summary>
     /// <remarks>
-    /// A page says what belongs in its own table of contents - a changelog wants its versions and not
-    /// every section of every release - as a <see cref="T:Nacara.Core.TocRange" /> the collection
-    /// reads out of its front matter with <c>Collection.toc</c>. Where nothing sets it, the format
-    /// plugin's own option decides.
+    /// A page says what belongs in its own table of contents as a
+    /// <see cref="T:Nacara.Core.TocRange" />, which the collection reads out of its front matter
+    /// with <c>Collection.toc</c>. Where nothing sets it, the format plugin's own option
+    /// decides.
     /// </remarks>
     [<Literal>]
     let Toc = "toc.range"

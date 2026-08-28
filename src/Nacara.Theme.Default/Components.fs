@@ -5,8 +5,8 @@ open Nacara.Core
 
 /// <summary>The building blocks of the default theme.</summary>
 /// <remarks>
-/// Exposed one by one, not just as a finished page: a site that outgrows the default layout can
-/// keep the navbar and the sidebar and replace only the part it cares about.
+/// Exposed one by one, so a layout of your own can keep the navbar and the sidebar and replace
+/// only the part it needs to.
 /// </remarks>
 [<RequireQualifiedAccess>]
 module Components =
@@ -502,9 +502,8 @@ module Components =
 
     /// <summary>A navbar item, as the drawer lists it on a screen too narrow for the bar.</summary>
     /// <remarks>
-    /// A dropdown becomes a titled group: nothing hovers in a drawer, and the drawer is a list
-    /// already. What sits at the end of the bar is moved down here by the theme's script instead,
-    /// so a widget is left where it is rather than rendered twice.
+    /// A dropdown becomes a titled group. What sits at the end of the bar is moved down here by
+    /// the theme's script, so a widget is left where it is.
     /// </remarks>
     /// <param name="page">The page being rendered, which says which section is the current one.</param>
     /// <param name="item">The navbar item to render.</param>
@@ -552,8 +551,8 @@ module Components =
     /// <remarks>
     /// <para>An explicit menu wins; otherwise the section's own pages are listed in front-matter
     /// order.</para>
-    /// <para>It is rendered even when a page asks for no menu, because it is also the drawer the
-    /// navbar's sections fold into once the bar is too narrow to hold them.</para>
+    /// <para>Rendered even when a page asks for no menu: it is also the drawer the navbar's
+    /// sections fold into on a narrow screen.</para>
     /// </remarks>
     /// <param name="options">The theme's configuration, whose <c>Menus</c> this renders. A section
     /// with no menu declared falls back to its pages in their own order.</param>

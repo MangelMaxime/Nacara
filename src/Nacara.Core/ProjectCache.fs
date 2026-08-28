@@ -5,8 +5,7 @@ open System.IO
 /// <summary>Where a build keeps what it worked out from the project's own files.</summary>
 /// <remarks>
 /// <para>Put an entry here when its key mentions the project - a file's contents, a source's
-/// timestamp, a path. Such an entry is worth nothing to any other project on the machine, and
-/// deleting <c>.nacara</c> costs a rebuild and nothing else.</para>
+/// timestamp, a path. Deleting <c>.nacara</c> costs a rebuild and nothing else.</para>
 /// <para>Something fetched rather than derived - a pinned tool, a grammar at a commit - is the same
 /// for every project, and belongs in <see cref="T:Nacara.Core.Tool" />'s cache instead.</para>
 /// <para>The directory carries a <c>.gitignore</c> covering itself, so a project needs no rule of

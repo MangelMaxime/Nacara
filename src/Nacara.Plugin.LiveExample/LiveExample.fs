@@ -121,12 +121,11 @@ module LiveExample =
 
     /// <summary>Precompile with a Fable of your own instead of the one that matches.</summary>
     /// <remarks>
-    /// <para>You do not normally want this. Left alone, the build fetches the Fable the compiler in
-    /// the browser was built from and precompiles with that, so the two agree whatever is installed
-    /// on the machine - or nothing at all.</para>
-    /// <para>It is here for working on Fable itself: point it at a local build and the snippets are
+    /// <para>Left alone, the build fetches the Fable the browser's compiler was built from and
+    /// precompiles with that, so the two agree whatever is installed on the machine.</para>
+    /// <para>Set it when working on Fable itself: point it at a local build and the snippets are
     /// precompiled with that one. Keeping the two in step is then yours, and the build says when
-    /// they have drifted rather than leaving a reader with a snippet that never answers.</para>
+    /// they have drifted.</para>
     /// </remarks>
     /// <param name="value">The <c>fable</c> executable to run.</param>
     /// <param name="options">The options so far.</param>

@@ -18,9 +18,9 @@ type LinkValidatorOptions =
     {
         /// <summary>Check links that leave the site.</summary>
         /// <remarks>
-        /// On, because a dead link is a dead link whether or not it is yours, and answers are
-        /// cached for a week so most builds ask nobody anything. Turn it off for a build that has
-        /// no network, and see <c>FailOnExternal</c> for what a failure should cost.
+        /// On by default. Answers are cached for a week, so most builds send no requests. Turn
+        /// it off for a build that has no network, and see <c>FailOnExternal</c> for what a
+        /// failure should cost.
         /// </remarks>
         CheckExternal: bool
         /// Check while watching too. Off by default: it is slow and rarely what you are working on.

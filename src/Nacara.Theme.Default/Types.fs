@@ -41,8 +41,7 @@ type MenuEntry =
     | MenuSection of label: string * items: MenuItem list
     /// <summary>A group whose label is a page of its own - the overview of what it holds.</summary>
     /// <remarks>
-    /// The page takes the group's place rather than sitting inside it, so a reader sees one
-    /// "Markdown" to click rather than a Markdown holding a Markdown. Put it at <c>index.md</c>
+    /// The page takes the group's place rather than sitting inside it. Put it at <c>index.md</c>
     /// beside the pages it introduces and it keeps their url.
     /// </remarks>
     | MenuGroup of page: string * items: MenuItem list
@@ -224,8 +223,8 @@ type DocPage =
         /// Show the sidebar menu.
         ShowMenu: bool
         /// <summary>Offer a box that filters the menu.</summary>
-        /// <remarks><c>None</c> leaves it to the theme, which offers one when the menu is long
-        /// enough that reading it is worse than typing a name.</remarks>
+        /// <remarks><c>None</c> leaves it to the theme, which offers one when the menu is
+        /// long.</remarks>
         MenuFilter: bool option
         /// <summary>Carry the menu's folding from page to page.</summary>
         /// <remarks>Off, every page opens the menu the same way: the trail to itself, and nothing
@@ -304,10 +303,7 @@ module DocPage =
     /// <summary>
     /// The menu forgets what a reader folded: every page opens it the same way.
     /// </summary>
-    /// <remarks>
-    /// For a section read by name rather than in order - a reference - where arriving at a page
-    /// with the folds left over from the last one is disorienting.
-    /// </remarks>
+    /// <remarks>For a section read by name rather than in order, such as a reference.</remarks>
     /// <param name="page">The page being described.</param>
     let withoutMenuMemory (page: DocPage) =
         { page with

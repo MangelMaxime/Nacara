@@ -370,8 +370,8 @@ module Yaml =
     /// <param name="decoder">What reads the parsed document.</param>
     /// <param name="text">The document to parse.</param>
     /// <remarks>
-    /// Front matter is embedded in a markdown file a few lines down; without the offset every error
-    /// would point at the wrong line and the message would be worse than useless.
+    /// Front matter sits a few lines down in a markdown file, and the offset is what makes a
+    /// decode error point at the right line.
     /// </remarks>
     let decodeWithOffset (lineOffset: int) (decoder: Decoder<'T>) (text: string) =
         let shift (decodeError: DecodeError) =

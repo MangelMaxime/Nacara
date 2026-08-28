@@ -49,8 +49,8 @@ module Locale =
     let other code = make false code
 
     /// <summary>What the language picker calls it.</summary>
-    /// <param name="label">The language's own name for itself: <c>Français</c> rather than
-    /// <c>French</c>, because that is what a reader looking for it recognises.</param>
+    /// <param name="label">The language's own name for itself: <c>Français</c>, not
+    /// <c>French</c>.</param>
     /// <param name="locale">The locale being described.</param>
     let withLabel label (locale: Locale) =
         { locale with

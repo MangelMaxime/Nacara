@@ -20,9 +20,8 @@ type SitemapOptions =
 /// </summary>
 /// <remarks>
 /// Only pages that exist in this build are listed, and only when the site declares where it is
-/// published: a sitemap full of URLs from the wrong origin is worse than no sitemap. Translations
-/// are cross-referenced with <c>hreflang</c>, so a search engine offers a reader the language they
-/// asked for instead of picking one.
+/// published. Translations are cross-referenced with <c>hreflang</c>, so a search engine can offer
+/// a reader the language they asked for.
 /// </remarks>
 [<RequireQualifiedAccess>]
 module Sitemap =

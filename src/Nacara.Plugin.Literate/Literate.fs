@@ -27,8 +27,8 @@ type LiterateOptions =
         DefaultMeta: string
         /// <summary>Check that the sources compile, with <c>dotnet fsi --typecheck-only</c>.</summary>
         /// <remarks>
-        /// The promise of a literate page is that the example on it is code that works. Checking it
-        /// is what keeps that true, and it is the cheap half of compiling - no code is run.
+        /// The file is type-checked, so the example on the page is code that compiles. Nothing
+        /// is run.
         /// </remarks>
         TypeCheck: bool
         /// Check while watching too. Off by default: it starts a compiler per file.
@@ -63,8 +63,8 @@ module Literate =
 
     /// <remarks>
     /// A file that starts with <c>---</c> does not compile, so the same block sits inside a
-    /// comment. The inner delimiters stay, and that is what tells a front matter comment apart from
-    /// the prose comment a literate file may just as well open with.
+    /// comment. The inner delimiters stay, and are what tell a front matter comment apart from a
+    /// prose comment.
     /// </remarks>
     /// <summary>How front matter is carried by a source file rather than a markdown one.</summary>
     /// <param name="options">Which extensions the plugin claims, and what its fences are written

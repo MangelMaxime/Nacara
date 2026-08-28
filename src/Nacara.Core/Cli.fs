@@ -22,8 +22,8 @@ module Nacara =
             Rest: string list
         }
 
-    /// The commands the engine answers itself. Anything else is a plugin's, and its arguments are
-    /// its own business rather than options to be checked here.
+    /// The commands the engine answers itself. Anything else belongs to a plugin, arguments
+    /// included.
     let private builtIn =
         set
             [

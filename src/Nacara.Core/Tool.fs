@@ -38,9 +38,8 @@ type ToolArchive =
 
 /// <summary>A program a plugin needs, and where to get it.</summary>
 /// <remarks>
-/// Half the plugins here drive something they did not write - pagefind, lightningcss, rumdl - and
-/// every one of them was fetching it the same way. Say what to fetch and what it is called
-/// afterwards, and <see cref="T:Nacara.Core.Tool" /> does the fetching.
+/// Say what to fetch and what it is called afterwards, and <see cref="T:Nacara.Core.Tool" /> does
+/// the fetching.
 /// </remarks>
 type ToolRequest =
     {

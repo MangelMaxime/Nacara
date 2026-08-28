@@ -3,13 +3,13 @@ namespace Nacara.Plugins
 /// <summary>How a live snippet colours itself once the reader is editing it.</summary>
 type LiveExampleHighlighting =
     /// <summary>The grammar the rest of the site is coloured with.</summary>
-    /// <remarks>An edited snippet looks exactly like the block it replaced, because it is the same
-    /// grammar, the same queries and the same classes. Costs the grammar: 728 KB, fetched with the
-    /// compiler and only when a reader asks to run something.</remarks>
+    /// <remarks>An edited snippet looks exactly like the block it replaced: the same grammar, the
+    /// same queries, the same classes. Costs the grammar - 728 KB, fetched with the compiler when a
+    /// reader first runs something.</remarks>
     | TreeSitterHighlighting
     /// <summary>The editor's own F# mode.</summary>
-    /// <remarks>Already inside the editor, so it costs nothing to add. Colours a little differently
-    /// from the static blocks around it, which shows only while someone is typing.</remarks>
+    /// <remarks>Already inside the editor, so nothing is fetched. Colours a little differently
+    /// from the static blocks around it.</remarks>
     | DefaultHighlighting
 
 /// <summary>Which tab a snippet opens on once it has run.</summary>
@@ -23,11 +23,10 @@ type LiveExampleTab =
 
 /// <summary>What Fable compiles a snippet to.</summary>
 /// <remarks>
-/// <para>Only JavaScript can run: it is the one language a browser has a runtime for. The rest are
-/// compiled and shown - the console carries what the compiler said, and the output tab carries the
-/// code, which is the thing worth looking at when the question is "what does F# become here".</para>
-/// <para>The compiler refuses a language it does not know rather than falling back, so a target it
-/// would refuse fails the build instead of reaching a reader.</para>
+/// <para>Only JavaScript runs. The rest are compiled and shown: the console carries what the
+/// compiler said, and the output tab carries the code it emitted.</para>
+/// <para>A language the compiler does not know fails the build rather than reaching a
+/// reader.</para>
 /// </remarks>
 type LiveExampleTarget =
     | JavaScript
@@ -125,9 +124,8 @@ module LiveExampleTarget =
         )
 
 /// <summary>Files put in front of a snippet, so it can use a library without repeating it.</summary>
-/// <remarks>They are compiled together with the snippet rather than referenced as an assembly,
-/// which is what lets the type-checker answer for them: hovering a function defined in a preset
-/// gives its real signature, and its full name.</remarks>
+/// <remarks>Compiled together with the snippet, so hovering a function defined in a preset gives
+/// its real signature and its full name.</remarks>
 type LiveExamplePreset =
     {
         /// What a fence writes to ask for it.
@@ -153,11 +151,8 @@ type LiveExamplePreset =
     }
 
 /// <summary>What a preset is made of, one line at a time.</summary>
-/// <remarks>
-/// Built as a value and handed to <see cref="M:Nacara.Plugins.LiveExample.preset" />, rather than
-/// declared and then added to by name: there is no name to mistype, and nothing that quietly does
-/// nothing when you do.
-/// </remarks>
+/// <remarks>Built as a value and handed to
+/// <see cref="M:Nacara.Plugins.LiveExample.preset" />.</remarks>
 [<RequireQualifiedAccess>]
 module LiveExamplePreset =
 
@@ -174,8 +169,8 @@ module LiveExamplePreset =
         }
 
     /// <summary>The F# put in front of a snippet, in the order it compiles.</summary>
-    /// <remarks>Small is the point: these are type-checked on every compile, so a preset is the
-    /// <c>open</c> lines and a helper or two rather than a library.</remarks>
+    /// <remarks>Type-checked on every compile, so keep a preset to the <c>open</c> lines and a
+    /// helper or two.</remarks>
     /// <param name="value">Files relative to the project root.</param>
     /// <param name="preset">The preset so far.</param>
     let files value (preset: LiveExamplePreset) =
@@ -185,11 +180,10 @@ module LiveExamplePreset =
 
     /// <summary>Give it an F# project, and everything in it reaches the snippets.</summary>
     /// <remarks>
-    /// <para>The project is compiled once, ahead of time, with every package it references - so a
-    /// site can offer a set of libraries and its own helpers together, and maintain them as an
-    /// ordinary project that its own build type-checks.</para>
-    /// <para>It is rebuilt when anything in it changes, with the Fable the compiler in the browser
-    /// was built from - fetched for the purpose, so nothing has to be installed.</para>
+    /// <para>The project is compiled once, ahead of time, with every package it references, so a
+    /// site can offer several libraries and its own helpers together.</para>
+    /// <para>It is rebuilt when anything in it changes, with the Fable the browser's compiler was
+    /// built from, fetched for the purpose.</para>
     /// </remarks>
     /// <param name="value">The <c>.fsproj</c>, relative to the project root.</param>
     /// <param name="preset">The preset so far.</param>
@@ -218,8 +212,7 @@ module LiveExamplePreset =
         }
 
     /// <summary>The one a fence naming no preset gets.</summary>
-    /// <remarks>Say it on one preset. Two of them is a build error, because there is no sensible
-    /// way to choose between them and guessing would be the wrong library on a page.</remarks>
+    /// <remarks>Say it on one preset: two defaults is a build error.</remarks>
     /// <param name="preset">The preset so far.</param>
     let asDefault (preset: LiveExamplePreset) =
         { preset with
@@ -232,8 +225,7 @@ type LiveExampleOptions =
         /// The presets a fence can name.
         Presets: LiveExamplePreset list
         /// <summary>The preset used by a fence that names none.</summary>
-        /// <remarks>Unset means a bare snippet compiles on its own, which is what a site with one
-        /// library and one prelude usually does not want.</remarks>
+        /// <remarks>Unset, a bare snippet compiles on its own.</remarks>
         /// How an edited snippet colours itself.
         Highlighting: LiveExampleHighlighting
         /// Which build of the Fable compiler snippets are compiled by.
@@ -251,16 +243,15 @@ type LiveExampleOptions =
         /// <summary>The page snippets are run inside, for presets that name none.</summary>
         Template: string option
         /// <summary>Whether a snippet shows what its compiles cost.</summary>
-        /// <remarks>A tab of timings, one row per run, kept across runs so a change can be
-        /// compared with what came before it. For writing a site rather than reading one.</remarks>
+        /// <remarks>A tab of timings, one row per run, kept so a change can be compared with the
+        /// run before it.</remarks>
         Stats: bool
         /// <summary>The Fable CLI used to precompile a preset's packages.</summary>
-        /// <remarks>Unset means a package is compiled with every snippet instead, which works and
-        /// costs the reader a second or two on the first run of a page.</remarks>
+        /// <remarks>Unset, a package is compiled with every snippet, which costs the reader a
+        /// second or two on the first run of a page.</remarks>
         FableTool: string option
         /// <summary>Grammars for colouring output this site's targets produce.</summary>
-        /// <remarks>The highlighting plugin ships the languages a documentation site is written in,
-        /// which is not the same set as the languages Fable emits. Name a grammar here and the
-        /// output tab for that target is coloured; name none and it is shown as plain text.</remarks>
+        /// <remarks>Name a grammar and the output tab for that target is coloured; name none and
+        /// it is shown as plain text.</remarks>
         OutputGrammars: TreeSitterGrammar list
     }

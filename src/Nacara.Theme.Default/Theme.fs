@@ -534,9 +534,8 @@ module Theme =
 
     /// <summary>Add the theme's assets to a site.</summary>
     /// <remarks>
-    /// This registers what the theme needs of the site. The layout is chosen per collection - with
-    /// <see cref="M:Nacara.Theme.Theme.docs" /> or <see cref="M:Nacara.Theme.Theme.layout" /> -
-    /// because a site can render different collections differently.
+    /// Registers what the theme needs of the site. The layout is chosen per collection, with
+    /// <see cref="M:Nacara.Theme.Theme.docs" /> or <see cref="M:Nacara.Theme.Theme.layout" />.
     /// </remarks>
     /// <param name="options">The theme's options: your navbar, your footer, your menus.</param>
     /// <param name="site">The site you are describing.</param>

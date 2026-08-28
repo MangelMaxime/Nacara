@@ -29,8 +29,8 @@ type MarkdownOptions =
         /// Fail the build on a link that points at no page. Warn instead when false.
         StrictLinks: bool
         /// <summary>Report a fence naming a language no highlighter covers.</summary>
-        /// <remarks>The engine knows which fence it was and where, so this is where it is said -
-        /// a highlighter only ever sees a language and a piece of code.</remarks>
+        /// <remarks>Reported here rather than by the highlighter, which only sees a language and
+        /// a piece of code.</remarks>
         WarnOnUnknownLanguage: bool
     }
 

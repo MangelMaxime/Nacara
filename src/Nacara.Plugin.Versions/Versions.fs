@@ -65,8 +65,8 @@ type VersionsOptions =
 /// <para>A version is a <em>build</em>, not a content dimension: each is built with its own prefix
 /// into its own directory. An old version is never rebuilt, so it cannot break, and building the
 /// current docs costs the same whether there is one version or twenty.</para>
-/// <para>What those independent builds share is small - a manifest of what exists and a switcher
-/// that rewrites the path - and that is all this plugin is.</para>
+/// <para>Those builds share a manifest of what exists and a switcher that rewrites the path, which
+/// is what this plugin provides.</para>
 /// </remarks>
 [<RequireQualifiedAccess>]
 module Versions =

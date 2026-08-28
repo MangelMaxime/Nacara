@@ -95,8 +95,7 @@ and AssetTransformContext =
         Content: string
         Diagnostics: DiagnosticSink
         /// <summary>True while <c>watch</c> is rebuilding.</summary>
-        /// <remarks>Work worth doing for a deploy is often not worth doing on every keystroke.
-        /// Minifiers skip themselves here unless the site asks otherwise.</remarks>
+        /// <remarks>Minifiers skip themselves here unless the site asks otherwise.</remarks>
         IsWatch: bool
     }
 

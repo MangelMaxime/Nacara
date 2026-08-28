@@ -4,9 +4,8 @@ namespace Nacara.Core
 /// A site, described as a value.
 /// </summary>
 /// <remarks>
-/// You build it with a plain pipeline - <c>Site.create … |> Site.baseUrl … |> Site.plugin …</c> -
-/// so your configuration is an ordinary value: share it between builds, reuse it in tests, and let
-/// the compiler tell you when it is wrong.
+/// Built with a pipeline - <c>Site.create … |> Site.baseUrl … |> Site.plugin …</c> - so the
+/// configuration is an ordinary value: share it between builds, or use it in a test.
 /// </remarks>
 type Site =
     {
@@ -20,7 +19,7 @@ type Site =
         VersionPrefix: string option
         Locales: Locale list
         /// Generate a page in the default locale's content for locales that have no translation
-        /// of it yet, rather than leaving a hole in the site.
+        /// of it yet.
         FallBackToDefaultLocale: bool
         /// Directory receiving the built site, relative to the project root.
         OutputDirectory: string
@@ -72,8 +71,7 @@ module Site =
 
     /// <summary>A script of your own, loaded on every page.</summary>
     /// <remarks>
-    /// Loaded as a classic script, so an <c>import</c> in it needs a bundler registered - unlike a
-    /// stylesheet, whose imports a browser would resolve on its own.
+    /// Loaded as a classic script, so an <c>import</c> in it needs a bundler registered.
     /// </remarks>
     /// <param name="path">The script, relative to the project root.</param>
     /// <param name="site">The site being described.</param>
@@ -105,8 +103,8 @@ module Site =
     /// Where the site is published, for the URLs that have to be absolute.
     /// </summary>
     /// <remarks>
-    /// Canonical links, sitemaps and social cards all need a full URL, and only you know where the
-    /// site is deployed. Leave this out and they are left out too, rather than guessed at.
+    /// Canonical links, sitemaps and social cards need a full URL. Left out, they are left out
+    /// too.
     /// </remarks>
     /// <param name="value">The scheme and host you deploy under, with no trailing slash:
     /// <c>https://example.github.io</c>.</param>
@@ -141,9 +139,7 @@ module Site =
     /// Whether a locale with no translation of a page still gets that page.
     /// </summary>
     /// <remarks>
-    /// On by default. A half-translated site should still be usable in either language, so an
-    /// untranslated page shows its original content and says so, rather than 404ing or vanishing
-    /// from the menu.
+    /// On by default: an untranslated page shows the original content and says so.
     /// </remarks>
     /// <param name="value"><c>true</c> to publish every page in every locale, translated or not;
     /// <c>false</c> to publish a page only in the locales that have it.</param>

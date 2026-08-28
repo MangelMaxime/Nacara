@@ -48,9 +48,8 @@ type FSharpApiOptions =
         /// reader should be sent to - <c>My.Library.Internal</c> and its like.</remarks>
         Exclude: string list
         /// <summary>Report a member that takes parameters and documents none of them.</summary>
-        /// <remarks>Off by default: a reference is worth publishing before it is complete. On, it
-        /// is a warning per member, which <c>check</c> turns into a failure - a way to hold a
-        /// library to its own documentation once it has caught up.</remarks>
+        /// <remarks>Off by default. On, it is a warning per member, which <c>check</c> turns
+        /// into a failure.</remarks>
         WarnOnUndocumented: bool
     }
 

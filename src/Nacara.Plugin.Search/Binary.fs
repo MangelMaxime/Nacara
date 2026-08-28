@@ -6,9 +6,8 @@ open Nacara.Core
 /// Finds - or fetches - the Pagefind binary.
 /// </summary>
 /// <remarks>
-/// The engine stays pure .NET; a plugin that wants a native tool owns saying which one. The
-/// fetching, the cache and the unpacking are <see cref="T:Nacara.Core.Tool" />'s - what is here is
-/// the name pagefind gives its releases.
+/// The fetching, the cache and the unpacking are <see cref="T:Nacara.Core.Tool" />'s. What is here
+/// is the name pagefind gives its releases.
 /// </remarks>
 [<RequireQualifiedAccess>]
 module Pagefind =
