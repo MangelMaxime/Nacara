@@ -128,7 +128,7 @@ module Components =
                                         prop.type' "button"
                                         prop.custom ("data-nacara-dropdown", "true")
                                         prop.ariaExpanded false
-                                        prop.text (page.Locale.Label + " ▾")
+                                        prop.text page.Locale.Label
                                     ]
                                 Html.ul
                                     [
@@ -188,7 +188,7 @@ module Components =
                                     prop.type' "button"
                                     prop.custom ("data-nacara-dropdown", "true")
                                     prop.ariaExpanded false
-                                    prop.text (label + " ▾")
+                                    prop.text label
                                 ]
                             Html.ul
                                 [

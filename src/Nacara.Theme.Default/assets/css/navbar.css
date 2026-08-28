@@ -39,6 +39,35 @@
     font-size: 0.9375rem;
     font-weight: 500;
 }
+/* The same class on a dropdown's trigger, which a browser would otherwise draw as a control. */
+button.nacara-navbar__link {
+    border: none;
+    background: none;
+    font-family: inherit;
+    line-height: inherit;
+    cursor: pointer;
+}
+button.nacara-navbar__link[data-nacara-dropdown]::after {
+    content: "";
+    flex: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    background: currentColor;
+    mask:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+        center / 1rem no-repeat;
+    transition: transform 0.15s ease;
+    opacity: 0.55;
+}
+.nacara-dropdown[data-open="true"] > button.nacara-navbar__link {
+    background: var(--nacara-primary-subtle);
+    color: var(--nacara-text);
+}
+.nacara-dropdown[data-open="true"] > button.nacara-navbar__link::after {
+    transform: rotate(180deg);
+    opacity: 1;
+}
+
 .nacara-navbar__link:hover {
     background: var(--nacara-bg-subtle);
     color: var(--nacara-text);
@@ -59,7 +88,7 @@
 }
 .nacara-dropdown__panel {
     position: absolute;
-    top: calc(100% + var(--nacara-space-2));
+    top: calc(100% + var(--nacara-space-1));
     left: 0;
     min-width: 15rem;
     margin: 0;
@@ -69,6 +98,15 @@
     border-radius: var(--nacara-radius);
     box-shadow: var(--nacara-shadow);
     list-style: none;
+}
+/* The gap up to the trigger belongs to the panel, or a pointer crossing it closes the menu. */
+.nacara-dropdown__panel::before {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 100%;
+    left: 0;
+    height: calc(var(--nacara-space-1) + 2px);
 }
 .nacara-dropdown:not([data-open="true"]) .nacara-dropdown__panel {
     display: none;
