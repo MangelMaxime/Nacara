@@ -1,7 +1,11 @@
 {
   "$schema": "http://json.schemastore.org/template",
   "author": "Maxime Mangel",
-  "classifications": [ "Documentation", "F#", "Static site" ],
+  "classifications": [
+    "Documentation",
+    "F#",
+    "Static site"
+  ],
   "identity": "Nacara.Docs.FSharp",
   "name": "Nacara documentation site",
   "shortName": "nacara-docs",
@@ -12,6 +16,26 @@
   "sourceName": "NacaraDocs",
   "preferNameDirectory": true,
   "symbols": {
+    "plugins": {
+      "type": "parameter",
+      "datatype": "choice",
+      "defaultValue": "standard",
+      "description": "Which plugins the site is set up with",
+      "choices": [
+        {
+          "choice": "minimal",
+          "description": "Markdown, highlighting and the theme"
+        },
+        {
+          "choice": "standard",
+          "description": "Plus search, a sitemap, minified assets and publishing to GitHub Pages"
+        },
+        {
+          "choice": "full",
+          "description": "Plus literate F#, versions, link checking and a markdown linter"
+        }
+      ]
+    },
     "title": {
       "type": "parameter",
       "datatype": "string",
@@ -26,6 +50,13 @@
       "replaces": "SITE_BASE_URL",
       "description": "Path the site is served from, for example /MyLibrary/"
     },
+    "origin": {
+      "type": "parameter",
+      "datatype": "string",
+      "defaultValue": "https://owner.github.io",
+      "replaces": "SITE_ORIGIN",
+      "description": "Where the site is published, for the sitemap and canonical links"
+    },
     "repository": {
       "type": "parameter",
       "datatype": "string",
@@ -37,7 +68,13 @@
   "sources": [
     {
       "modifiers": [
-        { "exclude": [ "**/output/**", "**/bin/**", "**/obj/**" ] }
+        {
+          "exclude": [
+            "**/output/**",
+            "**/bin/**",
+            "**/obj/**"
+          ]
+        }
       ]
     }
   ]

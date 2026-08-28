@@ -6,28 +6,35 @@ A Nacara site is an F# console project that references the engine and calls it.
 
 ## Create the project
 
-```bash frame="terminal"
-mkdir docs && cd docs
-dotnet new console -lang F# -o .
-dotnet add package Nacara.Core --prerelease && \
-dotnet add package Nacara.Plugin.Markdown --prerelease && \
-dotnet add package Nacara.Plugin.Highlight.TextMate --prerelease && \
-dotnet add package Nacara.Plugin.Search --prerelease && \
-dotnet add package Nacara.Plugin.Sitemap --prerelease && \
-dotnet add package Nacara.Plugin.Assets.LightningCss --prerelease && \
-dotnet add package Nacara.Plugin.Assets.Nuglify --prerelease && \
-dotnet add package Nacara.Theme.Default --prerelease
-```
-
-That is one package per thing it does. Take out any line you do not want, now or later.
-
-Or start from the template, which sets up the same project with a first page and a menu in it. The
-templates come as their own package, so install them once:
+The template offers different sets of plugins:
 
 ```bash frame="terminal"
 dotnet new install Nacara.Templates
 dotnet new nacara-docs -o docs
+# or use a preset
+dotnet new nacara-docs -o docs --plugins full
 ```
+
+| `--plugins` | What you get |
+|---|---|
+| `minimal` | Markdown, highlighting and the theme |
+| `standard` | Plus search, a sitemap, minified assets and publishing to GitHub Pages |
+| `full` | Plus literate F#, versions, link checking and a markdown linter |
+
+### By hand
+
+A site is a console project, so you can also start from one:
+
+```bash frame="terminal"
+mkdir docs && cd docs
+dotnet new console -lang F# -o .
+dotnet add package Nacara.Core --prerelease
+dotnet add package Nacara.Plugin.Markdown --prerelease
+dotnet add package Nacara.Theme.Default --prerelease
+```
+
+Those three are the least a site needs. Every other feature is a package of its own -
+[the plugins](../plugins/overview.md) lists them.
 
 ## Describe the site
 
@@ -48,12 +55,6 @@ let site =
     Site.create "My library"
     |> Site.baseUrl "/"
     |> Markdown.register
-    |> TextMate.register
-    |> Search.register
-    |> Sitemap.register
-    |> LightningCss.register
-    |> Nuglify.minifyHtml
-    |> Nuglify.minifyJs
     |> Theme.register theme
     |> Site.collection (Theme.docs theme "content")
 
@@ -61,10 +62,8 @@ let site =
 let main argv = Nacara.run site argv
 ```
 
-Those eight are markdown, syntax highlighting, search, a sitemap, and smaller HTML, JavaScript and
-CSS on the way out. Order does not matter, except that the last plugin to claim something wins.
-
-The rest are a line of your own, mostly because they need you to say something first:
+Each plugin is a line, and order does not matter, except that the last plugin to claim something
+wins. Some need you to say something first:
 
 | | |
 |---|---|
@@ -73,22 +72,23 @@ The rest are a line of your own, mostly because they need you to say something f
 | [Changelogs](../plugins/changelogs.md) | which changelog files to publish |
 | [Versions](../plugins/versions.md) | which versions you have deployed |
 
-### Sharper highlighting
+### Highlighting
 
-[TextMate](../plugins/highlight/textmate.md) above knows about fifty languages. Add
-[tree-sitter](../plugins/highlight/treesitter.md) after it when you want the twelve languages it
-ships done properly:
+There are two, and a site can have both:
+
+| | |
+|---|---|
+| [TextMate](../plugins/highlight/textmate.md) | about fifty languages, nothing to fetch |
+| [tree-sitter](../plugins/highlight/treesitter.md) | twelve languages done properly, fetched once per machine |
 
 ```fsharp
 |> TextMate.register
 |> TreeSitter.register
 ```
 
-The last highlighter registered is asked first, so tree-sitter takes F#, JSON and its others, and
-TextMate still covers everything else.
-
-If you would rather *know* when tree-sitter cannot colour something, drop the `TextMate.register`
-line so nothing quietly covers for it.
+The last one registered is asked first, so tree-sitter takes F#, JSON and its others, and TextMate
+covers the rest. Register tree-sitter alone if you would rather *know* when it cannot colour
+something, instead of having TextMate quietly cover for it.
 
 ## Write a page
 
