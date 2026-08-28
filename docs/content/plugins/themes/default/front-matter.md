@@ -1,9 +1,11 @@
 ---
 title: Front matter
+toc:
+  to: 3
 ---
 
-What a page can say about itself. Every field but `title` is optional, and a page that writes only a
-title gets the whole frame.
+The fields a page can set in its `---` block. Only `title` is required; a page that sets nothing
+else gets a menu, a table of contents, and links to the pages either side of it.
 
 ```yaml
 ---
@@ -13,23 +15,34 @@ order: 2
 ---
 ```
 
-## Every field
+## Fields
 
-| Field | Effect |
-|---|---|
-| `title` | The page's heading, its entry in the menu, its `<title>`, and what search shows. **Required** |
-| `description` | One sentence, used as the meta description and in search results |
-| `order` | Where it sits in a sidebar the theme built itself. Ignored once you [declare the menu](menu.md) |
-| `layout` | `bare` for a page with no chrome |
-| `pageNav` | `false` drops the previous and next links |
-| `menuFilter` | Whether the menu offers a filter box, when its length should not decide |
-| `menuMemory` | `false` opens the menu the same way on every page of the section |
-| `toc` | Which heading levels the table of contents holds |
+### `title`
 
-## The ones worth explaining
+**type:** `string` (required)
 
-**`layout: bare`** drops the menu, the table of contents and the previous and next links, leaving
-the navbar, your content and the footer. A landing page is the usual reason.
+You must provide a title for every page. It is shown at the top of the page, in the browser tab, in
+the menu, and in search results.
+
+### `description`
+
+**type:** `string`
+
+The page description, picked up by search engines and in social previews.
+
+### `order`
+
+**type:** `number`
+
+Controls where the page sits in its section, when no [menu](menu.md) is declared for that section.
+Pages without one come last, in title order.
+
+### `layout`
+
+**type:** `string`
+
+Set to `bare` for a page with no chrome: no menu, no table of contents, no previous and next links.
+Landing pages are the usual case.
 
 ```yaml
 ---
@@ -38,11 +51,38 @@ layout: bare
 ---
 ```
 
-**`pageNav: false`** is for a page that is not part of a sequence. Previous and next make sense when
-a section is read through; on a reference page or a landing page they offer whatever happens to sort
-next, which helps nobody.
+### `pageNav`
 
-**`toc`** takes the levels this page wants, when the collection's default does not fit:
+**type:** `boolean`
+
+**default:** `true`
+
+Set to `false` to drop the links to the previous and next pages of the section.
+
+### `menuFilter`
+
+**type:** `boolean`
+
+Whether the menu offers a box for filtering it. Left out, the menu's length decides. See
+[Menu](menu.md).
+
+### `menuMemory`
+
+**type:** `boolean`
+
+**default:** `true`
+
+Whether the menu keeps what the reader folded from one page to the next. Set to `false` and every
+page of the section opens the menu the same way. See [Menu](menu.md).
+
+### `toc`
+
+**type:** `{ from?: number; to?: number }`
+
+**default:** the range the markdown plugin was configured with
+
+The heading levels this page's table of contents holds. Either bound can be left out: `from` is
+`2`, `to` is `6`.
 
 ```yaml
 ---
@@ -53,13 +93,9 @@ toc:
 ---
 ```
 
-`from: 2, to: 3` is the usual default: `##` and `###`, since `#` is the title you already read.
-
-**`menuFilter` and `menuMemory`** are explained where they act, on the [menu](menu.md) page.
-
 ## Front matter of your own
 
-`Theme.docs` uses the theme's `DocFrontMatter`, which is these fields and nothing else. A site that
-needs more - a page that knows its author, a tag, a product - declares its own type and maps it onto
-what the theme needs. [Components](components.md) covers that, and the `DocPage` setters that decide
-the same things from code rather than from front matter.
+`Theme.docs` reads the theme's `DocFrontMatter`, which is these fields and nothing else. To add
+fields of your own - an author, a tag, a product - declare your own record and decoder, then map it
+onto what the theme needs. [Components](components.md) shows how, along with the `DocPage` setters
+that decide the same things from code.

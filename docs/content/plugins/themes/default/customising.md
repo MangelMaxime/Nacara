@@ -1,9 +1,11 @@
 ---
 title: Customising
+toc:
+  to: 3
 ---
 
-Colours, spacing and fonts are custom properties. Override the ones you care about in a stylesheet
-of your own - you have no build step to run and no configuration file to write.
+The theme is built on CSS custom properties, so most changes are a value rather than a rule. Your
+own stylesheet is linked after the theme's, so anything you do write wins without `!important`.
 
 ## Your own stylesheet
 
@@ -26,74 +28,65 @@ Site.create "My library"
 |> Site.stylesheet "css/custom.css"
 ```
 
-The path is relative to your project root, and one that names nothing fails the build rather than
-leaving you to wonder where your colours went. What you get is a stylesheet treated like any other
-the build handles: bundled, minified, fingerprinted, and linked on every page after the theme's
-own, so your rules win without having to out-specify anything.
+The path is relative to your project root, and a path that matches no file fails the build. The
+stylesheet is bundled, minified and fingerprinted like every other asset.
 
-Every stylesheet sitting beside it goes to the bundler too, so `custom.css` can be a table of
-contents for the rest and still arrive as one file:
+Every stylesheet beside it is given to the bundler too, so `custom.css` can `@import` its neighbours
+and still ship as one file:
 
 ```css title="css/custom.css"
 @import "colours.css";
 @import "navbar.css";
 ```
 
-## Your own script
-
-The same, at the end of every page and with `defer`:
-
-```fsharp
-|> Site.script "js/custom.js"
-```
-
-Written as several files that `import` each other, it needs
-[esbuild](../../assets/esbuild.md) registered. A stylesheet does not.
-
-## The other ways
-
-`Theme.headExtra` puts anything you like into every page's `<head>` - a font, a favicon variant, an
-analytics snippet, a stylesheet you host somewhere else:
-
-```fsharp
-Theme.defaults
-|> Theme.headExtra [ Html.link [ prop.rel "stylesheet"; prop.href "https://example.com/font.css" ] ]
-```
-
-And a file in the static directory is copied out untouched, bundled by nothing and fingerprinted by
-nothing - which is what you want for something whose URL has to stay exactly as you wrote it, and
-not what you want for a stylesheet.
-
-For a rule or two, skip the file altogether:
+For a rule or two, use `Theme.css` instead of a file. It is written into every page's `<head>` after
+every stylesheet, so it wins over the theme's and over yours:
 
 ```fsharp
 Theme.defaults
 |> Theme.css """[data-section="reference"] { --nacara-sidebar-width: 20rem; }"""
 ```
 
-It lands after everything above, so your rule wins without having to out-specify anything, and the
-theme stamps the section on `<body>` - so `[data-section="…"]` is how you treat one part of a site
-differently. Call it more than once and the rules add up.
+Call it more than once and the rules add up.
 
 ## The tokens
 
-| Token | What it decides |
-|---|---|
-| `--nacara-primary`, `--nacara-primary-contrast`, `--nacara-primary-subtle` | Links, the active menu entry, focus rings |
-| `--nacara-bg`, `--nacara-bg-subtle`, `--nacara-bg-raised` | The page, code blocks and tables, dialogs |
-| `--nacara-text`, `--nacara-text-muted` | Body text, and everything secondary |
-| `--nacara-border` | Every rule and outline |
-| `--nacara-content-width` | The measure - `75ch`, and `88ch` on a screen wider than 1600px |
-| `--nacara-sidebar-width`, `--nacara-toc-width`, `--nacara-navbar-height`, `--nacara-layout-gap` | The frame, and the gutters between its columns |
-| `--nacara-space-1` … `--nacara-space-12` | The spacing scale everything is built from |
-| `--nacara-radius`, `--nacara-radius-sm`, `--nacara-control-height`, `--nacara-control-radius` | Corners, and the height controls share |
-| `--nacara-font-sans`, `--nacara-font-mono` | The two families |
-| `--nacara-note`, `--nacara-tip`, `--nacara-warning`, `--nacara-danger` | Callouts |
-| `--tok-keyword`, `--tok-string`, `--tok-type`, … | [Code colours](../../highlight/index.md#colours) - Atom One Light, and One Dark Pro in the dark |
+Colours, spacing, radii, fonts, the widths of the frame and the colours code is painted in are all
+custom properties.
+[`tokens.css`](https://github.com/MangelMaxime/Nacara/blob/main/src/Nacara.Theme.Default/assets/css/tokens.css)
+declares every one of them, for both colour schemes. They cover:
 
-Redefine a token under `:root[data-theme="dark"]` to change it in dark mode only, or under
-`[data-section="…"]` to change it in one section only. The theme puts the section on the `<body>`,
-so a reference full of long names can have a wider sidebar than the rest of your site:
+| | |
+|---|---|
+| Colour | The primary and its pair, the backgrounds, text, borders, and the four callout hues |
+| Layout | The measure, the sidebar and table of contents, the navbar's height, the gutters |
+| Spacing | `--nacara-space-1` … `--nacara-space-12`, which everything else is built from |
+| Type | The sans and mono families |
+| Controls | The height and radius shared by everything in the navbar |
+| Code | `--tok-*`, one per token kind - see [Code colours](../../highlight/index.md#colours) |
+
+Redefine the ones you need; the rest keep the theme's values.
+
+### Light and dark
+
+Redefine a token under `:root` to change both schemes, or under `:root[data-theme="dark"]` for the
+dark one only:
+
+```css
+:root {
+  --nacara-primary: #7c3aed;
+}
+
+:root[data-theme="dark"] {
+  --nacara-primary: #a78bfa;
+}
+```
+
+The scheme is applied before first paint, so there is no flash of the wrong one.
+
+### One section only
+
+The theme sets `data-section` on `<body>`, so `[data-section="…"]` styles a single section:
 
 ```css
 [data-section="reference"] {
@@ -101,18 +94,38 @@ so a reference full of long names can have a wider sidebar than the rest of your
 }
 ```
 
-The scheme is applied before first paint, so a reader who chose dark never sees a white flash.
+The section is the first segment of a route: `guide/getting-started.md` is in `guide`.
 
-## Controls
+### Controls
 
-Everything that sits in the navbar - the search box, the version switcher, a widget of your own -
-uses `--nacara-control-height` and `--nacara-control-radius`, so they line up without you measuring
-anything. Use them too when your plugin adds a control.
+The search box, the version switcher and any widget of your own use `--nacara-control-height` and
+`--nacara-control-radius`. Use them when your plugin adds a control and it lines up with the rest.
 
-## When tuning is not enough
+## Your own script
 
-Your stylesheet is loaded after the theme's, so anything you write wins without `!important`. That
-covers colours, spacing and type.
+`Site.script` does the same for JavaScript, loaded at the end of every page with `defer`:
 
-When you want different markup rather than different colours, compose the theme's own pieces -
-[Components](components.md) builds a layout out of them.
+```fsharp
+|> Site.script "js/custom.js"
+```
+
+A script split across files that `import` each other needs [esbuild](../../assets/esbuild.md)
+registered.
+
+## Anything else in the head
+
+`Theme.headExtra` adds markup to every page's `<head>` - a font, a favicon variant, an analytics
+snippet, a stylesheet you host elsewhere:
+
+```fsharp
+Theme.defaults
+|> Theme.headExtra [ Html.link [ prop.rel "stylesheet"; prop.href "https://example.com/font.css" ] ]
+```
+
+A file in the static directory is copied out untouched, with no bundling and no fingerprint, so its
+URL stays exactly as you wrote it.
+
+## Changing the markup
+
+Tokens and your own stylesheet cover colours, spacing and type. For different markup, compose the
+theme's pieces yourself - see [Components](components.md).

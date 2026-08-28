@@ -55,13 +55,40 @@ it; a path that matches no page is a build error rather than a link that quietly
 | `Menu.link "Changelog" "/changelog/"` | Anything else, by URL |
 | `Menu.section "Writing" [ … ]` | A heading over entries. Not a link |
 | `Menu.group "plugins/markdown/index.md" [ … ]` | A page that also holds entries |
-| `… \|> Menu.badge "New"` | A mark beside an entry |
-| `… \|> Menu.badgeOf "beta" "Aperçu"` | The same, with a name you style yourself |
+| `… |> Menu.badge "New"` | A mark beside an entry |
+| `… |> Menu.badgeOf Badge.Beta "Aperçu"` | The same, saying which kind it is |
 
 They compose, so an entry carries what you give it and nothing else:
 
 ```fsharp
 Menu.page "guide/i18n.md" |> Menu.badge "New"
+```
+
+### Badges
+
+A badge is two things: the word a reader sees, and the kind it is drawn as. The kind reaches the
+markup as `data-kind`, and that is what carries the colour.
+
+`Menu.badge` works the kind out from the label, so `New` is drawn as `new`. The theme has colours
+for five of them:
+
+| Constant | Kind | Drawn in |
+|---|---|---|
+| `Badge.New` | `new` | the tip colour |
+| `Badge.Updated` | `updated` | the tip colour |
+| `Badge.Experimental` | `experimental` | the warning colour |
+| `Badge.Beta` | `beta` | the warning colour |
+| `Badge.Deprecated` | `deprecated` | the danger colour |
+
+Any other kind is drawn neutrally rather than refused, so a site styling
+`.nacara-badge[data-kind="internal"]` of its own passes `"internal"` and it works.
+
+`Menu.badgeOf` is for when the label cannot decide the kind - another language, or a word that says
+more than a status does:
+
+```fsharp
+Menu.page "guide/i18n.md" |> Menu.badgeOf Badge.New "Nouveau"
+Menu.page "guide/deploy.md" |> Menu.badgeOf Badge.Deprecated "Removed in 4.0"
 ```
 
 ### Sections and groups
@@ -91,17 +118,21 @@ matches and opens whatever holds a match; clearing it puts every fold back where
 A shorter menu does not get one, because reading it is quicker than typing. A page can decide for
 itself with `menuFilter: true` or `menuFilter: false` in its [front matter](front-matter.md).
 
-## What a reader folded
+## Menu memory
 
-Folding carries from page to page, so reading through a section does not mean opening the same group
-again on every page of it.
+A group the reader folds stays folded on the next page. Reading a section through does not mean
+opening the same group again on every page of it.
 
-For a section a reader arrives at by name rather than by reading through - a reference, where the
-folds from the last page mean nothing on this one - turn it off with `menuMemory: false`. Every page
-then opens the menu the same way: the trail to itself, and nothing else. The
-[API reference](../../fsharp-api.md) sets this on the pages it generates.
+That helps a reader going through a section in order. It helps nobody arriving at a page by name: in
+a reference, the folds left from the last page say nothing about this one. Turn the memory off
+there:
 
-## Turning it off
+```yaml
+---
+title: Nacara.Core.Site
+menuMemory: false
+---
+```
 
-`layout: bare` on a page drops the menu along with the rest of the chrome. For a section that should
-never show one, give its collection a layout of your own - see [Components](components.md).
+Every page of the section then opens the menu the same way - the trail down to the page being read,
+and nothing else. The [API reference](../../fsharp-api.md) sets it on the pages it generates.
