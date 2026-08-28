@@ -59,10 +59,10 @@ let theme =
     |> Theme.navbarEnd
         [
             NavbarDynamicWidget Search.trigger
-            NavbarDivider
             // NavbarDynamicWidget(Versions.switcher (Versions.versions versions Versions.defaults))
             NavbarLocalePicker
             NavbarIcon("GitHub", "https://github.com/MangelMaxime/Nacara", Icons.github)
+            NavbarDivider
         ]
     |> Theme.menu
         "guide"
@@ -149,7 +149,7 @@ let theme =
                 ]
             Menu.section "Writing plugins" [ Menu.page "plugins/authoring.md" ]
         ]
-    |> Theme.editUrl "https://github.com/MangelMaxime/Nacara/edit/main"
+    |> Theme.editUrl "https://github.com/MangelMaxime/Nacara/edit/main/docs"
     |> Theme.footer (
         Html.p
             [
