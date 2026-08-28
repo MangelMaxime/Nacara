@@ -413,10 +413,17 @@ module Build =
         let stopwatch = Stopwatch.StartNew()
         let mutable phaseStart = 0L
 
+        // A phase nobody waits for says nothing, so what is printed is what a build spends its
+        // time on.
         let phase (name: string) =
             let elapsed = stopwatch.ElapsedMilliseconds - phaseStart
             phaseStart <- stopwatch.ElapsedMilliseconds
-            Log.debug (name + ": " + string elapsed + " ms")
+            let message = $"%s{name}, %i{elapsed} ms"
+
+            if elapsed >= 100L then
+                Log.info message
+            else
+                Log.debug message
 
         let diagnostics = DiagnosticBag()
         Site.validate site |> List.iter diagnostics.Add
@@ -584,7 +591,7 @@ module Build =
                     None
             )
 
-        phase "load"
+        phase "Loaded the content"
 
         let pages =
             if not site.FallBackToDefaultLocale || List.length site.Locales < 2 then
@@ -647,7 +654,7 @@ module Build =
             |> parallelMap (applyTransforms registry transformContext cache)
             |> List.ofArray
 
-        phase "transform"
+        phase "Transformed the pages"
 
         let mutable written = 0
         let mutable unchanged = 0
@@ -708,7 +715,7 @@ module Build =
             }
 
         registry.PagesRoutedHooks |> List.iter (fun hook -> hook hookContext)
-        phase "hooks"
+        phase "Resolved the routes"
 
         if not diagnostics.HasErrors then
             let byName =
@@ -794,7 +801,7 @@ module Build =
                 | None -> ()
             )
 
-            phase "render"
+            phase "Rendered the pages"
 
             let bundleGroup = "bundles"
 
@@ -892,9 +899,9 @@ module Build =
                 copyDirectoryInto outputDirectory (AbsolutePath.combine projectRoot [ directory ])
             | None -> ()
 
-            phase "assets"
+            phase "Copied the assets"
             registry.BuildCompleteHooks |> List.iter (fun hook -> hook hookContext)
-            phase "post-build"
+            phase "Let the plugins finish"
 
             if cache.Writes && Directory.Exists(AbsolutePath.value outputDirectory) then
                 let preserved =
