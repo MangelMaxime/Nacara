@@ -9,7 +9,7 @@ open Nacara.Theme
 
 /// Versions of the documentation, as deployed side by side. One for now - an entry here is a
 /// promise that `<deployment root>/<its directory>/` exists, and the switcher links straight to it.
-let versions = [ SiteVersion.root "3.0-dev" ]
+let versions = [ SiteVersion.root "v2" ]
 
 /// Nacara's own API, read from the assemblies this site is built with.
 let apiOptions =
@@ -59,7 +59,8 @@ let theme =
     |> Theme.navbarEnd
         [
             NavbarDynamicWidget Search.trigger
-            NavbarDynamicWidget(Versions.switcher (Versions.versions versions Versions.defaults))
+            NavbarDivider
+            // NavbarDynamicWidget(Versions.switcher (Versions.versions versions Versions.defaults))
             NavbarLocalePicker
             NavbarIcon("GitHub", "https://github.com/MangelMaxime/Nacara", Icons.github)
         ]
@@ -148,7 +149,7 @@ let theme =
                 ]
             Menu.section "Writing plugins" [ Menu.page "plugins/authoring.md" ]
         ]
-    |> Theme.editUrl "https://github.com/MangelMaxime/Nacara/edit/v3"
+    |> Theme.editUrl "https://github.com/MangelMaxime/Nacara/edit/main"
     |> Theme.footer (
         Html.p
             [
@@ -204,6 +205,7 @@ let site =
     |> Site.baseUrl "/Nacara/"
     |> Site.origin "https://mangelmaxime.github.io"
     |> Site.staticFiles "static"
+    |> Site.stylesheet "assets/landing.css"
     |> Markdown.register
     |> TreeSitter.register
     |> Literate.register
