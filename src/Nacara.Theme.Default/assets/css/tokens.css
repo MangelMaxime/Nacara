@@ -34,15 +34,15 @@
     --nacara-bg: #ffffff;
     --nacara-bg-subtle: #f6f7f9;
     --nacara-bg-raised: #ffffff;
-    --nacara-border: #e3e6ea;
+    --nacara-border: #d0d7de;
     --nacara-text: #1b1f24;
     --nacara-text-muted: #5a6470;
-    --nacara-primary: #2f6feb;
+    --nacara-primary: #6669d7;
     --nacara-primary-contrast: #ffffff;
-    --nacara-primary-subtle: #eaf1ff;
+    --nacara-primary-subtle: #ececfb;
     --nacara-shadow: 0 1px 2px rgb(16 24 40 / 6%), 0 4px 12px rgb(16 24 40 / 6%);
 
-    --nacara-note: #2f6feb;
+    --nacara-note: #6669d7;
     --nacara-tip: #17935f;
     --nacara-warning: #b5730c;
     --nacara-danger: #cf3b3b;
@@ -83,12 +83,12 @@
     --nacara-border: #2a333d;
     --nacara-text: #e6edf3;
     --nacara-text-muted: #9aa7b4;
-    --nacara-primary: #6ea8fe;
+    --nacara-primary: #9b9ef0;
     --nacara-primary-contrast: #0f1419;
-    --nacara-primary-subtle: #182742;
+    --nacara-primary-subtle: #21224a;
     --nacara-shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 4px 14px rgb(0 0 0 / 35%);
 
-    --nacara-note: #6ea8fe;
+    --nacara-note: #9b9ef0;
     --nacara-tip: #56d4a0;
     --nacara-warning: #e2b23c;
     --nacara-danger: #ff7b72;
