@@ -4,6 +4,7 @@ open Scriptorium.Nib.Assertion
 open Scriptorium.Nib.Snapshot
 open type Scriptorium.Quill.Test
 open System.IO
+open Feliz.ViewEngine
 open Nacara.Core
 open Nacara.Plugins
 open Nacara.Theme
@@ -16,6 +17,39 @@ let private buildFixture () =
 
 let private outputText (root: AbsolutePath) (path: string) =
     File.ReadAllText(Path.Combine(AbsolutePath.value root, "output", path))
+
+/// <summary>A site whose pages link what it was given, which the fixture's own layout does not.</summary>
+let private linkedSite =
+    let layout (context: PageContext<Fixture.DocFrontMatter>) =
+        Html.html
+            [
+                Html.head
+                    [
+                        for asset in context.Site.PageAssets do
+                            match asset with
+                            | Stylesheet path ->
+                                Html.link
+                                    [
+                                        prop.rel "stylesheet"
+                                        prop.href (context.Site.UrlOfAsset path)
+                                    ]
+                            | Script _
+                            | InlineScript _ -> Html.none
+                    ]
+                Html.body [ Html.div [ prop.dangerouslySetInnerHTML context.Content ] ]
+            ]
+
+    Site.create "Fixture"
+    |> Site.baseUrl "/"
+    |> Site.output "output"
+    |> Site.stylesheet "assets/site.css"
+    |> Site.plugin (Markdown.create ())
+    |> Site.collection (
+        Collection.create "docs" Fixture.decoder
+        |> Collection.source "docs" [ "**/*.md" ]
+        |> Collection.title _.Title
+        |> Collection.layout layout
+    )
 
 let all =
     testList (
@@ -1299,6 +1333,40 @@ let all =
                             )
                         ))
                         (tag "so a deleted page cannot stay online" >> isFalse)
+            )
+
+            test (
+                "a stylesheet edited on its own reaches the pages that link it",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+                    let stylesheet = Path.Combine(AbsolutePath.value root, "assets/site.css")
+                    Directory.CreateDirectory(Path.GetDirectoryName stylesheet) |> ignore
+                    File.WriteAllText(stylesheet, "body { color: red }\n")
+
+                    let linkedStylesheet () =
+                        let page = outputText root "guide/advanced/index.html"
+
+                        System.Text.RegularExpressions.Regex
+                            .Match(page, "href=\"([^\"]+\.css)\"")
+                            .Groups[1].Value
+
+                    let cache = BuildCache()
+                    Build.runWith cache root linkedSite |> ignore
+                    let before = linkedStylesheet ()
+
+                    File.WriteAllText(stylesheet, "body { color: blue }\n")
+                    Build.runWith cache root linkedSite |> ignore
+                    let after = linkedStylesheet ()
+
+                    assertThat
+                        (after = before)
+                        (tag "the page links the stylesheet under its new name" >> isFalse)
+
+                    assertThat
+                        (File.Exists(
+                            Path.Combine(AbsolutePath.value root, "output", after.TrimStart '/')
+                        ))
+                        (tag "which is one the build wrote, not one it pruned" >> isTrue)
             )
         ]
     )

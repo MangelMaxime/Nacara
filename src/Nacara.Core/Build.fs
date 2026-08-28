@@ -764,6 +764,19 @@ module Build =
                     )
                     17
 
+            // A page links its assets by the hashed names they were written under, so a stylesheet
+            // edited under a watch renders every page differently while changing none of them.
+            let assets =
+                siteInfo.PageAssets
+                |> List.map (
+                    function
+                    | Stylesheet path -> $"stylesheet:%s{path}"
+                    | Script(path, defer) -> $"script:%s{path}:%b{defer}"
+                    | InlineScript code -> $"inline:%s{BuildCache.Hash code}"
+                )
+                |> String.concat "|"
+                |> BuildCache.Hash
+
             pages
             |> Array.ofList
             |> parallelMap (fun page ->
@@ -773,7 +786,7 @@ module Build =
                     let relative = Url.outputPath page.Route
 
                     let key =
-                        $"%i{shape}:%s{page.Id}:%s{BuildCache.Hash page.Html}:%i{hash page.Headings}:%i{hash page.FrontMatter}:%i{hash page.Data}"
+                        $"%s{assets}:%i{shape}:%s{page.Id}:%s{BuildCache.Hash page.Html}:%i{hash page.Headings}:%i{hash page.FrontMatter}:%i{hash page.Data}"
 
                     let html =
                         cache.Render(
