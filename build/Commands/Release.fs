@@ -28,6 +28,7 @@ let private packages =
         Workspace.src.``Nacara.Plugin.Versions``.``.``
         Workspace.src.``Nacara.Theme.Default``.``.``
         Workspace.src.``Nacara.Plugin.LiveExample``.``.``
+        Workspace.src.``Nacara.Plugin.Deploy.GitHubPages``.``.``
         Workspace.templates.``.``
     ]
 
