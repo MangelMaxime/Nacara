@@ -8,10 +8,13 @@ open EasyBuild.Commands.Release
 open EasyBuild.Commands.TreeSitter.Runtime
 open EasyBuild.Commands.TreeSitter.Bundle
 open EasyBuild.Commands.TreeSitter.Publish
+open EasyBuild.Tools.Husky
 
 [<EntryPoint>]
 let main args =
     let app = CommandApp()
+
+    Husky.install ()
 
     app.Configure(fun config ->
         config.Settings.ApplicationName <- "./build.sh"
