@@ -58,7 +58,7 @@ declares every one of them, for both colour schemes. They cover:
 
 | | |
 |---|---|
-| Colour | The primary and its pair, the backgrounds, text, borders, and the four callout hues |
+| Colour | The primary and its pair, the backgrounds, text, headings, borders, inline code, and the four callout hues |
 | Layout | The measure, the sidebar and table of contents, the navbar's height, the gutters |
 | Spacing | `--nacara-space-1` … `--nacara-space-12`, which everything else is built from |
 | Type | The sans and mono families |
@@ -95,6 +95,32 @@ The theme sets `data-section` on `<body>`, so `[data-section="…"]` styles a si
 ```
 
 The section is the first segment of a route: `guide/getting-started.md` is in `guide`.
+
+### Surfaces
+
+Every component paints itself from the tokens above, so redefining them on one part of the page
+re-skins everything inside it. The three the theme lays out are `.nacara-navbar`, `.nacara-sidebar`
+and `.nacara-footer`; any element works.
+
+```css title="css/custom.css"
+.nacara-navbar {
+  --nacara-bg: #2d3947;
+  --nacara-bg-subtle: #354353;
+  --nacara-bg-raised: #354353;
+  --nacara-border: #46566a;
+  --nacara-text: #ffffff;
+  --nacara-text-muted: rgb(255 255 255 / 78%);
+  --nacara-primary: #ffffff;
+  --nacara-primary-subtle: #46566a;
+}
+```
+
+This reaches the controls a plugin owns, such as the search box, because they read the same tokens.
+
+The navbar is painted at `--nacara-navbar-opacity`, `85%`, over `--nacara-navbar-blur`, `8px`, of
+backdrop blur. Set the opacity to `100%` for a solid bar.
+
+Below 860px the navbar's end widgets move into the menu drawer, where they take the page's colours.
 
 ### Controls
 

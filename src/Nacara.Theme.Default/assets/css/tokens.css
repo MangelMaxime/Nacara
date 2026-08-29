@@ -27,6 +27,8 @@
     --nacara-sidebar-width: 17rem;
     --nacara-toc-width: 15rem;
     --nacara-navbar-height: 3.5rem;
+    --nacara-navbar-opacity: 85%;
+    --nacara-navbar-blur: 8px;
 
     --nacara-control-height: 2.25rem;
     --nacara-control-radius: var(--nacara-radius-sm);
@@ -46,6 +48,11 @@
     --nacara-tip: #17935f;
     --nacara-warning: #b5730c;
     --nacara-danger: #cf3b3b;
+
+    --nacara-heading: var(--nacara-text);
+    --nacara-code-inline-bg: var(--nacara-bg-subtle);
+    --nacara-code-inline-border: var(--nacara-border);
+    --nacara-code-inline-text: currentColor;
 
     --tok-comment: #a0a1a7;
     --tok-string: #50a14f;

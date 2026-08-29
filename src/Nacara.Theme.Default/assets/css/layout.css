@@ -233,6 +233,9 @@
     margin-inline: auto;
 }
 
+.nacara-content :is(h1, h2, h3, h4, h5, h6) {
+    color: var(--nacara-heading);
+}
 .nacara-content h1 {
     font-size: 2.25rem;
     line-height: 1.2;
@@ -291,9 +294,10 @@
 }
 .nacara-content :not(pre) > code {
     padding: 0.125em 0.375em;
-    border: 1px solid var(--nacara-border);
+    border: 1px solid var(--nacara-code-inline-border);
     border-radius: var(--nacara-radius-sm);
-    background: var(--nacara-bg-subtle);
+    background: var(--nacara-code-inline-bg);
+    color: var(--nacara-code-inline-text);
     font-family: var(--nacara-font-mono);
     font-size: 0.875em;
     font-variant-ligatures: none;
@@ -431,6 +435,7 @@
 
 .nacara-footer {
     padding: var(--nacara-space-8) var(--nacara-space-4);
+    background: var(--nacara-bg);
     border-top: 1px solid var(--nacara-border);
     color: var(--nacara-text-muted);
     font-size: 0.875rem;

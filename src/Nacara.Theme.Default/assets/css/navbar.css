@@ -7,9 +7,10 @@
     gap: var(--nacara-space-4);
     height: var(--nacara-navbar-height);
     padding: 0 var(--nacara-space-4);
-    background: color-mix(in srgb, var(--nacara-bg) 85%, transparent);
-    backdrop-filter: blur(8px);
+    background: color-mix(in srgb, var(--nacara-bg) var(--nacara-navbar-opacity), transparent);
+    backdrop-filter: blur(var(--nacara-navbar-blur));
     border-bottom: 1px solid var(--nacara-border);
+    color: var(--nacara-text);
 }
 .nacara-navbar__brand {
     display: flex;
