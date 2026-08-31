@@ -66,6 +66,40 @@ module GitHubPages =
                     }
             ]
 
+    /// <summary>Puts an empty <c>.nojekyll</c> at the root of the tree being built.</summary>
+    let private addNoJekyll (root: string) (index: string) =
+        let file =
+            let name = Guid.NewGuid().ToString "N"
+            Path.Combine(Path.GetTempPath(), $"nacara-deploy-%s{name}.nojekyll")
+
+        File.WriteAllText(file, "")
+
+        try
+            result {
+                let! blob =
+                    Git.read
+                        root
+                        (Some index)
+                        [
+                            "hash-object"
+                            "-w"
+                            file
+                        ]
+
+                return!
+                    Git.exec
+                        root
+                        (Some index)
+                        [
+                            "update-index"
+                            "--add"
+                            "--cacheinfo"
+                            $"100644,%s{blob},.nojekyll"
+                        ]
+            }
+        finally
+            File.Delete file
+
     /// <summary>The tree to publish: what was built, in its place, and the rest as it stands.</summary>
     let private tree
         (root: string)
@@ -146,6 +180,8 @@ module GitHubPages =
                                 $"--prefix=%s{prefix}/"
                                 build
                             ]
+
+                do! addNoJekyll root index
 
                 return! gitRead [ "write-tree" ]
             }
