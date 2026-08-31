@@ -98,9 +98,8 @@ The section is the first segment of a route: `guide/getting-started.md` is in `g
 
 ### Surfaces
 
-Every component paints itself from the tokens above, so redefining them on one part of the page
-re-skins everything inside it. The three the theme lays out are `.nacara-navbar`, `.nacara-sidebar`
-and `.nacara-footer`; any element works.
+`.nacara-navbar`, `.nacara-sidebar` and `.nacara-footer` read the same tokens as the page.
+Restating them there gives that part its own colours:
 
 ```css title="css/custom.css"
 .nacara-navbar {
@@ -115,12 +114,10 @@ and `.nacara-footer`; any element works.
 }
 ```
 
-This reaches the controls a plugin owns, such as the search box, because they read the same tokens.
+Every component reads these tokens, including the controls a plugin owns such as the search box.
 
 The navbar is painted at `--nacara-navbar-opacity`, `85%`, over `--nacara-navbar-blur`, `8px`, of
 backdrop blur. Set the opacity to `100%` for a solid bar.
-
-Below 860px the navbar's end widgets move into the menu drawer, where they take the page's colours.
 
 ### Controls
 
