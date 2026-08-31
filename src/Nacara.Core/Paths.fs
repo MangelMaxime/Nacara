@@ -80,10 +80,18 @@ module RelativePath =
 
     /// <summary>A path inside the output, however it was written.</summary>
     /// <param name="value">A relative path. Backslashes become forward slashes and any leading
-    /// <c>./</c> is dropped, so <c>.\assets\api.css</c> and <c>assets/api.css</c> are one
-    /// path.</param>
+    /// <c>./</c> or <c>/</c> is dropped, so <c>.\assets\api.css</c> and <c>assets/api.css</c> are
+    /// one path.</param>
     let create (value: string) =
-        value.Replace('\\', '/').TrimStart('.', '/') |> RelativePath
+        let rec trim (value: string) =
+            if value.StartsWith("./", StringComparison.Ordinal) then
+                trim (value.Substring 2)
+            elif value.StartsWith('/') then
+                trim (value.Substring 1)
+            else
+                value
+
+        value.Replace('\\', '/') |> trim |> RelativePath
 
     /// <summary>Express <paramref name="path" /> relatively to <paramref name="root" />.</summary>
     /// <param name="root">What to express it against, usually the content or output directory.</param>

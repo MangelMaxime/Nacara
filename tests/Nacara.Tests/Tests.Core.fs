@@ -241,6 +241,13 @@ let paths =
                         (tag "the root is stripped" >> isEqualTo "docs/guide.md")
             )
             test (
+                "RelativePath.create keeps a leading dot in a file name",
+                fun _ ->
+                    assertThat
+                        (RelativePath.value (RelativePath.create "./static/.nojekyll"))
+                        (tag "only the ./ prefix is dropped" >> isEqualTo "static/.nojekyll")
+            )
+            test (
                 "RelativePath.changeExtension replaces the extension",
                 fun _ ->
                     assertThat
