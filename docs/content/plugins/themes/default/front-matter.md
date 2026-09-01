@@ -93,6 +93,21 @@ toc:
 ---
 ```
 
+### `main`
+
+**type:** `{ [name: string]: string }`
+
+Attributes to put on the page's `<main>`. `id`, `class` and `tabindex` are the theme's own and fail
+the build if set here.
+
+```yaml
+---
+title: Legacy API
+main:
+  data-pagefind-weight: "0.3"
+---
+```
+
 ## Front matter of your own
 
 `Theme.docs` reads the theme's `DocFrontMatter`, which is these fields and nothing else. To add

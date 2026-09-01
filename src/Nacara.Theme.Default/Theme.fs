@@ -318,6 +318,9 @@ module Theme =
                                                         Components.sidebar options doc context
                                                         Html.main
                                                             [
+                                                                for name, value in
+                                                                    doc.MainAttributes do
+                                                                    prop.custom (name, value)
                                                                 prop.id "nacara-content"
                                                                 prop.tabIndex -1
                                                                 prop.className "nacara-content"
@@ -465,6 +468,7 @@ module Theme =
                         MenuFilter = None
                         MenuMemory = None
                         Toc = None
+                        Main = []
                     }
 
                 let body =

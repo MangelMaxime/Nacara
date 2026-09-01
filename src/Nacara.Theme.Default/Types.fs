@@ -230,6 +230,10 @@ type DocPage =
         /// <remarks>Off, every page opens the menu the same way: the trail to itself, and nothing
         /// else.</remarks>
         MenuMemory: bool
+        /// <summary>Attributes to put on the page's <c>&lt;main&gt;</c>, name and value.</summary>
+        /// <remarks><c>id</c>, <c>class</c> and <c>tabindex</c> are the theme's own and cannot be
+        /// set here.</remarks>
+        MainAttributes: (string * string) list
     }
 
 [<RequireQualifiedAccess>]
@@ -246,6 +250,7 @@ module DocPage =
             ShowMenu = true
             MenuFilter = None
             MenuMemory = true
+            MainAttributes = []
         }
 
     /// <summary>What the page is about, for search results and social cards.</summary>
@@ -308,6 +313,14 @@ module DocPage =
     let withoutMenuMemory (page: DocPage) =
         { page with
             MenuMemory = false
+        }
+
+    /// <summary>Attributes to put on the page's <c>&lt;main&gt;</c>.</summary>
+    /// <param name="value">Each attribute as its name and its value.</param>
+    /// <param name="page">The page being described.</param>
+    let mainAttributes value (page: DocPage) =
+        { page with
+            MainAttributes = value
         }
 
     /// <summary>A standalone page: no menu, no table of contents, no page navigation.</summary>
@@ -383,10 +396,42 @@ type DocFrontMatter =
         /// title being the only heading above it, and <c>to</c> is 6.
         /// </remarks>
         Toc: TocRange option
+        /// <summary>
+        /// Attributes to put on the page's <c>&lt;main&gt;</c>:
+        /// <code>
+        /// main:
+        ///   data-pagefind-weight: "0.3"
+        /// </code>
+        /// </summary>
+        /// <remarks><c>id</c>, <c>class</c> and <c>tabindex</c> are the theme's own and cannot be
+        /// set here.</remarks>
+        Main: (string * string) list
     }
 
 [<RequireQualifiedAccess>]
 module DocFrontMatter =
+
+    /// The theme puts these on <main> itself, and a second one of the same name would win.
+    let private reserved =
+        set
+            [
+                "id"
+                "class"
+                "tabindex"
+            ]
+
+    let private mainAttributesDecoder =
+        Decode.keyValuePairs Decode.string
+        |> Decode.andThen (fun pairs ->
+            let taken =
+                pairs
+                |> List.tryFind (fun (name, _) -> reserved.Contains(name.ToLowerInvariant()))
+
+            match taken with
+            | Some(name, _) ->
+                Decode.error' $"'%s{name}' is the theme's own attribute, so main cannot set it"
+            | None -> Decode.succeed pairs
+        )
 
     /// <summary>Reads the theme's front matter, failing the build with file and line when it cannot.</summary>
     let decoder: Decoder<DocFrontMatter> =
@@ -409,13 +454,16 @@ module DocFrontMatter =
                                 To = toc.Optional.Field "to" Decode.int |> Option.defaultValue 6
                             }
                         ))
+                Main = get.Optional.Field "main" mainAttributesDecoder |> Option.defaultValue []
             }
         )
 
     /// <summary>The theme's view of a page described by this front matter.</summary>
     let toDocPage (frontMatter: DocFrontMatter) =
         let page =
-            DocPage.create frontMatter.Title |> DocPage.describedBy frontMatter.Description
+            DocPage.create frontMatter.Title
+            |> DocPage.describedBy frontMatter.Description
+            |> DocPage.mainAttributes frontMatter.Main
 
         let page =
             match frontMatter.Layout with

@@ -175,6 +175,38 @@ module Decode =
                 | None -> Ok(List.ofSeq items)
             | node -> fail path node $"Expected a list but got %s{describe node}"
 
+    let private childPath (path: string) (name: string) =
+        if path = "" then
+            name
+        else
+            $"%s{path}.%s{name}"
+
+    /// <summary>Every pair of an object, whatever its keys are.</summary>
+    /// <param name="decoder">Reads one value.</param>
+    /// <param name="path">Where in the document the decoder is, for the message when it
+    /// fails.</param>
+    /// <param name="node">The value being read.</param>
+    let keyValuePairs (decoder: Decoder<'T>) : Decoder<(string * 'T) list> =
+        fun path node ->
+            match node with
+            | :? YamlMappingNode as mapping ->
+                let mutable failure = None
+                let pairs = ResizeArray()
+
+                for entry in mapping.Children do
+                    if failure.IsNone then
+                        match entry.Key with
+                        | :? YamlScalarNode as key ->
+                            match decoder (childPath path key.Value) entry.Value with
+                            | Ok value -> pairs.Add(key.Value, value)
+                            | Error decodeError -> failure <- Some decodeError
+                        | key -> failure <- Some(error path key "Expected a name")
+
+                match failure with
+                | Some decodeError -> Error decodeError
+                | None -> Ok(List.ofSeq pairs)
+            | node -> fail path node $"Expected an object but got %s{describe node}"
+
     /// <summary>A single value or a list of them, which is how humans write YAML.</summary>
     /// <param name="decoder">Reads one entry, whether it was written alone or in a
     /// sequence - <c>tags: draft</c> and <c>tags: [draft]</c> both arrive as a list.</param>
@@ -186,12 +218,6 @@ module Decode =
             match node with
             | :? YamlSequenceNode -> list decoder path node
             | node -> decoder path node |> Result.map List.singleton
-
-    let private childPath (path: string) (name: string) =
-        if path = "" then
-            name
-        else
-            $"%s{path}.%s{name}"
 
     let private tryChild (name: string) (mapping: YamlMappingNode) =
         let key = YamlScalarNode name :> YamlNode

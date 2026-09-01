@@ -656,6 +656,25 @@ let decoding =
         "decoding",
         [
             test (
+                "keyValuePairs reads an object whatever its keys are",
+                fun _ ->
+                    let document = "main:\n  data-pagefind-weight: \"0.3\"\n  data-kind: legacy\n"
+
+                    assertThat
+                        (Yaml.decode
+                            (Decode.field "main" (Decode.keyValuePairs Decode.string))
+                            document)
+                        (tag "every pair, in the order written"
+                         >> isEqualTo (
+                             Ok
+                                 [
+                                     "data-pagefind-weight", "0.3"
+                                     "data-kind", "legacy"
+                                 ]
+                         ))
+            )
+
+            test (
                 "a nested field is reached by naming the path to it",
                 fun _ ->
                     let document = "site:\n  author:\n    name: Maxime\n"
