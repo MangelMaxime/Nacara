@@ -656,6 +656,46 @@ let decoding =
         "decoding",
         [
             test (
+                "oneOf takes the first decoder that reads the value",
+                fun _ ->
+                    let decoder =
+                        Decode.oneOf
+                            "false or a number"
+                            [
+                                Decode.bool |> Decode.map string
+                                Decode.int |> Decode.map string
+                            ]
+
+                    assertThat
+                        (Yaml.decode (Decode.field "toc" decoder) "toc: false\n")
+                        (tag "the boolean is read" >> isEqualTo (Ok "False"))
+
+                    assertThat
+                        (Yaml.decode (Decode.field "toc" decoder) "toc: 3\n")
+                        (tag "and so is the number" >> isEqualTo (Ok "3"))
+            )
+
+            test (
+                "oneOf says what it expected when none of them read it",
+                fun _ ->
+                    let decoder =
+                        Decode.oneOf
+                            "false or a number"
+                            [
+                                Decode.bool |> Decode.map string
+                                Decode.int |> Decode.map string
+                            ]
+
+                    match Yaml.decode (Decode.field "toc" decoder) "toc: sometimes\n" with
+                    | Ok _ -> assertThat false (tag "a value none of them read fails" >> isTrue)
+                    | Error decodeError ->
+                        assertThat
+                            decodeError.Message
+                            (tag "and the message names what was expected"
+                             >> isEqualTo "Expected false or a number but got the value 'sometimes'")
+            )
+
+            test (
                 "keyValuePairs reads an object whatever its keys are",
                 fun _ ->
                     let document = "main:\n  data-pagefind-weight: \"0.3\"\n  data-kind: legacy\n"

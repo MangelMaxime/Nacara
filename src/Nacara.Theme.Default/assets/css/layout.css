@@ -24,6 +24,11 @@
     grid-template-columns: minmax(0, 1fr);
     max-width: var(--nacara-content-width);
 }
+.nacara-layout--canvas {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: none;
+    padding: 0;
+}
 
 /*
     Sidebar

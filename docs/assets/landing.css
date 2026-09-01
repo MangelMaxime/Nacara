@@ -2,21 +2,13 @@
     The home page only. It leans on the theme's tokens, so it follows the colour scheme.
 */
 
-/* The page's own title, which this page says in its hero instead. */
-.nacara-content:has(.landing) > h1 {
-    display: none;
-}
-
-/* Prose reads better narrow; a landing does not. */
-.nacara-layout--bare:has(.landing) {
-    max-width: 68rem;
-}
-
 .landing {
     display: flex;
     flex-direction: column;
     gap: calc(var(--nacara-space-8) * 2);
-    padding-block: var(--nacara-space-8);
+    max-width: 68rem;
+    margin-inline: auto;
+    padding: var(--nacara-space-8) var(--nacara-space-4);
 }
 
 .landing-hero {

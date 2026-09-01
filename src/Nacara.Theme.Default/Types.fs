@@ -230,6 +230,10 @@ type DocPage =
         /// <remarks>Off, every page opens the menu the same way: the trail to itself, and nothing
         /// else.</remarks>
         MenuMemory: bool
+        /// <summary>Whether the theme lays the content out.</summary>
+        /// <remarks>Off, the page is a canvas: its title, the prose styles and the edit link are
+        /// left out, and the content is placed as it was written.</remarks>
+        Styled: bool
         /// <summary>Attributes to put on the page's <c>&lt;main&gt;</c>, name and value.</summary>
         /// <remarks><c>id</c>, <c>class</c> and <c>tabindex</c> are the theme's own and cannot be
         /// set here.</remarks>
@@ -250,6 +254,7 @@ module DocPage =
             ShowMenu = true
             MenuFilter = None
             MenuMemory = true
+            Styled = true
             MainAttributes = []
         }
 
@@ -323,14 +328,22 @@ module DocPage =
             MainAttributes = value
         }
 
-    /// <summary>A standalone page: no menu, no table of contents, no page navigation.</summary>
+    /// <summary>A canvas: the navbar and the footer, and the content laid out by the page.</summary>
     /// <param name="page">The page being described.</param>
     let bare (page: DocPage) =
         { page with
             ShowMenu = false
             ShowToc = false
             ShowPageNav = false
+            Styled = false
         }
+
+/// <summary>What a page says about its table of contents.</summary>
+type TocSetting =
+    /// No table of contents beside the content.
+    | TocOff
+    /// The heading levels it holds.
+    | TocLevels of TocRange
 
 /// <summary>
 /// Front matter understood by the theme's ready-made collection.
@@ -382,7 +395,7 @@ type DocFrontMatter =
         /// </remarks>
         MenuMemory: bool option
         /// <summary>
-        /// The heading levels in this page's table of contents, written as a range:
+        /// The table of contents: <c>toc: false</c> for none, or the heading levels it holds.
         /// <code>
         /// toc:
         ///   from: 2
@@ -395,7 +408,7 @@ type DocFrontMatter =
         /// decides for the whole site. Either bound may be left out: <c>from</c> is 2, a page's own
         /// title being the only heading above it, and <c>to</c> is 6.
         /// </remarks>
-        Toc: TocRange option
+        Toc: TocSetting option
         /// <summary>
         /// Attributes to put on the page's <c>&lt;main&gt;</c>:
         /// <code>
@@ -418,6 +431,27 @@ module DocFrontMatter =
                 "id"
                 "class"
                 "tabindex"
+            ]
+
+    let private tocDecoder =
+        Decode.oneOf
+            "false or a range of heading levels"
+            [
+                Decode.bool
+                |> Decode.andThen (fun shown ->
+                    if shown then
+                        Decode.error' "Leave 'toc' out for the table of contents the site gives it"
+                    else
+                        Decode.succeed TocOff
+                )
+
+                Decode.object (fun toc ->
+                    TocLevels
+                        {
+                            From = toc.Optional.Field "from" Decode.int |> Option.defaultValue 2
+                            To = toc.Optional.Field "to" Decode.int |> Option.defaultValue 6
+                        }
+                )
             ]
 
     let private mainAttributesDecoder =
@@ -444,16 +478,7 @@ module DocFrontMatter =
                 PageNav = get.Optional.Field "pageNav" Decode.bool
                 MenuFilter = get.Optional.Field "menuFilter" Decode.bool
                 MenuMemory = get.Optional.Field "menuMemory" Decode.bool
-                Toc =
-                    get.Optional.Field
-                        "toc"
-                        (Decode.object (fun toc ->
-                            {
-                                From =
-                                    toc.Optional.Field "from" Decode.int |> Option.defaultValue 2
-                                To = toc.Optional.Field "to" Decode.int |> Option.defaultValue 6
-                            }
-                        ))
+                Toc = get.Optional.Field "toc" tocDecoder
                 Main = get.Optional.Field "main" mainAttributesDecoder |> Option.defaultValue []
             }
         )
@@ -481,6 +506,11 @@ module DocFrontMatter =
             | Some false -> DocPage.withoutMenuFilter page
             | None -> page
 
-        match frontMatter.MenuMemory with
-        | Some false -> DocPage.withoutMenuMemory page
+        let page =
+            match frontMatter.MenuMemory with
+            | Some false -> DocPage.withoutMenuMemory page
+            | _ -> page
+
+        match frontMatter.Toc with
+        | Some TocOff -> DocPage.withoutToc page
         | _ -> page

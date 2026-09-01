@@ -41,8 +41,10 @@ Pages without one come last, in title order.
 
 **type:** `string`
 
-Set to `bare` for a page with no chrome: no menu, no table of contents, no previous and next links.
-Landing pages are the usual case.
+Set to `bare` for a canvas: the navbar, the footer, and the content placed as it was written. The
+menu, the table of contents, the page's title, the previous and next links and the edit link are
+left out, and the theme applies neither its prose styles nor its width. Landing pages are the usual
+case.
 
 ```yaml
 ---
@@ -77,12 +79,13 @@ page of the section opens the menu the same way. See [Menu](menu.md).
 
 ### `toc`
 
-**type:** `{ from?: number; to?: number }`
+**type:** `false | { from?: number; to?: number }`
 
 **default:** the range the markdown plugin was configured with
 
-The heading levels this page's table of contents holds. Either bound can be left out: `from` is
-`2`, `to` is `6`.
+`false` leaves the table of contents out. 
+
+A range says which heading levels it holds; either bound can be left out.
 
 ```yaml
 ---

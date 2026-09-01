@@ -179,7 +179,9 @@ module Theme =
         let scriptPath, _ = script.Value
 
         let layoutClass =
-            if not doc.ShowMenu then
+            if not doc.Styled then
+                "nacara-layout nacara-layout--canvas"
+            elif not doc.ShowMenu then
                 "nacara-layout nacara-layout--bare"
             elif not doc.ShowToc then
                 "nacara-layout nacara-layout--no-toc"
@@ -323,7 +325,9 @@ module Theme =
                                                                     prop.custom (name, value)
                                                                 prop.id "nacara-content"
                                                                 prop.tabIndex -1
-                                                                prop.className "nacara-content"
+
+                                                                if doc.Styled then
+                                                                    prop.className "nacara-content"
                                                                 match context.Page.Source with
                                                                 | Generated origin ->
                                                                     prop.custom (
@@ -360,18 +364,18 @@ module Theme =
                                                                                         ]
                                                                                 ]
                                                                         | None -> Html.none
-                                                                        Html.h1 doc.Title
+                                                                        if doc.Styled then
+                                                                            Html.h1 doc.Title
                                                                         Html.div
                                                                             [
-                                                                                prop.className
-                                                                                    "nacara-prose"
                                                                                 prop
                                                                                     .dangerouslySetInnerHTML
                                                                                     context.Content
                                                                             ]
-                                                                        Components.editLink
-                                                                            options
-                                                                            context
+                                                                        if doc.Styled then
+                                                                            Components.editLink
+                                                                                options
+                                                                                context
                                                                         if doc.ShowPageNav then
                                                                             Components.pageNav
                                                                                 options
@@ -441,7 +445,12 @@ module Theme =
         |> Collection.sourceAll name
         |> Collection.title _.Title
         |> Collection.order (fun frontMatter -> frontMatter.Order |> Option.defaultValue 0)
-        |> Collection.toc _.Toc
+        |> Collection.toc (fun frontMatter ->
+            match frontMatter.Toc with
+            | Some(TocLevels range) -> Some range
+            | Some TocOff
+            | None -> None
+        )
         |> Collection.layout (layout options)
 
     /// <summary>

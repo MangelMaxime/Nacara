@@ -181,6 +181,25 @@ module Decode =
         else
             $"%s{path}.%s{name}"
 
+    /// <summary>The first decoder that reads the value.</summary>
+    /// <param name="expected">What the value may be, for the message when none of them read
+    /// it.</param>
+    /// <param name="decoders">The decoders to try, in order.</param>
+    /// <param name="path">Where in the document the decoder is, for the message when it
+    /// fails.</param>
+    /// <param name="node">The value being read.</param>
+    let oneOf (expected: string) (decoders: Decoder<'T> list) : Decoder<'T> =
+        fun path node ->
+            let rec attempt remaining =
+                match remaining with
+                | [] -> fail path node $"Expected %s{expected} but got %s{describe node}"
+                | decoder :: rest ->
+                    match decoder path node with
+                    | Ok value -> Ok value
+                    | Error _ -> attempt rest
+
+            attempt decoders
+
     /// <summary>Every pair of an object, whatever its keys are.</summary>
     /// <param name="decoder">Reads one value.</param>
     /// <param name="path">Where in the document the decoder is, for the message when it
