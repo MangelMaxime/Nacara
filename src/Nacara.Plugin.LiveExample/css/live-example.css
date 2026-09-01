@@ -264,6 +264,15 @@ html[data-live-expanded] {
         white-space: pre;
     }
 
+    .nacara-live__line {
+        padding: var(--nacara-space-1) 0;
+        white-space: pre-wrap;
+    }
+
+    .nacara-live__line + .nacara-live__line {
+        border-top: 1px solid var(--nacara-border);
+    }
+
     .nacara-live__line--error {
         color: var(--nacara-danger);
     }
