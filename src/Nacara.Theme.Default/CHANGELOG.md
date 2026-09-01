@@ -1,5 +1,5 @@
 ---
-last_commit_released: 2ea4861b2dd698a3a7a7ff5459cb129fb2ea2484
+last_commit_released: 6e538f915a2693829ce44463ce7444bd568b60d5
 ---
 
 # Changelog
@@ -11,6 +11,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 1.0.0-beta.3 - 2026-09-01
+
+### 🚀 Features
+
+* *(theme-default)* Let front matter put attributes on `main` ([30e042d](https://github.com/MangelMaxime/Nacara/commit/30e042d97e83f437dfae30a1a3cab384f481f089))
+* *(theme-default)* Make `layout: bare` a canvas and expose `toc: false` ([33b041d](https://github.com/MangelMaxime/Nacara/commit/33b041d85926df96c7b971b541e2a9fb0ca9dd92))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/2ea4861b2dd698a3a7a7ff5459cb129fb2ea2484..6e538f915a2693829ce44463ce7444bd568b60d5)</small></strong>
 
 ## 1.0.0-beta.2 - 2026-08-29
 

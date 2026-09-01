@@ -1,5 +1,5 @@
 ---
-last_commit_released: e8ed7c5a308808771fe5062cef3dd9ea2179fcf9
+last_commit_released: 6e538f915a2693829ce44463ce7444bd568b60d5
 ---
 
 # Changelog
@@ -11,6 +11,20 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 2.0.0-beta.2 - 2026-09-01
+
+### 🚀 Features
+
+* *(theme-default)* Let front matter put attributes on `main` ([30e042d](https://github.com/MangelMaxime/Nacara/commit/30e042d97e83f437dfae30a1a3cab384f481f089))
+* *(theme-default)* Make `layout: bare` a canvas and expose `toc: false` ([33b041d](https://github.com/MangelMaxime/Nacara/commit/33b041d85926df96c7b971b541e2a9fb0ca9dd92))
+
+### 🐞 Bug Fixes
+
+* Normalize Path even more `./` and `/` normalize to the same RelativePath ([71b36c1](https://github.com/MangelMaxime/Nacara/commit/71b36c1a1ba23772d36707c58a266482f6a4b8ad))
+* *(core)* Take a free port when the one asked for is busy on either loopback ([77a1ec3](https://github.com/MangelMaxime/Nacara/commit/77a1ec39ca22c887a84791bfae59bd02f46a1894))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/e8ed7c5a308808771fe5062cef3dd9ea2179fcf9..6e538f915a2693829ce44463ce7444bd568b60d5)</small></strong>
 
 ## 2.0.0-beta.1 - 2026-08-28
 
