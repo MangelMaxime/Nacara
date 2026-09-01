@@ -424,7 +424,7 @@ type DocFrontMatter =
 [<RequireQualifiedAccess>]
 module DocFrontMatter =
 
-    /// The theme puts these on <main> itself, and a second one of the same name would win.
+    /// The theme puts these on <main> itself.
     let private reserved =
         set
             [

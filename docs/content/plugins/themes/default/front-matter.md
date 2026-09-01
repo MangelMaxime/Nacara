@@ -41,10 +41,9 @@ Pages without one come last, in title order.
 
 **type:** `string`
 
-Set to `bare` for a canvas: the navbar, the footer, and the content placed as it was written. The
-menu, the table of contents, the page's title, the previous and next links and the edit link are
-left out, and the theme applies neither its prose styles nor its width. Landing pages are the usual
-case.
+Set to `bare` for a page you lay out yourself. Landing pages are the usual case.
+
+The navbar and the footer stay, all the other elements are removed.
 
 ```yaml
 ---
@@ -83,7 +82,7 @@ page of the section opens the menu the same way. See [Menu](menu.md).
 
 **default:** the range the markdown plugin was configured with
 
-`false` leaves the table of contents out. 
+`false` leaves the table of contents out.
 
 A range says which heading levels it holds; either bound can be left out.
 
