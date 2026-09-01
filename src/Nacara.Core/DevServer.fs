@@ -3,6 +3,7 @@ namespace Nacara.Core
 open System
 open System.IO
 open System.Net
+open System.Net.Sockets
 open System.Text
 open System.Threading
 open System.Collections.Concurrent
@@ -13,7 +14,9 @@ open System.Collections.Concurrent
 /// <remarks>The reload script is injected into HTML responses on the way out, so nothing about
 /// the built output differs between <c>build</c> and <c>serve</c>.</remarks>
 type DevServer(root: AbsolutePath, basePath: string, host: string, port: int) =
-    let listener = new HttpListener()
+
+    let mutable listener = new HttpListener()
+    let mutable servedPort = port
     let clients = ConcurrentDictionary<Guid, StreamWriter>()
     let cancellation = new CancellationTokenSource()
 
@@ -170,6 +173,32 @@ type DevServer(root: AbsolutePath, basePath: string, host: string, port: int) =
                     ()
         }
 
+    /// <summary>Whether anything already holds the port, on either loopback.</summary>
+    /// <remarks>A prefix binds only the address its host resolves to.</remarks>
+    let taken (candidate: int) =
+        host = "localhost"
+        && [
+            IPAddress.Loopback
+            if Socket.OSSupportsIPv6 then
+                IPAddress.IPv6Loopback
+           ]
+           |> List.exists (fun address ->
+               try
+                   use socket =
+                       new Socket(address.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
+
+                   socket.Bind(IPEndPoint(address, candidate))
+                   false
+               with :? SocketException ->
+                   true
+           )
+
+    /// <summary>How many ports are tried, counting the one asked for.</summary>
+    static member PortAttempts = 10
+
+    /// <summary>The port it is listening on.</summary>
+    member _.Port = servedPort
+
     member _.Url =
         let path =
             if normalizedBase = "/" then
@@ -183,11 +212,30 @@ type DevServer(root: AbsolutePath, basePath: string, host: string, port: int) =
             else
                 host
 
-        $"http://%s{name}:%i{port}%s{path}"
+        $"http://%s{name}:%i{servedPort}%s{path}"
 
     member _.Start() =
-        listener.Prefixes.Add $"http://%s{host}:%i{port}/"
-        listener.Start()
+        let rec listen (candidate: int) =
+            let last = candidate >= port + DevServer.PortAttempts - 1
+
+            if taken candidate then
+                if last then
+                    raise (HttpListenerException(int SocketError.AddressAlreadyInUse))
+                else
+                    listen (candidate + 1)
+            else
+
+                listener <- new HttpListener()
+                listener.Prefixes.Add $"http://%s{host}:%i{candidate}/"
+
+                try
+                    listener.Start()
+                    servedPort <- candidate
+                with :? HttpListenerException when not last ->
+                    listener.Close()
+                    listen (candidate + 1)
+
+        listen port
 
         async {
             while not cancellation.IsCancellationRequested do

@@ -46,6 +46,15 @@ module Log =
                 rendered
         | _ -> rendered
 
+    /// <summary>Text the terminal opens when it is clicked, where that means something.</summary>
+    /// <param name="target">Where clicking it goes.</param>
+    /// <param name="label">What is written.</param>
+    let hyperlink (target: string) (label: string) =
+        if useHyperlinks then
+            $"\u001b]8;;%s{target}\u001b\\%s{label}\u001b]8;;\u001b\\"
+        else
+            label
+
     /// <summary>One line, with its mark coloured - and the rest of it too when it is a problem.</summary>
     let private write (color: ConsoleColor) (whole: bool) (prefix: string) (message: string) =
         if useColor then

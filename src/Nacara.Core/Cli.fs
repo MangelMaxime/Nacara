@@ -286,11 +286,15 @@ NOTE
         try
             server.Start()
         with :? System.Net.HttpListenerException ->
-            Log.error $"Port %i{options.Port} is already in use"
+            let last = options.Port + DevServer.PortAttempts - 1
+            Log.error $"Ports %i{options.Port} to %i{last} are all already in use"
             Log.info "Serve on another port with --port, or stop whatever is listening"
             exit 1
 
-        Log.success $"Serving %s{server.Url}"
+        if server.Port <> options.Port then
+            Log.warn $"Port %i{options.Port} is already in use, serving on %i{server.Port}"
+
+        Log.success $"Serving %s{Log.hyperlink server.Url server.Url}"
         Log.info "Press Ctrl+C to stop"
 
         use watcher =
