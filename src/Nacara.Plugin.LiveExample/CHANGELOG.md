@@ -1,5 +1,5 @@
 ---
-last_commit_released: 353cf65737afd57d96bee68d5236b20bfedad32a
+last_commit_released: 6951663ee3eb6cfd666a4b7d4f617affd6466f45
 ---
 
 # Changelog
@@ -11,6 +11,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 1.0.0-beta.4 - 2026-09-02
+
+### 🐞 Bug Fixes
+
+* *(live-example)* Precompile without deterministic source paths ([6951663](https://github.com/MangelMaxime/Nacara/commit/6951663ee3eb6cfd666a4b7d4f617affd6466f45))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/353cf65737afd57d96bee68d5236b20bfedad32a..6951663ee3eb6cfd666a4b7d4f617affd6466f45)</small></strong>
 
 ## 1.0.0-beta.3 - 2026-09-02
 
