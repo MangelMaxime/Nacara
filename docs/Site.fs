@@ -51,8 +51,8 @@ let theme =
     Theme.defaults
     |> Theme.navbar
         [
-            NavbarSection("Guide", "guide", "/Nacara/guide/getting-started/")
-            NavbarSection("Plugins", "plugins", "/Nacara/plugins/overview/")
+            NavbarSection("Guide", "guide", "guide/getting-started.md")
+            NavbarSection("Plugins", "plugins", "plugins/overview.md")
             NavbarSection("Reference", "reference", "/Nacara/reference/")
             NavbarSection("Changelog", "changelog", "/Nacara/changelog/nacara-core/")
         ]

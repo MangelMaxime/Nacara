@@ -11,13 +11,13 @@ right.
 Theme.defaults
 |> Theme.navbar
     [
-        NavbarSection("Guide", "guide", "/guide/getting-started/")
+        NavbarSection("Guide", "guide", "guide/getting-started.md")
         NavbarDropdown(
             "Reference",
             [
-                NavbarDescribed("API", "Types and functions", "/reference/")
+                NavbarDescribed("API", "Types and functions", "reference/index.md")
                 NavbarDivider
-                NavbarLink("Changelog", "/changelog/")
+                NavbarLink("Changelog", "changelog/index.md")
             ]
         )
     ]
@@ -41,6 +41,10 @@ Theme.defaults
 | `NavbarWidget html` / `NavbarDynamicWidget render` | Markup from a plugin - search and the version switcher arrive this way |
 
 `Navbar` is the left side, `NavbarEnd` the right.
+
+An item's url is a page's source file, written as the [menu](menu.md) writes it, and the theme
+resolves it with the base url and the version prefix. Anything it cannot match to a page is used as
+written.
 
 ## Around the page
 

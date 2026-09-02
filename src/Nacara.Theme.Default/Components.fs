@@ -51,6 +51,26 @@ module Components =
             locale, site.UrlOf route, translation.IsSome
         )
 
+    let private findPage (pages: Page list) (path: string) =
+        pages
+        |> List.tryFind (fun page ->
+            let id = page.Id
+
+            id.EndsWith(":" + path)
+            || id.EndsWith(":" + path + ".md")
+            || (
+                match page.ProjectPath with
+                | Some projectPath -> RelativePath.value projectPath = path
+                | None -> false
+            )
+        )
+
+    /// <summary>A source path becomes the url of that page; anything else is left as written.</summary>
+    let private navbarUrl (site: SiteInfo) (pages: Page list) (url: string) =
+        match findPage pages url with
+        | Some target -> site.UrlOf target.Route
+        | None -> url
+
     let rec private navbarItem (site: SiteInfo) (page: Page) (pages: Page list) (item: NavbarItem) =
         match item with
         | NavbarDivider -> Html.li [ prop.className "nacara-dropdown__divider" ]
@@ -60,7 +80,7 @@ module Components =
                     Html.a
                         [
                             prop.className "nacara-navbar__link"
-                            prop.href url
+                            prop.href (navbarUrl site pages url)
                             prop.text label
                         ]
                 ]
@@ -70,7 +90,7 @@ module Components =
                     Html.a
                         [
                             prop.className "nacara-navbar__link"
-                            prop.href url
+                            prop.href (navbarUrl site pages url)
                             prop.custom (
                                 "data-active",
                                 (if section = sectionOf page then
@@ -87,7 +107,7 @@ module Components =
                     Html.a
                         [
                             prop.className "nacara-icon-button"
-                            prop.href url
+                            prop.href (navbarUrl site pages url)
                             prop.ariaLabel label
                             prop.title label
                             prop.children [ rawHtml svg ]
@@ -99,7 +119,7 @@ module Components =
                     Html.a
                         [
                             prop.className "nacara-dropdown__item"
-                            prop.href url
+                            prop.href (navbarUrl site pages url)
                             prop.children
                                 [
                                     Html.span [ prop.text label ]
@@ -287,20 +307,6 @@ module Components =
             && sectionOf page = section
         )
         |> List.sortBy (fun page -> page.Order, page.Title)
-
-    let private findPage (pages: Page list) (path: string) =
-        pages
-        |> List.tryFind (fun page ->
-            let id = page.Id
-
-            id.EndsWith(":" + path)
-            || id.EndsWith(":" + path + ".md")
-            || (
-                match page.ProjectPath with
-                | Some projectPath -> RelativePath.value projectPath = path
-                | None -> false
-            )
-        )
 
     /// <summary>Flatten a menu into the page order a reader walks through.</summary>
     let rec private menuPages (pages: Page list) (items: MenuItem list) =
@@ -505,16 +511,18 @@ module Components =
     /// A dropdown becomes a titled group. What sits at the end of the bar is moved down here by
     /// the theme's script, so a widget is left where it is.
     /// </remarks>
+    /// <param name="site">The site, which turns a source path into a url.</param>
+    /// <param name="pages">Every page of the build, which is where a source path is looked up.</param>
     /// <param name="page">The page being rendered, which says which section is the current one.</param>
     /// <param name="item">The navbar item to render.</param>
-    let rec private drawerItem (page: Page) (item: NavbarItem) =
+    let rec private drawerItem (site: SiteInfo) (pages: Page list) (page: Page) (item: NavbarItem) =
         let link (label: string) (url: string) (current: bool) =
             Html.li
                 [
                     Html.a
                         [
                             prop.className "nacara-sidebar__link"
-                            prop.href url
+                            prop.href (navbarUrl site pages url)
                             if current then
                                 prop.custom ("aria-current", "true")
                             prop.text label
@@ -537,7 +545,7 @@ module Components =
                     Html.ul
                         [
                             prop.className "nacara-sidebar__list"
-                            prop.children [ for item in items -> drawerItem page item ]
+                            prop.children [ for item in items -> drawerItem site pages page item ]
                         ]
                 ]
         | NavbarDivider
@@ -566,7 +574,11 @@ module Components =
             Html.ul
                 [
                     prop.className "nacara-sidebar__sections"
-                    prop.children [ for item in options.Navbar -> drawerItem context.Page item ]
+                    prop.children
+                        [
+                            for item in options.Navbar ->
+                                drawerItem context.Site context.Pages context.Page item
+                        ]
                 ]
 
         let declared =
