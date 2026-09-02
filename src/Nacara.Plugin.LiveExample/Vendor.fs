@@ -167,6 +167,10 @@ module Vendor =
                     WorkingDirectory = directory
                 )
 
+            // Deterministic source paths rewrite the paths inside the assemblies and not the ones
+            // precompiled_info.json records, and the browser matches a source file on those.
+            start.EnvironmentVariables["DeterministicSourcePaths"] <- "false"
+
             before
             @ [
                 "precompile"

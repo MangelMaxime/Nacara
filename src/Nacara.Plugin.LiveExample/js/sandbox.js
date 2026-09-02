@@ -28,9 +28,12 @@ export function sandbox(js, presetModules, { css, template } = {}) {
     const names = new Set(Object.keys(presetModules));
 
     if (config().verbose) {
+        // An absolute url is fetched as it is, so only a bare or rooted specifier needs a module.
         const unmapped = specifiers(js).filter(
             (name) =>
-                !names.has(name.replace(/^\.\//, "")) && !name.startsWith("fable-library-js/"),
+                !names.has(name.replace(/^\.\//, "")) &&
+                !name.startsWith("fable-library-js/") &&
+                !/^https?:\/\//.test(name),
         );
 
         if (unmapped.length > 0) {
