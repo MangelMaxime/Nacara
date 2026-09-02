@@ -1,5 +1,5 @@
 ---
-last_commit_released: 6e538f915a2693829ce44463ce7444bd568b60d5
+last_commit_released: 353cf65737afd57d96bee68d5236b20bfedad32a
 ---
 
 # Changelog
@@ -11,6 +11,19 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 1.0.0-beta.4 - 2026-09-02
+
+### 🚀 Features
+
+* *(theme-default)* Resolve a navbar url from a page's source path ([037d1ec](https://github.com/MangelMaxime/Nacara/commit/037d1ecef5b8168a0f9053464a91d27e3f18a66c))
+* *(theme-default)* Add the site prefix to a root-relative navbar url ([5b28a10](https://github.com/MangelMaxime/Nacara/commit/5b28a1038e9883d0a5b869bcc1c0debd989be7d5))
+
+### 🐞 Bug Fixes
+
+* *(theme-default)* Resolve a page path only when one page answers to it ([0c465a2](https://github.com/MangelMaxime/Nacara/commit/0c465a236d7357c35080c6dbbdb329376dbd684a))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/6e538f915a2693829ce44463ce7444bd568b60d5..353cf65737afd57d96bee68d5236b20bfedad32a)</small></strong>
 
 ## 1.0.0-beta.3 - 2026-09-01
 
