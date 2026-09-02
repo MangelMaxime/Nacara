@@ -65,11 +65,22 @@ module Components =
             )
         )
 
-    /// <summary>A source path becomes the url of that page; anything else is left as written.</summary>
+    /// <summary>The url of a navbar item: a page's source path, or a path inside the site.</summary>
+    /// <remarks>Anything else is left as written.</remarks>
     let private navbarUrl (site: SiteInfo) (pages: Page list) (url: string) =
-        match findPage pages url with
-        | Some target -> site.UrlOf target.Route
-        | None -> url
+        if url.StartsWith "//" then
+            url
+        elif url.StartsWith "/" then
+            let resolved = site.UrlOfAsset url
+
+            if url.EndsWith "/" && not (resolved.EndsWith "/") then
+                resolved + "/"
+            else
+                resolved
+        else
+            match findPage pages url with
+            | Some target -> site.UrlOf target.Route
+            | None -> url
 
     let rec private navbarItem (site: SiteInfo) (page: Page) (pages: Page list) (item: NavbarItem) =
         match item with

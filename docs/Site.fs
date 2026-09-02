@@ -53,8 +53,8 @@ let theme =
         [
             NavbarSection("Guide", "guide", "guide/getting-started.md")
             NavbarSection("Plugins", "plugins", "plugins/overview.md")
-            NavbarSection("Reference", "reference", "/Nacara/reference/")
-            NavbarSection("Changelog", "changelog", "/Nacara/changelog/nacara-core/")
+            NavbarSection("Reference", "reference", "/reference/")
+            NavbarSection("Changelog", "changelog", "/changelog/nacara-core/")
         ]
     |> Theme.navbarEnd
         [

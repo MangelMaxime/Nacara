@@ -15,9 +15,9 @@ Theme.defaults
         NavbarDropdown(
             "Reference",
             [
-                NavbarDescribed("API", "Types and functions", "reference/index.md")
+                NavbarDescribed("API", "Types and functions", "/reference/")
                 NavbarDivider
-                NavbarLink("Changelog", "changelog/index.md")
+                NavbarLink("Changelog", "/changelog/")
             ]
         )
     ]
@@ -42,9 +42,9 @@ Theme.defaults
 
 `Navbar` is the left side, `NavbarEnd` the right.
 
-An item's url is a page's source file, written as the [menu](menu.md) writes it, and the theme
-resolves it with the base url and the version prefix. Anything it cannot match to a page is used as
-written.
+An item's url is a page's source file, written as the [menu](menu.md) writes it, or a path inside
+the site starting with `/`. Either way the theme adds the base url and the version prefix, so write
+neither. Anything else is used as written.
 
 ## Around the page
 
