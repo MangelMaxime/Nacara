@@ -51,7 +51,7 @@ it; a path that matches no page is a build error rather than a link that quietly
 
 | | |
 |---|---|
-| `Menu.page "guide/i18n.md"` | A page of the site, by its source file |
+| `Menu.page "guide/i18n.md"` | A page of the site, by its source file. `"reference:index.md"` when several collections hold that file |
 | `Menu.link "Changelog" "/changelog/"` | Anything else, by URL |
 | `Menu.section "Writing" [ … ]` | A heading over entries. Not a link |
 | `Menu.group "plugins/markdown/index.md" [ … ]` | A page that also holds entries |

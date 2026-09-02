@@ -51,19 +51,28 @@ module Components =
             locale, site.UrlOf route, translation.IsSome
         )
 
+    /// <summary>The page a path names, when exactly one answers to it.</summary>
+    /// <remarks><c>index.md</c> is a page of every collection, so a path several pages answer to
+    /// names none of them. The whole id - <c>reference:index.md</c> - names one.</remarks>
     let private findPage (pages: Page list) (path: string) =
-        pages
-        |> List.tryFind (fun page ->
-            let id = page.Id
+        let matching =
+            pages
+            |> List.filter (fun page ->
+                let id = page.Id
 
-            id.EndsWith(":" + path)
-            || id.EndsWith(":" + path + ".md")
-            || (
-                match page.ProjectPath with
-                | Some projectPath -> RelativePath.value projectPath = path
-                | None -> false
+                id = path
+                || id.EndsWith(":" + path)
+                || id.EndsWith(":" + path + ".md")
+                || (
+                    match page.ProjectPath with
+                    | Some projectPath -> RelativePath.value projectPath = path
+                    | None -> false
+                )
             )
-        )
+
+        match matching with
+        | [ page ] -> Some page
+        | _ -> None
 
     /// <summary>The url of a navbar item: a page's source path, or a path inside the site.</summary>
     /// <remarks>Anything else is left as written.</remarks>
