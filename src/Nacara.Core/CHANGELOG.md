@@ -1,6 +1,5 @@
 ---
-last_commit_released: 6e538f915a2693829ce44463ce7444bd568b60d5
-force_version: 2.0.0-beta.3
+last_commit_released: a76c8db8191075ddab193d526b0a6f11e5435746
 ---
 
 # Changelog
@@ -12,6 +11,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 2.0.0-beta.3 - 2026-09-02
+
+### 🚀 Features
+
+* Re-release Nacore.Core to expose Decode.oneOf API ([a76c8db](https://github.com/MangelMaxime/Nacara/commit/a76c8db8191075ddab193d526b0a6f11e5435746))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/6e538f915a2693829ce44463ce7444bd568b60d5..a76c8db8191075ddab193d526b0a6f11e5435746)</small></strong>
 
 ## 2.0.0-beta.2 - 2026-09-01
 
