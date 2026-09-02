@@ -705,6 +705,7 @@ module Build =
                 ProjectRoot = projectRoot
                 OutputDirectory = outputDirectory
                 Pages = pages
+                Rendered = []
                 Diagnostics = DiagnosticSink(diagnostics, Registry.engineSource)
                 Write =
                     fun relative content ->
@@ -777,6 +778,8 @@ module Build =
                 |> String.concat "|"
                 |> BuildCache.Hash
 
+            let rendered = ConcurrentDictionary<string, string>()
+
             pages
             |> Array.ofList
             |> parallelMap (fun page ->
@@ -788,7 +791,7 @@ module Build =
                     let key =
                         $"%s{assets}:%i{shape}:%s{page.Id}:%s{BuildCache.Hash page.Html}:%i{hash page.Headings}:%i{hash page.FrontMatter}:%i{hash page.Data}"
 
-                    let html =
+                    let document =
                         cache.Render(
                             key,
                             fun () ->
@@ -801,7 +804,9 @@ module Build =
                                     }
                                 |> Render.htmlDocument
                         )
-                        |> transformed relative
+
+                    rendered[page.Id] <- document
+                    let html = transformed relative document
 
                     let destination =
                         AbsolutePath.combine outputDirectory [ RelativePath.value relative ]
@@ -913,7 +918,19 @@ module Build =
             | None -> ()
 
             phase "Copied the assets"
-            registry.BuildCompleteHooks |> List.iter (fun hook -> hook hookContext)
+
+            let completeContext =
+                { hookContext with
+                    Rendered =
+                        pages
+                        |> List.choose (fun page ->
+                            match rendered.TryGetValue page.Id with
+                            | true, document -> Some(page, document)
+                            | _ -> None
+                        )
+                }
+
+            registry.BuildCompleteHooks |> List.iter (fun hook -> hook completeContext)
             phase "Let the plugins finish"
 
             if cache.Writes && Directory.Exists(AbsolutePath.value outputDirectory) then

@@ -173,6 +173,10 @@ and HookContext =
         ProjectRoot: AbsolutePath
         OutputDirectory: AbsolutePath
         Pages: Page list
+        /// <summary>Every page as the layout rendered it, whole document.</summary>
+        /// <remarks>Empty until the pages are rendered, so only a build-complete hook sees it.
+        /// The text is what the layout produced, before any asset transform.</remarks>
+        Rendered: (Page * string) list
         Diagnostics: DiagnosticSink
         /// <summary>
         /// Write a file into the output, relative to it. Returns true when the bytes changed.

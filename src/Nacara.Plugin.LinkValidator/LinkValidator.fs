@@ -287,6 +287,8 @@ module LinkValidator =
         {
             Url: string
             Page: Page
+            /// False for a link the layout put there, which is on every page and in no source file.
+            InBody: bool
         }
 
     let private check (options: LinkValidatorOptions) (context: HookContext) =
@@ -297,25 +299,36 @@ module LinkValidator =
             let prefix = sitePrefix context.Site.Url
             let output = AbsolutePath.value context.OutputDirectory
 
+            // One report per url: the navbar and the footer put the same link on every page.
             let found =
-                context.Pages
-                |> List.collect (fun page ->
-                    linksOf page.Html
+                context.Rendered
+                |> List.collect (fun (page, document) ->
+                    let body = linksOf page.Html |> Set.ofList
+
+                    linksOf document
                     |> List.filter isCheckable
                     |> List.map (fun url ->
                         {
                             Url = url
                             Page = page
+                            InBody = body.Contains url
                         }
                     )
                 )
+                |> List.groupBy _.Url
+                |> List.map (fun (_, occurrences) ->
+                    occurrences
+                    |> List.tryFind _.InBody
+                    |> Option.defaultValue (List.head occurrences)
+                )
 
-            let report (page: Page) code message hint =
+            let report (link: Found) code message hint =
                 let diagnostic = Diagnostic.error code message |> Diagnostic.withHint (hint: string)
 
-                match page.Source with
-                | FromFile file -> context.Diagnostics.Add(diagnostic |> Diagnostic.inFile file)
-                | Generated _ -> context.Diagnostics.Add diagnostic
+                match link.Page.Source with
+                | FromFile file when link.InBody ->
+                    context.Diagnostics.Add(diagnostic |> Diagnostic.inFile file)
+                | _ -> context.Diagnostics.Add diagnostic
 
             let written =
                 context.Pages
@@ -340,7 +353,7 @@ module LinkValidator =
             for link in found |> List.filter (fun link -> not (isExternal link.Url)) do
                 if not (link.Url.StartsWith "/") then
                     report
-                        link.Page
+                        link
                         "relative-link"
                         $"'%s{link.Url}' is relative, so where it points depends on the page it is read from"
                         "Link to the file with markdown, and the engine writes the url"
@@ -348,7 +361,7 @@ module LinkValidator =
                     match fileOf prefix link.Url with
                     | None ->
                         report
-                            link.Page
+                            link
                             "outside-site"
                             $"'%s{link.Url}' points outside this site, which is served from '%s{prefix}'"
                             "A link within the site should start with the base url, which markdown links do"
@@ -356,9 +369,12 @@ module LinkValidator =
                         let target =
                             Path.Combine(output, relative.Replace('/', Path.DirectorySeparatorChar))
 
-                        if not (written.ContainsKey relative || File.Exists target) then
+                        // An asset is a file rather than a page, and under `check` there is none.
+                        if not (written.ContainsKey relative || context.Writes) then
+                            ()
+                        elif not (written.ContainsKey relative || File.Exists target) then
                             report
-                                link.Page
+                                link
                                 "target-missing"
                                 $"'%s{link.Url}' points at nothing this build wrote"
                                 $"The build would have to write '%s{relative}'"
@@ -370,7 +386,7 @@ module LinkValidator =
                                 anchor <> "" && not ((anchorsIn relative target).Contains anchor)
                                 ->
                                 report
-                                    link.Page
+                                    link
                                     "anchor-missing"
                                     $"'%s{link.Url}' points at an anchor that is not on that page"
                                     "Anchors come from headings, or from an id written in the markup"
