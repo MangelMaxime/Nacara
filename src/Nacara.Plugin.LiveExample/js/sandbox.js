@@ -19,10 +19,24 @@ function assemble(template, head, body) {
         : withHead + body;
 }
 
+// What a specifier resolves to, so an unmapped one can be named.
+const specifiers = (code) => [...code.matchAll(/\bfrom\s*"([^"]+)"/g)].map((matched) => matched[1]);
+
 export function sandbox(js, presetModules, { css, template } = {}) {
     // Fable emits bare specifiers, which are import-map keys.
     const imports = { "fable-library-js/": at(`${config().compiler}/fable-library-js/`) };
     const names = new Set(Object.keys(presetModules));
+
+    if (config().verbose) {
+        const unmapped = specifiers(js).filter(
+            (name) =>
+                !names.has(name.replace(/^\.\//, "")) && !name.startsWith("fable-library-js/"),
+        );
+
+        if (unmapped.length > 0) {
+            console.debug("[nacara-live] specifiers no module answers to:", unmapped);
+        }
+    }
 
     for (const [name, code] of Object.entries(presetModules)) {
         imports[name] = URL.createObjectURL(

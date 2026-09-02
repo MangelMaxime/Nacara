@@ -74,6 +74,9 @@ module Log =
     /// <param name="value">On when the command line said <c>--verbose</c>.</param>
     let setVerbose value = verbose <- value
 
+    /// <summary>Whether the command line said <c>--verbose</c>.</summary>
+    let isVerbose () = verbose
+
     /// <summary>What the build is doing, as it does it.</summary>
     /// <param name="message">One line, present tense: <c>Changed: getting-started.md</c>.</param>
     let info message =

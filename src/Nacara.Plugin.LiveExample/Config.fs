@@ -1,5 +1,6 @@
 namespace Nacara.Plugins.Internal
 
+open Nacara.Core
 open Nacara.Plugins
 open Thoth.Json.Core
 open Thoth.Json.System.Text.Json
@@ -98,6 +99,7 @@ module internal LiveExampleConfig =
                 "highlighting", Encode.string highlighting
                 "tab", Encode.lossyOption Encode.string tab
                 "stats", Encode.bool options.Stats
+                "verbose", Encode.bool (Log.isVerbose ())
                 "precompiled", Encode.lossyOption precompiledJson precompiled
                 "defaultPreset", Encode.lossyOption Encode.string defaultPreset
                 "presets", Encode.object [ for item in presets -> item.Name, preset item ]

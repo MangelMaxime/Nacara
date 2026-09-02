@@ -63,6 +63,13 @@ async function precompiled() {
         ),
     );
 
+    if (config().verbose) {
+        console.debug(
+            "[nacara-live] precompiled paths registered with the compiler:",
+            info.files.map((file) => file.path),
+        );
+    }
+
     return {
         CompilerVersion: info.compilerVersion,
         Files: info.files.map((file) => ({
