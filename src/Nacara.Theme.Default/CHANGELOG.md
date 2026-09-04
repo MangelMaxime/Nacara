@@ -1,5 +1,5 @@
 ---
-last_commit_released: 353cf65737afd57d96bee68d5236b20bfedad32a
+last_commit_released: 22ac301653fe3807a89c94604a70662f47653313
 ---
 
 # Changelog
@@ -11,6 +11,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 1.0.0-beta.5 - 2026-09-04
+
+### 🚀 Features
+
+* *(theme-default)* Add a splash layout for pages that keep the theme's spacing ([abc85e8](https://github.com/MangelMaxime/Nacara/commit/abc85e836fc606dd826b35deb85251c1545ebe3f))
+* *(theme-default)* Drop the edit link on splash and bare pages ([22ac301](https://github.com/MangelMaxime/Nacara/commit/22ac301653fe3807a89c94604a70662f47653313))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/353cf65737afd57d96bee68d5236b20bfedad32a..22ac301653fe3807a89c94604a70662f47653313)</small></strong>
 
 ## 1.0.0-beta.4 - 2026-09-02
 
