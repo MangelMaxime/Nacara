@@ -232,6 +232,8 @@ type DocPage =
         MenuMemory: bool
         /// <summary>Whether the theme writes the page's title above the content.</summary>
         ShowTitle: bool
+        /// <summary>Whether the theme offers the link that edits the page at its source.</summary>
+        ShowEditLink: bool
         /// <summary>Whether the theme lays the content out.</summary>
         /// <remarks>Off, the page is a canvas: its title, the prose styles and the edit link are
         /// left out, and the content is placed as it was written.</remarks>
@@ -257,6 +259,7 @@ module DocPage =
             MenuFilter = None
             MenuMemory = true
             ShowTitle = true
+            ShowEditLink = true
             Styled = true
             MainAttributes = []
         }
@@ -340,6 +343,7 @@ module DocPage =
             ShowToc = false
             ShowPageNav = false
             ShowTitle = false
+            ShowEditLink = false
         }
 
     /// <summary>A canvas: the navbar and the footer, and the content laid out by the page.</summary>
@@ -350,6 +354,7 @@ module DocPage =
             ShowToc = false
             ShowPageNav = false
             ShowTitle = false
+            ShowEditLink = false
             Styled = false
         }
 

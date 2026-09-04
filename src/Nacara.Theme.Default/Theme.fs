@@ -372,7 +372,7 @@ module Theme =
                                                                                     .dangerouslySetInnerHTML
                                                                                     context.Content
                                                                             ]
-                                                                        if doc.Styled then
+                                                                        if doc.ShowEditLink then
                                                                             Components.editLink
                                                                                 options
                                                                                 context
