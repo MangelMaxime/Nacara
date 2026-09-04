@@ -180,9 +180,9 @@ module Theme =
 
         let layoutClass =
             if not doc.Styled then
-                "nacara-layout nacara-layout--canvas"
-            elif not doc.ShowMenu then
                 "nacara-layout nacara-layout--bare"
+            elif not doc.ShowMenu then
+                "nacara-layout nacara-layout--splash"
             elif not doc.ShowToc then
                 "nacara-layout nacara-layout--no-toc"
             else
@@ -364,7 +364,7 @@ module Theme =
                                                                                         ]
                                                                                 ]
                                                                         | None -> Html.none
-                                                                        if doc.Styled then
+                                                                        if doc.ShowTitle then
                                                                             Html.h1 doc.Title
                                                                         Html.div
                                                                             [

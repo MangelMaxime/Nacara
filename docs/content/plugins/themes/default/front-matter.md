@@ -39,16 +39,19 @@ Pages without one come last, in title order.
 
 ### `layout`
 
-**type:** `string`
+**type:** `'splash' | 'bare'`
 
-Set to `bare` for a page you lay out yourself. Landing pages are the usual case.
+Set to `splash` for a page without the menu or the table of contents. The theme's styles and
+spacing are kept, over a wider measure - `--nacara-splash-width`, 68rem. Landing pages are the
+usual case.
 
-The navbar and the footer stay, all the other elements are removed.
+Set to `bare` for a page you lay out yourself. The navbar and the footer stay, all the other
+elements are removed, and the theme adds no styles, no width and no padding.
 
 ```yaml
 ---
 title: My library
-layout: bare
+layout: splash
 ---
 ```
 

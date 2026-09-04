@@ -20,11 +20,14 @@
         var(--nacara-sidebar-width)
         minmax(0, var(--nacara-content-width));
 }
-.nacara-layout--bare {
+.nacara-layout--splash {
     grid-template-columns: minmax(0, 1fr);
-    max-width: var(--nacara-content-width);
+    max-width: var(--nacara-splash-width);
 }
-.nacara-layout--canvas {
+.nacara-layout--splash > .nacara-content {
+    max-width: none;
+}
+.nacara-layout--bare {
     grid-template-columns: minmax(0, 1fr);
     max-width: none;
     padding: 0;

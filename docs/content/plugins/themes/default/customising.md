@@ -59,7 +59,7 @@ declares every one of them, for both colour schemes. They cover:
 | | |
 |---|---|
 | Colour | The primary and its pair, the backgrounds, text, headings, borders, inline code, and the four callout hues |
-| Layout | The measure, the sidebar and table of contents, the navbar's height, the gutters |
+| Layout | The measure, the splash measure, the sidebar and table of contents, the navbar's height, the gutters |
 | Spacing | `--nacara-space-1` … `--nacara-space-12`, which everything else is built from |
 | Type | The sans and mono families |
 | Controls | The height and radius shared by everything in the navbar |

@@ -230,6 +230,8 @@ type DocPage =
         /// <remarks>Off, every page opens the menu the same way: the trail to itself, and nothing
         /// else.</remarks>
         MenuMemory: bool
+        /// <summary>Whether the theme writes the page's title above the content.</summary>
+        ShowTitle: bool
         /// <summary>Whether the theme lays the content out.</summary>
         /// <remarks>Off, the page is a canvas: its title, the prose styles and the edit link are
         /// left out, and the content is placed as it was written.</remarks>
@@ -254,6 +256,7 @@ module DocPage =
             ShowMenu = true
             MenuFilter = None
             MenuMemory = true
+            ShowTitle = true
             Styled = true
             MainAttributes = []
         }
@@ -328,6 +331,17 @@ module DocPage =
             MainAttributes = value
         }
 
+    /// <summary>The theme's styling and spacing, with no menu and no table of contents.</summary>
+    /// <remarks>Wider than the reading measure, at <c>--nacara-splash-width</c>.</remarks>
+    /// <param name="page">The page being described.</param>
+    let splash (page: DocPage) =
+        { page with
+            ShowMenu = false
+            ShowToc = false
+            ShowPageNav = false
+            ShowTitle = false
+        }
+
     /// <summary>A canvas: the navbar and the footer, and the content laid out by the page.</summary>
     /// <param name="page">The page being described.</param>
     let bare (page: DocPage) =
@@ -335,6 +349,7 @@ module DocPage =
             ShowMenu = false
             ShowToc = false
             ShowPageNav = false
+            ShowTitle = false
             Styled = false
         }
 
@@ -493,6 +508,7 @@ module DocFrontMatter =
         let page =
             match frontMatter.Layout with
             | Some "bare" -> DocPage.bare page
+            | Some "splash" -> DocPage.splash page
             | _ -> page
 
         let page =

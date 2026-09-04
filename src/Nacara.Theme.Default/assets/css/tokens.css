@@ -23,6 +23,7 @@
     --nacara-radius-sm: 0.25rem;
 
     --nacara-content-width: 75ch;
+    --nacara-splash-width: 68rem;
     --nacara-layout-gap: var(--nacara-space-8);
     --nacara-sidebar-width: 17rem;
     --nacara-toc-width: 15rem;

@@ -1,7 +1,7 @@
 ---
 title: Nacara
 description: A documentation engine for F#, where the site is an F# program
-layout: bare
+layout: splash
 ---
 
 <div class="landing">

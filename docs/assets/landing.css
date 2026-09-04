@@ -6,9 +6,6 @@
     display: flex;
     flex-direction: column;
     gap: calc(var(--nacara-space-8) * 2);
-    max-width: 68rem;
-    margin-inline: auto;
-    padding: var(--nacara-space-8) var(--nacara-space-4);
 }
 
 .landing-hero {
