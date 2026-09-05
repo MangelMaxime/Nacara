@@ -437,25 +437,30 @@ module Reader =
                 |> Option.defaultValue true)
         )
 
-    let private mergeCompanions (entities: FSharpApiEntity list) =
+    let rec private mergeCompanions (entities: FSharpApiEntity list) =
         entities
         |> List.groupBy _.Name
         |> List.map (fun (_, group) ->
             let companions, declarations =
                 group |> List.partition (fun entity -> entity.Kind = FSharpApiEntityKind.Module)
 
-            match companions, declarations with
-            | [ companion ], [ declaration ] ->
-                { declaration with
-                    Members = declaration.Members @ companion.Members
-                    Nested = declaration.Nested @ companion.Nested
-                    Doc =
-                        if declaration.Doc.Summary.IsSome then
-                            declaration.Doc
-                        else
-                            companion.Doc
-                }
-            | _ -> List.head group
+            let merged =
+                match companions, declarations with
+                | [ companion ], [ declaration ] ->
+                    { declaration with
+                        Members = declaration.Members @ companion.Members
+                        Nested = declaration.Nested @ companion.Nested
+                        Doc =
+                            if declaration.Doc.Summary.IsSome then
+                                declaration.Doc
+                            else
+                                companion.Doc
+                    }
+                | _ -> List.head group
+
+            { merged with
+                Nested = mergeCompanions merged.Nested
+            }
         )
         |> List.sortBy _.Name
 

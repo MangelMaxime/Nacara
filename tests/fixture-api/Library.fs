@@ -89,6 +89,34 @@ module Widget =
     /// <summary>The same widget, labelled differently.</summary>
     let relabel (label: string) (widget: Widget) : Widget = failwith "documentation only"
 
+/// <summary>A container whose nested type has a companion module, as a DSL is written.</summary>
+[<RequireQualifiedAccess>]
+module Codec =
+
+    /// <summary>A pair, kept nested with its operations.</summary>
+    type Pair =
+        {
+            /// <summary>The left part.</summary>
+            Left: string
+        }
+
+    /// <summary>Things to do with a pair.</summary>
+    [<RequireQualifiedAccess>]
+    module Pair =
+
+        /// <summary>A pair with that left part.</summary>
+        let create (left: string) : Pair = failwith "documentation only"
+
+    /// <summary>Two of a kind, as an abbreviation with a companion module.</summary>
+    type Twin = Pair * Pair
+
+    /// <summary>Things to do with twins.</summary>
+    [<RequireQualifiedAccess>]
+    module Twin =
+
+        /// <summary>The same pair, twice.</summary>
+        let double (pair: Pair) : Twin = failwith "documentation only"
+
 /// <summary>Extensions this library adds to types it does not own.</summary>
 [<AutoOpen>]
 module Extensions =

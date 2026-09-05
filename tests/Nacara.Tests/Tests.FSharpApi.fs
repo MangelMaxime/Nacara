@@ -700,6 +700,46 @@ let all =
             )
 
             test (
+                "a nested type and its companion module are one declaration",
+                fun _ ->
+                    let pairs =
+                        (declaration "Codec").Nested
+                        |> List.filter (fun entity -> entity.Name = "Pair")
+
+                    assertThat
+                        (List.length pairs)
+                        (tag "one page, not two with the same name" >> isEqualTo 1)
+
+                    let pair = List.head pairs
+
+                    assertThat
+                        (pair.Kind)
+                        (tag "the type is what it is" >> isEqualTo FSharpApiEntityKind.Record)
+
+                    let names = pair.Members |> List.map _.Name
+
+                    assertThat
+                        (List.contains "Left" names)
+                        (tag "with the type's own fields" >> isTrue)
+
+                    assertThat
+                        (List.contains "create" names)
+                        (tag "and what the module says you do with it" >> isTrue)
+
+                    let twins =
+                        (declaration "Codec").Nested
+                        |> List.filter (fun entity -> entity.Name = "Twin")
+
+                    assertThat
+                        (List.length twins)
+                        (tag "an abbreviation merges with its module too" >> isEqualTo 1)
+
+                    assertThat
+                        ((List.head twins).Members |> List.map _.Name |> List.contains "double")
+                        (tag "keeping the module's functions" >> isTrue)
+            )
+
+            test (
                 "a module's functions keep their names and their shape",
                 fun _ ->
                     let people = declaration "People"
