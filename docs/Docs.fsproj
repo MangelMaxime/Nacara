@@ -6,6 +6,7 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="Site.fs" />
+        <None Include="**/*.*" Exclude="bin;obj" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="../src/Nacara.Core/Nacara.Core.fsproj" />
