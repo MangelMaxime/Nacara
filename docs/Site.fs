@@ -146,7 +146,12 @@ let theme =
                             Menu.page "plugins/themes/default/components.md"
                         ]
                 ]
-            Menu.section "Writing plugins" [ Menu.page "plugins/authoring.md" ]
+            Menu.section
+                "Ecosystem"
+                [
+                    Menu.page "plugins/authoring.md"
+                    Menu.page "plugins/community.md"
+                ]
         ]
     |> Theme.editUrl "https://github.com/MangelMaxime/Nacara/edit/main/docs"
     |> Theme.footer (
