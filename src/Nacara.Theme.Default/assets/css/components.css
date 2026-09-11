@@ -41,6 +41,7 @@
     margin: 0 0 var(--nacara-space-4);
 }
 .nacara-steps > ol {
+    --nacara-step-bullet: 1.75rem;
     counter-reset: nacara-step;
     list-style: none;
     margin: 0;
@@ -49,7 +50,7 @@
 .nacara-steps > ol > li {
     counter-increment: nacara-step;
     position: relative;
-    padding-left: var(--nacara-space-8);
+    padding-left: calc(var(--nacara-step-bullet) + var(--nacara-space-4));
     padding-bottom: var(--nacara-space-6);
 }
 .nacara-steps > ol > li:last-child {
@@ -62,8 +63,8 @@
     top: -0.1rem;
     display: grid;
     place-items: center;
-    width: 1.75rem;
-    height: 1.75rem;
+    width: var(--nacara-step-bullet);
+    height: var(--nacara-step-bullet);
     border-radius: 50%;
     background: var(--nacara-primary);
     color: var(--nacara-primary-contrast);
@@ -74,8 +75,8 @@
 .nacara-steps > ol > li::after {
     content: "";
     position: absolute;
-    left: calc(0.875rem - 1px);
-    top: 2rem;
+    left: calc((var(--nacara-step-bullet) - 2px) / 2);
+    top: calc(var(--nacara-step-bullet) + 0.25rem);
     bottom: 0;
     width: 2px;
     border-radius: 1px;
