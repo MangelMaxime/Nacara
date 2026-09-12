@@ -5,7 +5,7 @@ Each is built from the commit named here, and carries the licence beside it.
 
 | Language | Repository | Commit |
 |---|---|---|
-| `fsharp` | [https://github.com/MangelMaxime/tree-sitter-fsharp](https://github.com/MangelMaxime/tree-sitter-fsharp) | `dd0f511f2a` |
+| `fsharp` | [https://github.com/MangelMaxime/tree-sitter-fsharp](https://github.com/MangelMaxime/tree-sitter-fsharp) | `9f15966976` |
 | `csharp` | [https://github.com/tree-sitter/tree-sitter-c-sharp](https://github.com/tree-sitter/tree-sitter-c-sharp) | `9150f7d56b` |
 | `bash` | [https://github.com/tree-sitter/tree-sitter-bash](https://github.com/tree-sitter/tree-sitter-bash) | `a06c2e4415` |
 | `json` | [https://github.com/tree-sitter/tree-sitter-json](https://github.com/tree-sitter/tree-sitter-json) | `254c42a647` |
