@@ -1,5 +1,5 @@
 ---
-last_commit_released: 09a68e254780ca78d3c8463b489a11124920e50c
+last_commit_released: 3212373a493a022ad4a500b79dcec0c719db1804
 ---
 
 # Changelog
@@ -11,6 +11,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 1.0.0-beta.6 - 2026-09-12
+
+### 🚀 Features
+
+* *(live-example)* Share the tree-sitter browser assets ([f37effc](https://github.com/MangelMaxime/Nacara/commit/f37effcd696c70eb3d2ca37fc968071d77b9fc97))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/09a68e254780ca78d3c8463b489a11124920e50c..3212373a493a022ad4a500b79dcec0c719db1804)</small></strong>
 
 ## 1.0.0-beta.5 - 2026-09-12
 
