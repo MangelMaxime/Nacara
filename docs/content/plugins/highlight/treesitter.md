@@ -1,5 +1,7 @@
 ---
 title: tree-sitter
+toc:
+  to: 4
 ---
 
 Colours code blocks with [tree-sitter](https://tree-sitter.github.io) grammars: a real parser per
@@ -141,6 +143,77 @@ another language needs:
 TreeSitter.bundled "fsharp" |> TreeSitter.continuedFrom "()"
 ```
 
+## Use in the browser
+
+`<nacara-highlight>` colours code in the browser, with the same token classes as the build. Use it
+for code a page only has at runtime.
+
+List the languages it can colour:
+
+```fsharp
+|> TreeSitter.registerWith (TreeSitter.browser [ "fsharp"; "json" ])
+```
+
+Each grammar is loaded once per page, and parsing runs in a worker. Every language in
+`TreeSitter.browser` is copied into the site.
+
+### Set up using HTML
+
+:::preview
+
+```html
+<nacara-highlight language="fsharp">
+type Page = 
+    { 
+        Title: string
+        Draft: bool 
+    }
+
+let published pages = pages |> List.filter (fun page -> not page.Draft)
+</nacara-highlight>
+```
+
+:::
+
+The element renders into its `<code>` child if it has one, and creates `<pre><code>` otherwise.
+
+### Set up from JavaScript
+
+Set the code from a script:
+
+```js
+const block = document.createElement("nacara-highlight");
+block.setAttribute("language", "json");
+block.code = await response.text();
+document.body.append(block);
+```
+
+The code is shown as plain text until its grammar is loaded. It is always written as text, never as
+HTML.
+
+### Options
+
+| Option | Default | Effect |
+|---|---|---|
+| `language` | none | The grammar to colour with, by any of its names |
+| `code` | text content | The code to colour, as a property or an attribute |
+| `loading` | eager | `lazy` loads nothing until the element is scrolled into view |
+
+A language missing from `TreeSitter.browser` is shown as plain text, with a warning in the console.
+
+Setting the `code` property colours the new code. Put code that contains markup in a
+`<script type="text/plain">` child.
+
+### State
+
+The element sets `data-state` to:
+
+- `plain` - not coloured, or the grammar could not be loaded
+- `loading` - the grammar is loading
+- `coloured` - the code is coloured
+
+It fires a `nacara-highlighted` event when colouring ends.
+
 ## Colours
 
 Every capture a grammar's queries make - `keyword`, `variable.parameter`, `constructor` - becomes
@@ -155,6 +228,7 @@ of your own.
 | Option | Default | Effect |
 |---|---|---|
 | `Grammars` | `[]` | The languages to add, one entry each |
+| `Browser` | `[]` | The languages `<nacara-highlight>` can colour in the browser |
 | `UseBundledGrammars` | `true` | Keep the twelve languages inside the package |
 | `AutoBuild` | `true` | Build a grammar named by repository when the cache has none |
 | `RuntimePath` | `None` | Where the tree-sitter and wasmtime libraries are |

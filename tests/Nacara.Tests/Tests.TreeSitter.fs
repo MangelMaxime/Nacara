@@ -14,6 +14,7 @@ open Scriptorium.Nib.Assertion
 open type Scriptorium.Quill.Test
 open Nacara.Core
 open Nacara.Plugins
+open Nacara.Tests
 
 /// <summary>A runtime said outright, for a machine the package ships none for.</summary>
 let private runtime =
@@ -41,6 +42,95 @@ let all =
     testList (
         "TreeSitter",
         [
+            test (
+                "a site can colour code the browser only has at runtime",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    Build.run
+                        root
+                        (Fixture.site
+                         |> TreeSitter.registerWith (
+                             TreeSitter.browser
+                                 [
+                                     "json"
+                                     "fs"
+                                 ]
+                         ))
+                    |> ignore
+
+                    let beside (path: string) =
+                        Path.Combine(AbsolutePath.value root, "output/assets/tree-sitter", path)
+
+                    for path in
+                        [
+                            "highlight.js"
+                            "highlight-worker.js"
+                            "web-tree-sitter.js"
+                            "web-tree-sitter.wasm"
+                            "grammars/json/grammar.wasm.gz"
+                            "grammars/json/highlights.scm"
+                            "grammars/json/captures.json"
+                            "grammars/fsharp/grammar.wasm.gz"
+                        ] do
+                        assertThat (File.Exists(beside path)) (tag path >> isTrue)
+
+                    let script = File.ReadAllText(beside "highlight.js")
+
+                    assertThat
+                        (script.Contains "\"json\":\"json\"")
+                        (tag "the browser is told what it can ask for" >> isTrue)
+
+                    assertThat
+                        (script.Contains "\"fs\":\"fsharp\"")
+                        (tag "and under every name that grammar answers to" >> isTrue)
+
+                    assertThat
+                        (File.ReadAllText(beside "grammars/json/captures.json").Contains
+                            "\"string\":\"tok-string\"")
+                        (tag "a capture carries the class the build would give it" >> isTrue)
+
+                    assertThat
+                        (File.Exists(beside "grammars/yaml/grammar.wasm.gz"))
+                        (tag "and a language nobody asked for is not shipped" >> isFalse)
+            )
+
+            test (
+                "a site that colours nothing in the browser carries no wasm",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+                    Build.run root (Fixture.site |> TreeSitter.register) |> ignore
+
+                    assertThat
+                        (Directory.Exists(
+                            Path.Combine(AbsolutePath.value root, "output/assets/tree-sitter")
+                        ))
+                        (tag "nothing is emitted for the browser" >> isFalse)
+
+                    assertThat
+                        TreeSitter.defaults.Browser
+                        (tag "which is what a site gets without asking" >> isEqualTo [])
+            )
+
+            test (
+                "every capture the queries use is paired with its class",
+                fun _ ->
+                    let map = TreeSitter.classMap "(a) @keyword (b) @variable.parameter (c) @string"
+
+                    assertThat
+                        (map |> List.tryFind (fst >> (=) "keyword") |> Option.map snd)
+                        (tag "a keyword" >> isEqualTo (Some "tok-keyword"))
+
+                    assertThat
+                        (map |> List.tryFind (fst >> (=) "variable.parameter") |> Option.map snd)
+                        (tag "a dotted capture keeps its own class"
+                         >> isEqualTo (Some "tok-parameter"))
+
+                    assertThat
+                        (map |> List.tryFind (fst >> (=) "string") |> Option.map snd)
+                        (tag "a string" >> isEqualTo (Some "tok-string"))
+            )
+
             test (
                 "a capture name becomes a class the theme knows",
                 fun _ ->

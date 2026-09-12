@@ -6,6 +6,7 @@ open System.IO
 open System.IO.Compression
 open System.Reflection
 open System.Text
+open System.Text.RegularExpressions
 open Nacara.Core
 open Nacara.Plugins.Internal
 
@@ -64,6 +65,21 @@ type TreeSitterOptions =
         /// <summary>Where the wasi-sdk is published, with <c>{major}</c>, <c>{version}</c> and
         /// <c>{platform}</c> in it.</summary>
         WasiSdkSource: string
+        /// <summary>The languages <c>&lt;nacara-highlight&gt;</c> can colour in the browser.</summary>
+        /// <remarks>Empty, nothing is emitted for the browser and a page carries no wasm. A build
+        /// cannot know what language a runtime string is, so a site says it here.</remarks>
+        Browser: string list
+    }
+
+/// <summary>What a site emits so a browser can colour code with tree-sitter.</summary>
+type TreeSitterBrowserAssets =
+    {
+        /// The runtime, and one grammar per language that could be had.
+        Assets: Asset list
+        /// The languages the browser can ask for, each under the name a grammar answers to.
+        Languages: (string * string) list
+        /// The languages that could not be had, and why.
+        Problems: (string * string) list
     }
 
 [<RequireQualifiedAccess>]
@@ -78,6 +94,7 @@ module TreeSitter =
             AutoBuild = true
             CliSource = Toolchain.CliSource
             WasiSdkSource = Toolchain.WasiSdkSource
+            Browser = []
         }
 
     /// <summary>
@@ -383,6 +400,154 @@ module TreeSitter =
         shorten capture
 
     /// <summary>
+    /// Every capture the queries use, paired with the class the build would give it.
+    /// </summary>
+    /// <remarks>Read out of the queries and answered by
+    /// <see cref="M:Nacara.Plugins.TreeSitter.className" />, so a browser colours a block the way
+    /// the build coloured the one above it. Deriving it beats copying the table into JavaScript,
+    /// where the two would drift apart the first time a capture was added.</remarks>
+    /// <param name="queries">The highlights query of a grammar.</param>
+    let classMap (queries: string) =
+        Regex.Matches(queries, @"@([A-Za-z][A-Za-z0-9_.]*)")
+        |> Seq.map (fun item -> item.Groups[1].Value.TrimEnd('.'))
+        |> Seq.distinct
+        |> Seq.sort
+        |> Seq.choose (fun capture -> className capture |> Option.map (fun name -> capture, name))
+        |> List.ofSeq
+
+    let private asJson (pairs: (string * string) list) =
+        pairs
+        |> List.map (fun (key, value) -> $"\"%s{key}\":\"%s{value}\"")
+        |> String.concat ","
+        |> sprintf "{%s}"
+
+    /// <summary>The two files a language takes, or why it cannot have them.</summary>
+    let private filesOf (options: TreeSitterOptions) (language: string) =
+        let ours (read: string -> byte array) =
+            if not options.UseBundledGrammars then
+                Error
+                    $"'%s{language}' is not in Grammars, and the grammars this package ships are turned off"
+            else
+                try
+                    Ok(read language)
+                with exn ->
+                    Error exn.Message
+
+        let shipped () =
+            ours bundledGrammar, ours bundledQueries
+
+        match options.Grammars |> List.tryFind (fun item -> item.Language = language) with
+        | None -> shipped ()
+        | Some grammar ->
+            match grammar.Source with
+            | Bundled -> shipped ()
+            | Files(wasm, queries) ->
+                let read path =
+                    if File.Exists path then
+                        Ok(File.ReadAllBytes path)
+                    else
+                        Error $"'%s{path}' does not exist"
+
+                read wasm, read queries
+            | Repository(repository, reference, subdirectory, queries) ->
+                match
+                    Toolchain.ensure
+                        {
+                            Language = language
+                            Repository = repository
+                            Reference = reference
+                            Subdirectory = subdirectory
+                            Queries = queries
+                        }
+                        options.AutoBuild
+                        options.CliSource
+                        options.WasiSdkSource
+                with
+                | Error message -> Error message, Error message
+                | Ok(wasm, queries) -> Ok(File.ReadAllBytes wasm), Ok(File.ReadAllBytes queries)
+
+    /// <summary>
+    /// Everything a browser needs to colour these languages itself.
+    /// </summary>
+    /// <remarks>The wasm build of tree-sitter is fetched once per machine, and a grammar is read
+    /// from wherever the options say it comes from - the same place the build reads it.</remarks>
+    /// <param name="options">Which grammar is which, and what may be fetched or built.</param>
+    /// <param name="languages">The languages to emit a grammar for.</param>
+    /// <returns>What to emit and what the browser can ask for, or why none of it could be had.</returns>
+    let browserAssetsWith (options: TreeSitterOptions) (languages: string list) =
+        match Browser.runtime () with
+        | Error message -> Error message
+        | Ok runtime ->
+            let known =
+                [
+                    for grammar in options.Grammars -> grammar, namesOf grammar
+                    for language in bundledLanguages.Value ->
+                        let grammar = bundled language
+                        grammar, namesOf grammar
+                ]
+
+            // A site names a language the way a fence would, and `fs` is the F# grammar.
+            let canonical (name: string) =
+                known
+                |> List.tryFind (fun (_, names) -> Set.contains name names)
+                |> Option.map (fun (grammar, _) -> grammar.Language)
+                |> Option.defaultValue name
+
+            let wanted =
+                languages
+                |> List.map (fun name -> canonical (name.ToLowerInvariant()))
+                |> List.distinct
+
+            let emitted =
+                wanted
+                |> List.map (fun language ->
+                    match filesOf options language with
+                    | Error message, _
+                    | _, Error message -> language, Error message
+                    | Ok wasm, Ok queries ->
+                        let captures = classMap (Encoding.UTF8.GetString queries) |> asJson
+                        language, Ok(Browser.grammar language wasm queries captures)
+                )
+
+            let names =
+                [
+                    for language, result in emitted do
+                        if Result.isOk result then
+                            let grammar =
+                                options.Grammars
+                                |> List.tryFind (fun item -> item.Language = language)
+                                |> Option.defaultValue (bundled language)
+
+                            for name in namesOf grammar -> name, language
+                ]
+                |> List.distinctBy fst
+
+            Ok
+                {
+                    Assets =
+                        Browser.workerAsset () :: runtime
+                        @ (emitted
+                           |> List.collect (fun (_, result) -> result |> Result.defaultValue []))
+                    Languages = names
+                    Problems =
+                        emitted
+                        |> List.choose (fun (language, result) ->
+                            match result with
+                            | Error message -> Some(language, message)
+                            | Ok _ -> None
+                        )
+                }
+
+    /// <summary>Everything a browser needs to colour these languages, with the grammars this
+    /// package ships.</summary>
+    /// <param name="languages">The languages to emit a grammar for.</param>
+    let browserAssets (languages: string list) = browserAssetsWith defaults languages
+
+    /// <summary>What the script has to know before a page uses the element.</summary>
+    let private browserPrelude (names: (string * string) list) =
+        $"globalThis.__nacaraTreeSitter={{\"languages\":%s{asJson names}}};\n"
+
+    /// <summary>
     /// The pieces of one line, coloured.
     /// </summary>
     let private colour (code: string) (captures: (int * int * int * string) list) =
@@ -575,8 +740,16 @@ module TreeSitter =
     type private TreeSitterPlugin(options: TreeSitterOptions) =
         let highlighter = lazy (TreeSitterHighlighter(options))
 
+        /// <summary>What the browser side could not be given, said once.</summary>
+        let browserProblems = ResizeArray<Diagnostic>()
+
         /// <summary>Says what could not be had, as a diagnostic rather than as an exception.</summary>
         let report (context: HookContext) =
+            for diagnostic in browserProblems do
+                context.Diagnostics.Add diagnostic
+
+            browserProblems.Clear()
+
             for language, message in highlighter.Value.TakeProblems() do
                 let diagnostic =
                     if language = "runtime" then
@@ -596,13 +769,47 @@ module TreeSitter =
             member _.Name = "highlight-tree-sitter"
 
             member _.Configure registry =
-                registry
-                |> Registry.extra (highlighter.Value :> IHighlighter)
-                |> Registry.onPagesRouted (fun context ->
-                    highlighter.Value.Warm()
-                    report context
-                )
-                |> Registry.onBuildComplete report
+                let registry =
+                    registry
+                    |> Registry.extra (highlighter.Value :> IHighlighter)
+                    |> Registry.onPagesRouted (fun context ->
+                        highlighter.Value.Warm()
+                        report context
+                    )
+                    |> Registry.onBuildComplete report
+
+                match options.Browser with
+                | [] -> registry
+                | languages ->
+                    match browserAssetsWith options languages with
+                    | Error message ->
+                        browserProblems.Add(
+                            Diagnostic.warning
+                                "tree-sitter/browser-runtime-missing"
+                                $"The browser build of tree-sitter could not be had, so <nacara-highlight> shows plain text: %s{message}"
+                            |> Diagnostic.withHint
+                                "It is fetched from npm once per machine. Leave Browser empty for a site that colours nothing in the browser"
+                        )
+
+                        registry
+                    | Ok browser ->
+                        for language, message in browser.Problems do
+                            browserProblems.Add(
+                                Diagnostic.warning
+                                    "tree-sitter/browser-grammar-failed"
+                                    $"'%s{language}' is shown in the browser without colour: %s{message}"
+                                |> Diagnostic.withHint
+                                    "Name it in Grammars, or ask for a language this package ships a grammar for"
+                            )
+
+                        let assets =
+                            browser.Assets @ [ Browser.script (browserPrelude browser.Languages) ]
+
+                        registry
+                        |> Browser.add assets
+                        |> Registry.extra (
+                            Script($"%s{Browser.Directory}/%s{Browser.Script}", true)
+                        )
 
     /// <summary>The grammars to load, one per language.</summary>
     /// <param name="value">The value to use.</param>
@@ -658,6 +865,14 @@ module TreeSitter =
     let wasiSdkSource value (options: TreeSitterOptions) =
         { options with
             WasiSdkSource = value
+        }
+
+    /// <summary>The languages <c>&lt;nacara-highlight&gt;</c> can colour in the browser.</summary>
+    /// <param name="value">The value to use.</param>
+    /// <param name="options">The options so far.</param>
+    let browser value (options: TreeSitterOptions) =
+        { options with
+            Browser = value
         }
 
     /// <summary>The plugin, with the grammars this package ships.</summary>

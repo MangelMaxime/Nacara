@@ -3,13 +3,24 @@
         <PackageId>Nacara.Plugin.Highlight.TreeSitter</PackageId>
         <Description>Syntax highlighting for Nacara, backed by tree-sitter grammars compiled to wasm.</Description>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <!-- Where the bundler writes. Under obj, so a generated file is never mistaken for a source
+             one, never committed, and cleaned with everything else. -->
+        <JsOutputPath>$(BaseIntermediateOutputPath)js/</JsOutputPath>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="Runtime.fs" />
         <Compile Include="Toolchain.fs" />
         <Compile Include="Native.fs" />
         <Compile Include="Grammar.fs" />
+        <Compile Include="Browser.fs" />
         <Compile Include="TreeSitter.fs" />
+    </ItemGroup>
+    <!-- What the bundler reads, so MSBuild can tell when a bundle has gone stale. -->
+    <ItemGroup>
+        <TreeSitterSource Include="js/**/*.js" />
+        <None Include="@(TreeSitterSource)" />
+        <!-- Full paths, so this works even as a ProjectReference. -->
+        <Watch Include="@(TreeSitterSource->'%(FullPath)')" />
     </ItemGroup>
     <ItemGroup>
         <!-- Bundled languages. RecursiveDir keeps the platform's separator, so it is spelled
@@ -30,4 +41,37 @@
     <ItemGroup>
         <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
     </ItemGroup>
+
+    <!-- Kept apart from the target below so that Inputs/Outputs can skip the bundling without also
+         skipping the EmbeddedResource items, which every build needs. -->
+    <Target Name="BundleTreeSitterBrowser"
+            Inputs="@(TreeSitterSource)"
+            Outputs="$(JsOutputPath).bundled">
+        <MakeDir Directories="$(JsOutputPath)" />
+        <!-- A classic script: the theme emits plugin scripts with defer, and the entry reads
+             document.currentScript to find the worker and the grammars sitting beside it. -->
+        <Exec WorkingDirectory="$(MSBuildThisFileDirectory)"
+              Command="npx --no-install esbuild js/highlight-element.js --bundle --minify --format=iife --outfile=&quot;$(JsOutputPath)highlight.js&quot;" />
+        <!-- A module worker: tree-sitter cannot be instantiated on the main thread. web-tree-sitter
+             is left external because it is a runtime asset served beside the worker, fetched once
+             per machine rather than bundled into the package. -->
+        <Exec WorkingDirectory="$(MSBuildThisFileDirectory)"
+              Command="npx --no-install esbuild js/highlight-worker.js --bundle --minify --format=esm --external:./web-tree-sitter.js --outfile=&quot;$(JsOutputPath)highlight-worker.js&quot;" />
+        <!-- A stamp rather than the files themselves: Copy preserves the source's timestamp, so a
+             copied file would look older than the sources on every build and this target would
+             never be considered up to date. -->
+        <Touch Files="$(JsOutputPath).bundled" AlwaysCreate="true" />
+    </Target>
+
+    <!-- Before AssignTargetPaths, not before PrepareResources: AssignTargetPaths is what walks
+         @(EmbeddedResource) to work out where each one goes, and an item added after it has run is
+         quietly dropped rather than embedded. -->
+    <Target Name="EmbedTreeSitterBrowserAssets" BeforeTargets="AssignTargetPaths" DependsOnTargets="BundleTreeSitterBrowser">
+        <ItemGroup>
+            <!-- LogicalName is given explicitly so a resource name does not depend on where the
+                 bundler happened to write, and Browser.fs keeps asking for the same names. -->
+            <EmbeddedResource Include="$(JsOutputPath)highlight.js" LogicalName="Nacara.Plugin.Highlight.TreeSitter.assets.highlight.js" />
+            <EmbeddedResource Include="$(JsOutputPath)highlight-worker.js" LogicalName="Nacara.Plugin.Highlight.TreeSitter.assets.highlight-worker.js" />
+        </ItemGroup>
+    </Target>
 </Project>

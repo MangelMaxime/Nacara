@@ -211,7 +211,7 @@ let site =
     |> Site.staticFiles "static"
     |> Site.stylesheet "assets/landing.css"
     |> Markdown.register
-    |> TreeSitter.register
+    |> TreeSitter.registerWith (TreeSitter.browser [ "fsharp" ])
     |> Literate.register
     |> Changelog.registerWith "changelog" changelogs
     |> Search.register
