@@ -78,15 +78,17 @@ type BuildCache(writes: bool) =
             rendered[key] <- html
             html
 
-    /// <summary>Reuse the transform of a page whose body has not changed.</summary>
+    /// <summary>Reuse the transform of a page whose body and data have not changed.</summary>
     /// <param name="key">What the transform is, so two of them never share a cached result.</param>
     /// <param name="page">The page being transformed.</param>
     /// <param name="sink">Where what the transform says ends up.</param>
-    /// <param name="compute">What to do when the body has changed, given the sink to report to.</param>
+    /// <param name="compute">What to do when either has changed, given the sink to report to.</param>
     member _.Transform
         (key: string, page: Page, sink: DiagnosticSink, compute: DiagnosticSink -> Page)
         =
-        let cacheKey = $"%s{key}:%s{BuildCache.Hash page.Body}"
+        // A transform reads front matter through Data, so the toc range a page asks for belongs
+        // in the key as much as its body does.
+        let cacheKey = $"%s{key}:%s{BuildCache.Hash page.Body}:%i{hash page.Data}"
 
         match transformed.TryGetValue cacheKey with
         | true, (cached, diagnostics) ->

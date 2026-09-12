@@ -1227,6 +1227,33 @@ let all =
             )
 
             test (
+                "changing the toc range rebuilds the headings",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+                    let page = Path.Combine(AbsolutePath.value root, "docs/guide/advanced.md")
+                    let body = "\n## Going further\n\n### Three\n\n#### Four\n"
+
+                    let frontMatter (level: int) =
+                        $"---\ntitle: Advanced\norder: 2\ntoc:\n  to: %i{level}\n---\n"
+
+                    File.WriteAllText(page, frontMatter 2 + body)
+
+                    let cache = BuildCache()
+                    Build.runWith cache root Fixture.site |> ignore
+
+                    File.WriteAllText(page, frontMatter 4 + body)
+
+                    let result = Build.runWith cache root Fixture.site
+                    let html = outputText root "guide/advanced/index.html"
+
+                    assertThat result.WrittenFiles (tag "the page is written again" >> isEqualTo 1)
+
+                    assertThat
+                        (html.Contains "href=\"#four\"")
+                        (tag "and the toc lists the deeper heading" >> isTrue)
+            )
+
+            test (
                 "rebuilding only writes the pages that changed",
                 fun _ ->
                     let root = Fixture.copyToTemporaryDirectory ()
