@@ -129,6 +129,10 @@ html[data-live-expanded] {
 */
 
 .nacara-live__editor {
+    /* The navbar is sticky, and the actions bar sits under the editor. */
+    scroll-margin-top: calc(var(--nacara-navbar-height) + var(--nacara-space-8));
+    scroll-margin-bottom: calc(var(--nacara-control-height) + var(--nacara-space-4));
+
     .cm-editor {
         font-family: var(--nacara-font-mono);
         font-size: 0.85rem;

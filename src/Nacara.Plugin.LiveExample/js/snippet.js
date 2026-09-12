@@ -51,6 +51,7 @@ export class Snippet {
                 .map((node) => node.textContent)
                 .join("");
         this.view = null;
+        this.host = null;
         this.ideReady = false;
         this.parseTimer = null;
         this.frame = null;
@@ -216,6 +217,7 @@ export class Snippet {
 
     becomeEditor() {
         const host = el("div", "nacara-live__editor");
+        this.host = host;
         this.figure.querySelector(".nacara-code__body").replaceChildren(host);
 
         host.addEventListener("focusin", () => {
@@ -240,6 +242,13 @@ export class Snippet {
         this.buildPanels();
         this.resetButton.hidden = false;
         this.figure.dataset.live = "editor";
+        this.reveal();
+    }
+
+    // The editor caps its height, so a long block shrinks and can land outside the viewport.
+    reveal() {
+        if (this.expanded) return;
+        this.host?.scrollIntoView({ block: "nearest" });
     }
 
     buildPanels() {
