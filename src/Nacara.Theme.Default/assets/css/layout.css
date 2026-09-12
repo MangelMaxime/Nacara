@@ -392,7 +392,16 @@
     border-left-color: var(--nacara-primary);
 }
 .nacara-toc__link[data-level="3"] {
-    padding-left: var(--nacara-space-6);
+    padding-left: calc(var(--nacara-space-3) * 2);
+}
+.nacara-toc__link[data-level="4"] {
+    padding-left: calc(var(--nacara-space-3) * 3);
+}
+.nacara-toc__link[data-level="5"] {
+    padding-left: calc(var(--nacara-space-3) * 4);
+}
+.nacara-toc__link[data-level="6"] {
+    padding-left: calc(var(--nacara-space-3) * 5);
 }
 
 /*
