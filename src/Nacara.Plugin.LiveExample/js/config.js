@@ -9,6 +9,10 @@ export async function load() {
 
 export const config = () => current;
 
+// The highlighting plugin emits the worker and the grammars, and says where relative to this script.
+export const treeSitterAt = (name) =>
+    at(`${globalThis.__nacaraLiveExample?.treeSitter ?? ""}${name}`);
+
 // The theme puts whatever the fence parser did not recognise into data-meta.
 const TABS = ["result", "console", "output"];
 

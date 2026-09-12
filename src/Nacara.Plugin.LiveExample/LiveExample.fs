@@ -35,7 +35,6 @@ module LiveExample =
 
     let private styles = lazy readResource "live-example.css"
     let private script = lazy readResource "live-example.js"
-    let private highlightWorker = lazy readResource "highlight-worker.js"
     let private editor = lazy readResource "codemirror.js"
 
     /// <summary>The options a site starts from.</summary>
@@ -217,23 +216,42 @@ module LiveExample =
 
                 let tag = precompiled |> Option.map Vendor.precompileTag
 
-                let registry, coloured, layout, browserFable =
-                    match
-                        Vendor.assets
-                            treeSitter
-                            options.OutputGrammars
-                            LiveExampleTarget.languages
-                            options.Fable
-                            tag
-                    with
-                    | Ok(assets, coloured, layout, fable) ->
+                let registry, layout, browserFable =
+                    match Vendor.assets options.Fable tag with
+                    | Ok(assets, layout, fable) ->
                         assets |> List.fold (fun acc asset -> Registry.asset asset acc) registry,
-                        coloured,
                         Some layout,
                         fable
                     | Error message ->
                         Log.warn $"Live examples are disabled: %s{message}"
-                        registry, [], None, None
+                        registry, None, None
+
+                // The grammars are the highlighting plugin's, so a site that colours its blocks
+                // with tree-sitter too ships one copy of each rather than two.
+                let registry, coloured =
+                    if not treeSitter then
+                        registry, []
+                    else
+                        let wanted =
+                            "fsharp" :: LiveExampleTarget.languages
+                            @ (options.OutputGrammars |> List.map _.Language)
+
+                        let asked =
+                            { TreeSitter.defaults with
+                                Grammars = options.OutputGrammars
+                            }
+
+                        match TreeSitter.browserAssetsWith asked wanted with
+                        | Ok browser ->
+                            for language, message in browser.Problems do
+                                Log.warn
+                                    $"Output in %s{language} is shown without colour: %s{message}"
+
+                            Browser.add browser.Assets registry,
+                            browser.Languages |> List.map snd |> List.distinct
+                        | Error message ->
+                            Log.warn $"A snippet is not coloured as it is edited: %s{message}"
+                            registry, []
 
                 let precompiled =
                     match precompiled with
@@ -271,17 +289,6 @@ module LiveExample =
                     )
                     |> Registry.extra (Script($"%s{Vendor.Directory}/live-example.js", true))
                     |> Registry.asset (asBytes editor.Value $"%s{Vendor.Directory}/codemirror.js")
-
-                let registry =
-                    if treeSitter then
-                        registry
-                        |> Registry.asset (
-                            asBytes
-                                highlightWorker.Value
-                                $"%s{Vendor.Directory}/tree-sitter/highlight-worker.js"
-                        )
-                    else
-                        registry
 
                 registry
                 |> Registry.codeBlockCheck LiveExampleFences.check

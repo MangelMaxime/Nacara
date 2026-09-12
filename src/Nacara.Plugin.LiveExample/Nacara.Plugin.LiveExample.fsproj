@@ -57,11 +57,6 @@
              document.currentScript to find the assets sitting beside it. -->
         <Exec WorkingDirectory="$(MSBuildThisFileDirectory)"
               Command="npx --no-install esbuild js/live-example.js --bundle --minify --format=iife --outfile=&quot;$(JsOutputPath)live-example.js&quot;" />
-        <!-- A module worker: tree-sitter cannot be instantiated on the main thread. web-tree-sitter
-             is left external because it is a runtime asset served beside the worker, fetched once
-             per machine like the compiler rather than bundled into the package. -->
-        <Exec WorkingDirectory="$(MSBuildThisFileDirectory)"
-              Command="npx --no-install esbuild js/highlight-worker.js --bundle --minify --format=esm --external:./web-tree-sitter.js --outfile=&quot;$(JsOutputPath)highlight-worker.js&quot;" />
         <!-- Bundled on its own, because it is imported only once someone presses Run. -->
         <Exec WorkingDirectory="$(MSBuildThisFileDirectory)"
               Command="npx --no-install esbuild js/codemirror.js --bundle --minify --format=esm --outfile=&quot;$(JsOutputPath)codemirror.js&quot;" />
@@ -80,7 +75,6 @@
             <!-- LogicalName is given explicitly so a resource name does not depend on where the
                  bundler happened to write, and LiveExample.fs keeps asking for the same names. -->
             <EmbeddedResource Include="$(JsOutputPath)live-example.js" LogicalName="Nacara.Plugin.LiveExample.assets.live-example.js" />
-            <EmbeddedResource Include="$(JsOutputPath)highlight-worker.js" LogicalName="Nacara.Plugin.LiveExample.assets.highlight-worker.js" />
             <EmbeddedResource Include="$(JsOutputPath)codemirror.js" LogicalName="Nacara.Plugin.LiveExample.assets.codemirror.js" />
             <EmbeddedResource Include="$(JsOutputPath)live-example.css" LogicalName="Nacara.Plugin.LiveExample.assets.live-example.css" />
         </ItemGroup>

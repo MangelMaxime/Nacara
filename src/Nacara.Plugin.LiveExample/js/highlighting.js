@@ -1,7 +1,6 @@
 // A browser refuses synchronous WebAssembly instantiation above 8 MB on the main thread.
 
-import { at } from "./paths.js";
-import { config } from "./config.js";
+import { config, treeSitterAt } from "./config.js";
 
 const pending = new Map();
 let worker = null;
@@ -11,7 +10,7 @@ export function highlight(code, language = "fsharp") {
     if (config()?.highlighting !== "treesitter") return Promise.resolve(null);
 
     if (!worker) {
-        worker = new Worker(at("tree-sitter/highlight-worker.js"), { type: "module" });
+        worker = new Worker(treeSitterAt("highlight-worker.js"), { type: "module" });
         worker.onmessage = (event) => {
             const { id, spans } = event.data;
             const resolve = pending.get(id);

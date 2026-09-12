@@ -113,25 +113,6 @@ let all =
             )
 
             test (
-                "captures are given the classes the build would give them",
-                fun _ ->
-                    let map = Vendor.classMap "(a) @keyword (b) @variable.parameter (c) @string"
-
-                    assertThat
-                        (map |> List.tryFind (fst >> (=) "keyword") |> Option.map snd)
-                        (tag "a keyword" >> isEqualTo (Some "tok-keyword"))
-
-                    assertThat
-                        (map |> List.tryFind (fst >> (=) "variable.parameter") |> Option.map snd)
-                        (tag "a dotted capture keeps its own class"
-                         >> isEqualTo (Some "tok-parameter"))
-
-                    assertThat
-                        (map |> List.tryFind (fst >> (=) "string") |> Option.map snd)
-                        (tag "a string" >> isEqualTo (Some "tok-string"))
-            )
-
-            test (
                 "the output is colourable too, from its own grammar",
                 fun _ ->
                     let shipped = TreeSitter.bundledLanguages.Value
@@ -142,7 +123,8 @@ let all =
                         (tag "every target's output has a grammar, so none is shown plain"
                          >> isEqualTo [])
 
-                    let map = Vendor.classMap "(a) @keyword (b) @string (c) @punctuation.bracket"
+                    let map =
+                        TreeSitter.classMap "(a) @keyword (b) @string (c) @punctuation.bracket"
 
                     assertThat
                         (map |> List.map snd)
@@ -393,7 +375,7 @@ let all =
                         (File.Exists(
                             Path.Combine(
                                 AbsolutePath.value root,
-                                "output/assets/live-example/tree-sitter/highlight-worker.js"
+                                "output/assets/tree-sitter/highlight-worker.js"
                             )
                         ))
                         (tag "and the tree-sitter worker is not shipped" >> isFalse)
@@ -433,13 +415,31 @@ let all =
                         [
                             $"%s{compiler}/worker.min.js"
                             $"%s{compiler}/bundle.min.js"
-                            "tree-sitter/highlight-worker.js"
-                            "tree-sitter/web-tree-sitter.wasm"
+                        ] do
+                        assertThat (exists path) (tag path >> isTrue)
+
+                    // The colouring is the highlighting plugin's, and sits in its own directory.
+                    let shipped path =
+                        File.Exists(
+                            Path.Combine(AbsolutePath.value root, "output/assets/tree-sitter", path)
+                        )
+
+                    for path in
+                        [
+                            "highlight-worker.js"
+                            "web-tree-sitter.wasm"
                             "grammars/fsharp/grammar.wasm.gz"
                             "grammars/fsharp/highlights.scm"
                             "grammars/fsharp/captures.json"
                         ] do
-                        assertThat (exists path) (tag path >> isTrue)
+                        assertThat (shipped path) (tag path >> isTrue)
+
+                    assertThat
+                        (Regex.IsMatch(
+                            read root "output/assets/live-example/live-example.js",
+                            "\"treeSitter\":\"\\.\\./tree-sitter/\""
+                        ))
+                        (tag "and the script is told where to find it" >> isTrue)
 
                     assertThat
                         (Directory.Exists(

@@ -141,6 +141,7 @@ module internal LiveExampleConfig =
                 [
                     "target", Encode.string chosen
                     "targets", Encode.object entries
+                    "treeSitter", Encode.string Vendor.TreeSitterPath
                 ]
             |> Encode.toString 0
 

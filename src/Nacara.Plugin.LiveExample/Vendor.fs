@@ -70,13 +70,14 @@ module Vendor =
     /// <summary>The pair this plugin was built and tried against.</summary>
     let Default = Pinned(StandaloneVersion, MetadataVersion)
 
-    /// <summary>Matches the tree-sitter the highlighting plugin pins.</summary>
-    /// <remarks>A grammar is compiled against a tree-sitter ABI, so the browser build has to be the
-    /// same version or it cannot load the grammar the site already ships.</remarks>
-    let TreeSitterVersion = Runtime.Version
-
     /// <summary>Where a site keeps all of this.</summary>
     let Directory = "assets/live-example"
+
+    /// <summary>Where the highlighting plugin's browser files are, relative to this one's.</summary>
+    /// <remarks>The two plugins emit side by side and the grammars are shared, so a site that
+    /// colours its snippets and its blocks with tree-sitter ships one copy of each.</remarks>
+    let TreeSitterPath =
+        Path.GetRelativePath(Directory, Browser.Directory).Replace('\\', '/') + "/"
 
     /// <summary>Where a build of the compiler, its references and a precompiled library are served
     /// from, each relative to <see cref="P:Nacara.Plugins.LiveExample.Vendor.Directory" />.</summary>
@@ -438,17 +439,6 @@ module Vendor =
             Checksum = None
         }
 
-    let treeSitter =
-        {
-            Name = "web-tree-sitter"
-            Version = TreeSitterVersion
-            Url = npm "" "web-tree-sitter" TreeSitterVersion
-            Archive = TarGzip
-            Files = sentinel
-            Executable = []
-            Checksum = None
-        }
-
     /// <summary>The version npm calls latest, or nothing if it could not be asked.</summary>
     let private latestOf (package: string) =
         try
@@ -546,58 +536,15 @@ module Vendor =
     let private copy source destination =
         CopyFile(AbsolutePath.create source, RelativePath.create $"%s{Directory}/%s{destination}")
 
-    /// <summary>What the highlighting plugin ships for a language, or why it does not.</summary>
-    let private bundled (read: string -> 'T) (language: string) =
-        try
-            Ok(read language)
-        with exn ->
-            Error exn.Message
-
-    let private bundledGrammar = bundled TreeSitter.bundledGrammar
-    let private bundledQueries = bundled TreeSitter.bundledQueries
-
-    /// <summary>
-    /// Every capture the queries use, paired with the class the build would give it.
-    /// </summary>
-    /// <remarks>
-    /// Read out of the queries and answered by the highlighting plugin's own
-    /// <see cref="M:Nacara.Plugins.TreeSitter.className" />, so the browser colours a snippet the
-    /// same way the build coloured the block above it. Deriving it beats copying the table into
-    /// JavaScript, where the two would drift apart the first time a capture was added.
-    /// </remarks>
-    let classMap (queries: string) =
-        Regex.Matches(queries, @"@([A-Za-z][A-Za-z0-9_.]*)")
-        |> Seq.map (fun m -> m.Groups[1].Value.TrimEnd('.'))
-        |> Seq.distinct
-        |> Seq.sort
-        |> Seq.choose (fun capture ->
-            TreeSitter.className capture |> Option.map (fun name -> capture, name)
-        )
-        |> List.ofSeq
-
-    let private json (pairs: (string * string) list) =
-        pairs
-        |> List.map (fun (key, value) -> $"\"%s{key}\":\"%s{value}\"")
-        |> String.concat ","
-        |> sprintf "{%s}"
-
-    /// <summary>Everything the browser needs, as assets to emit.</summary>
-    /// <param name="treeSitterHighlighting">Whether the tree-sitter grammar is wanted too.</param>
-    /// <param name="named">Grammars the site named for the languages its targets produce.</param>
-    /// <param name="targetLanguages">What the targets compile to, so the ones the highlighting
-    /// plugin already ships a grammar for are coloured without the site saying anything.</param>
+    /// <summary>The compiler and what it checks against, as assets to emit.</summary>
+    /// <remarks>Colouring is the highlighting plugin's: see
+    /// <see cref="M:Nacara.Plugins.TreeSitter.browserAssetsWith" /> for the grammars a snippet is
+    /// coloured with.</remarks>
     /// <param name="release">Which build of the compiler to fetch.</param>
     /// <param name="tag">What the precompiled library is, when the site built one.</param>
-    /// <returns>The assets, the languages a grammar was emitted for, where all of it went, and the
-    /// Fable this build of the compiler was made with - or the first reason one could not be
-    /// had.</returns>
-    let assets
-        (treeSitterHighlighting: bool)
-        (named: TreeSitterGrammar list)
-        (targetLanguages: string list)
-        (release: FableRelease)
-        (tag: string option)
-        =
+    /// <returns>The assets, where all of it went, and the Fable this build of the compiler was made
+    /// with - or the first reason one could not be had.</returns>
+    let assets (release: FableRelease) (tag: string option) =
         let standaloneVersion, metadataVersion = resolve release
         let layout = layout standaloneVersion metadataVersion tag
 
@@ -661,127 +608,4 @@ module Vendor =
                 )
                 |> List.ofSeq
 
-            if not treeSitterHighlighting then
-                Ok(compiler @ assemblies, [], layout, fable)
-            else
-
-                match Tool.resolve treeSitter with
-                | Error message -> Error message
-                | Ok treeSitterDir ->
-                    let filesOf language =
-                        match
-                            named |> List.tryFind (fun grammar -> grammar.Language = language)
-                        with
-                        | Some grammar ->
-                            match grammar.Source with
-                            | Bundled -> bundledGrammar language, bundledQueries language
-                            | Files(wasm, queries) ->
-                                let read path =
-                                    if File.Exists path then
-                                        Ok(File.ReadAllBytes path)
-                                    else
-                                        Error
-                                            $"The grammar for %s{language} names '%s{path}', which does not exist"
-
-                                read wasm, read queries
-                            | Repository(repository, reference, subdirectory, queries) ->
-                                match
-                                    Toolchain.ensure
-                                        {
-                                            Language = language
-                                            Repository = repository
-                                            Reference = reference
-                                            Subdirectory = subdirectory
-                                            Queries = queries
-                                        }
-                                        true
-                                        Toolchain.CliSource
-                                        Toolchain.WasiSdkSource
-                                with
-                                | Error message -> Error message, Error message
-                                | Ok(wasm, queries) ->
-                                    Ok(File.ReadAllBytes wasm), Ok(File.ReadAllBytes queries)
-                        | None -> bundledGrammar language, bundledQueries language
-
-                    let ofLanguage language =
-                        match filesOf language with
-                        | Error message, _
-                        | _, Error message -> Error message
-                        | Ok grammar, Ok queries ->
-                            Ok
-                                [
-                                    WriteBytes(
-                                        grammar,
-                                        RelativePath.create
-                                            $"%s{Directory}/grammars/%s{language}/grammar.wasm.gz"
-                                    )
-                                    WriteBytes(
-                                        queries,
-                                        RelativePath.create
-                                            $"%s{Directory}/grammars/%s{language}/highlights.scm"
-                                    )
-                                    WriteText(
-                                        json (classMap (Text.Encoding.UTF8.GetString queries)),
-                                        RelativePath.create
-                                            $"%s{Directory}/grammars/%s{language}/captures.json"
-                                    )
-                                ]
-
-                    let shipped = TreeSitter.bundledLanguages.Value
-
-                    let languages =
-                        "fsharp" :: targetLanguages
-                        |> List.filter (fun language -> List.contains language shipped)
-                        |> List.distinct
-
-                    let grammars =
-                        (Ok [], languages)
-                        ||> List.fold (fun state language ->
-                            match state, ofLanguage language with
-                            | Error message, _
-                            | _, Error message -> Error message
-                            | Ok sofar, Ok assets -> Ok(sofar @ assets)
-                        )
-
-                    match grammars with
-                    | Error message -> Error message
-                    | Ok grammars ->
-                        let extra =
-                            named
-                            |> List.filter (fun grammar ->
-                                not (List.contains grammar.Language languages)
-                            )
-                            |> List.choose (fun grammar ->
-                                match ofLanguage grammar.Language with
-                                | Ok assets -> Some(grammar.Language, assets)
-                                | Error message ->
-                                    Log.warn
-                                        $"Output in %s{grammar.Language} is shown without colour: %s{message}"
-
-                                    None
-                            )
-
-                        let grammars = grammars @ (extra |> List.collect snd)
-                        let emitted = languages @ (extra |> List.map fst)
-
-                        let runtime =
-                            [
-                                copy
-                                    (under
-                                        treeSitterDir
-                                        [
-                                            "package"
-                                            "web-tree-sitter.js"
-                                        ])
-                                    "tree-sitter/web-tree-sitter.js"
-                                copy
-                                    (under
-                                        treeSitterDir
-                                        [
-                                            "package"
-                                            "web-tree-sitter.wasm"
-                                        ])
-                                    "tree-sitter/web-tree-sitter.wasm"
-                            ]
-
-                        Ok(compiler @ assemblies @ runtime @ grammars, emitted, layout, fable)
+            Ok(compiler @ assemblies, layout, fable)
