@@ -142,8 +142,18 @@ type PersonExtensions =
     [<Extension>]
     static member Initials(person: Person) : string = failwith "documentation only"
 
+/// <summary>A value, and where it came from.</summary>
+type Sourced<'T> =
+    {
+        Value: 'T
+        Source: string
+    }
+
 /// <summary>Generic work, with the constraints spelled out.</summary>
 module Constrained =
+
+    /// <summary>What a <see cref="T:Fixture.Library.Sourced`1"/> carries.</summary>
+    let valueOf (sourced: Sourced<'T>) : 'T = failwith "documentation only"
 
     /// <summary>The larger of two, whatever they are. Compares like <see cref="T:Fixture.Library.Person"/> does.</summary>
     /// <typeparam name="T">What is being compared.</typeparam>

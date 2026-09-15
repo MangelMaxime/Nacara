@@ -502,6 +502,26 @@ let all =
             )
 
             test (
+                "a cref to a generic type points at its page",
+                fun _ ->
+                    let page =
+                        Render.entity
+                            (fun slug -> $"/reference/{slug}/")
+                            (fun name ->
+                                if name = "Sourced" then
+                                    Some "/reference/fixture-library/sourced/"
+                                else
+                                    None
+                            )
+                            false
+                            (declaration "Constrained")
+
+                    assertThat
+                        (page.Contains "[`Sourced`](/reference/fixture-library/sourced/)")
+                        (tag "named without the number of its type parameters" >> isTrue)
+            )
+
+            test (
                 "documentation the compiler wrote badly is still read",
                 fun _ ->
                     let describe =

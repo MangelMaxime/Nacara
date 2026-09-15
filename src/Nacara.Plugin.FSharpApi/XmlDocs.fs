@@ -53,7 +53,7 @@ module XmlDocs =
             else
                 cref
 
-        name.Split('(')[0]
+        Regex.Replace(name.Split('(')[0], @"`+\d+", "")
 
     let rec private toMarkdown (node: XNode) : string =
         match node with
