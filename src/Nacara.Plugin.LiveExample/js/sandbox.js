@@ -66,7 +66,7 @@ ${css ? `<style>${css}</style>` : ""}
 
     const frame = document.createElement("iframe");
     frame.className = "nacara-live__frame";
-    frame.setAttribute("sandbox", "allow-scripts allow-same-origin");
+    frame.setAttribute("sandbox", "allow-scripts allow-same-origin allow-forms");
     frame.srcdoc = page;
     return frame;
 }
