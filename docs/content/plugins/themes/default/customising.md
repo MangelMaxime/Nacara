@@ -63,6 +63,7 @@ declares every one of them, for both colour schemes. They cover:
 | Spacing | `--nacara-space-1` … `--nacara-space-12`, which everything else is built from |
 | Type | The sans and mono families |
 | Controls | The height and radius shared by everything in the navbar |
+| Shadow | `--nacara-shadow`, and `--nacara-shadow-floating` for what floats over the page, such as a navbar dropdown. Unset, it is `--nacara-shadow` |
 | Code | `--tok-*`, one per token kind - see [Code colours](../../highlight/index.md#colours) |
 
 Redefine the ones you need; the rest keep the theme's values.

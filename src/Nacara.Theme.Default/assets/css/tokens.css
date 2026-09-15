@@ -44,6 +44,7 @@
     --nacara-primary-contrast: #ffffff;
     --nacara-primary-subtle: #ececfb;
     --nacara-shadow: 0 1px 2px rgb(16 24 40 / 6%), 0 4px 12px rgb(16 24 40 / 6%);
+    /* --nacara-shadow-floating: unset, what floats over the page falls back to --nacara-shadow. */
 
     --nacara-note: #6669d7;
     --nacara-tip: #17935f;

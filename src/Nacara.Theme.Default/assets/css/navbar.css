@@ -91,13 +91,15 @@ button.nacara-navbar__link[data-nacara-dropdown]::after {
     position: absolute;
     top: calc(100% + var(--nacara-space-1));
     left: 0;
+    width: max-content;
     min-width: 15rem;
+    max-width: min(28rem, 90vw);
     margin: 0;
     padding: var(--nacara-space-2);
     background: var(--nacara-bg-raised);
     border: 1px solid var(--nacara-border);
     border-radius: var(--nacara-radius);
-    box-shadow: var(--nacara-shadow);
+    box-shadow: var(--nacara-shadow-floating, var(--nacara-shadow));
     list-style: none;
 }
 /* The gap up to the trigger belongs to the panel, or a pointer crossing it closes the menu. */
@@ -119,7 +121,7 @@ button.nacara-navbar__link[data-nacara-dropdown]::after {
     color: var(--nacara-text);
 }
 .nacara-dropdown__item:hover {
-    background: var(--nacara-bg-subtle);
+    background: var(--nacara-primary-subtle);
     text-decoration: none;
 }
 .nacara-dropdown__description {
