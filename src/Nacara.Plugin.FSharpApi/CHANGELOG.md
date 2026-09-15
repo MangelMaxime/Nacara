@@ -1,5 +1,5 @@
 ---
-last_commit_released: 6c0de327c613293f209c75d6472d32f9318fbeff
+last_commit_released: a042e9e6333701e3cc483c3f5337150d5b599b88
 ---
 
 # Changelog
@@ -11,6 +11,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 1.0.0-beta.3 - 2026-09-15
+
+### 🐞 Bug Fixes
+
+* *(fsharp-api)* Link a cref to a generic type ([b0c1e93](https://github.com/MangelMaxime/Nacara/commit/b0c1e93684db52e0a3e8cd917d1f511c3d57cae3))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/6c0de327c613293f209c75d6472d32f9318fbeff..a042e9e6333701e3cc483c3f5337150d5b599b88)</small></strong>
 
 ## 1.0.0-beta.2 - 2026-09-05
 

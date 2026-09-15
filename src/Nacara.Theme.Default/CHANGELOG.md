@@ -1,5 +1,5 @@
 ---
-last_commit_released: 09a68e254780ca78d3c8463b489a11124920e50c
+last_commit_released: a042e9e6333701e3cc483c3f5337150d5b599b88
 ---
 
 # Changelog
@@ -11,6 +11,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 1.0.0-beta.8 - 2026-09-15
+
+### 🐞 Bug Fixes
+
+* *(theme-default)* Size the navbar dropdown to its content ([a042e9e](https://github.com/MangelMaxime/Nacara/commit/a042e9e6333701e3cc483c3f5337150d5b599b88))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/09a68e254780ca78d3c8463b489a11124920e50c..a042e9e6333701e3cc483c3f5337150d5b599b88)</small></strong>
 
 ## 1.0.0-beta.7 - 2026-09-12
 
