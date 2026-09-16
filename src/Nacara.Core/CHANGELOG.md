@@ -1,5 +1,5 @@
 ---
-last_commit_released: 09a68e254780ca78d3c8463b489a11124920e50c
+last_commit_released: 4df579722848356abcfd265a61967830b991af33
 ---
 
 # Changelog
@@ -11,6 +11,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 2.0.0-beta.6 - 2026-09-16
+
+### 🚀 Features
+
+* *(core)* Cap a code block's height with maxHeight= ([4df5797](https://github.com/MangelMaxime/Nacara/commit/4df579722848356abcfd265a61967830b991af33))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/09a68e254780ca78d3c8463b489a11124920e50c..4df579722848356abcfd265a61967830b991af33)</small></strong>
 
 ## 2.0.0-beta.5 - 2026-09-12
 
