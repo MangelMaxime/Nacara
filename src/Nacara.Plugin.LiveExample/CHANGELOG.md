@@ -1,5 +1,5 @@
 ---
-last_commit_released: 4df579722848356abcfd265a61967830b991af33
+last_commit_released: 8f294aa6cfad169b23194617d082c7035f9562e3
 ---
 
 # Changelog
@@ -11,6 +11,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 1.0.0-beta.9 - 2026-09-16
+
+### 🐞 Bug Fixes
+
+* *(live-example)* Let an expanded snippet ignore the block's height cap ([8f294aa](https://github.com/MangelMaxime/Nacara/commit/8f294aa6cfad169b23194617d082c7035f9562e3))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/4df579722848356abcfd265a61967830b991af33..8f294aa6cfad169b23194617d082c7035f9562e3)</small></strong>
 
 ## 1.0.0-beta.8 - 2026-09-16
 
