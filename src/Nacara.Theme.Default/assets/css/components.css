@@ -54,7 +54,7 @@
 .nacara-steps__number {
     display: block;
     margin-bottom: var(--nacara-space-1);
-    color: var(--nacara-text-muted);
+    color: var(--nacara-primary);
     font-size: 0.625rem;
     font-weight: 500;
     letter-spacing: 0.12em;
