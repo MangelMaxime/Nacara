@@ -65,6 +65,7 @@ declares every one of them, for both colour schemes. They cover:
 | Controls | The height and radius shared by everything in the navbar |
 | Shadow | `--nacara-shadow`, and `--nacara-shadow-floating` for what floats over the page, such as a navbar dropdown. Unset, it is `--nacara-shadow` |
 | Code | `--tok-*`, one per token kind - see [Code colours](../../highlight/index.md#colours) |
+| Height | `--nacara-code-max-height`, how tall a code block gets before it scrolls. Unset, a block grows with its code |
 
 Redefine the ones you need; the rest keep the theme's values.
 

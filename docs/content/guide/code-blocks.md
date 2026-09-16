@@ -145,6 +145,41 @@ let site = Site.create "Docs" |> Site.baseUrl "/" |> Markdown.register
 
 :::
 
+## Height
+
+`maxHeight=` caps a block and scrolls it, for a listing too long to run down the page:
+
+:::preview
+
+````markdown "maxHeight=8rem"
+```json maxHeight=8rem
+{
+  "name": "example",
+  "one": 1,
+  "two": 2,
+  "three": 3,
+  "four": 4,
+  "five": 5,
+  "six": 6
+}
+```
+````
+
+:::
+
+Takes a CSS length: `30rem`, `400px`, `50vh`. Anything else is ignored.
+
+A [live example](../plugins/live-example.md) caps its editor with it too, so the block is the same
+height before and after Run.
+
+Set `--nacara-code-max-height` in your own stylesheet to cap every block of the site:
+
+```css
+:root {
+  --nacara-code-max-height: 30rem;
+}
+```
+
 ## Highlighting
 
 Colours come from CSS classes, never inline styles, so one rendering serves light and dark and

@@ -82,6 +82,9 @@ back, and the page returns to where they left it.
 Snippets run in a frame of their own, so one that throws, loops forever or rewrites the whole
 document breaks only itself.
 
+The editor is 28rem tall at most and scrolls past that. A block sets its own height with
+[`maxHeight=`](../guide/code-blocks.md#height), which caps it as text and as an editor.
+
 A [diff](../guide/code-blocks.md#writing-a-diff) runs as the code it leaves behind - the lines you
 marked deleted are shown but never compiled, so a block can show a change and still run.
 

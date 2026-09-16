@@ -36,6 +36,9 @@ type CodeBlockMeta =
         ShowLineNumbers: bool
         StartLineNumber: int
         Wrap: bool
+        /// <summary>How tall the block gets before it scrolls, as a CSS length.</summary>
+        /// <remarks>What <c>maxHeight=</c> sets. A live example caps its editor with it too.</remarks>
+        MaxHeight: string option
         LineMarkers: Map<int, Marker>
         /// Regular expressions marking text inside lines.
         WordMarkers: (Regex * Marker) list
@@ -123,12 +126,17 @@ module CodeBlockMeta =
             ShowLineNumbers = false
             StartLineNumber = 1
             Wrap = false
+            MaxHeight = None
             LineMarkers = Map.empty
             WordMarkers = []
             Collapse = []
             HighlightAs = None
             Unknown = []
         }
+
+    /// <summary>Whether that is a CSS length, and so safe to write into a style attribute.</summary>
+    let private isLength (value: string) =
+        Regex.IsMatch(value, @"^\d+(\.\d+)?(px|rem|em|ch|vh|svh|dvh|%)$")
 
     /// <summary>Split a meta string into tokens, keeping quoted, braced and slashed groups whole.</summary>
     let private tokenize (meta: string) =
@@ -271,6 +279,10 @@ module CodeBlockMeta =
                     | "wrap", None ->
                         { state with
                             Wrap = true
+                        }
+                    | "maxHeight", Some value when isLength (unquote value) ->
+                        { state with
+                            MaxHeight = Some(unquote value)
                         }
                     | "lang", Some value ->
                         { state with

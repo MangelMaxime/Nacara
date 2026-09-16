@@ -260,6 +260,39 @@ let meta =
             )
 
             test (
+                "a block can say how tall it gets",
+                fun _ ->
+                    assertThat
+                        (parse "maxHeight=30rem").MaxHeight
+                        (tag "a length is taken as written" >> isEqualTo (Some "30rem"))
+
+                    assertThat
+                        (parse "maxHeight=\"40vh\"").MaxHeight
+                        (tag "quoted too" >> isEqualTo (Some "40vh"))
+
+                    assertThat
+                        (parse "maxHeight=60px").MaxHeight
+                        (tag "nothing is set without it" >> isEqualTo (Some "60px"))
+
+                    assertThat
+                        (parse "").MaxHeight
+                        (tag "and a block that says nothing has none" >> isEqualTo None)
+            )
+
+            test (
+                "a height that is not a length is not written into the page",
+                fun _ ->
+                    let meta = parse "maxHeight=30rem;background:url(x)"
+
+                    assertThat meta.MaxHeight (tag "nothing is taken" >> isEqualTo None)
+
+                    assertThat
+                        meta.Unknown
+                        (tag "and it is left for a plugin to make sense of"
+                         >> isEqualTo [ "maxHeight=30rem;background:url(x)" ])
+            )
+
+            test (
                 "unknown tokens are kept for plugins",
                 fun _ ->
                     assertThat
@@ -354,6 +387,21 @@ let layering =
     testList (
         "layering",
         [
+            test (
+                "a height travels to the page as a custom property",
+                fun _ ->
+                    let html = render (parse "maxHeight=30rem") "let x = 1"
+
+                    assertThat
+                        (html.Contains "style=\"--nacara-code-max-height:30rem\"")
+                        (tag "which is what the theme and the editor both read" >> isTrue)
+
+                    assertThat
+                        ((render CodeBlockMeta.empty "let x = 1").Contains
+                            "--nacara-code-max-height")
+                        (tag "and a block that asked for nothing carries none" >> isFalse)
+            )
+
             test (
                 "with no theme, code still renders",
                 fun _ ->

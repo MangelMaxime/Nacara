@@ -24,6 +24,8 @@
     position: relative;
     /* A block that folds lines is drawn as several <pre>. */
     padding: var(--nacara-space-4) 0;
+    max-height: var(--nacara-code-max-height, none);
+    overflow-y: auto;
 }
 .nacara-code pre {
     margin: 0;

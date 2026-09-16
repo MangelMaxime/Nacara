@@ -144,7 +144,7 @@ html[data-live-expanded] {
 
     .cm-scroller {
         font-family: inherit;
-        max-height: 28rem;
+        max-height: var(--nacara-code-max-height, var(--nacara-live-editor-height, 28rem));
     }
 
     .cm-gutters {

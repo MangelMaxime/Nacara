@@ -138,6 +138,10 @@ type NacaraCodeBlockRenderer() =
                         if block.Meta.ShowLineNumbers then
                             "data-line-numbers", "true"
 
+                        match block.Meta.MaxHeight with
+                        | Some height -> "style", $"--nacara-code-max-height:%s{height}"
+                        | None -> ()
+
                         if not block.Meta.Unknown.IsEmpty then
                             "data-meta",
                             CodeBlock.escapeAttribute (String.concat " " block.Meta.Unknown)
