@@ -80,6 +80,7 @@ html[data-live-expanded] {
     .nacara-code__body {
         flex: 1;
         min-height: 0;
+        max-height: none;
         overflow: auto;
     }
 
