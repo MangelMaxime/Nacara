@@ -60,25 +60,40 @@ on its own.
 
 ## Steps
 
+Each heading inside the block opens a step. The number is written for you.
+
 ::::preview
 
-```markdown
+`````markdown
 :::steps
-1. Create the project
 
-    ```bash frame=terminal
-    mkdir my-project
-    ```
+### Create the project
 
-2. Describe the site
-3. Build it
+Anything a step needs goes under its heading.
+
+````bash frame=terminal
+mkdir my-project
+````
+
+### Describe the site
+
+One file says what the site is and which plugins it uses.
+
+### Build it
+
+The output lands in `docs_deploy`.
+
 :::
-```
+`````
 
 ::::
 
-A numbered sequence, drawn as one - useful when each step carries a code block and the numbers would
-otherwise drift apart.
+A step written with no heading keeps its number and renders without a title.
+
+The title is a heading one level under the heading the block sits under, so steps written under an
+`##` get `###`. It carries an anchor like any other heading.
+
+A `:::steps` block inside another one is refused. What it holds still renders.
 
 ## Disclosures
 

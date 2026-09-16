@@ -224,6 +224,138 @@ let all =
             )
 
             test (
+                "a step is titled, numbered and ordered",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    File.WriteAllText(
+                        Path.Combine(AbsolutePath.value root, "docs/steps.md"),
+                        "---\ntitle: Steps\n---\n\n## Install it\n\n:::steps\n\n### Describe the field\n\nAny record works.\n\n### Draw it\n\nThe render function receives it.\n\n:::\n"
+                    )
+
+                    let result = Build.run root Fixture.site
+
+                    let html =
+                        File.ReadAllText(
+                            Path.Combine(AbsolutePath.value root, "output/steps/index.html")
+                        )
+
+                    assertThat
+                        (html.Contains """<ol class="nacara-steps">""")
+                        (tag "the sequence is a list, so it survives with CSS off" >> isTrue)
+
+                    assertThat
+                        (html.Contains
+                            """<span class="nacara-steps__number" aria-hidden="true">Step 01</span>""")
+                        (tag "each step carries its number, unannounced beside the list's own"
+                         >> isTrue)
+
+                    assertThat (html.Contains "Step 02") (tag "which counts up" >> isTrue)
+
+                    assertThat
+                        (html.Contains
+                            """<h3 id="describe-the-field" class="nacara-steps__title">Describe the field""")
+                        (tag "the heading of a step becomes its title, one level under the block"
+                         >> isTrue)
+
+                    assertThat
+                        (html.Contains "href=\"#describe-the-field\"")
+                        (tag "which keeps its anchor, so the table of contents still reaches it"
+                         >> isTrue)
+
+                    assertThat
+                        (html.Contains "nacara-step-bullet")
+                        (tag "and nothing draws a numbered circle any more" >> isFalse)
+
+                    assertThat
+                        (result.Diagnostics
+                         |> List.exists (fun item -> item.Code.StartsWith "steps"))
+                        (tag "a block written the way the docs say reports nothing" >> isFalse)
+            )
+
+            test (
+                "steps under a deeper heading take a deeper title",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    File.WriteAllText(
+                        Path.Combine(AbsolutePath.value root, "docs/deep.md"),
+                        "---\ntitle: Deep\n---\n\n## Section\n\n### Part\n\n:::steps\n\n### Do it\n\nWords.\n\n:::\n"
+                    )
+
+                    Build.run root Fixture.site |> ignore
+
+                    let html =
+                        File.ReadAllText(
+                            Path.Combine(AbsolutePath.value root, "output/deep/index.html")
+                        )
+
+                    assertThat
+                        (html.Contains """<h4 id="do-it" class="nacara-steps__title">Do it""")
+                        (tag "the title sits under the heading the block sits under" >> isTrue)
+            )
+
+            test (
+                "a step with no title of its own is still a step",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    File.WriteAllText(
+                        Path.Combine(AbsolutePath.value root, "docs/untitled.md"),
+                        "---\ntitle: Untitled\n---\n\n:::steps\n\n1. Create the project\n2. Write a page\n\n:::\n"
+                    )
+
+                    let result = Build.run root Fixture.site
+
+                    let html =
+                        File.ReadAllText(
+                            Path.Combine(AbsolutePath.value root, "output/untitled/index.html")
+                        )
+
+                    assertThat
+                        (html.Contains
+                            """<span class="nacara-steps__number" aria-hidden="true">Step 01</span>""")
+                        (tag "what was written still renders" >> isTrue)
+
+                    assertThat
+                        (html.Contains "nacara-steps__title")
+                        (tag "with no title invented for it" >> isFalse)
+
+                    assertThat
+                        (result.Diagnostics
+                         |> List.exists (fun item -> item.Code.StartsWith "markdown/steps"))
+                        (tag "and nothing is said about how the page should have been written"
+                         >> isFalse)
+            )
+
+            test (
+                "steps inside steps are refused",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    File.WriteAllText(
+                        Path.Combine(AbsolutePath.value root, "docs/nested.md"),
+                        "---\ntitle: Nested\n---\n\n::::steps\n\n### Outer\n\n:::steps\n\n### Inner\n\nWords.\n\n:::\n\n::::\n"
+                    )
+
+                    let result = Build.run root Fixture.site
+
+                    assertThat
+                        (result.Diagnostics
+                         |> List.exists (fun item -> item.Code = "markdown/steps-nested"))
+                        (tag "the numbering of one sequence inside another is refused" >> isTrue)
+
+                    let html =
+                        File.ReadAllText(
+                            Path.Combine(AbsolutePath.value root, "output/nested/index.html")
+                        )
+
+                    assertThat
+                        (html.Contains "Inner")
+                        (tag "and what was written is still shown" >> isTrue)
+            )
+
+            test (
                 "a file tree says which entries are directories",
                 fun _ ->
                     let root = Fixture.copyToTemporaryDirectory ()

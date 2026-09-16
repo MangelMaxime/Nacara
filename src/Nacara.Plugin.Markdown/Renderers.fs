@@ -202,6 +202,8 @@ type DirectiveResult =
     | Preview
     /// Draw the list it contains as a directory listing.
     | FileTree
+    /// Number what it contains, one step per heading.
+    | Steps
     /// The directive is not known; the transform reports it.
     | Unknown
 
@@ -239,7 +241,7 @@ module Directive =
                 ]
             )
         | "tab" -> Element("nacara-tab", [ "data-label", label ])
-        | "steps" -> Element("div", [ "class", "nacara-steps" ])
+        | "steps" -> Steps
         | "preview" -> Preview
         | "filetree"
         | "file-tree" -> FileTree
@@ -419,6 +421,90 @@ type NacaraContainerRenderer
 
         renderer.Write "</div>" |> ignore
 
+    /// <summary>
+    /// A numbered sequence, one step per heading.
+    /// </summary>
+    /// <remarks>The number is a label rather than a marker: a documentation step has no state, and
+    /// a circled number implies one.</remarks>
+    member private _.WriteSteps(renderer: HtmlRenderer, container: CustomContainer) =
+        let isSteps (block: Block) =
+            match block with
+            | :? CustomContainer as other ->
+                not (isNull other.Info) && other.Info.ToLowerInvariant() = "steps"
+            | _ -> false
+
+        let rec ancestors (block: Block) : Block list =
+            match block.Parent with
+            | null -> []
+            | parent -> (parent :> Block) :: ancestors parent
+
+        if ancestors container |> List.exists isSteps then
+            report
+                "steps-nested"
+                "A ':::steps' block cannot hold another one"
+                "Both the numbering and the bar down the side become ambiguous. Write the inner steps as an ordered list, or split the page"
+                container.Line
+                container.Column
+
+            renderer.Write """<div class="nacara-steps">""" |> ignore
+            renderer.WriteChildren container |> ignore
+            renderer.Write "</div>" |> ignore
+        else
+
+            let document = ancestors container |> List.tryLast |> Option.defaultValue container
+
+            // A step's title sits one level under the heading its block was written under.
+            let level =
+                match document with
+                | :? MarkdownDocument as document ->
+                    document.Descendants()
+                    |> Seq.cast<MarkdownObject>
+                    |> Seq.takeWhile (fun block -> not (obj.ReferenceEquals(block, container)))
+                    |> Seq.choose (
+                        function
+                        | :? HeadingBlock as heading -> Some heading.Level
+                        | _ -> None
+                    )
+                    |> Seq.fold (fun _ found -> found) 2
+                | _ -> 2
+                |> (+) 1
+                |> min 6
+
+            let steps =
+                (([], []), container)
+                ||> Seq.fold (fun (started, current) block ->
+                    match block with
+                    | :? HeadingBlock as heading -> started @ [ current ], [ Choice1Of2 heading ]
+                    | _ -> started, current @ [ Choice2Of2 block ]
+                )
+                |> fun (started, current) -> started @ [ current ]
+                |> List.filter (List.isEmpty >> not)
+
+            renderer.Write """<ol class="nacara-steps">""" |> ignore
+
+            steps
+            |> List.iteri (fun index step ->
+                renderer.Write """<li class="nacara-steps__step">""" |> ignore
+
+                renderer.Write
+                    $"""<span class="nacara-steps__number" aria-hidden="true">Step %02i{index + 1}</span>"""
+                |> ignore
+
+                for block in step do
+                    match block with
+                    | Choice1Of2 heading ->
+                        // Rendered as any other heading, so it keeps its anchor and its place in
+                        // the table of contents.
+                        heading.Level <- level
+                        heading.GetAttributes().AddClass "nacara-steps__title"
+                        renderer.Render heading |> ignore
+                    | Choice2Of2 block -> renderer.Render block |> ignore
+
+                renderer.Write "</li>" |> ignore
+            )
+
+            renderer.Write "</ol>" |> ignore
+
     override this.Write(renderer: HtmlRenderer, container: CustomContainer) =
         let name =
             if isNull container.Info then
@@ -435,6 +521,7 @@ type NacaraContainerRenderer
         match Directive.builtIn name argument with
         | Preview -> this.WritePreview(renderer, container)
         | FileTree -> this.WriteFileTree(renderer, container)
+        | Steps -> this.WriteSteps(renderer, container)
         | Unknown ->
             report
                 "unknown-directive"

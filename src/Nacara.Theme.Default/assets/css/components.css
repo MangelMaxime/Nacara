@@ -38,58 +38,42 @@
 */
 
 .nacara-steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nacara-space-6);
     margin: 0 0 var(--nacara-space-4);
-}
-.nacara-steps > ol {
-    --nacara-step-bullet: 1.75rem;
-    counter-reset: nacara-step;
-    list-style: none;
-    margin: 0;
     padding-left: 0;
+    list-style: none;
 }
-.nacara-steps > ol > li {
-    counter-increment: nacara-step;
-    position: relative;
-    padding-left: calc(var(--nacara-step-bullet) + var(--nacara-space-4));
-    padding-bottom: var(--nacara-space-6);
+/* The bar groups a step's content; the number carries the sequence. Neither says anything about
+   state, so no step is singled out. */
+.nacara-steps__step {
+    border-left: 2px solid var(--nacara-border);
+    padding-left: var(--nacara-space-4);
 }
-.nacara-steps > ol > li:last-child {
-    padding-bottom: 0;
+.nacara-steps__number {
+    display: block;
+    margin-bottom: var(--nacara-space-1);
+    color: var(--nacara-text-muted);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 }
-.nacara-steps > ol > li::before {
-    content: counter(nacara-step);
-    position: absolute;
-    left: 0;
-    top: -0.1rem;
-    display: grid;
-    place-items: center;
-    width: var(--nacara-step-bullet);
-    height: var(--nacara-step-bullet);
-    border-radius: 50%;
-    background: var(--nacara-primary);
-    color: var(--nacara-primary-contrast);
-    font-size: 0.8125rem;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
+.nacara-content .nacara-steps__title {
+    margin: 0 0 var(--nacara-space-2);
+    font-size: 1.125rem;
+    line-height: 1.2;
 }
-.nacara-steps > ol > li::after {
-    content: "";
-    position: absolute;
-    left: calc((var(--nacara-step-bullet) - 2px) / 2);
-    top: calc(var(--nacara-step-bullet) + 0.25rem);
-    bottom: 0;
-    width: 2px;
-    border-radius: 1px;
-    background: color-mix(in srgb, var(--nacara-primary) 35%, var(--nacara-border));
-}
-.nacara-steps > ol > li:last-child:not(:has(> :nth-child(2)))::after {
-    display: none;
-}
-.nacara-steps > ol > li > :first-child {
-    margin-top: 0;
-}
-.nacara-steps > ol > li > :last-child {
+.nacara-content .nacara-steps__step > :last-child {
     margin-bottom: 0;
+}
+/* A step is indented by its own bar, so there is no margin to hang the anchor in. */
+.nacara-content .nacara-steps__title .nacara-heading-anchor {
+    position: static;
+    display: inline-block;
+    margin-left: var(--nacara-space-2);
+    vertical-align: middle;
 }
 
 /*
