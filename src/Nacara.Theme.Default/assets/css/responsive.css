@@ -8,7 +8,8 @@
 }
 
 @media (max-width: 1200px) {
-    .nacara-layout {
+    /* A splash or bare page is one column at every width, so it is left alone here. */
+    .nacara-layout:not(.nacara-layout--splash, .nacara-layout--bare) {
         grid-template-columns:
             var(--nacara-sidebar-width)
             minmax(0, var(--nacara-content-width));
@@ -19,7 +20,7 @@
 }
 
 @media (max-width: 860px) {
-    .nacara-layout {
+    .nacara-layout:not(.nacara-layout--bare) {
         grid-template-columns: minmax(0, 1fr);
         padding: var(--nacara-space-4);
     }
