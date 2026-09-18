@@ -19,6 +19,15 @@ module Theme =
             Css = []
             Footer = None
             FavIcon = None
+            MenuGroupLimit = 150
+        }
+
+    /// <summary>How many pages a menu group lists before it points at its own page instead.</summary>
+    /// <param name="value">The value to use. <c>0</c> lists them all.</param>
+    /// <param name="options">The options so far.</param>
+    let menuGroupLimit value (options: ThemeOptions) =
+        { options with
+            MenuGroupLimit = value
         }
 
     /// <summary>The items on the left of the navbar, after the site's title.</summary>

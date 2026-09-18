@@ -122,6 +122,72 @@ let all =
             )
 
             test (
+                "a menu group past the limit keeps the trail and points at the rest",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    for index in 1..8 do
+                        File.WriteAllText(
+                            Path.Combine(AbsolutePath.value root, $"docs/guide/member-%i{index}.md"),
+                            $"---\ntitle: Member %i{index}\n---\n\nOne of many.\n"
+                        )
+
+                    let menu =
+                        [
+                            Menu.group
+                                "guide/advanced.md"
+                                [ for index in 1..8 -> Menu.page $"guide/member-%i{index}.md" ]
+                        ]
+
+                    let build (limit: int) =
+                        let theme =
+                            Theme.defaults |> Theme.menu "guide" menu |> Theme.menuGroupLimit limit
+
+                        let site =
+                            Site.create "Fixture"
+                            |> Site.baseUrl "/"
+                            |> Site.output "output"
+                            |> Site.noStaticFiles
+                            |> Markdown.register
+                            |> Theme.register theme
+                            |> Site.collection (Theme.docs theme "docs")
+
+                        Build.run root site |> ignore
+
+                        File.ReadAllText(
+                            Path.Combine(
+                                AbsolutePath.value root,
+                                "output/guide/member-3/index.html"
+                            )
+                        )
+
+                    let full = build 0
+
+                    assertThat
+                        (System.Text.RegularExpressions.Regex.Matches(full, ">Member \\d<").Count)
+                        (tag "a group under the limit lists every page it holds"
+                         >> isGreaterOrEqual 8)
+
+                    let pruned = build 3
+
+                    assertThat
+                        (pruned.Contains ">Member 3<")
+                        (tag "past it, the page being read is still there" >> isTrue)
+
+                    assertThat
+                        (System.Text.RegularExpressions.Regex.Matches(pruned, ">Member \\d<").Count)
+                        (tag "the ones around it are not" >> isLessThan 8)
+
+                    assertThat
+                        (pruned.Contains ">7 more<")
+                        (tag "and what is left out is counted" >> isTrue)
+
+                    assertThat
+                        (pruned.Contains "href=\"/guide/advanced/\"")
+                        (tag "pointing at the group's own page, which lists them" >> isTrue)
+            )
+
+            test (
                 "a menu entry names one page or none",
                 fun _ ->
                     let root = Fixture.copyToTemporaryDirectory ()

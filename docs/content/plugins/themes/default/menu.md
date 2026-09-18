@@ -118,6 +118,21 @@ matches and opens whatever holds a match; clearing it puts every fold back where
 A shorter menu does not get one, because reading it is quicker than typing. A page can decide for
 itself with `menuFilter: true` or `menuFilter: false` in its [front matter](front-matter.md).
 
+## Large groups
+
+A group lists up to 150 pages. Past that it lists only the trail to the page being read, and a link
+to its own page, which lists them all.
+
+This is what keeps a generated reference of thousands of pages from writing every one of them into
+every page of the site. A reference of 3600 types goes from 690 KB a page to 12 KB, and from 2.4 GB
+to 54 MB.
+
+Change where it starts, or turn it off with `0`:
+
+```fsharp
+|> Theme.menuGroupLimit 500
+```
+
 ## Menu memory
 
 A group the reader folds stays folded on the next page. Reading a section through does not mean

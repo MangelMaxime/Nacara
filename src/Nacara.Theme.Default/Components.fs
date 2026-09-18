@@ -385,6 +385,45 @@ module Components =
             | MenuLink _ -> false
         )
 
+    /// <summary>The menu as it is written into this page.</summary>
+    /// <remarks>A group of thousands of pages would otherwise be written into every page of the
+    /// site. Above the limit a group keeps the trail to the page being read and a link to its own
+    /// page, which lists the rest.</remarks>
+    let rec private pruned
+        (site: SiteInfo)
+        (current: Page)
+        (pages: Page list)
+        (limit: int)
+        (items: MenuItem list)
+        =
+        items
+        |> List.map (fun item ->
+            match item.Entry with
+            | MenuSection(label, children) ->
+                { item with
+                    Entry = MenuSection(label, pruned site current pages limit children)
+                }
+            | MenuGroup(path, children) when limit > 0 && List.length children > limit ->
+                let kept = children |> List.filter (fun child -> holds pages current [ child ])
+                let hidden = List.length children - List.length kept
+
+                let rest =
+                    match findPage pages path with
+                    | Some page when hidden > 0 ->
+                        [ Menu.link $"%i{hidden} more" (site.UrlOf page.Route) ]
+                    | _ -> []
+
+                { item with
+                    Entry = MenuGroup(path, pruned site current pages limit kept @ rest)
+                }
+            | MenuGroup(path, children) ->
+                { item with
+                    Entry = MenuGroup(path, pruned site current pages limit children)
+                }
+            | MenuPage _
+            | MenuLink _ -> item
+        )
+
     /// <summary>
     /// One level of the sidebar.
     /// </summary>
@@ -632,6 +671,7 @@ module Components =
             | None ->
                 OfferedMenus.forSection section
                 |> Option.map (fun outline -> Menu.ofOutline outline.Items)
+            |> Option.map (pruned context.Site context.Page context.Pages options.MenuGroupLimit)
 
         let entries =
             match declared with

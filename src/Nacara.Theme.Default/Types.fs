@@ -205,6 +205,10 @@ type ThemeOptions =
         Footer: ReactElement option
         /// Path of the favicon, relative to the site root.
         FavIcon: string option
+        /// <summary>How many pages a menu group lists before it points at its own page instead.</summary>
+        /// <remarks>A generated section of thousands of pages would otherwise write every one of
+        /// them into every page of the site. <c>0</c> lists them all, whatever it costs.</remarks>
+        MenuGroupLimit: int
     }
 
 /// <summary>What the theme needs to know about the page it is rendering.</summary>
