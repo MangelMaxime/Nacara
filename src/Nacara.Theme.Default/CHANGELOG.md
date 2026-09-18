@@ -1,5 +1,5 @@
 ---
-last_commit_released: 82f0280fb8208a1ae930ae279d25ec4915e05bd1
+last_commit_released: 0db668ca8825d9b3b8d40f970689b0954e702a40
 ---
 
 # Changelog
@@ -11,6 +11,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 1.0.0-beta.12 - 2026-09-17
+
+### 🐞 Bug Fixes
+
+* *(theme-default)* Keep a splash page to one column below 1200px ([0db668c](https://github.com/MangelMaxime/Nacara/commit/0db668ca8825d9b3b8d40f970689b0954e702a40))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/82f0280fb8208a1ae930ae279d25ec4915e05bd1..0db668ca8825d9b3b8d40f970689b0954e702a40)</small></strong>
 
 ## 1.0.0-beta.11 - 2026-09-16
 
