@@ -1,5 +1,5 @@
 ---
-last_commit_released: 0db668ca8825d9b3b8d40f970689b0954e702a40
+last_commit_released: 4ba7535ef32c2fbd243ef96b3f6a3fd2a89181e6
 ---
 
 # Changelog
@@ -11,6 +11,18 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 1.0.0-beta.13 - 2026-09-18
+
+### 🚀 Features
+
+* *(theme-default)* List a menu group's pages up to a limit ([4ba7535](https://github.com/MangelMaxime/Nacara/commit/4ba7535ef32c2fbd243ef96b3f6a3fd2a89181e6))
+
+### ⚡ Performance Improvements
+
+* *(theme-default)* Find a menu's page by name instead of scanning ([c2dbaf8](https://github.com/MangelMaxime/Nacara/commit/c2dbaf80214892639517779783bc2bbbd471da56))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/0db668ca8825d9b3b8d40f970689b0954e702a40..4ba7535ef32c2fbd243ef96b3f6a3fd2a89181e6)</small></strong>
 
 ## 1.0.0-beta.12 - 2026-09-17
 

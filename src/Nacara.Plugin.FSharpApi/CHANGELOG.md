@@ -1,5 +1,5 @@
 ---
-last_commit_released: a042e9e6333701e3cc483c3f5337150d5b599b88
+last_commit_released: 4ba7535ef32c2fbd243ef96b3f6a3fd2a89181e6
 ---
 
 # Changelog
@@ -11,6 +11,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 1.0.0-beta.4 - 2026-09-18
+
+### 🐞 Bug Fixes
+
+* *(fsharp-api)* Give two declarations that differ only by case a route each ([0a13df1](https://github.com/MangelMaxime/Nacara/commit/0a13df1b254ef83f79b0f802818f46138eca7bb8))
+* *(fsharp-api)* Say which declarations could not be read ([5cbcaf6](https://github.com/MangelMaxime/Nacara/commit/5cbcaf6b1cf6e0fb80dcb974e5c225626da3e152))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/a042e9e6333701e3cc483c3f5337150d5b599b88..4ba7535ef32c2fbd243ef96b3f6a3fd2a89181e6)</small></strong>
 
 ## 1.0.0-beta.3 - 2026-09-15
 
