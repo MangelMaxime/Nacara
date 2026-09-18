@@ -1,6 +1,7 @@
 namespace Nacara.Theme
 
 open Feliz.ViewEngine
+open System.Runtime.CompilerServices
 open Nacara.Core
 
 /// <summary>The building blocks of the default theme.</summary>
@@ -51,27 +52,51 @@ module Components =
             locale, site.UrlOf route, translation.IsSome
         )
 
+    /// <summary>Every name a page answers to, paired with the pages that answer to it.</summary>
+    /// <remarks>Held against the page list it was built from: a menu of a thousand entries would
+    /// otherwise walk every page a thousand times, for every page of the site.</remarks>
+    let private indexed =
+        ConditionalWeakTable<obj, System.Collections.Generic.Dictionary<string, Page list>>()
+
+    let private namesOf (page: Page) =
+        [
+            page.Id
+
+            match page.Id.IndexOf ':' with
+            | -1 -> ()
+            | colon ->
+                let path = page.Id.Substring(colon + 1)
+                path
+
+                if path.EndsWith ".md" then
+                    path.Substring(0, path.Length - 3)
+
+            match page.ProjectPath with
+            | Some projectPath -> RelativePath.value projectPath
+            | None -> ()
+        ]
+
     /// <summary>The page a path names, when exactly one answers to it.</summary>
     /// <remarks><c>index.md</c> is a page of every collection, so a path several pages answer to
     /// names none of them. The whole id - <c>reference:index.md</c> - names one.</remarks>
     let private findPage (pages: Page list) (path: string) =
-        let matching =
-            pages
-            |> List.filter (fun page ->
-                let id = page.Id
+        let index =
+            indexed.GetValue(
+                box pages,
+                fun _ ->
+                    let map = System.Collections.Generic.Dictionary<string, Page list>()
 
-                id = path
-                || id.EndsWith(":" + path)
-                || id.EndsWith(":" + path + ".md")
-                || (
-                    match page.ProjectPath with
-                    | Some projectPath -> RelativePath.value projectPath = path
-                    | None -> false
-                )
+                    for page in pages do
+                        for name in namesOf page do
+                            match map.TryGetValue name with
+                            | true, found -> map[name] <- page :: found
+                            | _ -> map[name] <- [ page ]
+
+                    map
             )
 
-        match matching with
-        | [ page ] -> Some page
+        match index.TryGetValue path with
+        | true, [ page ] -> Some page
         | _ -> None
 
     /// <summary>The url of a navbar item: a page's source path, or a path inside the site.</summary>

@@ -122,6 +122,73 @@ let all =
             )
 
             test (
+                "a menu entry names one page or none",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    File.WriteAllText(
+                        Path.Combine(AbsolutePath.value root, "docs/index.md"),
+                        "---\ntitle: Docs\n---\n\nThe docs.\n"
+                    )
+
+                    let notes =
+                        Collection.create "notes" Fixture.decoder
+                        |> Collection.producer
+                            "notes"
+                            (fun _ ->
+                                [
+                                    GeneratedContent.create
+                                        "index.md"
+                                        "---\ntitle: Notes\n---\n\nThe notes.\n"
+                                ]
+                            )
+                        |> Collection.routePrefix "notes"
+                        |> Collection.title _.Title
+                        |> Collection.layout Fixture.layout
+
+                    let theme =
+                        Theme.defaults
+                        |> Theme.menu
+                            "guide"
+                            [
+                                Menu.page "guide/advanced.md"
+                                // Two collections hold an index.md, so this names neither.
+                                Menu.page "index.md"
+                            ]
+
+                    let site =
+                        Site.create "Fixture"
+                        |> Site.baseUrl "/"
+                        |> Site.output "output"
+                        |> Site.noStaticFiles
+                        |> Markdown.register
+                        |> Theme.register theme
+                        |> Site.collection (Theme.docs theme "docs")
+                        |> Site.collection notes
+
+                    Build.run root site |> ignore
+
+                    let html =
+                        File.ReadAllText(
+                            Path.Combine(
+                                AbsolutePath.value root,
+                                "output/guide/advanced/index.html"
+                            )
+                        )
+
+                    assertThat
+                        (html.Contains "nacara-sidebar__link\" href=\"/guide/advanced/\"")
+                        (tag "a path one page answers to is a link" >> isTrue)
+
+                    assertThat
+                        (System.Text.RegularExpressions.Regex
+                            .Matches(html, "nacara-sidebar__link")
+                            .Count)
+                        (tag "and one that several answer to is left out, rather than guessed at"
+                         >> isEqualTo 1)
+            )
+
+            test (
                 "a menu group folds, and opens on the page being read",
                 fun _ ->
                     let root = Fixture.copyToTemporaryDirectory ()
