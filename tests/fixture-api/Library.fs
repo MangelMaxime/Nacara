@@ -204,3 +204,13 @@ module Operators =
     /// </summary>
     /// <seealso cref="M:Fixture.Library.People.greet"/>
     let (=>) (first: Person) (second: Person) : string = failwith "documentation only"
+
+/// <summary>A type named after a global of the JavaScript runtime.</summary>
+type Blob =
+    abstract member Size: float with get
+
+/// <summary>The module named after the runtime module that declares that global.</summary>
+module blob =
+
+    /// <summary>Resolves a blob from its URL.</summary>
+    let resolve (url: string) : Blob option = failwith "documentation only"

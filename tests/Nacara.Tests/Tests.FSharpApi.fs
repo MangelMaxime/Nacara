@@ -478,6 +478,71 @@ let all =
             )
 
             test (
+                "a library whose names differ only by case is published",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    let options =
+                        { FSharpApi.defaults with
+                            Root = "reference"
+                            Sources = [ FSharpApiSource.create (AbsolutePath.value fixture) ]
+                        }
+
+                    let reference =
+                        FSharpApi.collection "reference" Fixture.decoder options
+                        |> Collection.title _.Title
+                        |> Collection.layout Fixture.layout
+
+                    let result =
+                        Build.run
+                            root
+                            (Fixture.site
+                             |> Site.plugin (FSharpApi.create options)
+                             |> Site.collection reference)
+
+                    assertThat
+                        (result.Diagnostics
+                         |> List.filter (fun item -> item.Code = "nacara/duplicate-route")
+                         |> List.map _.Message)
+                        (tag "no two pages of the reference want the same file" >> isEqualTo [])
+
+                    let written path =
+                        File.Exists(Path.Combine(AbsolutePath.value root, "output", path))
+
+                    assertThat
+                        (written "reference/fixture-library/fixture-library/blob/index.html")
+                        (tag "the type is published" >> isTrue)
+
+                    assertThat
+                        (written "reference/fixture-library/fixture-library/blob-module/index.html")
+                        (tag "and so is the module it shares a name with" >> isTrue)
+            )
+
+            test (
+                "two declarations that differ only by case get a page each",
+                fun _ ->
+                    let entities = library.Namespaces |> List.collect _.Entities
+
+                    let blob = entities |> List.tryFind (fun item -> item.Name = "Blob")
+                    let companion = entities |> List.tryFind (fun item -> item.Name = "blob")
+
+                    assertThat
+                        (blob |> Option.map _.Slug)
+                        (tag "the type keeps the route its name asks for"
+                         >> isEqualTo (Some "fixture-library/fixture-library/blob"))
+
+                    assertThat
+                        (companion |> Option.map _.Slug)
+                        (tag "and the module beside it is told apart by what it is"
+                         >> isEqualTo (Some "fixture-library/fixture-library/blob-module"))
+
+                    assertThat
+                        (entities |> List.map _.Slug |> List.distinct |> List.length)
+                        (tag "so no two declarations of a namespace want the same page"
+                         >> isEqualTo (entities |> List.length))
+            )
+
+            test (
                 "a cref points at the page of what it names",
                 fun _ ->
                     let page =

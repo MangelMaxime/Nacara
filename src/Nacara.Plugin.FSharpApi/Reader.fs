@@ -437,6 +437,66 @@ module Reader =
                 |> Option.defaultValue true)
         )
 
+    /// <summary>What a declaration is, as one word for a route.</summary>
+    let private wordOf (entity: FSharpApiEntity) =
+        match entity.Kind with
+        | FSharpApiEntityKind.Module -> "module"
+        | FSharpApiEntityKind.Record -> "record"
+        | FSharpApiEntityKind.Union -> "union"
+        | FSharpApiEntityKind.Class -> "class"
+        | FSharpApiEntityKind.Interface -> "interface"
+        | FSharpApiEntityKind.Struct -> "struct"
+        | FSharpApiEntityKind.Enum -> "enum"
+        | FSharpApiEntityKind.Abbreviation -> "abbreviation"
+        | FSharpApiEntityKind.Exception -> "exception"
+        | FSharpApiEntityKind.Delegate -> "delegate"
+        | FSharpApiEntityKind.Measure -> "measure"
+
+    /// <summary>
+    /// The route of every declaration, each one its own.
+    /// </summary>
+    /// <remarks>A route is lowercased, so <c>Blob</c> and <c>blob</c> of one namespace ask for the
+    /// same page. Whoever asks second is told apart by what it is, and then by a number.</remarks>
+    let rec private routes (parentSlug: string) (entities: FSharpApiEntity list) =
+        let taken = Collections.Generic.HashSet<string>(StringComparer.Ordinal)
+
+        let free (slug: string) (kind: string) =
+            if taken.Add slug then
+                slug
+            else
+
+                let told = $"%s{slug}-%s{kind}"
+
+                if taken.Add told then
+                    told
+                else
+
+                    let rec numbered index =
+                        let candidate = $"%s{told}-%i{index}"
+
+                        if taken.Add candidate then
+                            candidate
+                        else
+                            numbered (index + 1)
+
+                    numbered 2
+
+        entities
+        |> List.map (fun entity ->
+            let asked =
+                if parentSlug = "" then
+                    Slug.create entity.Name
+                else
+                    $"%s{parentSlug}/%s{Slug.create entity.Name}"
+
+            let slug = free asked (wordOf entity)
+
+            { entity with
+                Slug = slug
+                Nested = routes slug entity.Nested
+            }
+        )
+
     let rec private mergeCompanions (entities: FSharpApiEntity list) =
         entities
         |> List.groupBy _.Name
@@ -605,6 +665,7 @@ module Reader =
                                         |> List.ofSeq
                                         |> mergeCompanions
                                         |> attachExtensions
+                                        |> routes slug
                                 }
                             )
                             |> Seq.sortBy _.Name
