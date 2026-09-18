@@ -656,6 +656,31 @@ let all =
             )
 
             test (
+                "a declaration whose name is all punctuation gets a route of its own",
+                fun _ ->
+                    let options =
+                        library.Namespaces
+                        |> List.collect _.Entities
+                        |> List.tryFind (fun item -> item.Name = "Options")
+
+                    match options |> Option.bind (fun item -> List.tryHead item.Nested) with
+                    | None ->
+                        assertThat
+                            ""
+                            (tag "the module holds the type it was given" >> isNotEqualTo "")
+                    | Some nested ->
+                        assertThat
+                            nested.Slug
+                            (tag "the type is a page under its module, not the module itself"
+                             >> isEqualTo "fixture-library/fixture-library/options/underscore")
+
+                        assertThat
+                            (options |> Option.map _.Slug)
+                            (tag "which still has its own"
+                             >> isEqualTo (Some "fixture-library/fixture-library/options"))
+            )
+
+            test (
                 "two declarations that differ only by case get a page each",
                 fun _ ->
                     let entities = library.Namespaces |> List.collect _.Entities

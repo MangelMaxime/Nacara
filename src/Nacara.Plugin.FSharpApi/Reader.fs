@@ -98,48 +98,60 @@ module Reader =
         else
             FSharpApiMemberKind.Value
 
+    /// <summary>A name that slugifies to nothing, spelled out.</summary>
+    /// <remarks><c>Slug.create</c> keeps letters and digits, so an operator or an underscore comes
+    /// back empty and a page would take its parent's route.</remarks>
+    let private spelled (name: string) =
+        name.Trim(
+            [|
+                '('
+                ')'
+                ' '
+            |]
+        )
+        |> Seq.choose (fun character ->
+            match character with
+            | '=' -> Some "eq"
+            | '>' -> Some "gt"
+            | '<' -> Some "lt"
+            | '+' -> Some "plus"
+            | '-' -> Some "minus"
+            | '*' -> Some "star"
+            | '/' -> Some "slash"
+            | '%' -> Some "percent"
+            | '&' -> Some "amp"
+            | '|' -> Some "bar"
+            | '^' -> Some "hat"
+            | '!' -> Some "bang"
+            | '?' -> Some "question"
+            | '~' -> Some "tilde"
+            | '@' -> Some "at"
+            | '.' -> Some "dot"
+            | ':' -> Some "colon"
+            | '$' -> Some "dollar"
+            | '_' -> Some "underscore"
+            | _ -> None
+        )
+        |> String.concat "-"
+
+    /// <summary>The route a declaration takes, which is never its parent's.</summary>
+    let private slugOf (name: string) =
+        match Slug.create name with
+        | "" ->
+            match spelled name with
+            | "" -> "unnamed"
+            | said -> said
+        | slug -> slug
+
     /// <summary>
     /// The anchor a link can point at.
     /// </summary>
     let private anchorOf (name: string) =
         match Slug.create name with
         | "" ->
-            let spelled =
-                name.Trim(
-                    [|
-                        '('
-                        ')'
-                        ' '
-                    |]
-                )
-                |> Seq.choose (fun character ->
-                    match character with
-                    | '=' -> Some "eq"
-                    | '>' -> Some "gt"
-                    | '<' -> Some "lt"
-                    | '+' -> Some "plus"
-                    | '-' -> Some "minus"
-                    | '*' -> Some "star"
-                    | '/' -> Some "slash"
-                    | '%' -> Some "percent"
-                    | '&' -> Some "amp"
-                    | '|' -> Some "bar"
-                    | '^' -> Some "hat"
-                    | '!' -> Some "bang"
-                    | '?' -> Some "question"
-                    | '~' -> Some "tilde"
-                    | '@' -> Some "at"
-                    | '.' -> Some "dot"
-                    | ':' -> Some "colon"
-                    | '$' -> Some "dollar"
-                    | _ -> None
-                )
-                |> String.concat "-"
-
-            if spelled = "" then
-                "op"
-            else
-                "op-" + spelled
+            match spelled name with
+            | "" -> "op"
+            | said -> "op-" + said
         | slug -> slug
 
     let private docOf
@@ -235,9 +247,9 @@ module Reader =
 
         let slug =
             if parentSlug = "" then
-                Slug.create name
+                slugOf name
             else
-                $"%s{parentSlug}/%s{Slug.create name}"
+                $"%s{parentSlug}/%s{slugOf name}"
 
         let members =
             [
@@ -485,9 +497,9 @@ module Reader =
         |> List.map (fun entity ->
             let asked =
                 if parentSlug = "" then
-                    Slug.create entity.Name
+                    slugOf entity.Name
                 else
-                    $"%s{parentSlug}/%s{Slug.create entity.Name}"
+                    $"%s{parentSlug}/%s{slugOf entity.Name}"
 
             let slug = free asked (wordOf entity)
 

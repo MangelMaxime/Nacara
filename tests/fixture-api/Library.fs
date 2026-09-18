@@ -214,3 +214,12 @@ module blob =
 
     /// <summary>Resolves a blob from its URL.</summary>
     let resolve (url: string) : Blob option = failwith "documentation only"
+
+/// <summary>What a member takes, when TypeScript gave it no name.</summary>
+module Options =
+
+    /// <summary>A parameter object whose only member has no name of its own.</summary>
+    type ``_`` =
+
+        /// <summary>The value to pass.</summary>
+        abstract member Value: int with get
