@@ -18,6 +18,7 @@ let main args =
 
     app.Configure(fun config ->
         config.Settings.ApplicationName <- "./build.sh"
+        config.UseStrictParsing() |> ignore
 
         config
             .AddCommand<TestCommand>("test")

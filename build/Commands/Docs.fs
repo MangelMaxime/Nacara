@@ -15,8 +15,8 @@ open BlackFox.CommandLine
 open EasyBuild.Tools.Npm
 open EasyBuild.Workspace
 
-/// <summary>What every one of these takes: the port, and anything the site knows that this
-/// does not - written after <c>--</c> and passed on as it stands.</summary>
+/// <summary>What every one of these takes, and what it hands to the site.</summary>
+/// <remarks>Anything written after <c>--</c> is handed to the site as it stands.</remarks>
 type DocsSettings() =
     inherit CommandSettings()
 
@@ -24,29 +24,68 @@ type DocsSettings() =
     [<Description("The port to serve on.")>]
     member val Port = 0 with get, set
 
-/// <summary>Everything this command did not recognise, put back the way it was written.</summary>
-let private forwarded (context: CommandContext) =
-    let options =
-        context.Remaining.Parsed
-        |> Seq.collect (fun option ->
-            [
-                // The key arrives with its dashes already on it.
-                for value in option do
-                    option.Key
+    [<CommandOption("--strict")>]
+    [<Description("Treat the site's warnings as errors.")>]
+    member val Strict = false with get, set
 
-                    if not (isNull value) then
-                        value
-            ]
-        )
+    [<CommandOption("--verbose")>]
+    [<Description("Log what the build is doing.")>]
+    member val Verbose = false with get, set
 
-    let positionals =
-        context.Remaining.Raw
-        |> Seq.filter (fun argument -> not (argument.StartsWith "-"))
+    /// <summary>What the site is given, beyond the name of its command.</summary>
+    abstract Arguments: CmdLine -> CmdLine
 
-    Seq.append options positionals
+    default this.Arguments line =
+        line
+        |> CmdLine.appendPrefixIf (this.Port > 0) "--port" (string this.Port)
+        |> CmdLine.appendIf this.Strict "--strict"
+        |> CmdLine.appendIf this.Verbose "--verbose"
 
-/// <summary>Runs the site with a command of its own, and whatever else was asked for.</summary>
-let private site (command: string) (watch: bool) (settings: DocsSettings) (extra: string seq) =
+/// <summary>A build that can be published under a version prefix.</summary>
+type VersionedSettings() =
+    inherit DocsSettings()
+
+    [<CommandOption("--version <VERSION>")>]
+    [<Description("Build under a version prefix, for a site that serves several.")>]
+    member val Version = "" with get, set
+
+    override this.Arguments line =
+        base.Arguments line
+        |> CmdLine.appendPrefixIfNotNullOrEmpty "--version" this.Version
+
+type CleanSettings() =
+    inherit DocsSettings()
+
+    [<CommandOption("--global")>]
+    [<Description("Empty the shared cache of downloaded tools too.")>]
+    member val Global = false with get, set
+
+    override this.Arguments line =
+        base.Arguments line |> CmdLine.appendIf this.Global "--global"
+
+type WatchSettings() =
+    inherit DocsSettings()
+
+    [<CommandOption("--host [HOST]")>]
+    [<Description("Listen on an address other than localhost. On its own, every interface.")>]
+    member val Host = FlagValue<string>() with get, set
+
+    [<CommandOption("--no-restart")>]
+    [<Description("Serve without rebuilding the site when its own code changes.")>]
+    member val NoRestart = false with get, set
+
+    override this.Arguments line =
+        base.Arguments line
+        |> CmdLine.appendIf this.Host.IsSet "--host"
+        |> CmdLine.appendIf (this.Host.IsSet && not (isNull this.Host.Value)) this.Host.Value
+
+/// <summary>Runs the site with a command of its own, and what the flags asked for.</summary>
+let private site
+    (command: string)
+    (watch: bool)
+    (settings: DocsSettings)
+    (context: CommandContext)
+    =
     Npm.install Workspace.``.``
 
     let program, before =
@@ -66,68 +105,40 @@ let private site (command: string) (watch: bool) (settings: DocsSettings) (extra
         |> CmdLine.appendPrefix "--project" Workspace.docs.``Docs.fsproj``
         |> CmdLine.appendRaw "--"
         |> CmdLine.appendRaw command
-        |> fun line ->
-            if settings.Port > 0 then
-                CmdLine.appendPrefix "--port" (string settings.Port) line
-            else
-                line
-        |> fun line -> extra |> Seq.fold (fun line argument -> CmdLine.appendRaw argument line) line
+        |> settings.Arguments
+        |> CmdLine.appendSeq context.Remaining.Raw
         |> CmdLine.toString
 
     Command.Run(program, arguments, workingDirectory = Workspace.``.``)
     0
 
 type BuildCommand() =
-    inherit Command<DocsSettings>()
+    inherit Command<VersionedSettings>()
     interface ICommandLimiter<CommandSettings>
 
-    override _.Execute(context, settings, _) =
-        site "build" false settings (forwarded context)
+    override _.Execute(context, settings, _) = site "build" false settings context
 
 type CheckCommand() =
     inherit Command<DocsSettings>()
     interface ICommandLimiter<CommandSettings>
 
-    override _.Execute(context, settings, _) =
-        site "check" false settings (forwarded context)
+    override _.Execute(context, settings, _) = site "check" false settings context
 
 type CleanCommand() =
-    inherit Command<DocsSettings>()
+    inherit Command<CleanSettings>()
     interface ICommandLimiter<CommandSettings>
 
-    override _.Execute(context, settings, _) =
-        site "clean" false settings (forwarded context)
+    override _.Execute(context, settings, _) = site "clean" false settings context
 
 type DeployCommand() =
-    inherit Command<DocsSettings>()
+    inherit Command<VersionedSettings>()
     interface ICommandLimiter<CommandSettings>
 
-    override _.Execute(context, settings, _) =
-        site "gh-pages" false settings (forwarded context)
-
-type WatchSettings() =
-    inherit DocsSettings()
-
-    [<CommandOption("--host [HOST]")>]
-    [<Description("Listen on an address other than localhost. On its own, every interface.")>]
-    member val Host = FlagValue<string>() with get, set
-
-    [<CommandOption("--no-restart")>]
-    [<Description("Serve without rebuilding the site when its own code changes.")>]
-    member val NoRestart = false with get, set
+    override _.Execute(context, settings, _) = site "gh-pages" false settings context
 
 type WatchCommand() =
     inherit Command<WatchSettings>()
     interface ICommandLimiter<CommandSettings>
 
     override _.Execute(context, settings, _) =
-        let host =
-            [
-                if settings.Host.IsSet then
-                    "--host"
-
-                    if not (isNull settings.Host.Value) then
-                        settings.Host.Value
-            ]
-
-        site "watch" (not settings.NoRestart) settings (Seq.append host (forwarded context))
+        site "watch" (not settings.NoRestart) settings context
