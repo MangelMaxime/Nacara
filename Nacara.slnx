@@ -31,5 +31,7 @@
   <Folder Name="/tests/">
     <Project Path="tests/Nacara.Tests/Nacara.Tests.fsproj" />
     <Project Path="tests/fixture-api/Fixture.Library.fsproj" />
+    <Project Path="tests/fixture-api-dependency/Fixture.Dependency.fsproj" />
+    <Project Path="tests/fixture-api-dependent/Fixture.Dependent.fsproj" />
   </Folder>
 </Solution>

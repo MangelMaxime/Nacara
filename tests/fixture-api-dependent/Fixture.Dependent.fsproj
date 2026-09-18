@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <!-- A library that exists to be documented, and that names a type of another assembly. -->
+        <IsPackable>false</IsPackable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Dependent.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../fixture-api-dependency/Fixture.Dependency.fsproj" />
+    </ItemGroup>
+</Project>

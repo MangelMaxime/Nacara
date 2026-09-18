@@ -49,6 +49,7 @@
         <!-- The API tests read this assembly from disk; referencing it without using it is how
              MSBuild is told to build it first. -->
         <ProjectReference Include="../fixture-api/Fixture.Library.fsproj" ReferenceOutputAssembly="false" />
+        <ProjectReference Include="../fixture-api-dependent/Fixture.Dependent.fsproj" ReferenceOutputAssembly="false" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="../../src/Nacara.Plugin.Highlight.TreeSitter/Nacara.Plugin.Highlight.TreeSitter.fsproj" />

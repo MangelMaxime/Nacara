@@ -619,6 +619,8 @@ module Reader =
                     with
                     | None -> Error $"The compiler could not load %s{name}"
                     | Some assembly ->
+                        let skipped = ResizeArray<string * string>()
+
                         let namespaces =
                             assembly.Contents.Entities
                             |> Seq.filter isVisible
@@ -658,7 +660,8 @@ module Reader =
                                         |> Seq.choose (fun (_, entity) ->
                                             try
                                                 Some(readEntity docs slug entity)
-                                            with _ ->
+                                            with exn ->
+                                                skipped.Add(entity.DisplayName, exn.Message)
                                                 None
                                         )
                                         |> Seq.sortBy _.Name
@@ -687,6 +690,7 @@ module Reader =
                                             Entities = ns.Entities |> List.map stamp
                                         }
                                     )
+                                Skipped = skipped |> List.ofSeq |> List.sortBy fst
                             }
 
                 if results.HasCriticalErrors then

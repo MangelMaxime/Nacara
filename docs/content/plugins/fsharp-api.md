@@ -138,6 +138,18 @@ FSharpApiSource.create "../src/My.Library/bin/Release/net10.0/My.Library.dll"
 Three places are already searched: beside the assembly, the running runtime, and the directory your
 site runs from - which covers you when your site references the library it documents.
 
+A declaration whose signature names a type of an assembly none of those places hold cannot be read,
+and is left out of the reference. The build warns with `fsharp-api/declaration-unreadable`, naming
+the declarations and the assembly the compiler asked for:
+
+```text
+! warning fsharp-api/declaration-unreadable: Person of My.Library could not be read, so the
+  reference does not hold it: The entity or value 'Fable.Core.JS.Promise`1' does not exist or is in
+  an unresolved assembly. You may need to add a reference to assembly 'Fable.Core'
+```
+
+Reference that package from your site's project, or name where it lives with `searchPaths`.
+
 ## The menu
 
 You get one without asking. `register` builds a sidebar for the reference section - a group per

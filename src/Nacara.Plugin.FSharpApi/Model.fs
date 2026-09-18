@@ -179,6 +179,11 @@ type FSharpApiAssembly =
     {
         Name: string
         Namespaces: FSharpApiNamespace list
+        /// <summary>What the compiler could not read, and what it said about each.</summary>
+        /// <remarks>A signature naming a type of an assembly that is out of reach cannot be
+        /// written down, so the declaration is left out. It is named here rather than passed
+        /// over.</remarks>
+        Skipped: (string * string) list
     }
 
 /// <summary>One declaration, as a menu entry: what it is called and which page it is.</summary>

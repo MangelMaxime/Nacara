@@ -478,6 +478,143 @@ let all =
             )
 
             test (
+                "a declaration the compiler cannot read is reported, not dropped",
+                fun _ ->
+                    // Only the assembly under test, so what it names is out of reach - which is
+                    // what a site that does not reference its library's dependencies has.
+                    let alone =
+                        Path.Combine(
+                            Path.GetTempPath(),
+                            "nacara-tests",
+                            Guid.NewGuid().ToString "N"
+                        )
+
+                    Directory.CreateDirectory alone |> ignore
+
+                    let dependent =
+                        built [ "fixture-api-dependent" ] "Fixture.Dependent.dll"
+                        |> AbsolutePath.value
+
+                    for extension in
+                        [
+                            ".dll"
+                            ".xml"
+                        ] do
+                        let name = Path.GetFileNameWithoutExtension dependent + extension
+
+                        File.Copy(
+                            Path.ChangeExtension(dependent, extension),
+                            Path.Combine(alone, name)
+                        )
+
+                    match
+                        Reader.readAllWith
+                            []
+                            [ AbsolutePath.create (Path.Combine(alone, "Fixture.Dependent.dll")) ]
+                    with
+                    | [ Error message ] ->
+                        assertThat message (tag "the assembly is read" >> isEqualTo "")
+                    | [ Ok assembly ] ->
+                        let entities =
+                            assembly.Namespaces |> List.collect _.Entities |> List.map _.Name
+
+                        assertThat
+                            (entities |> List.contains "Plain")
+                            (tag "what the compiler could read is published" >> isTrue)
+
+                        assertThat
+                            (assembly.Skipped |> List.map fst)
+                            (tag "and what it could not is named rather than passed over"
+                             >> isEqualTo [ "Reader" ])
+
+                        assertThat
+                            (assembly.Skipped
+                             |> List.forall (fun (_, reason) ->
+                                 reason.Contains "Fixture.Dependency"
+                             ))
+                            (tag "with what the compiler said, which names the assembly it wanted"
+                             >> isTrue)
+                    | other ->
+                        assertThat
+                            (List.length other)
+                            (tag "one assembly was asked for" >> isEqualTo 1)
+            )
+
+            test (
+                "a build says which declarations its reference is missing",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    let alone =
+                        Path.Combine(
+                            Path.GetTempPath(),
+                            "nacara-tests",
+                            Guid.NewGuid().ToString "N"
+                        )
+
+                    Directory.CreateDirectory alone |> ignore
+
+                    let dependent =
+                        built [ "fixture-api-dependent" ] "Fixture.Dependent.dll"
+                        |> AbsolutePath.value
+
+                    for extension in
+                        [
+                            ".dll"
+                            ".xml"
+                        ] do
+                        let name = Path.GetFileNameWithoutExtension dependent + extension
+
+                        File.Copy(
+                            Path.ChangeExtension(dependent, extension),
+                            Path.Combine(alone, name)
+                        )
+
+                    let options =
+                        { FSharpApi.defaults with
+                            Root = "reference"
+                            Sources =
+                                [
+                                    FSharpApiSource.create (
+                                        Path.Combine(alone, "Fixture.Dependent.dll")
+                                    )
+                                ]
+                        }
+
+                    let reference =
+                        FSharpApi.collection "reference" Fixture.decoder options
+                        |> Collection.title _.Title
+                        |> Collection.layout Fixture.layout
+
+                    let result =
+                        Build.run
+                            root
+                            (Fixture.site
+                             |> Site.plugin (FSharpApi.create options)
+                             |> Site.collection reference)
+
+                    let missing =
+                        result.Diagnostics
+                        |> List.filter (fun item -> item.Code = "fsharp-api/declaration-unreadable")
+
+                    assertThat
+                        (missing |> List.map _.Message)
+                        (tag "the build says what it left out, and what the compiler wanted"
+                         >> satisfy (fun messages ->
+                             messages
+                             |> List.exists (fun message ->
+                                 message.Contains "Reader"
+                                 && message.Contains "Fixture.Dependency"
+                             )
+                         ))
+
+                    assertThat
+                        (missing |> List.map _.Severity |> List.distinct)
+                        (tag "as a warning, since the rest of the reference is worth having"
+                         >> isEqualTo [ Severity.Warning ])
+            )
+
+            test (
                 "a library whose names differ only by case is published",
                 fun _ ->
                     let root = Fixture.copyToTemporaryDirectory ()

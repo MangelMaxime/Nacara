@@ -288,6 +288,33 @@ module FSharpApi =
                             | Ok assembly -> Some(path, assembly)
                         )
 
+                    // A reference that quietly holds half a library looks finished, so what was
+                    // left out is said once per reason, with the compiler's own words.
+                    for _, assembly in assemblies do
+                        for reason, declarations in assembly.Skipped |> List.groupBy snd do
+                            let names = declarations |> List.map fst
+
+                            let shown =
+                                if List.length names <= 5 then
+                                    String.concat ", " names
+                                else
+                                    String.concat ", " (List.truncate 5 names)
+                                    + $" and %i{List.length names - 5} more"
+
+                            let them =
+                                if List.length names = 1 then
+                                    "it"
+                                else
+                                    "them"
+
+                            found.Add(
+                                Diagnostic.warning
+                                    "declaration-unreadable"
+                                    $"%s{shown} of %s{assembly.Name} could not be read, so the reference does not hold %s{them}: %s{reason}"
+                                |> Diagnostic.withHint
+                                    "Reference the assembly the compiler names from the site's project, or name the directory it lives in with FSharpApiSource.searchPaths"
+                            )
+
                     let link (slug: string) =
                         Url.ofPath context.Site.Url $"%s{options.Root}/%s{slug}" + "/"
 

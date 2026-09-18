@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <!-- What a documented library depends on. The API tests read an assembly that names these
+             types with this one out of reach, which is what a site missing a package reference has. -->
+        <IsPackable>false</IsPackable>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Dependency.fs" />
+    </ItemGroup>
+</Project>
