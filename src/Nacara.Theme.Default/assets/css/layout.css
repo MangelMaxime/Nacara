@@ -294,6 +294,9 @@
     background: var(--nacara-bg-subtle);
     font-weight: 650;
 }
+.nacara-content :is(th, td) > :last-child {
+    margin-bottom: 0;
+}
 .nacara-content blockquote {
     margin: 0 0 var(--nacara-space-4);
     padding: var(--nacara-space-2) var(--nacara-space-4);
