@@ -1,5 +1,5 @@
 ---
-last_commit_released: 4ba7535ef32c2fbd243ef96b3f6a3fd2a89181e6
+last_commit_released: fc56931fe415984d030bde232d0539d09888d745
 ---
 
 # Changelog
@@ -11,6 +11,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 1.0.0-beta.14 - 2026-09-19
+
+### 🐞 Bug Fixes
+
+* *(theme-default)* Let the menu filter reach every page of its section ([4bfd38b](https://github.com/MangelMaxime/Nacara/commit/4bfd38b24c177283006397d63d0d52f9b681ffc0))
+* *(theme-default)* Drop the bottom margin of a table cell's last child ([fc56931](https://github.com/MangelMaxime/Nacara/commit/fc56931fe415984d030bde232d0539d09888d745))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/4ba7535ef32c2fbd243ef96b3f6a3fd2a89181e6..fc56931fe415984d030bde232d0539d09888d745)</small></strong>
 
 ## 1.0.0-beta.13 - 2026-09-18
 
