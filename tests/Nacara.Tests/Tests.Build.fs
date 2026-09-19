@@ -139,9 +139,12 @@ let all =
                                 [ for index in 1..8 -> Menu.page $"guide/member-%i{index}.md" ]
                         ]
 
-                    let build (limit: int) =
+                    let build (menuLimit: int) (groupLimit: int) =
                         let theme =
-                            Theme.defaults |> Theme.menu "guide" menu |> Theme.menuGroupLimit limit
+                            Theme.defaults
+                            |> Theme.menu "guide" menu
+                            |> Theme.menuLimit menuLimit
+                            |> Theme.menuGroupLimit groupLimit
 
                         let site =
                             Site.create "Fixture"
@@ -161,14 +164,21 @@ let all =
                             )
                         )
 
-                    let full = build 0
+                    let full = build 1 0
 
                     assertThat
                         (System.Text.RegularExpressions.Regex.Matches(full, ">Member \\d<").Count)
                         (tag "a group under the limit lists every page it holds"
                          >> isGreaterOrEqual 8)
 
-                    let pruned = build 3
+                    let small = build 500 3
+
+                    assertThat
+                        (System.Text.RegularExpressions.Regex.Matches(small, ">Member \\d<").Count)
+                        (tag "and so does a large group in a menu the whole of which is small"
+                         >> isGreaterOrEqual 8)
+
+                    let pruned = build 1 3
 
                     assertThat
                         (pruned.Contains ">Member 3<")
@@ -185,6 +195,77 @@ let all =
                     assertThat
                         (pruned.Contains "href=\"/guide/advanced/\"")
                         (tag "pointing at the group's own page, which lists them" >> isTrue)
+            )
+
+            test (
+                "a pruned menu is written out whole for the filter to search",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    for index in 1..8 do
+                        File.WriteAllText(
+                            Path.Combine(AbsolutePath.value root, $"docs/guide/member-%i{index}.md"),
+                            $"---\ntitle: Member %i{index}\n---\n\nOne of many.\n"
+                        )
+
+                    let theme =
+                        Theme.defaults
+                        |> Theme.menu
+                            "guide"
+                            [
+                                Menu.group
+                                    "guide/advanced.md"
+                                    [ for index in 1..8 -> Menu.page $"guide/member-%i{index}.md" ]
+                            ]
+                        |> Theme.menuLimit 1
+                        |> Theme.menuGroupLimit 3
+
+                    let site =
+                        Site.create "Fixture"
+                        |> Site.baseUrl "/"
+                        |> Site.output "output"
+                        |> Site.noStaticFiles
+                        |> Markdown.register
+                        |> Theme.register theme
+                        |> Site.collection (Theme.docs theme "docs")
+
+                    Build.run root site |> ignore
+
+                    let written =
+                        File.ReadAllText(
+                            Path.Combine(AbsolutePath.value root, "output/assets/menu/guide.json")
+                        )
+
+                    for index in 1..8 do
+                        assertThat
+                            (written.Contains $"Member %i{index}")
+                            (tag $"the file holds Member %i{index}, which the page does not"
+                             >> isTrue)
+
+                    let html =
+                        File.ReadAllText(
+                            Path.Combine(
+                                AbsolutePath.value root,
+                                "output/guide/member-3/index.html"
+                            )
+                        )
+
+                    assertThat
+                        (html.Contains "data-nacara-menu-source=\"/assets/menu/guide.json\"")
+                        (tag "and the filter box is told where it is" >> isTrue)
+
+                    let sidebar =
+                        System.Text.RegularExpressions.Regex
+                            .Match(
+                                html,
+                                "<nav class=\"nacara-sidebar.*?</nav>",
+                                System.Text.RegularExpressions.RegexOptions.Singleline
+                            )
+                            .Value
+
+                    assertThat
+                        (sidebar.Contains ">Member 4<")
+                        (tag "since the menu the page holds is only the trail" >> isFalse)
             )
 
             test (

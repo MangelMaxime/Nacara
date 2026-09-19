@@ -19,11 +19,20 @@ module Theme =
             Css = []
             Footer = None
             FavIcon = None
+            MenuLimit = 500
             MenuGroupLimit = 150
         }
 
-    /// <summary>How many pages a menu group lists before it points at its own page instead.</summary>
-    /// <param name="value">The value to use. <c>0</c> lists them all.</param>
+    /// <summary>How many pages a section's menu writes into a page before it prunes.</summary>
+    /// <param name="value">The value to use. <c>0</c> never prunes.</param>
+    /// <param name="options">The options so far.</param>
+    let menuLimit value (options: ThemeOptions) =
+        { options with
+            MenuLimit = value
+        }
+
+    /// <summary>Which groups are pruned, once a menu is over the limit.</summary>
+    /// <param name="value">The value to use. <c>0</c> prunes none of them.</param>
     /// <param name="options">The options so far.</param>
     let menuGroupLimit value (options: ThemeOptions) =
         { options with
@@ -535,6 +544,24 @@ module Theme =
 
                 context.Write path html |> ignore
 
+    /// <summary>Writes every section's menu, whole.</summary>
+    /// <remarks>A page holds the menu it was rendered with, which for a large section is a part of
+    /// it. The filter box reads this to search the rest.</remarks>
+    let private writeMenus (options: ThemeOptions) (context: HookContext) =
+        let sections =
+            [
+                for section in options.Menus.Keys -> section, options.Menus[section]
+                for outline in OfferedMenus.all () do
+                    if not (options.Menus.ContainsKey outline.Section) then
+                        yield outline.Section, Menu.ofOutline outline.Items
+            ]
+
+        for section, items in sections do
+            if options.MenuLimit > 0 && Components.menuSize items > options.MenuLimit then
+                let json = Components.menuJson context.Site context.Pages items
+
+                context.Write (Components.menuSourcePath section) json |> ignore
+
     type private ThemePlugin(options: ThemeOptions) =
         interface IPlugin with
             member _.Name = "theme.default"
@@ -549,6 +576,8 @@ module Theme =
                 |> Registry.asset (Bundle(parts, entryStyleSheet, RelativePath.create cssPath))
                 |> Registry.asset (WriteText(javascript, RelativePath.create scriptPath))
                 |> Registry.extra (NacaraCodeBlockRenderer() :> ICodeBlockRenderer)
+                |> Registry.onPagesRouted (writeMenus options)
+                |> Registry.preserve "assets/menu"
                 |> Registry.onBuildComplete (writeDefaultNotFound options)
 
     /// <summary>The theme's assets. Add it to the site alongside the layout you use.</summary>

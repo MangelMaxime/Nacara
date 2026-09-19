@@ -118,20 +118,29 @@ matches and opens whatever holds a match; clearing it puts every fold back where
 A shorter menu does not get one, because reading it is quicker than typing. A page can decide for
 itself with `menuFilter: true` or `menuFilter: false` in its [front matter](front-matter.md).
 
-## Large groups
+A [pruned menu](#large-menus) always gets one, and it searches every page of the section rather than
+the part the page holds.
 
-A group lists up to 150 pages. Past that it lists only the trail to the page being read, and a link
-to its own page, which lists them all.
+## Large menus
 
-This is what keeps a generated reference of thousands of pages from writing every one of them into
-every page of the site. A reference of 3600 types goes from 690 KB a page to 12 KB, and from 2.4 GB
-to 54 MB.
+A section's menu is written into every page of that section, so a generated reference of thousands
+of pages writes all of them into all of them.
 
-Change where it starts, or turn it off with `0`:
+Up to 500 entries a menu is written whole, and the filter box covers every page it holds. Past that,
+a group of more than 150 pages keeps the trail to the page being read and a link to its own page,
+which lists them all. A reference of 3600 types goes from 690 KB a page to 12 KB, and from 2.4 GB to
+54 MB.
+
+Both numbers move, and `0` on the first never prunes:
 
 ```fsharp
-|> Theme.menuGroupLimit 500
+|> Theme.menuLimit 1000
+|> Theme.menuGroupLimit 40
 ```
+
+The filter box reaches every page either way. On a menu that was written whole it narrows the tree
+in place; on a pruned one it reads `assets/menu/<section>.json`, written once per section that
+prunes, and lists what matches.
 
 ## Menu memory
 

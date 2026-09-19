@@ -2,6 +2,7 @@ namespace Nacara.Theme
 
 open Feliz.ViewEngine
 open System.Runtime.CompilerServices
+open System.Text.Json
 open Nacara.Core
 
 /// <summary>The building blocks of the default theme.</summary>
@@ -385,6 +386,52 @@ module Components =
             | MenuLink _ -> false
         )
 
+    /// <summary>How many pages a menu names, at every depth.</summary>
+    let rec internal menuSize (items: MenuItem list) =
+        items
+        |> List.sumBy (fun item ->
+            match item.Entry with
+            | MenuGroup(_, children) -> 1 + menuSize children
+            | MenuSection(_, children) -> menuSize children
+            | _ -> 1
+        )
+
+    /// <summary>Where a section's whole menu is written, for the filter box to search.</summary>
+    let internal menuSourcePath (section: string) =
+        $"assets/menu/%s{Slug.create section}.json"
+
+    /// <summary>A section's menu as json, whole, the way the page would have written it.</summary>
+    /// <remarks>Shaped like the markup - a node carries its label, where it goes and what it
+    /// holds - so the filter box can put back the entries a pruned page left out.</remarks>
+    let rec internal menuJson (site: SiteInfo) (pages: Page list) (items: MenuItem list) =
+        let text (value: string) = JsonSerializer.Serialize value
+
+        let node (label: string) (url: string) (children: MenuItem list) =
+            let holds =
+                if List.isEmpty children then
+                    ""
+                else
+                    $",\"children\":%s{menuJson site pages children}"
+
+            $"{{\"label\":%s{text label},\"url\":%s{text url}%s{holds}}}"
+
+        items
+        |> List.choose (fun item ->
+            match item.Entry with
+            | MenuLink(label, url) -> Some(node label url [])
+            | MenuPage path ->
+                findPage pages path
+                |> Option.map (fun page -> node page.Title (site.UrlOf page.Route) [])
+            | MenuGroup(path, children) ->
+                findPage pages path
+                |> Option.map (fun page -> node page.Title (site.UrlOf page.Route) children)
+            // A section is a label with no page of its own, so its children stand in its place.
+            | MenuSection(_, children) ->
+                Some(menuJson site pages children |> fun json -> json.Trim('[', ']'))
+        )
+        |> String.concat ","
+        |> sprintf "[%s]"
+
     /// <summary>The menu as it is written into this page.</summary>
     /// <remarks>A group of thousands of pages would otherwise be written into every page of the
     /// site. Above the limit a group keeps the trail to the page being read and a link to its own
@@ -665,13 +712,26 @@ module Components =
                         ]
                 ]
 
-        let declared =
+        let whole =
             match Map.tryFind section options.Menus with
             | Some items -> Some items
             | None ->
                 OfferedMenus.forSection section
                 |> Option.map (fun outline -> Menu.ofOutline outline.Items)
-            |> Option.map (pruned context.Site context.Page context.Pages options.MenuGroupLimit)
+
+        let prunes =
+            match whole with
+            | Some items -> options.MenuLimit > 0 && menuSize items > options.MenuLimit
+            | None -> false
+
+        let declared =
+            whole
+            |> Option.map (fun items ->
+                if prunes then
+                    pruned context.Site context.Page context.Pages options.MenuGroupLimit items
+                else
+                    items
+            )
 
         let entries =
             match declared with
@@ -696,18 +756,10 @@ module Components =
             match doc.MenuFilter with
             | Some answer -> answer
             | None ->
-                let rec count (items: MenuItem list) =
-                    items
-                    |> List.sumBy (fun item ->
-                        match item.Entry with
-                        | MenuGroup(_, children) -> 1 + count children
-                        | MenuSection(_, children) -> count children
-                        | _ -> 1
-                    )
-
-                declared
-                |> Option.map (fun items -> count items > 30)
-                |> Option.defaultValue false
+                prunes
+                || declared
+                   |> Option.map (fun items -> menuSize items > 30)
+                   |> Option.defaultValue false
 
         Html.nav
             [
@@ -731,6 +783,13 @@ module Components =
                                     prop.type' "search"
                                     prop.className "nacara-sidebar__filter"
                                     prop.custom ("data-nacara-menu-filter", "true")
+                                    // The menu this page holds is a part of the section's, so the
+                                    // box is told where the rest of it is.
+                                    if prunes then
+                                        prop.custom (
+                                            "data-nacara-menu-source",
+                                            context.Site.UrlOfAsset(menuSourcePath section)
+                                        )
                                     prop.ariaLabel "Filter this menu"
                                     prop.placeholder "Filter"
                                 ]

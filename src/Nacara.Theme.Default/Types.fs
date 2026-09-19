@@ -79,6 +79,9 @@ module OfferedMenus =
     let forSection (section: string) =
         offered |> List.tryFind (fun outline -> outline.Section = section)
 
+    /// <summary>Every menu that was offered.</summary>
+    let all () = offered
+
 /// <summary>
 /// The badge kinds this theme paints.
 /// </summary>
@@ -205,9 +208,14 @@ type ThemeOptions =
         Footer: ReactElement option
         /// Path of the favicon, relative to the site root.
         FavIcon: string option
-        /// <summary>How many pages a menu group lists before it points at its own page instead.</summary>
-        /// <remarks>A generated section of thousands of pages would otherwise write every one of
-        /// them into every page of the site. <c>0</c> lists them all, whatever it costs.</remarks>
+        /// <summary>How many pages a section's menu writes into a page before it prunes.</summary>
+        /// <remarks>Under it the menu is written whole, so the filter box covers every page it
+        /// holds. <c>0</c> never prunes, whatever it costs.</remarks>
+        MenuLimit: int
+        /// <summary>Which groups are pruned, once a menu is over
+        /// <see cref="P:Nacara.Theme.ThemeOptions.MenuLimit" />.</summary>
+        /// <remarks>A group of more than this keeps the trail to the page being read and a link to
+        /// its own page; a smaller one is written whole.</remarks>
         MenuGroupLimit: int
     }
 
