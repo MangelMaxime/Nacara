@@ -18,6 +18,14 @@ A list of community created plugins and integrations for the Nacara platform.
   your own projects or to share as a plugin. Type safe argument capture, just like Nacara page
   front matter!
 
+## Metadata & Output
+
+- [OgImage](https://shayanhabibi.github.io/Partas.Nacara.Plugins/guide/og-image/) - Link preview
+  images: `og:image` and `twitter:image` tags from page front matter, with a site-wide fallback.
+- [AgentFriendly](https://shayanhabibi.github.io/Partas.Nacara.Plugins/guide/agent-friendly/) - A
+  site agents can read without scraping it: an [`llms.txt`](https://llmstxt.org) index, an
+  `llms-full.txt` holding every page, and a markdown copy of each page beside its html.
+
 ## Themes
 
 - [Partas.Nacara.Theme](https://shayanhabibi.github.io/Partas.Nacara.Plugins/guide/theme/) - The
