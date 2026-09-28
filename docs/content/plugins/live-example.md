@@ -211,6 +211,13 @@ The library is precompiled again when a property changes.
 Applies inside the frame a snippet runs in, and nowhere else - the page around it is untouched.
 Without one, the frame has the browser's defaults.
 
+Name several and they apply in that order, so a site's design tokens can go first:
+
+```fsharp
+|> LiveExamplePreset.css "docs/theme/tokens.css"
+|> LiveExamplePreset.css "docs/snippets/snippet.css"
+```
+
 ### A template
 
 ```fsharp

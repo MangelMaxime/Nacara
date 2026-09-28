@@ -176,6 +176,120 @@ let all =
                         (tag "the suffix the worker needs to find assemblies" >> isTrue)
             )
 
+            /// The stylesheet config.json hands the browser for one preset, if any.
+            let presetCss (root: AbsolutePath) (name: string) =
+                use config =
+                    System.Text.Json.JsonDocument.Parse(
+                        read root "output/assets/live-example/config.json"
+                    )
+
+                let css =
+                    config.RootElement.GetProperty("presets").GetProperty(name).GetProperty "css"
+
+                if css.ValueKind = System.Text.Json.JsonValueKind.Null then
+                    None
+                else
+                    Some(css.GetString())
+
+            test (
+                "a preset's stylesheets reach the frame in the order they were added",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+                    let styles = Path.Combine(AbsolutePath.value root, "styles")
+                    Directory.CreateDirectory styles |> ignore
+                    File.WriteAllText(Path.Combine(styles, "tokens.css"), ":root { --ink: teal; }")
+                    File.WriteAllText(Path.Combine(styles, "rules.css"), "p { color: var(--ink); }")
+
+                    let preset =
+                        LiveExamplePreset.create "demo"
+                        |> LiveExamplePreset.css "styles/tokens.css"
+                        |> LiveExamplePreset.css "styles/rules.css"
+
+                    assertThat
+                        preset.Css
+                        (tag "a second call adds to the first"
+                         >> isEqualTo
+                             [
+                                 "styles/tokens.css"
+                                 "styles/rules.css"
+                             ])
+
+                    Build.run
+                        root
+                        (Fixture.site |> LiveExample.registerWith (LiveExample.preset preset))
+                    |> ignore
+
+                    assertThat
+                        (presetCss root "demo")
+                        (tag "both are there, the first added first"
+                         >> isEqualTo (Some ":root { --ink: teal; }\np { color: var(--ink); }"))
+            )
+
+            test (
+                "a preset naming no stylesheet gets the site's, and one naming its own does not",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+                    let styles = Path.Combine(AbsolutePath.value root, "styles")
+                    Directory.CreateDirectory styles |> ignore
+                    File.WriteAllText(Path.Combine(styles, "site.css"), "p { color: teal; }")
+                    File.WriteAllText(Path.Combine(styles, "own.css"), "p { color: plum; }")
+
+                    let site =
+                        Fixture.site
+                        |> LiveExample.registerWith (
+                            LiveExample.defaultCss "styles/site.css"
+                            >> LiveExample.preset (LiveExamplePreset.create "plain")
+                            >> LiveExample.preset (
+                                LiveExamplePreset.create "own"
+                                |> LiveExamplePreset.css "styles/own.css"
+                            )
+                        )
+
+                    Build.run root site |> ignore
+
+                    assertThat
+                        (presetCss root "plain")
+                        (tag "the site's stylesheet stands in"
+                         >> isEqualTo (Some "p { color: teal; }"))
+
+                    assertThat
+                        (presetCss root "own")
+                        (tag "a preset's own replaces it" >> isEqualTo (Some "p { color: plum; }"))
+            )
+
+            test (
+                "a stylesheet that is not there is reported, and the others still reach the frame",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+                    let styles = Path.Combine(AbsolutePath.value root, "styles")
+                    Directory.CreateDirectory styles |> ignore
+                    File.WriteAllText(Path.Combine(styles, "tokens.css"), ":root { --ink: teal; }")
+
+                    let site =
+                        Fixture.site
+                        |> LiveExample.registerWith (
+                            LiveExample.preset (
+                                LiveExamplePreset.create "demo"
+                                |> LiveExamplePreset.css "styles/tokens.css"
+                                |> LiveExamplePreset.css "styles/missing.css"
+                            )
+                        )
+
+                    let reported =
+                        (Build.run root site).Diagnostics
+                        |> List.exists (fun item ->
+                            item.Code = "live-example/preset-shell-missing"
+                            && item.Message.Contains "styles/missing.css"
+                        )
+
+                    assertThat reported (tag "the missing one is named" >> isTrue)
+
+                    assertThat
+                        (presetCss root "demo")
+                        (tag "the one that exists still applies"
+                         >> isEqualTo (Some ":root { --ink: teal; }"))
+            )
+
             test (
                 "one library is precompiled, so two presets cannot each name a project",
                 fun _ ->

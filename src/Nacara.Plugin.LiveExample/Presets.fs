@@ -29,28 +29,35 @@ module internal LiveExamplePresets =
                         None
                 )
 
+            let readShell file =
+                let path = AbsolutePath.combine root [ file ]
+
+                if File.Exists(AbsolutePath.value path) then
+                    Some(File.ReadAllText(AbsolutePath.value path))
+                else
+                    sink.Add(
+                        Diagnostic.error
+                            "preset-shell-missing"
+                            $"The preset '%s{preset.Name}' names '%s{file}', which does not exist"
+                    )
+
+                    None
+
             let shell name (chosen: string option) =
-                chosen
-                |> Option.orElse name
-                |> Option.bind (fun file ->
-                    let path = AbsolutePath.combine root [ file ]
+                chosen |> Option.orElse name |> Option.bind readShell
 
-                    if File.Exists(AbsolutePath.value path) then
-                        Some(File.ReadAllText(AbsolutePath.value path))
-                    else
-                        sink.Add(
-                            Diagnostic.error
-                                "preset-shell-missing"
-                                $"The preset '%s{preset.Name}' names '%s{file}', which does not exist"
-                        )
-
-                        None
-                )
+            let css =
+                match preset.Css with
+                | [] -> shell options.Css None
+                | files ->
+                    match List.choose readShell files with
+                    | [] -> None
+                    | read -> Some(String.concat "\n" read)
 
             {|
                 Name = preset.Name
                 Files = contents
-                Css = shell options.Css preset.Css
+                Css = css
                 Template = shell options.Template preset.Template
             |}
         )
