@@ -146,9 +146,15 @@ module Vendor =
         (properties: (string * string) list)
         (directory: string)
         =
-        let fableModules = Path.Combine(directory, "out", "fable_modules")
+        let out = Path.Combine(directory, "out")
+        let fableModules = Path.Combine(out, "fable_modules")
 
         try
+            // Fable skips a compile whose output looks up to date, even output from a run that
+            // wrote no precompiled_info.json.
+            if IO.Directory.Exists out then
+                IO.Directory.Delete(out, true)
+
             IO.Directory.CreateDirectory directory |> ignore
 
             Log.info

@@ -968,5 +968,33 @@ let all =
 
                     Directory.Delete(root, true)
             )
+
+            test (
+                "what a failed precompile left behind is cleared before the next",
+                fun _ ->
+                    let root, project = scratch None "module Shared.Helpers\nlet answer = 41\n"
+
+                    let precompile =
+                        Vendor.precompileProject
+                            (AbsolutePath.create root)
+                            (fakeFable "WithExtra")
+                            project
+
+                    match precompile [] with
+                    | Error message ->
+                        assertThat message (tag "the precompile should succeed" >> isEqualTo "")
+                    | Ok modules ->
+                        File.Delete(Path.Combine(modules, "precompiled_info.json"))
+                        let stale = Path.Combine(modules, "..", "stale.js")
+                        File.WriteAllText(stale, "")
+
+                        assertThat
+                            (precompile [])
+                            (tag "the library is precompiled again" >> isEqualTo (Ok modules))
+
+                        assertThat (File.Exists stale) (tag "over a clean output folder" >> isFalse)
+
+                    Directory.Delete(root, true)
+            )
         ]
     )
