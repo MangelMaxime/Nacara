@@ -138,8 +138,14 @@ module Vendor =
     /// <param name="cli">Which Fable to run it with.</param>
     /// <param name="project">The project to compile. Its own files come too, so a site can offer
     /// its readers helpers as well as packages.</param>
+    /// <param name="properties">MSBuild properties, handed to Fable as environment variables.</param>
     /// <param name="directory">Where the output is kept.</param>
-    let private runPrecompile (cli: FableCli) (project: string) (directory: string) =
+    let private runPrecompile
+        (cli: FableCli)
+        (project: string)
+        (properties: (string * string) list)
+        (directory: string)
+        =
         let fableModules = Path.Combine(directory, "out", "fable_modules")
 
         try
@@ -171,6 +177,9 @@ module Vendor =
             // Deterministic source paths rewrite the paths inside the assemblies and not the ones
             // precompiled_info.json records, and the browser matches a source file on those.
             start.EnvironmentVariables["DeterministicSourcePaths"] <- "false"
+
+            for name, value in properties do
+                start.EnvironmentVariables[name] <- value
 
             before
             @ [
@@ -216,13 +225,19 @@ module Vendor =
     /// <param name="projectRoot">The root of the site being built, where the output is kept.</param>
     /// <param name="cli">Which Fable to run it with.</param>
     /// <param name="project">The <c>.fsproj</c> to compile.</param>
-    let precompileProject (projectRoot: AbsolutePath) (cli: FableCli) (project: string) =
+    /// <param name="properties">The MSBuild properties it is compiled with.</param>
+    let precompileProject
+        (projectRoot: AbsolutePath)
+        (cli: FableCli)
+        (project: string)
+        (properties: (string * string) list)
+        =
         if not (File.Exists project) then
             Error $"'%s{project}' does not exist"
         else
 
             let stamp =
-                match ProjectInputs.read project with
+                match ProjectInputs.read properties project with
                 | Ok inputs -> inputs
                 | Error message ->
                     Log.debug
@@ -239,7 +254,15 @@ module Vendor =
                     |> Seq.map (fun file -> $"%s{file}:%i{FileInfo(file).LastWriteTimeUtc.Ticks}")
                     |> String.concat ";"
 
-            let slug = slugOf $"project:%s{project}:%s{stamp}:fable:%s{cli.Identity}"
+            let described =
+                properties
+                |> List.sortBy fst
+                |> List.map (fun (name, value) -> $"%s{name}=%s{value}")
+                |> String.concat ";"
+
+            let slug =
+                slugOf
+                    $"project:%s{project}:%s{stamp}:properties:%s{described}:fable:%s{cli.Identity}"
 
             ProjectCache.forgetOthers projectRoot PrecompiledGroup [ slug ]
 
@@ -251,7 +274,7 @@ module Vendor =
             if File.Exists(Path.Combine(modules, "precompiled_info.json")) then
                 Ok modules
             else
-                runPrecompile cli (Path.GetFullPath project) cache
+                runPrecompile cli (Path.GetFullPath project) properties cache
 
     /// <summary>What the build knows about a precompiled library, for the browser to be told.</summary>
     type Precompiled =

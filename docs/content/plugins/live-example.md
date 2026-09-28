@@ -193,6 +193,15 @@ Point it at your own library's project and snippets get it as it is in your work
 
 One project serves the whole site, so one preset names it, and naming two fails the build.
 
+Set an MSBuild property for its precompile with `property`:
+
+```fsharp
+|> LiveExamplePreset.property "WithTracing" "true"
+```
+
+It reaches MSBuild as an environment variable, so a value the project sets itself wins over it.
+The library is precompiled again when a property changes.
+
 ### A stylesheet
 
 ```fsharp

@@ -600,7 +600,7 @@ let all =
                 fun _ ->
                     let root, project = scratch None "module Shared.Helpers\nlet answer = 41\n"
 
-                    match ProjectInputs.read project with
+                    match ProjectInputs.read [] project with
                     | Error message ->
                         assertThat message (tag "MSBuild should answer" >> isEqualTo "")
                     | Ok before ->
@@ -613,7 +613,7 @@ let all =
                             "module Shared.Helpers\nlet answer = 42\n"
                         )
 
-                        match ProjectInputs.read project with
+                        match ProjectInputs.read [] project with
                         | Error message ->
                             assertThat message (tag "MSBuild should answer" >> isEqualTo "")
                         | Ok after ->
@@ -629,7 +629,7 @@ let all =
                 fun _ ->
                     let root, project = scratch None "module Shared.Helpers\nlet answer = 41\n"
 
-                    match ProjectInputs.read project with
+                    match ProjectInputs.read [] project with
                     | Error message ->
                         assertThat message (tag "MSBuild should answer" >> isEqualTo "")
                     | Ok before ->
@@ -637,7 +637,7 @@ let all =
                             Directory.EnumerateFiles(root, "*.fs", SearchOption.AllDirectories) do
                             File.SetLastWriteTimeUtc(file, System.DateTime.UtcNow.AddMinutes 1.)
 
-                        match ProjectInputs.read project with
+                        match ProjectInputs.read [] project with
                         | Error message ->
                             assertThat message (tag "MSBuild should answer" >> isEqualTo "")
                         | Ok after ->
@@ -661,13 +661,196 @@ let all =
                     let root, project =
                         scratch (Some packages) "module Shared.Helpers\nlet answer = 41\n"
 
-                    match ProjectInputs.read project with
+                    match ProjectInputs.read [] project with
                     | Error message ->
                         assertThat message (tag "MSBuild should answer" >> isEqualTo "")
                     | Ok inputs ->
                         assertThat
                             (inputs.Contains "Thoth.Json.Core@0.9.1")
                             (tag "the version comes from Directory.Packages.props" >> isTrue)
+
+                    Directory.Delete(root, true)
+            )
+
+            test (
+                "a property that adds a file counts towards what the project is",
+                fun _ ->
+                    let root, project = scratch None "module Shared.Helpers\nlet answer = 41\n"
+
+                    File.WriteAllText(Path.Combine(root, "lib", "Extra.fs"), "module Extra\n")
+
+                    File.WriteAllText(
+                        Path.Combine(root, "Directory.Build.targets"),
+                        """<Project>
+  <ItemGroup Condition="'$(WithExtra)' == 'true'"><Compile Include="Extra.fs" /></ItemGroup>
+</Project>
+"""
+                    )
+
+                    match
+                        ProjectInputs.read [] project,
+                        ProjectInputs.read [ "WithExtra", "true" ] project
+                    with
+                    | Ok without, Ok withExtra ->
+                        assertThat
+                            (without.Contains "Extra.fs")
+                            (tag "left unset, the file is not compiled" >> isFalse)
+
+                        assertThat (withExtra.Contains "Extra.fs") (tag "set, it is" >> isTrue)
+                    | Error message, _
+                    | _, Error message ->
+                        assertThat message (tag "MSBuild should answer" >> isEqualTo "")
+
+                    Directory.Delete(root, true)
+            )
+
+            /// Stands in for `fable precompile`: writes what the build looks for, and the value of
+            /// one environment variable, so a test can see what the precompile was handed.
+            let fakeFable (variable: string) =
+                let directory =
+                    Path.Combine(
+                        Path.GetTempPath(),
+                        "nacara-tests",
+                        System.Guid.NewGuid().ToString "N"
+                    )
+
+                Directory.CreateDirectory directory |> ignore
+
+                let tool =
+                    if System.OperatingSystem.IsWindows() then
+                        let path = Path.Combine(directory, "fable.cmd")
+
+                        File.WriteAllText(
+                            path,
+                            String.concat
+                                "\r\n"
+                                [
+                                    "@echo off"
+                                    "mkdir out\\fable_modules"
+                                    $"echo(%%%s{variable}%%> out\\fable_modules\\seen.txt"
+                                    "echo {}> out\\fable_modules\\precompiled_info.json"
+                                    ""
+                                ]
+                        )
+
+                        path
+                    else
+                        let path = Path.Combine(directory, "fable.sh")
+
+                        File.WriteAllText(
+                            path,
+                            String.concat
+                                "\n"
+                                [
+                                    "#!/bin/sh"
+                                    "mkdir -p out/fable_modules"
+                                    $"printf '%%s' \"$%s{variable}\" > out/fable_modules/seen.txt"
+                                    "printf '{}' > out/fable_modules/precompiled_info.json"
+                                    ""
+                                ]
+                        )
+
+                        File.SetUnixFileMode(
+                            path,
+                            UnixFileMode.UserRead
+                            ||| UnixFileMode.UserWrite
+                            ||| UnixFileMode.UserExecute
+                        )
+
+                        path
+
+                NamedFable(tool, None)
+
+            test (
+                "a property named twice keeps the last value, whatever its case",
+                fun _ ->
+                    let preset =
+                        LiveExamplePreset.create "demo"
+                        |> LiveExamplePreset.property "WithTracing" "false"
+                        |> LiveExamplePreset.property "Other" "1"
+                        |> LiveExamplePreset.property "withtracing" "true"
+
+                    assertThat
+                        preset.Properties
+                        (tag "one entry per name, the last value winning"
+                         >> isEqualTo
+                             [
+                                 "Other", "1"
+                                 "withtracing", "true"
+                             ])
+            )
+
+            test (
+                "a property reaches the precompile",
+                fun _ ->
+                    let root, project = scratch None "module Shared.Helpers\nlet answer = 41\n"
+
+                    match
+                        Vendor.precompileProject
+                            (AbsolutePath.create root)
+                            (fakeFable "WithExtra")
+                            project
+                            [ "WithExtra", "true" ]
+                    with
+                    | Error message ->
+                        assertThat message (tag "the precompile should succeed" >> isEqualTo "")
+                    | Ok modules ->
+                        assertThat
+                            (File.ReadAllText(Path.Combine(modules, "seen.txt")).Trim())
+                            (tag "the value Fable was started with" >> isEqualTo "true")
+
+                    Directory.Delete(root, true)
+            )
+
+            test (
+                "changing a property precompiles the library again",
+                fun _ ->
+                    let root, project = scratch None "module Shared.Helpers\nlet answer = 41\n"
+
+                    let precompile =
+                        Vendor.precompileProject
+                            (AbsolutePath.create root)
+                            (fakeFable "WithExtra")
+                            project
+
+                    match precompile [], precompile [ "WithExtra", "true" ] with
+                    | Ok before, Ok after ->
+                        assertThat (before <> after) (tag "the output is kept apart" >> isTrue)
+
+                        assertThat
+                            (Directory.Exists before)
+                            (tag "and the old one is forgotten" >> isFalse)
+                    | Error message, _
+                    | _, Error message ->
+                        assertThat message (tag "the precompile should succeed" >> isEqualTo "")
+
+                    Directory.Delete(root, true)
+            )
+
+            test (
+                "the same properties read the last precompile",
+                fun _ ->
+                    let root, project = scratch None "module Shared.Helpers\nlet answer = 41\n"
+
+                    let precompile =
+                        Vendor.precompileProject
+                            (AbsolutePath.create root)
+                            (fakeFable "WithExtra")
+                            project
+
+                    match precompile [ "WithExtra", "true" ] with
+                    | Error message ->
+                        assertThat message (tag "the precompile should succeed" >> isEqualTo "")
+                    | Ok modules ->
+                        File.Delete(Path.Combine(modules, "seen.txt"))
+
+                        assertThat
+                            (precompile [ "WithExtra", "true" ])
+                            (tag "the same output is handed back" >> isEqualTo (Ok modules))
+
+                        assertThat
+                            (File.Exists(Path.Combine(modules, "seen.txt")))
+                            (tag "without Fable being run again" >> isFalse)
 
                     Directory.Delete(root, true)
             )
