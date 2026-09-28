@@ -166,7 +166,8 @@ module LiveExample =
                 let projects =
                     options.Presets
                     |> List.choose (fun preset ->
-                        preset.Project |> Option.map (fun path -> preset.Name, path)
+                        preset.Project
+                        |> Option.map (fun path -> preset.Name, (path, preset.Properties))
                     )
 
                 let clash =
@@ -193,7 +194,7 @@ module LiveExample =
                     let built =
                         match cli, project with
                         | _ when clash.IsSome -> None
-                        | Some cli, Some project ->
+                        | Some cli, Some(project, properties) ->
                             let root = Nacara.defaultProjectRoot ()
 
                             let path =
@@ -202,7 +203,13 @@ module LiveExample =
                                 else
                                     Path.Combine(root, project)
 
-                            Some(Vendor.precompileProject (AbsolutePath.create root) cli path)
+                            Some(
+                                Vendor.precompileProject
+                                    (AbsolutePath.create root)
+                                    cli
+                                    path
+                                    properties
+                            )
                         | _ -> None
 
                     match built with

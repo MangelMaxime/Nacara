@@ -146,6 +146,8 @@ type LiveExamplePreset =
         /// site that wants to offer more than one package, or helpers of its own alongside them,
         /// writes a project instead of listing packages here.</remarks>
         Project: string option
+        /// MSBuild properties the project is evaluated and precompiled with.
+        Properties: (string * string) list
         /// Whether a fence naming no preset gets this one.
         IsDefault: bool
     }
@@ -165,6 +167,7 @@ module LiveExamplePreset =
             Css = None
             Template = None
             Project = None
+            Properties = []
             IsDefault = false
         }
 
@@ -190,6 +193,25 @@ module LiveExamplePreset =
     let project value (preset: LiveExamplePreset) =
         { preset with
             Project = Some value
+        }
+
+    /// <summary>Set an MSBuild property for the project's precompile.</summary>
+    /// <remarks>The library is precompiled again when a property changes. A later call for the
+    /// same name replaces it.</remarks>
+    /// <param name="name">The property name.</param>
+    /// <param name="value">Its value.</param>
+    /// <param name="preset">The preset so far.</param>
+    let property (name: string) (value: string) (preset: LiveExamplePreset) =
+        let others =
+            preset.Properties
+            |> List.filter (fun (existing, _) ->
+                not (
+                    System.String.Equals(existing, name, System.StringComparison.OrdinalIgnoreCase)
+                )
+            )
+
+        { preset with
+            Properties = others @ [ name, value ]
         }
 
     /// <summary>A stylesheet for what its snippets draw.</summary>

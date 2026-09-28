@@ -9,7 +9,7 @@ open System.Text.Json
 module internal ProjectInputs =
 
     /// Evaluation only - no restore, no build - so this costs a quarter of a second.
-    let private evaluate (project: string) =
+    let private evaluate (properties: (string * string) list) (project: string) =
         let start =
             ProcessStartInfo(
                 "dotnet",
@@ -17,6 +17,9 @@ module internal ProjectInputs =
                 RedirectStandardOutput = true,
                 WorkingDirectory = Path.GetDirectoryName project
             )
+
+        for name, value in properties do
+            start.EnvironmentVariables[name] <- value
 
         [
             "msbuild"
@@ -73,8 +76,9 @@ module internal ProjectInputs =
         ]
 
     /// <summary>Everything the project is made of, as one string to key a cache by.</summary>
+    /// <param name="properties">The MSBuild properties it is evaluated with.</param>
     /// <param name="project">The <c>.fsproj</c> to describe.</param>
-    let read (project: string) =
+    let read (properties: (string * string) list) (project: string) =
         let rec walk (visited: Set<string>) (project: string) =
             let project = Path.GetFullPath project
 
@@ -82,7 +86,7 @@ module internal ProjectInputs =
                 Ok(visited, [])
             else
 
-                match evaluate project with
+                match evaluate properties project with
                 | Error message -> Error message
                 | Ok json ->
                     use document = JsonDocument.Parse json
