@@ -132,10 +132,10 @@ type LiveExamplePreset =
         Name: string
         /// F# files, relative to the project root, in compilation order.
         Files: string list
-        /// <summary>A stylesheet for what its snippets draw.</summary>
-        /// <remarks>Unset, the site's own is used - and if there is none either, the frame is left
+        /// <summary>Stylesheets for what its snippets draw, in the order the frame applies them.</summary>
+        /// <remarks>Empty, the site's own is used - and if there is none either, the frame is left
         /// with the browser's defaults.</remarks>
-        Css: string option
+        Css: string list
         /// <summary>The page its snippets are run inside.</summary>
         /// <remarks>Unset, the site's own is used. A full HTML document: the import map and the
         /// snippet are put into its head and its body, so whatever it lays out is there before the
@@ -164,7 +164,7 @@ module LiveExamplePreset =
         {
             Name = name
             Files = []
-            Css = None
+            Css = []
             Template = None
             Project = None
             Properties = []
@@ -214,13 +214,14 @@ module LiveExamplePreset =
             Properties = others @ [ name, value ]
         }
 
-    /// <summary>A stylesheet for what its snippets draw.</summary>
-    /// <remarks>Inside the frame only: it never reaches the page around it.</remarks>
+    /// <summary>Add a stylesheet for what its snippets draw.</summary>
+    /// <remarks>Inside the frame only: it never reaches the page around it. Each call adds one,
+    /// applied after those before it.</remarks>
     /// <param name="value">A CSS file, relative to the project root.</param>
     /// <param name="preset">The preset so far.</param>
     let css value (preset: LiveExamplePreset) =
         { preset with
-            Css = Some value
+            Css = preset.Css @ [ value ]
         }
 
     /// <summary>The page its snippets run inside.</summary>
