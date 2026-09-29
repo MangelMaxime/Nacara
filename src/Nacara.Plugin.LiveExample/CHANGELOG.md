@@ -1,5 +1,5 @@
 ---
-last_commit_released: 8f294aa6cfad169b23194617d082c7035f9562e3
+last_commit_released: 52991dcb39361c6c36a8a9e38abade34eb03975e
 ---
 
 # Changelog
@@ -11,6 +11,22 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 1.0.0-beta.10 - 2026-09-29
+
+### 🏗️ Breaking changes
+
+* *(live-example)* Stack a preset's stylesheets ([f910ae3](https://github.com/MangelMaxime/Nacara/commit/f910ae39c6019ab99ae844ad9683ebd3a6e1b3ea))
+
+### 🚀 Features
+
+* *(live-example)* Precompile a preset's project with MSBuild properties ([d1a4b8f](https://github.com/MangelMaxime/Nacara/commit/d1a4b8f137c8c9f225fe52ca51577cdba359d08a))
+
+### 🐞 Bug Fixes
+
+* *(live-example)* Clear a failed precompile's output before the next ([829e2b3](https://github.com/MangelMaxime/Nacara/commit/829e2b37fd319aea914230f715a4721c1fa933a6))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/8f294aa6cfad169b23194617d082c7035f9562e3..52991dcb39361c6c36a8a9e38abade34eb03975e)</small></strong>
 
 ## 1.0.0-beta.9 - 2026-09-16
 
