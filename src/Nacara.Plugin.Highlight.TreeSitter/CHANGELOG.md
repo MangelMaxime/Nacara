@@ -1,5 +1,5 @@
 ---
-last_commit_released: 3212373a493a022ad4a500b79dcec0c719db1804
+last_commit_released: 52991dcb39361c6c36a8a9e38abade34eb03975e
 ---
 
 # Changelog
@@ -11,6 +11,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 1.0.0-beta.3 - 2026-09-29
+
+### 🐞 Bug Fixes
+
+* *(treesitter)* Ship the C# grammar under the name its wasm exports (#274) ([52991dc](https://github.com/MangelMaxime/Nacara/commit/52991dcb39361c6c36a8a9e38abade34eb03975e))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/3212373a493a022ad4a500b79dcec0c719db1804..52991dcb39361c6c36a8a9e38abade34eb03975e)</small></strong>
 
 ## 1.0.0-beta.2 - 2026-09-12
 
