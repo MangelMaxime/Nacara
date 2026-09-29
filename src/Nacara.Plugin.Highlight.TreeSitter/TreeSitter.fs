@@ -26,7 +26,8 @@ type TreeSitterGrammarSource =
 /// <summary>A grammar this site can colour with: what it is called, and where it comes from.</summary>
 type TreeSitterGrammar =
     {
-        /// What a fence writes after its backticks.
+        /// <summary>What the grammar is called: what a fence writes after its backticks, and what
+        /// its wasm exports after <c>tree_sitter_</c>.</summary>
         Language: string
         /// Other names the same fence is written with, on top of the ones already known.
         Aliases: string list
@@ -263,6 +264,7 @@ module TreeSitter =
                 "fsi"
             ]
             [
+                "c_sharp"
                 "csharp"
                 "cs"
             ]

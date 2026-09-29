@@ -29,7 +29,8 @@ there.
 
 | | |
 |---|---|
-| F#, C# | `fsharp` `fs` `fsx` `fsi`, `csharp` `cs` |
+| F# | `fsharp` `fs` `fsx` `fsi` |
+| C# | `c_sharp` `csharp` `cs` |
 | Web | `javascript` `js` `jsx`, `typescript` `ts`, `html`, `css` |
 | Configuration file | `json`, `yaml` `yml`, `toml`, `xml` |
 | Content | `markdown` `md` |
