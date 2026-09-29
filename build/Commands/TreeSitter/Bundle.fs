@@ -48,7 +48,7 @@ let private grammars =
             "https://github.com/MangelMaxime/tree-sitter-fsharp"
             "9f15966976f0e96c40b8be1efdf4b922d29ec0c9"
         from
-            "csharp"
+            "c_sharp"
             "https://github.com/tree-sitter/tree-sitter-c-sharp"
             "9150f7d56bb47f1a809fa23623f1ba1413e93fa9"
         from

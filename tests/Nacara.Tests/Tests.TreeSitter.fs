@@ -226,7 +226,7 @@ let all =
                     for language in
                         [
                             "fsharp"
-                            "csharp"
+                            "c_sharp"
                             "bash"
                             "json"
                             "yaml"
@@ -236,6 +236,51 @@ let all =
                         assertThat
                             (List.contains language shipped)
                             (tag $"%s{language} needs no building" >> isEqualTo true)
+            )
+
+            test (
+                "every shipped grammar loads under the name it is shipped as",
+                fun _ ->
+                    let highlighter =
+                        TreeSitter.TreeSitterHighlighter(
+                            { TreeSitter.defaults with
+                                RuntimePath = runtime
+                            }
+                        )
+
+                    for language in TreeSitter.bundledLanguages.Value do
+                        assertThat
+                            ((highlighter :> IHighlighter).Highlight(Some language, "x")).IsSome
+                            (tag $"%s{language} colours a snippet" >> isEqualTo true)
+
+                    assertThat
+                        (highlighter.TakeProblems())
+                        (tag "and none of them had anything to report" >> isEqualTo [])
+            )
+
+            test (
+                "a C# fence reaches the grammar shipped as c_sharp",
+                fun _ ->
+                    let highlighter = highlighter ()
+
+                    for fence in
+                        [
+                            "csharp"
+                            "cs"
+                        ] do
+                        match highlighter.Highlight(Some fence, "class Point { }") with
+                        | None -> assertThat "" (tag $"%s{fence} answered" >> isNotEqualTo "")
+                        | Some lines ->
+                            let classOf word =
+                                lines
+                                |> List.collect id
+                                |> List.tryFind (fun token -> token.Text = word)
+                                |> Option.bind _.ClassName
+
+                            assertThat
+                                (classOf "class")
+                                (tag $"%s{fence}: a keyword is a keyword"
+                                 >> isEqualTo (Some "tok-keyword"))
             )
 
             test (
