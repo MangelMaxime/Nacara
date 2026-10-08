@@ -32,7 +32,8 @@ module Pagefind =
                 elif platform.IsMacOS then
                     $"pagefind-v%s{Version}-%s{architecture}-apple-darwin.tar.gz", "pagefind"
                 else
-                    $"pagefind-v%s{Version}-%s{architecture}-pc-windows-msvc.zip", "pagefind.exe"
+                    $"pagefind-v%s{Version}-%s{architecture}-pc-windows-msvc.tar.gz",
+                    "pagefind.exe"
 
             Ok
                 {
