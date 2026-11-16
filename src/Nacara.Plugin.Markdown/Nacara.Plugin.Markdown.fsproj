@@ -4,6 +4,7 @@
         <Description>Markdown content for Nacara: Markdig pipeline, directives, table of contents and link resolution.</Description>
     </PropertyGroup>
     <ItemGroup>
+        <Compile Include="Directives.fs" />
         <Compile Include="Renderers.fs" />
         <Compile Include="Markdown.fs" />
     </ItemGroup>

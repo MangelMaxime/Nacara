@@ -43,6 +43,22 @@ Without it the engine has no idea what a `.md` file is, and says so with
 | `GithubRepo` | `None` | Repository used to expand `#12` and commit references |
 | `WarnOnUnknownLanguage` | `true` | Report a fence naming a language no highlighter covers |
 
+## Markdown outside the body
+
+`Markdown.renderInline context text` renders markdown from front matter or data in a layout, with
+no paragraph around it. `Markdown.renderBlock context text` keeps the paragraphs.
+
+```fsharp
+Html.p [ Markdown.renderInline context context.FrontMatter.Summary ]
+```
+
+Links resolve as they do in the body: to a file beside the page, or from the project root with a
+leading `/`. A link that names no file is looked up by source path, as `context.LinkTo` does, then
+kept as a path in the site. A link that resolves to nothing is written as it is, and the
+[link validator](../checks/link-validator.md) reports it.
+
+Directives and code blocks are rendered by Markdig itself, without the plugin's markup.
+
 ## What it reports
 
 Whatever it finds, it tells you where and what to do about it:

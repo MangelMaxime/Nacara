@@ -221,6 +221,103 @@ module Markdown =
                     else
                         Error url
 
+    let private currentPipeline () =
+        lock
+            built
+            (fun () ->
+                match cached with
+                | Some(_, pipeline) -> pipeline
+                | None -> build []
+            )
+
+    let private linkIn (context: PageContext<'FrontMatter>) (url: string) =
+        let path, anchor =
+            match url.IndexOf '#' with
+            | -1 -> url, ""
+            | index -> url.Substring(0, index), url.Substring index
+
+        let page = context.Page
+
+        let fromFile =
+            match page.SourceFile, page.ProjectPath with
+            | Some source, _ when path <> "" && not (path.StartsWith "/") ->
+                Some(AbsolutePath.combine (AbsolutePath.directory source) [ path ])
+            | Some source, Some projectPath when path.StartsWith "/" ->
+                let file = AbsolutePath.value source
+                let relative = RelativePath.value projectPath
+
+                if file.EndsWith relative then
+                    let root =
+                        AbsolutePath.create (file.Substring(0, file.Length - relative.Length))
+
+                    Some(AbsolutePath.combine root [ path.TrimStart '/' ])
+                else
+                    None
+            | _ -> None
+            |> Option.bind (fun target ->
+                context.Pages
+                |> List.tryFind (fun candidate -> candidate.SourceFile = Some target)
+            )
+
+        if path = "" then
+            url
+        else
+            match fromFile with
+            | Some target -> context.Site.UrlOf target.Route + anchor
+            | None ->
+                let resolved = PageIndex.link context.Site context.Pages path
+
+                if resolved = path then
+                    url
+                else
+                    resolved + anchor
+
+    let private renderText (context: PageContext<'FrontMatter>) (text: string) =
+        let pipeline = currentPipeline ()
+        let document = Markdig.Markdown.Parse(text, pipeline)
+
+        for link in document.Descendants<LinkInline>() do
+            if not link.IsImage && not (isNull link.Url) && not (isExternal link.Url) then
+                link.Url <- linkIn context link.Url
+
+        use writer = new StringWriter()
+        let renderer = HtmlRenderer(writer)
+        pipeline.Setup(renderer :> IMarkdownRenderer)
+        renderer.Render document |> ignore
+        writer.Flush()
+        writer.ToString().Trim()
+
+    /// <summary>Markdown from front matter or data, rendered as a block: paragraphs, lists.</summary>
+    /// <remarks>
+    /// Links resolve as they do in a page: to a file beside the page, or from the project root
+    /// with a leading <c>/</c>. A link that names no file is looked up by source path, then kept
+    /// as a path in the site. One that resolves to nothing is written as it is, for the link
+    /// validator to report.
+    /// </remarks>
+    /// <param name="context">The page being rendered.</param>
+    /// <param name="text">The markdown.</param>
+    let renderBlock (context: PageContext<'FrontMatter>) (text: string) =
+        Feliz.ViewEngine.Interop.createRawTextElement (renderText context text)
+
+    /// <summary>Markdown from front matter or data, rendered as a run of text, with no paragraph
+    /// around it.</summary>
+    /// <remarks>Links resolve as with <see cref="M:Nacara.Plugins.Markdown.renderBlock" />. Text of
+    /// several paragraphs keeps them.</remarks>
+    /// <param name="context">The page being rendered.</param>
+    /// <param name="text">The markdown.</param>
+    let renderInline (context: PageContext<'FrontMatter>) (text: string) =
+        let html = renderText context text
+
+        let single =
+            html.StartsWith "<p>" && html.EndsWith "</p>" && html.IndexOf("<p>", 3) = -1
+
+        Feliz.ViewEngine.Interop.createRawTextElement (
+            if single then
+                html.Substring(3, html.Length - 7)
+            else
+                html
+        )
+
     let private transform (options: MarkdownOptions) (context: TransformContext) (page: Page) =
         let pipeline = pipelineFor context.Registry
 
@@ -351,8 +448,21 @@ module Markdown =
                             )
                         | None -> context.Diagnostics.Add diagnostic
                     ),
+                    (fun diagnostic line column ->
+                        match page.SourceFile with
+                        | Some file ->
+                            context.Diagnostics.Add(
+                                diagnostic |> Diagnostic.at file (inFile line) (column + 1)
+                            )
+                        | None -> context.Diagnostics.Add diagnostic
+                    ),
                     lazy pipeline,
-                    nested
+                    nested,
+                    (Registry.extras<MarkdownDirective> context.Registry
+                     |> List.map (fun directive -> directive.Name.ToLowerInvariant(), directive)
+                     |> Map.ofList),
+                    page,
+                    context.Site
                 )
             )
             |> ignore
@@ -447,6 +557,46 @@ module Markdown =
         { options with
             WarnOnUnknownLanguage = value
         }
+
+    type private DirectivePlugin(directive: MarkdownDirective) =
+        interface IPlugin with
+            member _.Name = $"markdown-directive:%s{directive.Name}"
+            member _.Configure registry = registry |> Registry.extra directive
+
+    /// <summary>A <c>:::name</c> directive of your own, as a plugin.</summary>
+    /// <remarks>It takes precedence over a built-in directive of the same name. Of two with the
+    /// same name, the one registered last is used.</remarks>
+    /// <param name="name">What follows the colons, matched ignoring case.</param>
+    /// <param name="render">Given what the directive holds, its markup. An exception it throws
+    /// fails the build at the directive's line.</param>
+    let directivePlugin (name: string) (render: DirectiveContext -> Feliz.ViewEngine.ReactElement) =
+        DirectivePlugin(
+            {
+                Name = name
+                Render = render
+            }
+        )
+        :> IPlugin
+
+    /// <summary>Add a <c>:::name</c> directive of your own to a site.</summary>
+    /// <example>
+    /// <code lang="fsharp">
+    /// Site.create "Blog"
+    /// |> Markdown.register
+    /// |> Markdown.directive "youtube" (fun directive ->
+    ///     Html.iframe [ prop.src $"https://www.youtube-nocookie.com/embed/{directive.Argument.Value}" ]
+    /// )
+    /// </code>
+    /// </example>
+    /// <param name="name">What follows the colons, matched ignoring case.</param>
+    /// <param name="render">Given what the directive holds, its markup.</param>
+    /// <param name="site">The site being described.</param>
+    let directive
+        (name: string)
+        (render: DirectiveContext -> Feliz.ViewEngine.ReactElement)
+        (site: Site)
+        =
+        Site.plugin (directivePlugin name render) site
 
     /// <summary>The markdown plugin, with its default options.</summary>
     let create () = MarkdownPlugin(defaults) :> IPlugin

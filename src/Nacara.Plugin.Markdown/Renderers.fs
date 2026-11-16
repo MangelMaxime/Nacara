@@ -9,6 +9,7 @@ open Markdig.Syntax
 open Markdig.Syntax.Inlines
 open Markdig.Extensions.CustomContainers
 open Nacara.Core
+open Nacara.Plugins
 
 /// <summary>Renders a heading with a link to itself.</summary>
 type NacaraHeadingRenderer() =
@@ -259,12 +260,90 @@ module Directive =
 type NacaraContainerRenderer
     (
         report: string -> string -> string -> int -> int -> unit,
+        fail: Diagnostic -> int -> int -> unit,
         pipeline: Lazy<MarkdownPipeline>,
         /// How far the document being rendered is into the page, for a preview inside a preview.
-        nested: int ref
+        nested: int ref,
+        directives: Map<string, MarkdownDirective>,
+        page: Page,
+        site: SiteInfo
     )
     =
     inherit HtmlObjectRenderer<CustomContainer>()
+
+    let attributesOf (container: CustomContainer) =
+        match container.TryGetAttributes() with
+        | null -> Map.empty
+        | attributes ->
+            [
+                if not (isNull attributes.Id) then
+                    "id", attributes.Id
+                // Markdig adds the directive's name to its classes.
+                let classes =
+                    if isNull attributes.Classes then
+                        []
+                    else
+                        attributes.Classes
+                        |> Seq.filter (fun name -> name <> container.Info)
+                        |> List.ofSeq
+
+                if not classes.IsEmpty then
+                    "class", String.concat " " classes
+
+                if not (isNull attributes.Properties) then
+                    for property in attributes.Properties do
+                        property.Key,
+                        (if isNull property.Value then
+                             ""
+                         else
+                             property.Value)
+            ]
+            |> Map.ofList
+
+    let childrenOf (renderer: HtmlRenderer) (container: CustomContainer) =
+        let outer = renderer.Writer
+        use inner = new StringWriter()
+        renderer.Writer <- inner
+        renderer.WriteChildren container |> ignore
+        renderer.Writer <- outer
+        inner.ToString()
+
+    member private _.WriteCustom
+        (
+            renderer: HtmlRenderer,
+            container: CustomContainer,
+            directive: MarkdownDirective,
+            name,
+            argument
+        )
+        =
+        let content = childrenOf renderer container
+
+        let context =
+            {
+                Name = name
+                Argument = argument
+                Attributes = attributesOf container
+                Content = content
+                Page = page
+                Site = site
+            }
+
+        try
+            renderer.Write(Feliz.ViewEngine.Render.htmlView (directive.Render context))
+            |> ignore
+        with error ->
+            fail
+                (Diagnostic.ofException
+                    "directive-failed"
+                    $"The directive ':::%s{name}' failed"
+                    error)
+                container.Line
+                container.Column
+
+            renderer.Write("<div class=\"nacara-directive\">") |> ignore
+            renderer.Write content |> ignore
+            renderer.Write("</div>") |> ignore
 
     /// <summary>
     /// The source of an example, and the example itself, from one block.
@@ -518,25 +597,35 @@ type NacaraContainerRenderer
             else
                 Some(container.Arguments.Trim('"'))
 
-        match Directive.builtIn name argument with
-        | Preview -> this.WritePreview(renderer, container)
-        | FileTree -> this.WriteFileTree(renderer, container)
-        | Steps -> this.WriteSteps(renderer, container)
-        | Unknown ->
+        match directives.TryFind(name.ToLowerInvariant()), Directive.builtIn name argument with
+        | Some directive, _ -> this.WriteCustom(renderer, container, directive, name, argument)
+        | None, Preview -> this.WritePreview(renderer, container)
+        | None, FileTree -> this.WriteFileTree(renderer, container)
+        | None, Steps -> this.WriteSteps(renderer, container)
+        | None, Unknown ->
             report
                 "unknown-directive"
                 $"Unknown directive ':::%s{name}'"
                 (if name = "" then
                      "A container nested in another one needs fewer colons than its parent: ::::tabs around :::tab"
                  else
-                     "Built-in directives are note, tip, info, warning, danger, caution, tabs, tab, steps, details, preview and filetree")
+                     let own =
+                         if directives.IsEmpty then
+                             ""
+                         else
+                             directives.Values
+                             |> Seq.map _.Name
+                             |> String.concat ", "
+                             |> sprintf "; this site adds %s"
+
+                     $"Built-in directives are note, tip, info, warning, danger, caution, tabs, tab, steps, details, preview and filetree%s{own}")
                 container.Line
                 container.Column
 
             renderer.Write("<div class=\"nacara-directive\">") |> ignore
             renderer.WriteChildren container |> ignore
             renderer.Write("</div>") |> ignore
-        | Element(tag, attributes) ->
+        | None, Element(tag, attributes) ->
             renderer.Write($"<%s{tag}") |> ignore
 
             for name, value in attributes do

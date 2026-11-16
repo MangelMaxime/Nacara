@@ -81,7 +81,7 @@ One file says what the site is and which plugins it uses.
 
 ### Build it
 
-The output lands in `docs_deploy`.
+The output lands in `output`.
 
 :::
 `````
@@ -182,13 +182,96 @@ let main argv = 0
 ```
 
 An unknown directive is reported, with the position of the line at fault, instead of rendering as a
-paragraph.
+paragraph. The hint lists the directives the site adds.
 
-## Adding your own
+## Your own directives
 
-The plugin renders the directives above itself. For anything else - a container of your own, an
-inline of your own, an extension from NuGet - write a Markdig extension and contribute it from a
-plugin, and the pipeline every page is parsed with picks it up:
+`Markdown.directive name render` adds a `:::name` directive to a site. `render` returns its
+markup:
+
+```fsharp
+Site.create "Blog"
+|> Markdown.register
+|> Markdown.directive "youtube" (fun directive ->
+    Html.figure
+        [
+            Html.iframe [ prop.src $"https://www.youtube-nocookie.com/embed/{directive.Argument.Value}" ]
+            Html.figcaption [ directive.Body ]
+        ]
+)
+```
+
+```markdown
+:::youtube dQw4w9WgXcQ {.wide start=30}
+The launch talk.
+:::
+```
+
+A directive of your own is used in place of a built-in one of the same name. Names are matched
+ignoring case. When two have the same name, the one registered last is used.
+
+`Markdown.directivePlugin name render` gives the same directive as a plugin, for a plugin or a
+theme to register.
+
+### `DirectiveContext`
+
+What `render` is given.
+
+### `Name`
+
+**type:** `string`
+
+The name as the page wrote it.
+
+### `Argument`
+
+**type:** `string option`
+
+The text after the name on the opening line, quotes removed. `dQw4w9WgXcQ` above.
+
+### `Attributes`
+
+**type:** `Map<string, string>`
+
+From `{key=value}`, `{.class}` and `{#id}` on the opening line. Classes are under `class`,
+separated by spaces, and the id is under `id`. `directive.Attribute "start"` reads one as an
+option.
+
+### `Content`
+
+**type:** `string`
+
+The markdown between the opening and closing lines, rendered as HTML. `directive.Body` is the
+same as an element, with nothing around it.
+
+### `Page`
+
+**type:** `Page`
+
+The page the directive is on.
+
+### `Site`
+
+**type:** `SiteInfo`
+
+### When it fails
+
+An exception that `render` throws fails the build with `markdown/directive-failed`, at the
+directive's opening line. The page shows what the directive holds in its place:
+
+```fsharp
+|> Markdown.directive "youtube" (fun directive ->
+    match directive.Argument with
+    | Some id -> Html.iframe [ prop.src $"https://www.youtube-nocookie.com/embed/{id}" ]
+    | None -> failwith "Name the video: :::youtube <id>"
+)
+```
+
+## Markdig extensions
+
+The plugin renders the directives above itself. For anything else - an inline of your own, an
+extension from NuGet - write a Markdig extension and contribute it from a plugin, and the pipeline
+every page is parsed with picks it up:
 
 ```fsharp
 type MyPlugin() =
