@@ -17,6 +17,7 @@
         <Compile Include="Tests.Versions.fs" />
         <Compile Include="Tests.Literate.fs" />
         <Compile Include="Tests.Sitemap.fs" />
+        <Compile Include="Tests.Components.fs" />
         <Compile Include="Tests.LinkValidator.fs" />
         <Compile Include="Tests.Rumdl.fs" />
         <Compile Include="Tests.Nuglify.fs" />

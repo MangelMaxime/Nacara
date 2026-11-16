@@ -20,6 +20,21 @@ module Log =
     let private useHyperlinks =
         useColor && isNull (Environment.GetEnvironmentVariable "NO_HYPERLINKS")
 
+    /// <summary>The url that opens a location in the editor <c>NACARA_EDITOR_URL</c> names, when
+    /// it names one.</summary>
+    /// <param name="span">The location to open.</param>
+    let editorUrl (span: SourceSpan) =
+        // NACARA_EDITOR_URL names the scheme, e.g. 'vscode://file/{path}:{line}:{column}'.
+        match Environment.GetEnvironmentVariable "NACARA_EDITOR_URL" with
+        | null
+        | "" -> None
+        | template ->
+            template
+                .Replace("{path}", AbsolutePath.value span.File)
+                .Replace("{line}", string span.Line)
+                .Replace("{column}", string span.Column)
+            |> Some
+
     /// <summary>The location of a diagnostic, made clickable where that means something.</summary>
     let private linked (value: Diagnostic) (rendered: string) =
         match value.Span with
@@ -28,16 +43,9 @@ module Log =
             let shown = $"%s{path}(%i{span.Line},%i{span.Column})"
 
             if rendered.StartsWith shown then
-                // NACARA_EDITOR_URL names the scheme, e.g. 'vscode://file/{path}:{line}:{column}'.
                 let target =
-                    match Environment.GetEnvironmentVariable "NACARA_EDITOR_URL" with
-                    | null
-                    | "" -> Uri("file://" + path).AbsoluteUri
-                    | template ->
-                        template
-                            .Replace("{path}", path)
-                            .Replace("{line}", string span.Line)
-                            .Replace("{column}", string span.Column)
+                    editorUrl span
+                    |> Option.defaultWith (fun () -> Uri("file://" + path).AbsoluteUri)
 
                 let opening = $"\u001b]8;;%s{target}\u001b\\"
                 let closing = "\u001b]8;;\u001b\\"

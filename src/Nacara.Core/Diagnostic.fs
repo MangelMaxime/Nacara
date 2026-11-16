@@ -95,6 +95,42 @@ module Diagnostic =
             Hint = Some(hint: string)
         }
 
+    /// <summary>An error from an exception: its type and message, and its stack as the hint.</summary>
+    /// <param name="code">The rule, such as <c>nacara/layout-failed</c>.</param>
+    /// <param name="message">What was running when it was thrown.</param>
+    /// <param name="error">What was thrown. An aggregate of one is unwrapped.</param>
+    let ofException (code: string) (message: string) (error: exn) =
+        let rec innermost (error: exn) =
+            match error with
+            | :? System.AggregateException as aggregate when aggregate.InnerExceptions.Count = 1 ->
+                innermost aggregate.InnerExceptions[0]
+            | :? System.Reflection.TargetInvocationException as invocation when
+                not (isNull invocation.InnerException)
+                ->
+                innermost invocation.InnerException
+            | error -> error
+
+        let error = innermost error
+
+        let frames =
+            (if isNull error.StackTrace then
+                 ""
+             else
+                 error.StackTrace)
+                .Split('\n')
+            |> Array.map _.Trim()
+            |> Array.filter (fun frame -> frame <> "")
+            |> Array.truncate 8
+            |> String.concat "\n    "
+
+        let diagnostic =
+            create Severity.Error code $"%s{message}: %s{error.GetType().Name}: %s{error.Message}"
+
+        if frames = "" then
+            diagnostic
+        else
+            withHint frames diagnostic
+
     let private severityLabel =
         function
         | Severity.Error -> "error"

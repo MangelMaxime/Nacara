@@ -34,6 +34,20 @@ dotnet watch --no-hot-reload run -- watch
 `--no-hot-reload` is required: without it the SDK patches the running process instead of restarting
 the site.
 
+### Problems in the browser
+
+Every page `watch` serves shows what the last build reported, over the page. Errors open the panel.
+Warnings only show a button in the corner that opens it. `Close` and `Escape` hide it until the
+next build.
+
+Each problem shows its rule, its location relative to the project, its message and its hint. With
+`NACARA_EDITOR_URL` set, the location opens the file in your editor - see
+[clicking through to the file](#clicking-through-to-the-file).
+
+A layout that throws fails the build with `nacara/layout-failed` on its page, and the other pages
+are still written. A build that stops on an exception is reported as `nacara/build-failed`, and
+`watch` keeps serving.
+
 ### Reaching it from another machine
 
 `watch` listens on loopback only. Use `--host` to serve it on the network:

@@ -271,17 +271,24 @@ NOTE
             AbsolutePath.combine options.ProjectRoot [ site.OutputDirectory ]
 
         let follow = ref (fun (_: BuildResult) -> ())
-
-        let build () =
-            let result = Build.runWatch cache options.ProjectRoot site
-            report options result |> ignore
-            follow.Value result
-            result
-
-        let first = build ()
+        let last = ref None
 
         use server =
             new DevServer(outputDirectory, site.BaseUrl, options.Host, options.Port)
+
+        let build () =
+            try
+                let result = Build.runWatch cache options.ProjectRoot site
+                report options result |> ignore
+                server.ShowProblems(options.ProjectRoot, result.Diagnostics)
+                last.Value <- Some result
+                follow.Value result
+            with error ->
+                let crash = Diagnostic.ofException "nacara/build-failed" "The build stopped" error
+                Log.diagnostic crash
+                server.ShowProblems(options.ProjectRoot, [ crash ])
+
+        build ()
 
         try
             server.Start()
@@ -317,7 +324,7 @@ NOTE
                                 ""
 
                         Log.info $"Changed: %s{names}%s{extra}"
-                        build () |> ignore
+                        build ()
                         server.NotifyReload()
                 )
 
@@ -326,7 +333,7 @@ NOTE
 
         follow.Value <- fun result -> result.Pages |> List.collect _.Dependencies |> watcher.Follow
 
-        follow.Value first
+        last.Value |> Option.iter follow.Value
 
         let quit = new ManualResetEventSlim(false)
 
@@ -418,6 +425,7 @@ NOTE
                                 Site =
                                     { Site.toInfo site with
                                         PageAssets = Registry.extras<PageAsset> registry.Value
+                                        Extras = registry.Value.Extras
                                     }
                                 ProjectRoot = options.ProjectRoot
                                 OutputDirectory =

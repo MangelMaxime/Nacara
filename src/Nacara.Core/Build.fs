@@ -942,26 +942,45 @@ module Build =
                         $"%s{assets}:%i{shape}:%s{page.Id}:%s{BuildCache.Hash page.Html}:%i{hash page.Headings}:%i{hash page.FrontMatter}:%i{hash page.Data}"
 
                     let document =
-                        cache.Render(
-                            key,
-                            fun () ->
-                                definition.Render
-                                    {
-                                        Site = siteInfo
-                                        Pages = pages
-                                        Page = page
-                                        Content = page.Html
-                                    }
-                                |> Render.htmlDocument
-                        )
+                        try
+                            cache.Render(
+                                key,
+                                fun () ->
+                                    definition.Render
+                                        {
+                                            Site = siteInfo
+                                            Pages = pages
+                                            Page = page
+                                            Content = page.Html
+                                        }
+                                    |> Render.htmlDocument
+                            )
+                            |> Some
+                        with error ->
+                            let failure =
+                                Diagnostic.ofException
+                                    "nacara/layout-failed"
+                                    $"The layout of '%s{page.Collection}' failed on this page"
+                                    error
 
-                    rendered[page.Id] <- document
-                    let html = transformed relative document
+                            diagnostics.Add(
+                                match page.SourceFile with
+                                | Some file -> failure |> Diagnostic.inFile file
+                                | None -> failure
+                            )
 
-                    let destination =
-                        AbsolutePath.combine outputDirectory [ RelativePath.value relative ]
+                            None
 
-                    Some(destination, cache.WriteIfChanged(destination, html))
+                    match document with
+                    | None -> None
+                    | Some document ->
+                        rendered[page.Id] <- document
+                        let html = transformed relative document
+
+                        let destination =
+                            AbsolutePath.combine outputDirectory [ RelativePath.value relative ]
+
+                        Some(destination, cache.WriteIfChanged(destination, html))
             )
             |> Array.iter (
                 function
