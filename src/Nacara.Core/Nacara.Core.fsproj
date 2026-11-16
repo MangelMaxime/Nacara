@@ -15,6 +15,8 @@
         <Compile Include="CodeBlock.fs" />
         <Compile Include="Content.fs" />
         <Compile Include="Collection.fs" />
+        <Compile Include="Paging.fs" />
+        <Compile Include="Taxonomy.fs" />
         <Compile Include="Registry.fs" />
         <Compile Include="Site.fs" />
         <Compile Include="Log.fs" />

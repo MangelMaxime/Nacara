@@ -192,17 +192,82 @@ layout. Use `dependsOn` so watch mode rebuilds them when their source changes.
 
 A producer runs before any page is loaded. A page that lists or counts other pages - an index, an
 archive, a tag page - derives from their collections instead, and is given their pages with the
-front matter decoded:
+front matter decoded.
+
+`GeneratedContent.ofValue path frontMatter body` gives a generated page its front matter as a
+value. `Collection.generated name` starts a collection whose pages are all made that way:
 
 ```fsharp
-Collection.create "blog-index" IndexFrontMatter.decoder
+type IndexFrontMatter = { Paged: Paged<TypedPage<PostFrontMatter>> }
+
+Collection.generated<IndexFrontMatter> "blog-index"
 |> Collection.derive "blog-index" [ "blog" ] (fun context ->
-    [ GeneratedContent.create "index.md" (renderIndex context.Pages) ]
+    let posts = Collection.pagesOf posts context.Pages
+
+    [
+        for paged in Paging.split 10 posts ->
+            GeneratedContent.ofValue $"{paged.Number}.md" { Paged = paged } ""
+    ]
+)
+|> Collection.route (fun page ->
+    Paging.route (Route.create page.Locale [ "blog" ]) page.FrontMatter.Paged.Number
 )
 ```
 
+A value of another type than the collection's front matter fails the build with
+`nacara/front-matter-invalid`.
+
 A derived collection may derive from another derived one. Watch mode rebuilds its pages when any
 page it was derived from changes.
+
+`Collection.fromPages name source make` does the same from one typed collection. `make` is given
+its pages as `TypedPage` values and returns the front matter of each page to publish:
+
+```fsharp
+Collection.fromPages "blog-index" posts (fun posts ->
+    [ for paged in Paging.split 10 posts -> { Paged = paged } ]
+)
+|> Collection.route (fun page ->
+    Paging.route (Route.create page.Locale [ "blog" ]) page.FrontMatter.Paged.Number
+)
+```
+
+The pages have no source file, so give the collection a route.
+
+### Paging
+
+`Paging.split size items` splits a list into `Paged` values, one per page. An empty list gives one
+page with no items.
+
+| Field | What it holds |
+|---|---|
+| `Number` | Which page it is, from 1 |
+| `PageCount` | How many pages there are |
+| `Items` | The items on this page |
+| `ItemCount` | How many items the whole list holds |
+| `Offset` | How many items come before this page |
+| `Previous`, `Next` | The number of the page before and after, as an option |
+
+`Paging.route first number` is `first` for page 1, and `first` followed by `page/<number>` for the
+others.
+
+`Paging.slots current total` lists the slots of a pager: `PageNumber n` or `Gap`. Up to seven
+pages, every page is listed. Past seven, there are always seven slots: the first page, the last,
+the current one and its neighbours, and gaps.
+
+### Taxonomies
+
+`Taxonomy.group termsOf items` groups items by the terms each one is filed under, such as tags. It
+returns one `Term` per term:
+
+| Field | What it holds |
+|---|---|
+| `Name` | The term, as the first item filed under it writes it |
+| `Slug` | The term, slugged |
+| `Items` | The items filed under it, in the order they were given |
+
+An item with several terms is in each of them. Terms with the same slug are one term. Terms are
+ordered by name, ignoring case.
 
 ## Files that are not pages
 

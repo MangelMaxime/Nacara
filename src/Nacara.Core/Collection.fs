@@ -12,16 +12,39 @@ type GeneratedContent =
         Text: string
         /// Files this content was derived from, so watch mode can rebuild when they change.
         Dependencies: AbsolutePath list
+        /// <summary>The front matter as a value, set by
+        /// <see cref="M:Nacara.Core.GeneratedContent.ofValue" />. <c>Text</c> is then the body
+        /// alone.</summary>
+        FrontMatter: obj option
     }
 
 [<RequireQualifiedAccess>]
 module GeneratedContent =
 
+    /// <summary>Content written as a file would be: front matter, then body.</summary>
+    /// <param name="path">The path the page pretends to have, relative to the collection root.</param>
+    /// <param name="text">The whole document, front matter included.</param>
     let create (path: string) (text: string) =
         {
             Path = RelativePath.create path
             Text = text
             Dependencies = []
+            FrontMatter = None
+        }
+
+    /// <summary>Content whose front matter is already a value, so it is not written out and read
+    /// back.</summary>
+    /// <remarks>The value must be of the front-matter type of the collection that publishes it.
+    /// Any other type fails the build with <c>nacara/front-matter-invalid</c>.</remarks>
+    /// <param name="path">The path the page pretends to have, relative to the collection root.</param>
+    /// <param name="frontMatter">The page's front matter.</param>
+    /// <param name="body">The page's body, in the format the path's extension names.</param>
+    let ofValue (path: string) (frontMatter: 'FrontMatter) (body: string) =
+        {
+            Path = RelativePath.create path
+            Text = body
+            Dependencies = []
+            FrontMatter = Some(box frontMatter)
         }
 
     let dependsOn dependencies (content: GeneratedContent) =
@@ -100,6 +123,13 @@ type PageContext<'FrontMatter> =
         )
         |> List.sortBy (fun page -> page.Route.Segments)
 
+/// <summary>A page of a collection, with its front matter typed.</summary>
+type TypedPage<'FrontMatter> =
+    {
+        Page: Page
+        FrontMatter: 'FrontMatter
+    }
+
 /// <summary>A collection of content sharing a front-matter type, a route shape and a layout.</summary>
 type Collection<'FrontMatter> =
     {
@@ -125,6 +155,8 @@ type LoadRequest =
         ProjectPath: RelativePath option
         /// The front matter, already split from the body by whichever format claimed this file.
         FrontMatter: FrontMatterBlock
+        /// The front matter as a value, for generated content that carried one.
+        Decoded: obj option
         Source: PageSource
         Text: string
         Dependencies: AbsolutePath list
@@ -190,6 +222,34 @@ module Collection =
             Layout = fun _ -> Html.none
         }
 
+    /// <summary>Start describing a collection whose pages are generated with their front matter
+    /// as a value.</summary>
+    /// <remarks>Its pages come from <see cref="M:Nacara.Core.Collection.producer" /> or
+    /// <see cref="M:Nacara.Core.Collection.derive" />, each made with
+    /// <see cref="M:Nacara.Core.GeneratedContent.ofValue" />. Content that carries front matter
+    /// as text fails the build.</remarks>
+    /// <param name="name">What you call the collection.</param>
+    let generated<'FrontMatter> (name: string) : Collection<'FrontMatter> =
+        create
+            name
+            (Decode.error'
+                $"The collection '%s{name}' takes its front matter as a value; generate its pages with GeneratedContent.ofValue")
+
+    /// <summary>The pages of a collection among <paramref name="pages" />, with their front matter
+    /// typed.</summary>
+    /// <param name="collection">The collection to read.</param>
+    /// <param name="pages">The pages to look through: a layout's <c>context.Pages</c>, a hook's or
+    /// a derived collection's.</param>
+    let pagesOf (collection: Collection<'FrontMatter>) (pages: Page list) =
+        pages
+        |> List.filter (fun page -> page.Collection = collection.Name)
+        |> List.map (fun page ->
+            {
+                Page = page
+                FrontMatter = page.FrontMatter :?> 'FrontMatter
+            }
+        )
+
     /// <summary>Read content from files under <paramref name="root" />.</summary>
     /// <remarks>Use this only when you want something narrower than "every format this site reads"
     /// - a directory holding samples beside its pages, say. Left alone, a collection reads every
@@ -237,9 +297,12 @@ module Collection =
     /// </remarks>
     /// <example>
     /// <code lang="fsharp">
-    /// Collection.create "blog-index" IndexFrontMatter.decoder
+    /// Collection.generated&lt;IndexFrontMatter&gt; "blog-index"
     /// |> Collection.derive "blog-index" [ "blog" ] (fun context ->
-    ///     [ GeneratedContent.create "index.md" (renderIndex context.Pages) ]
+    ///     [
+    ///         for paged in Paging.split 10 context.Pages ->
+    ///             GeneratedContent.ofValue $"{paged.Number}.md" { Paged = paged } ""
+    ///     ]
     /// )
     /// </code>
     /// </example>
@@ -257,6 +320,45 @@ module Collection =
         =
         { collection with
             Source = Derived(name, from, derive)
+        }
+
+    /// <summary>Start describing a collection whose pages are made from the pages of another.</summary>
+    /// <remarks>
+    /// Each value <paramref name="make" /> returns is the front matter of one page, with no body.
+    /// Give the collection a <see cref="M:Nacara.Core.Collection.route" />: the pages have no
+    /// path of their own. They are in the root locale.
+    /// </remarks>
+    /// <example>
+    /// <code lang="fsharp">
+    /// Collection.fromPages "archive" posts (fun posts ->
+    ///     [ for paged in Paging.split 10 posts -> { Paged = paged } ]
+    /// )
+    /// |> Collection.route (fun page ->
+    ///     Paging.route (Route.create page.Locale [ "archive" ]) page.FrontMatter.Paged.Number
+    /// )
+    /// </code>
+    /// </example>
+    /// <param name="name">What you call the collection.</param>
+    /// <param name="source">The collection whose pages it is made from.</param>
+    /// <param name="make">Given the pages of <paramref name="source" />, front matter decoded and
+    /// bodies not yet rendered, the front matter of each page to publish.</param>
+    let fromPages
+        (name: string)
+        (source: Collection<'Source>)
+        (make: TypedPage<'Source> list -> 'FrontMatter list)
+        : Collection<'FrontMatter>
+        =
+        { generated<'FrontMatter> name with
+            Source =
+                Derived(
+                    name,
+                    [ source.Name ],
+                    fun context ->
+                        make (pagesOf source context.Pages)
+                        |> List.mapi (fun index frontMatter ->
+                            GeneratedContent.ofValue $"%04i{index + 1}" frontMatter ""
+                        )
+                )
         }
 
     /// <summary>How to read a page's title out of its front matter.</summary>
@@ -345,12 +447,27 @@ module Collection =
 
             let block = request.FrontMatter
 
-            match Yaml.decodeWithOffset block.LineOffset collection.Decoder block.Yaml with
-            | Error decodeError ->
-                match request.Source with
-                | FromFile file -> Error(DecodeError.toDiagnostic file decodeError)
-                | Generated _ ->
-                    Error(reportAt decodeError.Line decodeError.Column decodeError.Message)
+            let decoded =
+                match request.Decoded with
+                | Some(:? 'FrontMatter as frontMatter) -> Ok frontMatter
+                | Some value ->
+                    Error(
+                        reportAt
+                            1
+                            1
+                            $"The collection '%s{collection.Name}' reads front matter of type '%s{typeof<'FrontMatter>.Name}', and was given a '%s{value.GetType().Name}'"
+                    )
+                | None ->
+                    match Yaml.decodeWithOffset block.LineOffset collection.Decoder block.Yaml with
+                    | Ok frontMatter -> Ok frontMatter
+                    | Error decodeError ->
+                        match request.Source with
+                        | FromFile file -> Error(DecodeError.toDiagnostic file decodeError)
+                        | Generated _ ->
+                            Error(reportAt decodeError.Line decodeError.Column decodeError.Message)
+
+            match decoded with
+            | Error diagnostic -> Error diagnostic
             | Ok frontMatter ->
                 let info =
                     {
@@ -379,8 +496,11 @@ module Collection =
                         Title = collection.TitleOf frontMatter
                         Order = collection.OrderOf frontMatter
                         Body = block.Body
-                        // The yaml, plus the two delimiter lines around it.
-                        BodyLine = block.LineOffset + (block.Yaml.Split('\n').Length) + 2
+                        BodyLine =
+                            match request.Decoded with
+                            | Some _ -> 1
+                            // The yaml, plus the two delimiter lines around it.
+                            | None -> block.LineOffset + (block.Yaml.Split('\n').Length) + 2
                         Html = ""
                         Headings = []
                         FrontMatter = box frontMatter
