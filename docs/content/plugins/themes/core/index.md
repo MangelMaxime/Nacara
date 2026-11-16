@@ -23,6 +23,8 @@ the behaviours script, the default tokens and the content stylesheet.
 
 `ThemeCore.tokensStylesheet` registers the default tokens on their own.
 
+[A site with its own look](../../../guide/custom-site.md) builds one.
+
 ## The shell
 
 The pieces of a page every theme writes the same way.

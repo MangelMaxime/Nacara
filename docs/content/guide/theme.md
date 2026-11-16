@@ -57,6 +57,9 @@ site writes and the models a layout renders. `Nacara.Theme.Core` holds the share
 script. A theme of your own is markup and CSS over them. [Theme.Docs](../plugins/themes/docs/index.md)
 shows one. Publish it and it is an ordinary NuGet package, like the default one.
 
+**Skip the theme.** A site can write its own layouts over Theme.Core without a theme package. See
+[A site with its own look](custom-site.md).
+
 ## What the engine owns
 
 Some things stay with the engine whichever theme you use:

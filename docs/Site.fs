@@ -85,6 +85,7 @@ let theme =
                 "Publishing"
                 [
                     Menu.page "guide/theme.md"
+                    Menu.page "guide/custom-site.md"
                     Menu.page "guide/command-line.md"
                     Menu.page "guide/i18n.md"
                     Menu.page "guide/deploy.md"
