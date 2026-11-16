@@ -12,6 +12,20 @@ type private IndexFrontMatter =
         Paged: Paged<string>
     }
 
+type private PageFrontMatter =
+    {
+        Title: string
+        Layout: string
+    }
+
+let private pageDecoder: Decoder<PageFrontMatter> =
+    Decode.object (fun get ->
+        {
+            Title = get.Required.Field "title" Decode.string
+            Layout = get.Optional.Field "layout" Decode.string |> Option.defaultValue "plain"
+        }
+    )
+
 type private DraftFrontMatter =
     {
         Title: string
@@ -266,6 +280,82 @@ let private collections =
             )
 
             test (
+                "a page is rendered with the layout its front matter names",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    File.WriteAllText(
+                        Path.Combine(AbsolutePath.value root, "docs/loud.md"),
+                        "---\ntitle: Loud\nlayout: shout\n---\n"
+                    )
+
+                    let docs =
+                        Collection.create "docs" pageDecoder
+                        |> Collection.source "docs" [ "**/*.md" ]
+                        |> Collection.layouts
+                            _.Layout
+                            [
+                                "plain", (fun context -> Html.p context.FrontMatter.Title)
+                                "shout",
+                                (fun context ->
+                                    Html.h1 (context.FrontMatter.Title.ToUpperInvariant())
+                                )
+                            ]
+
+                    let site =
+                        Site.create "Layouts"
+                        |> Site.output "output"
+                        |> Site.plugin (Nacara.Plugins.Markdown.create ())
+                        |> Site.collection docs
+
+                    let result = Build.run root site
+
+                    assertThat (isClean result) (tag "the build is clean" >> isTrue)
+
+                    assertThat
+                        ((File.ReadAllText(outputOf root "loud/index.html")).Contains
+                            "<h1>LOUD</h1>")
+                        (tag "the page asking for one gets it" >> isTrue)
+
+                    assertThat
+                        ((File.ReadAllText(outputOf root "index.html")).Contains "<p>Home</p>")
+                        (tag "and the others the default" >> isTrue)
+            )
+
+            test (
+                "a page naming a layout the collection does not have fails the build",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    File.WriteAllText(
+                        Path.Combine(AbsolutePath.value root, "docs/odd.md"),
+                        "---\ntitle: Odd\nlayout: whisper\n---\n"
+                    )
+
+                    let docs =
+                        Collection.create "docs" pageDecoder
+                        |> Collection.source "docs" [ "**/*.md" ]
+                        |> Collection.layouts _.Layout [ "plain", (fun _ -> Html.none) ]
+
+                    let result =
+                        Build.run
+                            root
+                            (Site.create "Layouts"
+                             |> Site.output "output"
+                             |> Site.plugin (Nacara.Plugins.Markdown.create ())
+                             |> Site.collection docs)
+
+                    assertThat
+                        (result.Diagnostics
+                         |> List.exists (fun diagnostic ->
+                             diagnostic.Code = "nacara/front-matter-invalid"
+                             && diagnostic.Message.Contains "'whisper'"
+                             && diagnostic.Message.Contains "'plain'"
+                         ))
+                        (tag "the layouts it has are listed" >> isTrue)
+            )
+
+            test (
                 "a collection reads content/<name>, and a site writes to output, unless told otherwise",
                 fun _ ->
                     let root = Fixture.copyToTemporaryDirectory ()
@@ -355,6 +445,64 @@ let private siteHelpers =
                                      "b"
                                  ]
                              ])
+            )
+
+            test (
+                "a link names a page by its source, or a path in the site",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+                    let result = Build.run root Fixture.site
+                    let site = Site.toInfo (Fixture.site |> Site.baseUrl "/docs/")
+                    let link = PageIndex.link site result.Pages
+
+                    assertThat
+                        (link "guide/advanced.md")
+                        (tag "a source path" >> isEqualTo "/docs/guide/advanced/")
+
+                    assertThat
+                        (link "guide/advanced")
+                        (tag "without its extension" >> isEqualTo "/docs/guide/advanced/")
+
+                    assertThat
+                        (link "/blog/")
+                        (tag "a path keeps its trailing slash" >> isEqualTo "/docs/blog/")
+
+                    assertThat
+                        (link "missing.md")
+                        (tag "and what names nothing is left for the link validator"
+                         >> isEqualTo "missing.md")
+            )
+
+            test (
+                "a layout links to pages and lists another collection, typed",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    let home =
+                        Collection.generated<string> "home"
+                        |> Collection.producer
+                            "home"
+                            (fun _ -> [ GeneratedContent.ofValue "index" "Home" "" ])
+                        |> Collection.route (fun info -> Route.create info.Locale [ "home" ])
+                        |> Collection.layout (fun context ->
+                            Html.div
+                                [
+                                    yield Html.a [ prop.href (context.LinkTo "guide/advanced.md") ]
+                                    for page in context.PagesOf Fixture.docs do
+                                        yield Html.p page.FrontMatter.Title
+                                ]
+                        )
+
+                    Build.run root (Fixture.site |> Site.collection home) |> ignore
+                    let html = File.ReadAllText(outputOf root "home/index.html")
+
+                    assertThat
+                        (html.Contains "href=\"/guide/advanced/\"")
+                        (tag "the link is the page's url" >> isTrue)
+
+                    assertThat
+                        (html.Contains "<p>Home</p><p>Advanced</p><p>Getting started</p>")
+                        (tag "and the pages come in route order" >> isTrue)
             )
 
             test (

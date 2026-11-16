@@ -278,6 +278,46 @@ leave them out before any collection derives from them, so they are in no index 
 |> Collection.draft _.Draft
 ```
 
+## Pages of another collection
+
+`context.PagesOf collection` gives the pages of a collection in the page's locale, ordered by
+route, as `TypedPage` values with a `Page` and a `FrontMatter`:
+
+```fsharp
+let latest (context: PageContext<HomeFrontMatter>) =
+    context.PagesOf posts
+    |> List.sortByDescending _.FrontMatter.Date
+    |> List.truncate 3
+```
+
+`Collection.pagesOf collection pages` does the same over any list of pages, in every locale.
+
+## Links in a layout
+
+`context.LinkTo target` gives the url of a page from its source path, relative to its collection
+root: `context.LinkTo "about.md"`. A target starting with `/` is put under the base url, its
+trailing slash kept. A target that names no page is returned as written, and the
+[link validator](../plugins/checks/link-validator.md) reports it.
+
+`context.FindPage path` returns the page itself. `PageIndex.find` and `PageIndex.link` do the same
+from a list of pages.
+
+## A layout per page
+
+`Collection.layouts` renders each page with the layout its front matter names:
+
+```fsharp
+Collection.create "pages" PageFrontMatter.decoder
+|> Collection.layouts _.Layout [
+    "simple", Layouts.simple
+    "home", Layouts.home
+    "contact", Layouts.contact
+]
+```
+
+A page naming a layout that is not in the list fails the build with
+`nacara/front-matter-invalid`. Call it after the decoder is set: `Collection.create` sets it.
+
 ## Files that are not pages
 
 A search index or a manifest is a rendering of the pages rather than a page. `Site.file` writes

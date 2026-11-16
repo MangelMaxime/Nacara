@@ -145,6 +145,83 @@ type SiteInfo =
     member this.AbsoluteUrlOf(route: Route) =
         this.Origin |> Option.map (fun origin -> origin + this.UrlOf route)
 
+/// <summary>Finding a page by the path of its source.</summary>
+[<RequireQualifiedAccess>]
+module PageIndex =
+
+    /// Built once per page list: a menu of a thousand entries would otherwise walk every page for every entry.
+    let private indexed =
+        System.Runtime.CompilerServices.ConditionalWeakTable<
+            obj,
+            System.Collections.Generic.Dictionary<string, Page list>
+         >()
+
+    let private namesOf (page: Page) =
+        [
+            page.Id
+
+            match page.Id.IndexOf ':' with
+            | -1 -> ()
+            | colon ->
+                let path = page.Id.Substring(colon + 1)
+                path
+
+                if path.EndsWith ".md" then
+                    path.Substring(0, path.Length - 3)
+
+            match page.ProjectPath with
+            | Some projectPath -> RelativePath.value projectPath
+            | None -> ()
+        ]
+
+    /// <summary>The page a path names, when exactly one answers to it.</summary>
+    /// <remarks><c>index.md</c> is a page of every collection, so a path several pages answer to
+    /// names none of them. The whole id - <c>reference:index.md</c> - names one.</remarks>
+    /// <param name="pages">Every page of the site.</param>
+    /// <param name="path">A source path relative to the collection root, with or without its
+    /// extension, a path relative to the project root, or a page id.</param>
+    let find (pages: Page list) (path: string) =
+        let index =
+            indexed.GetValue(
+                box pages,
+                fun _ ->
+                    let map = System.Collections.Generic.Dictionary<string, Page list>()
+
+                    for page in pages do
+                        for name in namesOf page do
+                            match map.TryGetValue name with
+                            | true, found -> map[name] <- page :: found
+                            | _ -> map[name] <- [ page ]
+
+                    map
+            )
+
+        match index.TryGetValue path with
+        | true, [ page ] -> Some page
+        | _ -> None
+
+    /// <summary>The url of a link target: a page's source path, or a path inside the site.</summary>
+    /// <remarks>A path starting with <c>/</c> is put under the base url, its trailing slash kept.
+    /// A target that names no page is returned as written, for the link validator to report.</remarks>
+    /// <param name="site">Where the site is served from.</param>
+    /// <param name="pages">Every page of the site.</param>
+    /// <param name="target">A source path, as <see cref="M:Nacara.Core.PageIndex.find" /> takes
+    /// it, or a path starting with <c>/</c>.</param>
+    let link (site: SiteInfo) (pages: Page list) (target: string) =
+        if target.StartsWith "//" then
+            target
+        elif target.StartsWith "/" then
+            let resolved = site.UrlOfAsset target
+
+            if target.EndsWith "/" && not (resolved.EndsWith "/") then
+                resolved + "/"
+            else
+                resolved
+        else
+            match find pages target with
+            | Some page -> site.UrlOf page.Route
+            | None -> target
+
 /// <summary>
 /// A front-matter block extracted from a text file.
 /// </summary>

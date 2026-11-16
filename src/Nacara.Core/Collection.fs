@@ -448,6 +448,43 @@ module Collection =
             Layout = layout
         }
 
+    /// <summary>Render each page with the layout its front matter names.</summary>
+    /// <remarks>A page naming a layout that is not in the list fails the build with
+    /// <c>nacara/front-matter-invalid</c>. Call it after the collection's decoder is set.</remarks>
+    /// <param name="layoutOf">Given the decoded front matter, the name of the layout to use.</param>
+    /// <param name="layouts">Each layout, by the name a page uses for it.</param>
+    /// <param name="collection">The collection being described.</param>
+    let layouts
+        (layoutOf: 'FrontMatter -> string)
+        (layouts: (string * (PageContext<'FrontMatter> -> ReactElement)) list)
+        (collection: Collection<'FrontMatter>)
+        =
+        let known = Map.ofList layouts
+        let offered = layouts |> List.map (fst >> sprintf "'%s'") |> String.concat ", "
+
+        let unknown name =
+            $"'%s{name}' is not a layout of the collection '%s{collection.Name}'; it has %s{offered}"
+
+        { collection with
+            Decoder =
+                collection.Decoder
+                |> Decode.andThen (fun frontMatter ->
+                    let name = layoutOf frontMatter
+
+                    if known.ContainsKey name then
+                        Decode.succeed frontMatter
+                    else
+                        Decode.error' (unknown name)
+                )
+            Layout =
+                fun context ->
+                    let name = layoutOf context.FrontMatter
+
+                    match known.TryFind name with
+                    | Some layout -> layout context
+                    | None -> invalidOp (unknown name)
+        }
+
     /// <summary>Erase the front-matter type, capturing the typed functions in closures.</summary>
     let build (collection: Collection<'FrontMatter>) : CollectionDefinition =
         let load (request: LoadRequest) =
@@ -542,3 +579,26 @@ module Collection =
             Render = render
             IsDraft = fun page -> collection.DraftOf(page.FrontMatter :?> 'FrontMatter)
         }
+
+type PageContext<'FrontMatter> with
+
+    /// <summary>The pages of a collection in this page's locale, with their front matter typed,
+    /// ordered by route.</summary>
+    /// <param name="collection">The collection to read.</param>
+    member this.PagesOf(collection: Collection<'Other>) =
+        Collection.pagesOf collection this.Pages
+        |> List.filter (fun page -> page.Page.Locale.Code = this.Page.Locale.Code)
+        |> List.sortBy (fun page -> page.Page.Route.Segments)
+
+    /// <summary>The page a source path names, as <see cref="M:Nacara.Core.PageIndex.find" />
+    /// finds it.</summary>
+    /// <param name="path">A source path relative to its collection root, like
+    /// <c>"about.md"</c>.</param>
+    member this.FindPage(path: string) = PageIndex.find this.Pages path
+
+    /// <summary>The url of a link target, as <see cref="M:Nacara.Core.PageIndex.link" />
+    /// resolves it.</summary>
+    /// <param name="target">A source path, like <c>"about.md"</c>, or a path starting with
+    /// <c>/</c>.</param>
+    member this.LinkTo(target: string) =
+        PageIndex.link this.Site this.Pages target
