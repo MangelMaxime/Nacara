@@ -50,6 +50,7 @@ somewhere else.
 
 ## Content and output
 
-A collection reads files from one directory. Anything in the static directory is copied as it is.
-The output directory is rebuilt in place: files that nothing produces any more are deleted, so a
+A collection reads files from one directory: `content/<name>` unless it says otherwise. Anything in
+the static directory is copied as it is. The output directory is `output` unless `Site.output`
+says otherwise. It is rebuilt in place: files that nothing produces any more are deleted, so a
 page you delete does not stay online.

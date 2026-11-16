@@ -51,6 +51,19 @@ let slug =
                         (tag "digits survive" >> isEqualTo "nacara-2-0")
             )
             test (
+                "Slug.create spells a # after a word",
+                fun _ ->
+                    assertThat (Slug.create "F#") (tag "F# is not F" >> isEqualTo "fsharp")
+
+                    assertThat
+                        (Slug.create "C# 12")
+                        (tag "and the rest follows" >> isEqualTo "csharp-12")
+
+                    assertThat
+                        (Slug.create "#tag")
+                        (tag "a leading # is dropped" >> isEqualTo "tag")
+            )
+            test (
                 "Slug.create is total on symbols",
                 fun _ ->
                     assertThat

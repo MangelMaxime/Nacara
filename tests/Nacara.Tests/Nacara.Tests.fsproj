@@ -10,6 +10,7 @@
         <Compile Include="Tests.Core.fs" />
         <Compile Include="Tests.Tool.fs" />
         <Compile Include="Tests.Build.fs" />
+        <Compile Include="Tests.Collections.fs" />
         <Compile Include="Tests.Locale.fs" />
         <Compile Include="Tests.CodeBlock.fs" />
         <Compile Include="Tests.Changelog.fs" />

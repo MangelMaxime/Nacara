@@ -9,7 +9,8 @@ open System.Globalization
 /// </summary>
 /// <remarks>
 /// The same text always gives the same segment, and every segment is safe in a path. Diacritics
-/// are folded, so "Créer" becomes "creer" rather than losing the letter altogether.
+/// are folded, so "Créer" becomes "creer" rather than losing the letter altogether. A <c>#</c>
+/// after a letter or a digit is spelled <c>sharp</c>, so "F#" becomes "fsharp".
 /// </remarks>
 [<RequireQualifiedAccess>]
 module Slug =
@@ -28,6 +29,7 @@ module Slug =
     /// <code lang="fsharp">
     /// Slug.create "Get started!" // "get-started"
     /// Slug.create "Nacara.Core"  // "nacara-core"
+    /// Slug.create "F# tips"      // "fsharp-tips"
     /// </code>
     /// </example>
     let create (text: string) =
@@ -37,6 +39,12 @@ module Slug =
         |> Seq.iter (fun char ->
             if Char.IsLetterOrDigit char then
                 builder.Append char |> ignore
+            elif
+                char = '#'
+                && builder.Length > 0
+                && Char.IsLetterOrDigit builder[builder.Length - 1]
+            then
+                builder.Append "sharp" |> ignore
             elif builder.Length > 0 && builder[builder.Length - 1] <> '-' then
                 builder.Append '-' |> ignore
         )

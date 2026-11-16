@@ -11,6 +11,7 @@ let main _ =
             Core.all
             Tool.all
             Build.all
+            Collections.all
             Locale.all
             CodeBlock.all
             Changelog.all

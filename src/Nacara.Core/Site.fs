@@ -50,7 +50,7 @@ module Site =
             VersionPrefix = None
             Locales = [ Locale.root "en" ]
             FallBackToDefaultLocale = true
-            OutputDirectory = "docs_deploy"
+            OutputDirectory = "output"
             StaticDirectory = Some "static"
             Stylesheets = []
             Scripts = []
@@ -173,8 +173,9 @@ module Site =
         }
 
     /// <summary>Where the built site is written.</summary>
-    /// <param name="value">A directory, relative to the project root. The build removes whatever it
-    /// no longer produces, so do not keep anything of your own in there.</param>
+    /// <param name="value">A directory, relative to the project root. <c>output</c> when it is not
+    /// set. The build removes whatever it no longer produces, so do not keep anything of your own
+    /// in there.</param>
     /// <param name="site">The site being described.</param>
     let output value (site: Site) =
         { site with

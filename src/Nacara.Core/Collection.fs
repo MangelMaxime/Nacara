@@ -154,6 +154,8 @@ type CollectionDefinition =
 module Collection =
 
     /// <summary>Route a page from its path: <c>guide/index.md</c> becomes <c>/guide/</c>.</summary>
+    /// <remarks>A <c>404</c> page at the root of the collection is published at
+    /// <c>404.html</c>, with <see cref="M:Nacara.Core.Route.notFound" />.</remarks>
     let defaultRoute (info: PageInfo<'FrontMatter>) =
         let segments =
             info.RelativePath
@@ -163,20 +165,23 @@ module Collection =
             |> List.filter (fun segment -> segment <> "" && segment <> "index")
             |> List.map Slug.create
 
-        Route.create info.Locale segments
+        match segments with
+        | [ "404" ] -> Route.notFound info.Locale
+        | _ -> Route.create info.Locale segments
 
     /// <summary>
     /// Start describing a collection. The decoder is what gives its front matter a type.
     /// </summary>
-    /// <param name="name">What you call the collection. Its files are looked for under a directory
-    /// of that name in the content directory, in every format your plugins read.</param>
+    /// <param name="name">What you call the collection. Its files are read from
+    /// <c>content/&lt;name&gt;</c>, in every format your plugins read.
+    /// <see cref="M:Nacara.Core.Collection.sourceAll" /> reads another directory.</param>
     /// <param name="decoder">Reads the front matter of every page, and fails the build with a file
     /// and a line when a page does not match.</param>
     /// <returns>A collection with the defaults of every field, ready to point somewhere.</returns>
     let create (name: string) (decoder: Decoder<'FrontMatter>) =
         {
             Name = name
-            Source = FileFormats name
+            Source = FileFormats $"content/%s{name}"
             Decoder = decoder
             TitleOf = fun _ -> ""
             OrderOf = fun _ -> 0

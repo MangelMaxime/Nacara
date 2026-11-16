@@ -71,6 +71,12 @@ module Route =
             IsFile = true
         }
 
+    /// <summary>The route of a locale's 404 page: <c>404.html</c>, where static hosts look for
+    /// it.</summary>
+    /// <param name="locale">Which language the page is in. Another locale than the root one writes
+    /// it under its prefix, as <c>fr/404.html</c>.</param>
+    let notFound (locale: Locale) = file locale "404.html"
+
     /// <summary>True when this route names a file, rather than a page in a directory.</summary>
     /// <param name="route">The route to ask about.</param>
     let isFile (route: Route) = route.IsFile

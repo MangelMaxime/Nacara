@@ -167,15 +167,7 @@ let theme =
     )
     |> Theme.css """[data-section="reference"] { --nacara-sidebar-width: 20rem; }"""
 
-let content =
-    Theme.docs theme "content"
-    // Every static host looks for 404.html at the root, and will not use 404/index.html.
-    |> Collection.route (fun page ->
-        if RelativePath.value page.RelativePath = "404.md" then
-            Route.file page.Locale "404.html"
-        else
-            Collection.defaultRoute page
-    )
+let content = Theme.docs theme "content"
 
 let reference =
     FSharpApi.collection "reference" DocFrontMatter.decoder apiOptions

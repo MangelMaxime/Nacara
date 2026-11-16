@@ -50,6 +50,9 @@ than it offers.
 
 ## Which files a collection reads
 
+`Collection.create "posts"` reads `content/posts`. `Collection.sourceAll "notes"` reads another
+directory, relative to the project root.
+
 A collection reads every file under its directory that a plugin knows how to read. You do not
 declare which: register the [markdown plugin](../plugins/markdown/index.md) and `.md` files become
 content, register the [literate plugin](../plugins/literate/index.md) and `.fsx` files do too.
@@ -78,7 +81,10 @@ into the directory holding it, and each segment is slugged:
 content/guide/getting-started.md   →  /guide/getting-started/
 content/guide/index.md             →  /guide/
 content/index.md                   →  /
+content/404.md                     →  /404.html
 ```
+
+A `404` page at the root of a collection is written as `404.html`, where static hosts look for it.
 
 The page is then written as `guide/getting-started/index.html`, so its URL ends in a slash. That is
 the default, and most sites never touch it.
@@ -113,17 +119,18 @@ rather than reimplement it. Two pages landing on the same route fail the build w
 `nacara/duplicate-route`.
 
 `Route.file` publishes a page at a literal path, for the files a host expects to find exactly
-there - `404.html`, `robots.txt` - where `404/index.html` would not be found. Put it behind a
-condition, or every page in the collection ends up at that same path:
+there. Put it behind a condition, or every page in the collection ends up at that same path:
 
 ```fsharp
 |> Collection.route (fun page ->
-    if RelativePath.value page.RelativePath = "404.md" then
-        Route.file page.Locale "404.html"
+    if RelativePath.value page.RelativePath = "humans.md" then
+        Route.file page.Locale "humans.txt"
     else
         Collection.defaultRoute page
 )
 ```
+
+`Route.notFound locale` is the route of a locale's `404.html`.
 
 ### Links follow files, not URLs
 
