@@ -269,6 +269,15 @@ returns one `Term` per term:
 An item with several terms is in each of them. Terms with the same slug are one term. Terms are
 ordered by name, ignoring case.
 
+## Drafts
+
+`Collection.draft` names the pages that are drafts. `watch` publishes them. `build` and `check`
+leave them out before any collection derives from them, so they are in no index and no feed.
+
+```fsharp
+|> Collection.draft _.Draft
+```
+
 ## Files that are not pages
 
 A search index or a manifest is a rendering of the pages rather than a page. `Site.file` writes

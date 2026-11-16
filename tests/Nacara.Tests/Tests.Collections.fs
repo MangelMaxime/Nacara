@@ -12,6 +12,20 @@ type private IndexFrontMatter =
         Paged: Paged<string>
     }
 
+type private DraftFrontMatter =
+    {
+        Title: string
+        Draft: bool
+    }
+
+let private draftDecoder: Decoder<DraftFrontMatter> =
+    Decode.object (fun get ->
+        {
+            Title = get.Required.Field "title" Decode.string
+            Draft = get.Optional.Field "draft" Decode.bool |> Option.defaultValue false
+        }
+    )
+
 type private ArchiveFrontMatter =
     {
         Titles: string list
@@ -372,6 +386,63 @@ let private siteHelpers =
                         ((File.ReadAllText(outputOf root "archive/index.html")).Contains
                             "Advanced, Getting started, Home")
                         (tag "given every page of the source" >> isTrue)
+            )
+
+            test (
+                "a draft is published while serving, and left out of a build",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    File.WriteAllText(
+                        Path.Combine(AbsolutePath.value root, "docs/soon.md"),
+                        "---\ntitle: Soon\ndraft: true\n---\n"
+                    )
+
+                    let docs =
+                        Collection.create "docs" draftDecoder
+                        |> Collection.source "docs" [ "**/*.md" ]
+                        |> Collection.title _.Title
+                        |> Collection.draft _.Draft
+                        |> Collection.layout (fun context -> Html.p context.FrontMatter.Title)
+
+                    let archive =
+                        Collection.fromPages
+                            "archive"
+                            docs
+                            (fun pages ->
+                                [
+                                    {
+                                        Titles = pages |> List.map _.FrontMatter.Title
+                                    }
+                                ]
+                            )
+                        |> Collection.route (fun info -> Route.create info.Locale [ "archive" ])
+                        |> Collection.layout (fun context ->
+                            Html.p (String.concat ", " (List.sort context.FrontMatter.Titles))
+                        )
+
+                    let site =
+                        Site.create "Drafts"
+                        |> Site.output "output"
+                        |> Site.plugin (Nacara.Plugins.Markdown.create ())
+                        |> Site.collection docs
+                        |> Site.collection archive
+
+                    Build.run root site |> ignore
+
+                    assertThat
+                        (File.Exists(outputOf root "soon/index.html"))
+                        (tag "a build does not publish it" >> isFalse)
+
+                    assertThat
+                        ((File.ReadAllText(outputOf root "archive/index.html")).Contains "Soon")
+                        (tag "nor list it" >> isFalse)
+
+                    Build.runWatch (BuildCache()) root site |> ignore
+
+                    assertThat
+                        (File.Exists(outputOf root "soon/index.html"))
+                        (tag "serving does" >> isTrue)
             )
         ]
     )

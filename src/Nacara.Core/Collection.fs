@@ -142,6 +142,8 @@ type Collection<'FrontMatter> =
         TocOf: 'FrontMatter -> TocRange option
         RouteOf: PageInfo<'FrontMatter> -> Route
         Layout: PageContext<'FrontMatter> -> ReactElement
+        /// Published only while serving.
+        DraftOf: 'FrontMatter -> bool
     }
 
 /// <summary>A page about to be loaded.</summary>
@@ -180,6 +182,7 @@ type CollectionDefinition =
         Source: ContentSource
         Load: LoadRequest -> Result<Page, Diagnostic>
         Render: RenderRequest -> ReactElement
+        IsDraft: Page -> bool
     }
 
 [<RequireQualifiedAccess>]
@@ -220,6 +223,7 @@ module Collection =
             TocOf = fun _ -> None
             RouteOf = defaultRoute
             Layout = fun _ -> Html.none
+            DraftOf = fun _ -> false
         }
 
     /// <summary>Start describing a collection whose pages are generated with their front matter
@@ -234,6 +238,16 @@ module Collection =
             name
             (Decode.error'
                 $"The collection '%s{name}' takes its front matter as a value; generate its pages with GeneratedContent.ofValue")
+
+    /// <summary>Pages that are published while serving, and left out of a build.</summary>
+    /// <remarks>A draft is left out before any collection derives from it, so it is in no index
+    /// and no feed of a build.</remarks>
+    /// <param name="isDraft">Given the decoded front matter, whether the page is a draft.</param>
+    /// <param name="collection">The collection being described.</param>
+    let draft (isDraft: 'FrontMatter -> bool) (collection: Collection<'FrontMatter>) =
+        { collection with
+            DraftOf = isDraft
+        }
 
     /// <summary>The pages of a collection among <paramref name="pages" />, with their front matter
     /// typed.</summary>
@@ -526,4 +540,5 @@ module Collection =
             Source = collection.Source
             Load = load
             Render = render
+            IsDraft = fun page -> collection.DraftOf(page.FrontMatter :?> 'FrontMatter)
         }

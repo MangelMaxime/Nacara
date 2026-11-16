@@ -657,7 +657,8 @@ module Build =
             |> List.ofArray
             |> List.choose (fun result ->
                 match result with
-                | Ok page -> Some page
+                | Ok page when isWatch || not (definition.IsDraft page) -> Some page
+                | Ok _ -> None
                 | Error diagnostic ->
                     diagnostics.Add diagnostic
                     None
