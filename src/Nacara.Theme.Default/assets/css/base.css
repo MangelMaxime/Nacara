@@ -9,6 +9,11 @@ html {
     font-family: var(--nacara-font-sans);
 }
 
+/* The width responsive.css folds the navbar at, for the script: a media query cannot read it. */
+:root {
+    --nacara-narrow: 860px;
+}
+
 body {
     margin: 0;
     font-size: 1rem;
@@ -71,16 +76,4 @@ kbd {
 .nacara-skip-link:focus {
     transform: translateY(0);
     text-decoration: none;
-}
-
-.nacara-visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    border: 0;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
 }

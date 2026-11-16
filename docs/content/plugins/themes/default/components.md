@@ -1,11 +1,11 @@
 ---
-title: Components
+title: Parts
 toc:
   to: 3
 ---
 
-The theme's layout and every piece of it is a function. Call them yourself when you want a page
-shape the theme does not offer.
+The theme renders a page as parts. Replace one with `Theme.parts` and keep the rest, or call the
+layout yourself when you want a page shape the theme does not offer.
 
 ## Layouts
 
@@ -55,54 +55,52 @@ DocPage.create "Releases"
 | `DocPage.withMenuFilter` | A filter box over the menu, however short it is |
 | `DocPage.withoutMenuFilter` | No filter box, however long it is |
 | `DocPage.withoutMenuMemory` | Every page of the section opens the menu the same way |
-| `DocPage.bare` | No menu, no table of contents, no previous and next links |
+| `DocPage.splash` | No menu, no table of contents, over a wider measure. `Layout` is `splash` |
+| `DocPage.bare` | The navbar and the footer, and nothing else. `Layout` is `bare` |
 
 Left alone, the filter box appears when the menu is long enough that reading it is worse than
 typing a name. `DocPage.bare` is what [`layout: bare`](front-matter.md#layout) sets from front
 matter.
 
-## The pieces
+## Parts
 
-Each returns markup for the page it is given, so your own layout can keep the parts you want:
-
-| Function | What it renders |
-|---|---|
-| `Components.navbar theme context` | The bar across the top, and the drawer it folds into |
-| `Components.sidebar theme docPage context` | The section's menu. The `DocPage` decides the filter and the memory |
-| `Components.toc context` | This page's headings |
-| `Components.pageNav theme context` | The previous and next pages of the section |
-| `Components.editLink theme context` | A link to the page's source. Renders nothing unless [`Theme.editUrl`](navbar.md#around-the-page) is set |
+`Theme.parts` replaces how a part of the page is rendered:
 
 ```fsharp
-Collection.layout (fun context ->
-    Html.html
-        [
-            Html.head [ (* … *) ]
-            Html.body
-                [
-                    Components.navbar theme context
-                    // context.Content is already rendered html.
-                    Html.main [ prop.dangerouslySetInnerHTML context.Content ]
-                    Components.pageNav theme context
-                ]
-        ]
-)
+Theme.defaults
+|> Theme.parts (fun parts ->
+    { parts with
+        Footer = fun context -> Html.div [ Parts.footer context; Html.p "Hosted by us" ]
+        Navbar =
+            fun context model ->
+                Parts.navbar context { model with End = model.End @ [ NavbarEntry.Widget "…" ] }
+    })
 ```
 
-`Theme.shell` is what links the theme's stylesheet. A layout that does not call it gets no theme
-CSS - the file is still built, but nothing points at it - so bring your own.
+`Parts` holds the theme's own rendering of each one. Call it from your replacement to wrap it, or
+change the model on its way in.
 
-Three helpers answer the questions those pieces ask:
+| Part | Given | What it renders |
+|---|---|---|
+| `Head` | `HeadModel` | The tags of the head: title, description, social cards, favicon |
+| `Navbar` | `NavbarModel` | The bar across the top |
+| `Sidebar` | `SidebarModel` | The section's menu, the filter box, and the drawer the navbar folds into |
+| `Toc` | `TocModel` | This page's headings |
+| `PageNav` | `PageNavModel` | The previous and next pages of the section |
+| `EditLink` | `EditLinkModel` | A link to the page's source |
+| `Article` | `ArticleSlots` | The `<main>`: title, content, edit link, previous and next |
+| `Footer` | | The footer the site gave, or nothing |
+| `Frame` | `FrameSlots` | The navbar, then the sidebar, the content and the table of contents, then the footer |
 
-| Function | What it answers |
-|---|---|
-| `Components.sectionOf page` | The section a page is in - the first segment of its route |
-| `Components.sectionPages context` | The pages of the current section, in menu order |
-| `Components.translationsOf site pages page` | Each locale, the url of this page in it, and whether that translation exists |
+Every part is given a `PartContext` first: `Scope` holds the page, the site and every page,
+`Doc` is the page's [`DocPage`](#docpage), and `Options` the theme's.
+
+The models are resolved by [Theme.Docs](../docs/index.md#models-and-resolvers). `Frame` reads
+`context.Doc.Layout` to arrange a layout of the theme's own differently.
 
 ## Web components
 
-The theme emits plain HTML and defines one custom element. The
+The theme emits plain HTML. Theme.Core's script defines one custom element, and the
 [versions plugin](../../versions.md) adds another:
 
 | Element | What it does |
@@ -110,8 +108,9 @@ The theme emits plain HTML and defines one custom element. The
 | `<nacara-tabs>` / `<nacara-tab>` | The `:::tabs` directive. Tabs with the same `data-sync` follow each other |
 | `<nacara-version-switcher>` | The version picker, when that plugin is registered |
 
-Everything else is a plain element the theme's script attaches to: the copy button on a code frame,
-the colour-scheme picker, the menu filter, the sidebar drawer.
+Everything else is a plain element the script attaches to: the copy button on a code frame, the
+colour-scheme picker, the menu filter, the sidebar drawer. [Contracts](../core/contracts.md) lists
+the attributes.
 
 To add an element of your own, ship the script as an asset and register it:
 
@@ -125,5 +124,5 @@ registry
 
 ## Code blocks
 
-The theme renders code blocks by implementing `ICodeBlockRenderer`. Register your own to replace its
-markup - see [Code blocks](../../../guide/code-blocks.md).
+Theme.Core renders code blocks with `NacaraCodeBlockRenderer`. Register your own
+`ICodeBlockRenderer` to replace its markup - see [Code blocks](../../../guide/code-blocks.md).

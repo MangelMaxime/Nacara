@@ -28,14 +28,14 @@ export const copyButtons = () => {
     };
 
     document.addEventListener("click", async (event) => {
-        const button = event.target.closest(".nacara-code__copy");
+        const button = event.target.closest("[data-nacara-code-copy]");
         if (!button) return;
 
         // A block that folds some of its lines is drawn as more than one <pre>.
-        const block = button.closest(".nacara-code");
+        const block = button.closest("[data-nacara-code]");
         const text =
             block?.dataset.source ??
-            [...(button.closest(".nacara-code__body")?.querySelectorAll("code") ?? [])]
+            [...(button.closest("[data-nacara-code-body]")?.querySelectorAll("code") ?? [])]
                 .map((node) => node.textContent)
                 .join("");
 

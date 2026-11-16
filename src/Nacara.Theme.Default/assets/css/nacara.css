@@ -1,9 +1,8 @@
 /* Cascade order: tokens must come first. */
 
-@import "tokens.css";
+@import "nacara-core-tokens.css";
 @import "base.css";
 @import "navbar.css";
 @import "layout.css";
-@import "components.css";
-@import "code.css";
+@import "nacara-core-content.css";
 @import "responsive.css";

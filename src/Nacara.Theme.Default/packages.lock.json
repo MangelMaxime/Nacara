@@ -23,6 +23,21 @@
           "YamlDotNet": "[18.1.0, )"
         }
       },
+      "nacara.theme.core": {
+        "type": "Project",
+        "dependencies": {
+          "FSharp.Core": "[10.1.300, )",
+          "Nacara.Core": "[1.0.0, )"
+        }
+      },
+      "nacara.theme.docs": {
+        "type": "Project",
+        "dependencies": {
+          "FSharp.Core": "[10.1.300, )",
+          "Nacara.Core": "[1.0.0, )",
+          "Nacara.Theme.Core": "[1.0.0, )"
+        }
+      },
       "Feliz.ViewEngine": {
         "type": "CentralTransitive",
         "requested": "[1.0.3, )",

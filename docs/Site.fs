@@ -42,6 +42,8 @@ let apiOptions =
                         "Nacara.Plugin.Linter.Rumdl"
                         "Nacara.Plugin.LiveExample"
                         "Nacara.Plugin.FSharpApi"
+                        "Nacara.Theme.Core"
+                        "Nacara.Theme.Docs"
                         "Nacara.Theme.Default"
                     ] -> FSharpApiSource.create (Path.Combine(beside, $"%s{name}.dll"))
             ]
@@ -145,6 +147,10 @@ let theme =
                             Menu.page "plugins/themes/default/customising.md"
                             Menu.page "plugins/themes/default/components.md"
                         ]
+                    Menu.page "plugins/themes/docs/index.md"
+                    Menu.group
+                        "plugins/themes/core/index.md"
+                        [ Menu.page "plugins/themes/core/contracts.md" ]
                 ]
             Menu.section
                 "Ecosystem"

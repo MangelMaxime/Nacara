@@ -1,0 +1,391 @@
+=== Theme > default theme pages > a page in a declared menu renders as expected ===
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Advanced · Fixture</title><meta name="description" content="A site that exists to be snapshotted"><meta property="og:site_name" content="Fixture"><meta property="og:locale" content="en"><meta name="twitter:card" content="summary_large_image"><meta property="og:description" content="A site that exists to be snapshotted"><meta property="og:title" content="Advanced"><meta property="og:type" content="article"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/assets/css/nacara.HASH.css"><script>(()=>{var o="nacara-theme",s=matchMedia("(prefers-color-scheme: dark)"),a=()=>{try{return localStorage.getItem(o)||"system"}catch{return"system"}},c=e=>{let t=document.documentElement;t.dataset.themeSetting=e,t.dataset.theme=e==="system"?s.matches?"dark":"light":e};c(a());})();
+</script><link rel="stylesheet" href="/assets/changelog.css"><meta name="generator" content="tests"><style>body { --site-rule: 1; }</style></head><body data-section="guide"><a class="nacara-skip-link" href="#nacara-content">Skip to content</a><header class="nacara-navbar" role="banner" data-nacara-navbar="true"><button class="nacara-icon-button" type="button" data-nacara-menu-toggle="true" aria-label="Open the menu"><span><svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span></button><a class="nacara-navbar__brand" href="/">Fixture</a><ul class="nacara-navbar__items" role="navigation" aria-label="Main"><li><a class="nacara-navbar__link" href="/guide/getting-started/" data-active="true">Guide</a></li><li><a class="nacara-navbar__link" href="/changelog/one/" data-active="false">Changelog</a></li><li class="nacara-dropdown" data-nacara-dropdown-root="true"><button class="nacara-navbar__link" type="button" data-nacara-dropdown="true" aria-expanded="false">More</button><ul class="nacara-dropdown__panel"><li><a class="nacara-dropdown__item" href="/guide/advanced/"><span>Advanced</span><span class="nacara-dropdown__description">The deep end</span></a></li><li class="nacara-dropdown__divider"></li><li><a class="nacara-navbar__link" href="https://example.com/repo">Repository</a></li></ul></li></ul><ul class="nacara-navbar__items nacara-navbar__items--end" data-nacara-widgets-end="true"><li><a class="nacara-icon-button" href="https://example.com/repo" aria-label="GitHub" title="GitHub"><span><svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 16 16"
+                 fill="currentColor"
+                 aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></span></a></li><li><span class="widget">Widget</span></li><li><span>Fixture</span></li><li><select class="nacara-theme-select" data-nacara-theme="true" aria-label="Colour scheme"><option value="light">Light</option><option value="dark">Dark</option><option value="system">System</option></select></li></ul></header><div class="nacara-layout"><nav class="nacara-sidebar" aria-label="Section" data-nacara-sidebar="true"><ul class="nacara-sidebar__sections"><li><a class="nacara-sidebar__link" href="/guide/getting-started/" aria-current="true">Guide</a></li><li><a class="nacara-sidebar__link" href="/changelog/one/">Changelog</a></li><li><p class="nacara-sidebar__title">More</p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/guide/advanced/">Advanced</a></li><li><a class="nacara-sidebar__link" href="https://example.com/repo">Repository</a></li></ul></li></ul><input type="search" class="nacara-sidebar__filter" data-nacara-menu-filter="true" data-nacara-menu-source="/assets/menu/guide.json" aria-label="Filter this menu" placeholder="Filter"><ul class="nacara-sidebar__list" data-nacara-menu-list="true"><li><a class="nacara-sidebar__link" href="/guide/getting-started/"><span>Getting started</span><span class="nacara-badge" data-kind="new">New</span></a></li><li><div class="nacara-sidebar__section"><p class="nacara-sidebar__title"><span>Section</span></p><ul class="nacara-sidebar__list"><li><details class="nacara-sidebar__group" open="" data-nacara-menu-group="Advanced"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/guide/advanced/" aria-current="page"><span>Advanced</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/guide/advanced/"><span>8 more</span></a></li></ul></details></li><li><a class="nacara-sidebar__link" href="/guide/directives/"><span>Directives</span><span class="nacara-badge" data-kind="deprecated">Old</span></a></li><li><a class="nacara-sidebar__link" href="https://example.com"><span>Outside</span></a></li></ul></div></li></ul><template data-nacara-menu-leaf-template="true"><li><a class="nacara-sidebar__link"><span></span></a></li></template><template data-nacara-menu-group-template="true"><li><details class="nacara-sidebar__group"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link"><span></span></a></summary><ul class="nacara-sidebar__list"></ul></details></li></template><ul class="nacara-sidebar__widgets" data-nacara-widgets-shelf="true" hidden=""></ul></nav><main id="nacara-content" tabIndex="-1" class="nacara-content"><h1>Advanced</h1><div><h2 id="going-further">Going further<a class="nacara-heading-anchor"
+                       href="#going-further"
+                       aria-label="Link to this section"
+                       data-pagefind-ignore></a></h2>
+<p>A terminal block:</p>
+<figure class="nacara-code"
+        data-nacara-code="true"
+        data-language="bash"
+        data-frame="terminal"
+        data-line-numbers="true"
+        data-source="dotnet run -- build
+dotnet run -- watch"><figcaption class="nacara-code__title">Terminal</figcaption><div class="nacara-code__body" data-nacara-code-body="true"><pre><code><span class="nacara-code__line"
+      data-line="1">dotnet run -- build
+</span><span class="nacara-code__line"
+      data-line="2">dotnet run -- watch
+</span></code></pre><button class="nacara-code__copy"
+                       data-nacara-code-copy="true"
+                       type="button"
+                       aria-label="Copy code"><svg class="nacara-code__copy-idle"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2.5"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure>
+<p>And a collapsed one:</p>
+<figure class="nacara-code"
+        data-nacara-code="true"
+        data-language="json"
+        data-frame="code"
+        data-source="{
+  &quot;a&quot;: 1,
+  &quot;b&quot;: 2,
+  &quot;c&quot;: 3
+}"><div class="nacara-code__body" data-nacara-code-body="true"><pre><code><span class="nacara-code__line"><span class="tok-punctuation">{</span>
+</span></code></pre><details class="nacara-code__collapsed"><summary>2 collapsed lines</summary><pre><code><span class="nacara-code__line">  <span class="tok-punctuation">"</span><span class="tok-type">a</span><span class="tok-punctuation">"</span><span class="tok-punctuation">:</span> <span class="tok-number">1</span><span class="tok-punctuation">,</span>
+</span><span class="nacara-code__line">  <span class="tok-punctuation">"</span><span class="tok-type">b</span><span class="tok-punctuation">"</span><span class="tok-punctuation">:</span> <span class="tok-number">2</span><span class="tok-punctuation">,</span>
+</span></code></pre></details><pre><code><span class="nacara-code__line">  <span class="tok-punctuation">"</span><span class="tok-type">c</span><span class="tok-punctuation">"</span><span class="tok-punctuation">:</span> <span class="tok-number">3</span>
+</span><span class="nacara-code__line"><span class="tok-punctuation">}</span>
+</span></code></pre><button class="nacara-code__copy"
+                       data-nacara-code-copy="true"
+                       type="button"
+                       aria-label="Copy code"><svg class="nacara-code__copy-idle"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2.5"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure></div><a class="nacara-edit-link" href="https://example.com/edit/main/docs/docs/guide/advanced.md"><span><svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"><path d="M12 20h9"/>
+               <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span><span> Edit this page</span></a><nav class="nacara-page-nav"><a class="nacara-page-nav__link nacara-page-nav__link--previous" href="/guide/getting-started/"><span class="nacara-page-nav__label">Previous</span><span>Getting started</span></a><a class="nacara-page-nav__link nacara-page-nav__link--next" href="/guide/member-1/"><span class="nacara-page-nav__label">Next</span><span>Member 1</span></a></nav></main><nav class="nacara-toc" aria-label="On this page"><p class="nacara-toc__title">On this page</p><ul class="nacara-toc__list"><li><a class="nacara-toc__link" data-level="2" href="#going-further" data-nacara-toc-link="true">Going further</a></li></ul></nav></div><footer class="nacara-footer"><p>The footer</p></footer><script src="/assets/nacara-behaviours.HASH.js" defer="defer"></script><script src="/assets/nacara-menu.HASH.js" defer="defer"></script></body></html>
+=== end-snapshot ===
+
+=== Theme > default theme pages > a page in a menu a plugin offered renders as expected ===
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>One · Fixture</title><meta name="description" content="A site that exists to be snapshotted"><meta property="og:site_name" content="Fixture"><meta property="og:locale" content="en"><meta name="twitter:card" content="summary_large_image"><meta property="og:description" content="A site that exists to be snapshotted"><meta property="og:title" content="One"><meta property="og:type" content="article"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/assets/css/nacara.HASH.css"><script>(()=>{var o="nacara-theme",s=matchMedia("(prefers-color-scheme: dark)"),a=()=>{try{return localStorage.getItem(o)||"system"}catch{return"system"}},c=e=>{let t=document.documentElement;t.dataset.themeSetting=e,t.dataset.theme=e==="system"?s.matches?"dark":"light":e};c(a());})();
+</script><link rel="stylesheet" href="/assets/changelog.css"><meta name="generator" content="tests"><style>body { --site-rule: 1; }</style></head><body data-section="changelog"><a class="nacara-skip-link" href="#nacara-content">Skip to content</a><header class="nacara-navbar" role="banner" data-nacara-navbar="true"><button class="nacara-icon-button" type="button" data-nacara-menu-toggle="true" aria-label="Open the menu"><span><svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span></button><a class="nacara-navbar__brand" href="/">Fixture</a><ul class="nacara-navbar__items" role="navigation" aria-label="Main"><li><a class="nacara-navbar__link" href="/guide/getting-started/" data-active="false">Guide</a></li><li><a class="nacara-navbar__link" href="/changelog/one/" data-active="true">Changelog</a></li><li class="nacara-dropdown" data-nacara-dropdown-root="true"><button class="nacara-navbar__link" type="button" data-nacara-dropdown="true" aria-expanded="false">More</button><ul class="nacara-dropdown__panel"><li><a class="nacara-dropdown__item" href="/guide/advanced/"><span>Advanced</span><span class="nacara-dropdown__description">The deep end</span></a></li><li class="nacara-dropdown__divider"></li><li><a class="nacara-navbar__link" href="https://example.com/repo">Repository</a></li></ul></li></ul><ul class="nacara-navbar__items nacara-navbar__items--end" data-nacara-widgets-end="true"><li><a class="nacara-icon-button" href="https://example.com/repo" aria-label="GitHub" title="GitHub"><span><svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 16 16"
+                 fill="currentColor"
+                 aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></span></a></li><li><span class="widget">Widget</span></li><li><span>Fixture</span></li><li><select class="nacara-theme-select" data-nacara-theme="true" aria-label="Colour scheme"><option value="light">Light</option><option value="dark">Dark</option><option value="system">System</option></select></li></ul></header><div class="nacara-layout"><nav class="nacara-sidebar" aria-label="Section" data-nacara-sidebar="true"><ul class="nacara-sidebar__sections"><li><a class="nacara-sidebar__link" href="/guide/getting-started/">Guide</a></li><li><a class="nacara-sidebar__link" href="/changelog/one/" aria-current="true">Changelog</a></li><li><p class="nacara-sidebar__title">More</p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/guide/advanced/">Advanced</a></li><li><a class="nacara-sidebar__link" href="https://example.com/repo">Repository</a></li></ul></li></ul><input type="search" class="nacara-sidebar__filter" data-nacara-menu-filter="true" data-nacara-menu-source="/assets/menu/changelog.json" aria-label="Filter this menu" placeholder="Filter"><ul class="nacara-sidebar__list" data-nacara-menu-list="true"><li><a class="nacara-sidebar__link" href="/changelog/one/" aria-current="page"><span>One</span></a></li><li><div class="nacara-sidebar__section"><p class="nacara-sidebar__title"><span>Plugins</span></p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/changelog/two/"><span>Two</span></a></li></ul></div></li></ul><template data-nacara-menu-leaf-template="true"><li><a class="nacara-sidebar__link"><span></span></a></li></template><template data-nacara-menu-group-template="true"><li><details class="nacara-sidebar__group"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link"><span></span></a></summary><ul class="nacara-sidebar__list"></ul></details></li></template><ul class="nacara-sidebar__widgets" data-nacara-widgets-shelf="true" hidden=""></ul></nav><main id="nacara-content" tabIndex="-1" class="nacara-content" data-nacara-generated-by="changelog"><h1>One</h1><div><h2 id="v1-1-0">1.1.0 - 2024-06-01<a class="nacara-heading-anchor"
+                       href="#v1-1-0"
+                       aria-label="Link to this section"
+                       data-pagefind-ignore></a></h2>
+<h3 id="added">Added<a class="nacara-heading-anchor"
+                       href="#added"
+                       aria-label="Link to this section"
+                       data-pagefind-ignore></a></h3>
+<ul>
+<li>Something new in One</li>
+</ul>
+<h2 id="v1-0-0">1.0.0 - 2024-01-15<a class="nacara-heading-anchor"
+                       href="#v1-0-0"
+                       aria-label="Link to this section"
+                       data-pagefind-ignore></a></h2>
+<h3 id="added-1">Added<a class="nacara-heading-anchor"
+                       href="#added-1"
+                       aria-label="Link to this section"
+                       data-pagefind-ignore></a></h3>
+<ul>
+<li>The first release of One</li>
+</ul>
+</div></main><nav class="nacara-toc" aria-label="On this page"><p class="nacara-toc__title">On this page</p><ul class="nacara-toc__list"><li><a class="nacara-toc__link" data-level="2" href="#v1-1-0" data-nacara-toc-link="true">1.1.0 - 2024-06-01</a></li><li><a class="nacara-toc__link" data-level="2" href="#v1-0-0" data-nacara-toc-link="true">1.0.0 - 2024-01-15</a></li></ul></nav></div><footer class="nacara-footer"><p>The footer</p></footer><script src="/assets/nacara-behaviours.HASH.js" defer="defer"></script><script src="/assets/nacara-menu.HASH.js" defer="defer"></script></body></html>
+=== end-snapshot ===
+
+=== Theme > default theme pages > a page in a pruned group renders as expected ===
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Member 3 · Fixture</title><meta name="description" content="A site that exists to be snapshotted"><meta property="og:site_name" content="Fixture"><meta property="og:locale" content="en"><meta name="twitter:card" content="summary_large_image"><meta property="og:description" content="A site that exists to be snapshotted"><meta property="og:title" content="Member 3"><meta property="og:type" content="article"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/assets/css/nacara.HASH.css"><script>(()=>{var o="nacara-theme",s=matchMedia("(prefers-color-scheme: dark)"),a=()=>{try{return localStorage.getItem(o)||"system"}catch{return"system"}},c=e=>{let t=document.documentElement;t.dataset.themeSetting=e,t.dataset.theme=e==="system"?s.matches?"dark":"light":e};c(a());})();
+</script><link rel="stylesheet" href="/assets/changelog.css"><meta name="generator" content="tests"><style>body { --site-rule: 1; }</style></head><body data-section="guide"><a class="nacara-skip-link" href="#nacara-content">Skip to content</a><header class="nacara-navbar" role="banner" data-nacara-navbar="true"><button class="nacara-icon-button" type="button" data-nacara-menu-toggle="true" aria-label="Open the menu"><span><svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span></button><a class="nacara-navbar__brand" href="/">Fixture</a><ul class="nacara-navbar__items" role="navigation" aria-label="Main"><li><a class="nacara-navbar__link" href="/guide/getting-started/" data-active="true">Guide</a></li><li><a class="nacara-navbar__link" href="/changelog/one/" data-active="false">Changelog</a></li><li class="nacara-dropdown" data-nacara-dropdown-root="true"><button class="nacara-navbar__link" type="button" data-nacara-dropdown="true" aria-expanded="false">More</button><ul class="nacara-dropdown__panel"><li><a class="nacara-dropdown__item" href="/guide/advanced/"><span>Advanced</span><span class="nacara-dropdown__description">The deep end</span></a></li><li class="nacara-dropdown__divider"></li><li><a class="nacara-navbar__link" href="https://example.com/repo">Repository</a></li></ul></li></ul><ul class="nacara-navbar__items nacara-navbar__items--end" data-nacara-widgets-end="true"><li><a class="nacara-icon-button" href="https://example.com/repo" aria-label="GitHub" title="GitHub"><span><svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 16 16"
+                 fill="currentColor"
+                 aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></span></a></li><li><span class="widget">Widget</span></li><li><span>Fixture</span></li><li><select class="nacara-theme-select" data-nacara-theme="true" aria-label="Colour scheme"><option value="light">Light</option><option value="dark">Dark</option><option value="system">System</option></select></li></ul></header><div class="nacara-layout"><nav class="nacara-sidebar" aria-label="Section" data-nacara-sidebar="true"><ul class="nacara-sidebar__sections"><li><a class="nacara-sidebar__link" href="/guide/getting-started/" aria-current="true">Guide</a></li><li><a class="nacara-sidebar__link" href="/changelog/one/">Changelog</a></li><li><p class="nacara-sidebar__title">More</p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/guide/advanced/">Advanced</a></li><li><a class="nacara-sidebar__link" href="https://example.com/repo">Repository</a></li></ul></li></ul><input type="search" class="nacara-sidebar__filter" data-nacara-menu-filter="true" data-nacara-menu-source="/assets/menu/guide.json" aria-label="Filter this menu" placeholder="Filter"><ul class="nacara-sidebar__list" data-nacara-menu-list="true"><li><a class="nacara-sidebar__link" href="/guide/getting-started/"><span>Getting started</span><span class="nacara-badge" data-kind="new">New</span></a></li><li><div class="nacara-sidebar__section"><p class="nacara-sidebar__title"><span>Section</span></p><ul class="nacara-sidebar__list"><li><details class="nacara-sidebar__group" open="" data-nacara-menu-group="Advanced"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/guide/advanced/"><span>Advanced</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/guide/member-3/" aria-current="page"><span>Member 3</span></a></li><li><a class="nacara-sidebar__link" href="/guide/advanced/"><span>7 more</span></a></li></ul></details></li><li><a class="nacara-sidebar__link" href="/guide/directives/"><span>Directives</span><span class="nacara-badge" data-kind="deprecated">Old</span></a></li><li><a class="nacara-sidebar__link" href="https://example.com"><span>Outside</span></a></li></ul></div></li></ul><template data-nacara-menu-leaf-template="true"><li><a class="nacara-sidebar__link"><span></span></a></li></template><template data-nacara-menu-group-template="true"><li><details class="nacara-sidebar__group"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link"><span></span></a></summary><ul class="nacara-sidebar__list"></ul></details></li></template><ul class="nacara-sidebar__widgets" data-nacara-widgets-shelf="true" hidden=""></ul></nav><main id="nacara-content" tabIndex="-1" class="nacara-content"><h1>Member 3</h1><div><p>One of many.</p>
+</div><a class="nacara-edit-link" href="https://example.com/edit/main/docs/docs/guide/member-3.md"><span><svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"><path d="M12 20h9"/>
+               <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span><span> Edit this page</span></a><nav class="nacara-page-nav"><a class="nacara-page-nav__link nacara-page-nav__link--previous" href="/guide/member-2/"><span class="nacara-page-nav__label">Previous</span><span>Member 2</span></a><a class="nacara-page-nav__link nacara-page-nav__link--next" href="/guide/member-4/"><span class="nacara-page-nav__label">Next</span><span>Member 4</span></a></nav></main></div><footer class="nacara-footer"><p>The footer</p></footer><script src="/assets/nacara-behaviours.HASH.js" defer="defer"></script><script src="/assets/nacara-menu.HASH.js" defer="defer"></script></body></html>
+=== end-snapshot ===
+
+=== Theme > default theme pages > a pruned menu is written out whole ===
+[{"label":"Getting started","url":"/guide/getting-started/"},{"label":"Advanced","url":"/guide/advanced/","children":[{"label":"Member 1","url":"/guide/member-1/"},{"label":"Member 2","url":"/guide/member-2/"},{"label":"Member 3","url":"/guide/member-3/"},{"label":"Member 4","url":"/guide/member-4/"},{"label":"Member 5","url":"/guide/member-5/"},{"label":"Member 6","url":"/guide/member-6/"},{"label":"Member 7","url":"/guide/member-7/"},{"label":"Member 8","url":"/guide/member-8/"}]},{"label":"Directives","url":"/guide/directives/"},{"label":"Outside","url":"https://example.com"}]
+=== end-snapshot ===
+
+=== Theme > default theme pages > every directive renders as expected ===
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Directives · Fixture</title><meta name="description" content="Every directive the markdown plugin knows"><meta property="og:site_name" content="Fixture"><meta property="og:locale" content="en"><meta name="twitter:card" content="summary_large_image"><meta property="og:description" content="Every directive the markdown plugin knows"><meta property="og:title" content="Directives"><meta property="og:type" content="article"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/assets/css/nacara.HASH.css"><script>(()=>{var o="nacara-theme",s=matchMedia("(prefers-color-scheme: dark)"),a=()=>{try{return localStorage.getItem(o)||"system"}catch{return"system"}},c=e=>{let t=document.documentElement;t.dataset.themeSetting=e,t.dataset.theme=e==="system"?s.matches?"dark":"light":e};c(a());})();
+</script><link rel="stylesheet" href="/assets/changelog.css"><meta name="generator" content="tests"><style>body { --site-rule: 1; }</style></head><body data-section="guide"><a class="nacara-skip-link" href="#nacara-content">Skip to content</a><header class="nacara-navbar" role="banner" data-nacara-navbar="true"><button class="nacara-icon-button" type="button" data-nacara-menu-toggle="true" aria-label="Open the menu"><span><svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span></button><a class="nacara-navbar__brand" href="/">Fixture</a><ul class="nacara-navbar__items" role="navigation" aria-label="Main"><li><a class="nacara-navbar__link" href="/guide/getting-started/" data-active="true">Guide</a></li><li><a class="nacara-navbar__link" href="/changelog/one/" data-active="false">Changelog</a></li><li class="nacara-dropdown" data-nacara-dropdown-root="true"><button class="nacara-navbar__link" type="button" data-nacara-dropdown="true" aria-expanded="false">More</button><ul class="nacara-dropdown__panel"><li><a class="nacara-dropdown__item" href="/guide/advanced/"><span>Advanced</span><span class="nacara-dropdown__description">The deep end</span></a></li><li class="nacara-dropdown__divider"></li><li><a class="nacara-navbar__link" href="https://example.com/repo">Repository</a></li></ul></li></ul><ul class="nacara-navbar__items nacara-navbar__items--end" data-nacara-widgets-end="true"><li><a class="nacara-icon-button" href="https://example.com/repo" aria-label="GitHub" title="GitHub"><span><svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 16 16"
+                 fill="currentColor"
+                 aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></span></a></li><li><span class="widget">Widget</span></li><li><span>Fixture</span></li><li><select class="nacara-theme-select" data-nacara-theme="true" aria-label="Colour scheme"><option value="light">Light</option><option value="dark">Dark</option><option value="system">System</option></select></li></ul></header><div class="nacara-layout"><nav class="nacara-sidebar" aria-label="Section" data-nacara-sidebar="true"><ul class="nacara-sidebar__sections"><li><a class="nacara-sidebar__link" href="/guide/getting-started/" aria-current="true">Guide</a></li><li><a class="nacara-sidebar__link" href="/changelog/one/">Changelog</a></li><li><p class="nacara-sidebar__title">More</p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/guide/advanced/">Advanced</a></li><li><a class="nacara-sidebar__link" href="https://example.com/repo">Repository</a></li></ul></li></ul><input type="search" class="nacara-sidebar__filter" data-nacara-menu-filter="true" data-nacara-menu-source="/assets/menu/guide.json" aria-label="Filter this menu" placeholder="Filter"><ul class="nacara-sidebar__list" data-nacara-menu-list="true"><li><a class="nacara-sidebar__link" href="/guide/getting-started/"><span>Getting started</span><span class="nacara-badge" data-kind="new">New</span></a></li><li><div class="nacara-sidebar__section"><p class="nacara-sidebar__title"><span>Section</span></p><ul class="nacara-sidebar__list"><li><details class="nacara-sidebar__group" data-nacara-menu-group="Advanced"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link" href="/guide/advanced/"><span>Advanced</span></a></summary><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/guide/advanced/"><span>8 more</span></a></li></ul></details></li><li><a class="nacara-sidebar__link" href="/guide/directives/" aria-current="page"><span>Directives</span><span class="nacara-badge" data-kind="deprecated">Old</span></a></li><li><a class="nacara-sidebar__link" href="https://example.com"><span>Outside</span></a></li></ul></div></li></ul><template data-nacara-menu-leaf-template="true"><li><a class="nacara-sidebar__link"><span></span></a></li></template><template data-nacara-menu-group-template="true"><li><details class="nacara-sidebar__group"><summary class="nacara-sidebar__group-title"><a class="nacara-sidebar__group-link"><span></span></a></summary><ul class="nacara-sidebar__list"></ul></details></li></template><ul class="nacara-sidebar__widgets" data-nacara-widgets-shelf="true" hidden=""></ul></nav><main id="nacara-content" tabIndex="-1" class="nacara-content"><h1>Directives</h1><div><aside class="nacara-callout" data-kind="note" data-title="Heads up"><p>A callout with a title.</p>
+</aside><aside class="nacara-callout" data-kind="tip"><p>A callout without one.</p>
+</aside><nacara-tabs data-sync="install"><nacara-tab data-label="dotnet"><figure class="nacara-code"
+        data-nacara-code="true"
+        data-language="bash"
+        data-frame="code"
+        data-source="dotnet add package Nacara.Core"><div class="nacara-code__body" data-nacara-code-body="true"><pre><code><span class="nacara-code__line">dotnet add package Nacara.Core
+</span></code></pre><button class="nacara-code__copy"
+                       data-nacara-code-copy="true"
+                       type="button"
+                       aria-label="Copy code"><svg class="nacara-code__copy-idle"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2.5"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure></nacara-tab><nacara-tab data-label="paket"><figure class="nacara-code"
+        data-nacara-code="true"
+        data-language="bash"
+        data-frame="code"
+        data-source="paket add Nacara.Core"><div class="nacara-code__body" data-nacara-code-body="true"><pre><code><span class="nacara-code__line">paket add Nacara.Core
+</span></code></pre><button class="nacara-code__copy"
+                       data-nacara-code-copy="true"
+                       type="button"
+                       aria-label="Copy code"><svg class="nacara-code__copy-idle"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2.5"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure></nacara-tab></nacara-tabs><ol class="nacara-steps"><li class="nacara-steps__step"><span class="nacara-steps__number" aria-hidden="true">Step 01</span><h3 id="create-the-project" class="nacara-steps__title">Create the project<a class="nacara-heading-anchor"
+                       href="#create-the-project"
+                       aria-label="Link to this section"
+                       data-pagefind-ignore></a></h3>
+<p>Anything a step needs goes under its heading.</p>
+</li><li class="nacara-steps__step"><span class="nacara-steps__number" aria-hidden="true">Step 02</span><h3 id="build-it" class="nacara-steps__title">Build it<a class="nacara-heading-anchor"
+                       href="#build-it"
+                       aria-label="Link to this section"
+                       data-pagefind-ignore></a></h3>
+<figure class="nacara-code"
+        data-nacara-code="true"
+        data-language="bash"
+        data-frame="terminal"
+        data-source="dotnet run -- build"><figcaption class="nacara-code__title">Terminal</figcaption><div class="nacara-code__body" data-nacara-code-body="true"><pre><code><span class="nacara-code__line">dotnet run -- build
+</span></code></pre><button class="nacara-code__copy"
+                       data-nacara-code-copy="true"
+                       type="button"
+                       aria-label="Copy code"><svg class="nacara-code__copy-idle"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2.5"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure></li></ol><details class="nacara-details" data-summary="Show me more"><summary>Show me more</summary><p>Anything in here starts folded.</p>
+</details><div class="nacara-file-tree"><ul class="nacara-file-tree__list"><li data-kind="directory"><details class="nacara-file-tree__folder"
+                                                                  open><summary class="nacara-file-tree__name">src</summary><ul class="nacara-file-tree__list"><li data-kind="file"><span class="nacara-file-tree__name"><strong>Build.fs</strong></span></li><li data-kind="file"><span class="nacara-file-tree__name">Route.fs</span></li></ul></details></li><li data-kind="file"><span class="nacara-file-tree__name">global.json</span></li></ul></div><div class="nacara-preview"><figure class="nacara-code"
+        data-nacara-code="true"
+        data-language="markdown"
+        data-frame="code"
+        data-source=":::tip
+Written once, shown twice.
+:::"><div class="nacara-code__body" data-nacara-code-body="true"><pre><code><span class="nacara-code__line">:::tip
+</span><span class="nacara-code__line">Written once, shown twice.
+</span><span class="nacara-code__line">:::
+</span></code></pre><button class="nacara-code__copy"
+                       data-nacara-code-copy="true"
+                       type="button"
+                       aria-label="Copy code"><svg class="nacara-code__copy-idle"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2.5"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><div class="nacara-preview__result"><aside class="nacara-callout" data-kind="tip"><p>Written once, shown twice.</p>
+</aside></div></div><figure class="nacara-code"
+        data-nacara-code="true"
+        data-language="fsharp"
+        data-frame="code"
+        data-line-numbers="true"
+        data-source="let one = 1
+let two = 2
+let three = 3"><figcaption class="nacara-code__title">Program.fs</figcaption><div class="nacara-code__body" data-nacara-code-body="true"><pre><code><span class="nacara-code__line"
+      data-marker="mark"
+      data-line="1"><span class="tok-keyword">let</span> <span class="tok-variable">one</span> <span class="tok-keyword">=</span> <span class="tok-number">1</span>
+</span><span class="nacara-code__line"
+      data-line="2"><span class="tok-keyword">let</span> <span class="tok-variable">two</span> <span class="tok-keyword">=</span> <span class="tok-number">2</span>
+</span><span class="nacara-code__line"
+      data-marker="ins"
+      data-line="3"><span class="tok-keyword">let</span> <span class="tok-variable">three</span> <span class="tok-keyword">=</span> <span class="tok-number">3</span>
+</span><span class="nacara-code__line"
+      data-marker="del"
+      data-line="4"><span class="tok-keyword">let</span> <span class="tok-variable">four</span> <span class="tok-keyword">=</span> <span class="tok-number">4</span>
+</span></code></pre><button class="nacara-code__copy"
+                       data-nacara-code-copy="true"
+                       type="button"
+                       aria-label="Copy code"><svg class="nacara-code__copy-idle"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2.5"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><figure class="nacara-code"
+        data-nacara-code="true"
+        data-language="json"
+        data-frame="code"
+        data-source="{
+  &quot;a&quot;: 1,
+  &quot;b&quot;: 2,
+  &quot;c&quot;: 3
+}"><div class="nacara-code__body" data-nacara-code-body="true"><pre><code><span class="nacara-code__line"><span class="tok-punctuation">{</span>
+</span></code></pre><details class="nacara-code__collapsed"><summary>2 collapsed lines</summary><pre><code><span class="nacara-code__line">  <span class="tok-punctuation">"</span><span class="tok-type">a</span><span class="tok-punctuation">"</span><span class="tok-punctuation">:</span> <span class="tok-number">1</span><span class="tok-punctuation">,</span>
+</span><span class="nacara-code__line">  <span class="tok-punctuation">"</span><span class="tok-type">b</span><span class="tok-punctuation">"</span><span class="tok-punctuation">:</span> <span class="tok-number">2</span><span class="tok-punctuation">,</span>
+</span></code></pre></details><pre><code><span class="nacara-code__line">  <span class="tok-punctuation">"</span><span class="tok-type">c</span><span class="tok-punctuation">"</span><span class="tok-punctuation">:</span> <span class="tok-number">3</span>
+</span><span class="nacara-code__line"><span class="tok-punctuation">}</span>
+</span></code></pre><button class="nacara-code__copy"
+                       data-nacara-code-copy="true"
+                       type="button"
+                       aria-label="Copy code"><svg class="nacara-code__copy-idle"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2.5"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure></div><a class="nacara-edit-link" href="https://example.com/edit/main/docs/docs/guide/directives.md"><span><svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"><path d="M12 20h9"/>
+               <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span><span> Edit this page</span></a><nav class="nacara-page-nav"><a class="nacara-page-nav__link nacara-page-nav__link--previous" href="/guide/member-8/"><span class="nacara-page-nav__label">Previous</span><span>Member 8</span></a></nav></main><nav class="nacara-toc" aria-label="On this page"><p class="nacara-toc__title">On this page</p><ul class="nacara-toc__list"><li><a class="nacara-toc__link" data-level="3" href="#create-the-project" data-nacara-toc-link="true">Create the project</a></li><li><a class="nacara-toc__link" data-level="3" href="#build-it" data-nacara-toc-link="true">Build it</a></li></ul></nav></div><footer class="nacara-footer"><p>The footer</p></footer><script src="/assets/nacara-behaviours.HASH.js" defer="defer"></script><script src="/assets/nacara-menu.HASH.js" defer="defer"></script></body></html>
+=== end-snapshot ===
+
+=== Theme > default theme pages > the home page renders as expected ===
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Home · Fixture</title><meta name="description" content="The fixture site"><meta property="og:site_name" content="Fixture"><meta property="og:locale" content="en"><meta name="twitter:card" content="summary_large_image"><meta property="og:description" content="The fixture site"><meta property="og:title" content="Home"><meta property="og:type" content="article"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/assets/css/nacara.HASH.css"><script>(()=>{var o="nacara-theme",s=matchMedia("(prefers-color-scheme: dark)"),a=()=>{try{return localStorage.getItem(o)||"system"}catch{return"system"}},c=e=>{let t=document.documentElement;t.dataset.themeSetting=e,t.dataset.theme=e==="system"?s.matches?"dark":"light":e};c(a());})();
+</script><link rel="stylesheet" href="/assets/changelog.css"><meta name="generator" content="tests"><style>body { --site-rule: 1; }</style></head><body data-section=""><a class="nacara-skip-link" href="#nacara-content">Skip to content</a><header class="nacara-navbar" role="banner" data-nacara-navbar="true"><button class="nacara-icon-button" type="button" data-nacara-menu-toggle="true" aria-label="Open the menu"><span><svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span></button><a class="nacara-navbar__brand" href="/">Fixture</a><ul class="nacara-navbar__items" role="navigation" aria-label="Main"><li><a class="nacara-navbar__link" href="/guide/getting-started/" data-active="false">Guide</a></li><li><a class="nacara-navbar__link" href="/changelog/one/" data-active="false">Changelog</a></li><li class="nacara-dropdown" data-nacara-dropdown-root="true"><button class="nacara-navbar__link" type="button" data-nacara-dropdown="true" aria-expanded="false">More</button><ul class="nacara-dropdown__panel"><li><a class="nacara-dropdown__item" href="/guide/advanced/"><span>Advanced</span><span class="nacara-dropdown__description">The deep end</span></a></li><li class="nacara-dropdown__divider"></li><li><a class="nacara-navbar__link" href="https://example.com/repo">Repository</a></li></ul></li></ul><ul class="nacara-navbar__items nacara-navbar__items--end" data-nacara-widgets-end="true"><li><a class="nacara-icon-button" href="https://example.com/repo" aria-label="GitHub" title="GitHub"><span><svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 16 16"
+                 fill="currentColor"
+                 aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></span></a></li><li><span class="widget">Widget</span></li><li><span>Fixture</span></li><li><select class="nacara-theme-select" data-nacara-theme="true" aria-label="Colour scheme"><option value="light">Light</option><option value="dark">Dark</option><option value="system">System</option></select></li></ul></header><div class="nacara-layout"><nav class="nacara-sidebar" aria-label="Section" data-nacara-sidebar="true"><ul class="nacara-sidebar__sections"><li><a class="nacara-sidebar__link" href="/guide/getting-started/">Guide</a></li><li><a class="nacara-sidebar__link" href="/changelog/one/">Changelog</a></li><li><p class="nacara-sidebar__title">More</p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/guide/advanced/">Advanced</a></li><li><a class="nacara-sidebar__link" href="https://example.com/repo">Repository</a></li></ul></li></ul><ul class="nacara-sidebar__list" data-nacara-menu-list="true"><li><a class="nacara-sidebar__link" href="/" aria-current="page">Home</a></li></ul><ul class="nacara-sidebar__widgets" data-nacara-widgets-shelf="true" hidden=""></ul></nav><main id="nacara-content" tabIndex="-1" class="nacara-content"><h1>Home</h1><div><p>Welcome to the <a href="/guide/getting-started/">getting started guide</a>.</p>
+<aside class="nacara-callout" data-kind="note" data-title="Heads up"><p>Directives render as semantic HTML plus a web component.</p>
+</aside></div><a class="nacara-edit-link" href="https://example.com/edit/main/docs/docs/index.md"><span><svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"><path d="M12 20h9"/>
+               <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span><span> Edit this page</span></a></main></div><footer class="nacara-footer"><p>The footer</p></footer><script src="/assets/nacara-behaviours.HASH.js" defer="defer"></script><script src="/assets/nacara-menu.HASH.js" defer="defer"></script></body></html>
+=== end-snapshot ===
+
+=== Theme > default theme pages > the theme's 404 page renders as expected ===
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Page not found · Fixture</title><meta name="description" content="That page does not exist"><meta property="og:site_name" content="Fixture"><meta property="og:locale" content="en"><meta name="twitter:card" content="summary_large_image"><meta property="og:description" content="That page does not exist"><meta property="og:title" content="Page not found"><meta property="og:type" content="article"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/assets/css/nacara.HASH.css"><script>(()=>{var o="nacara-theme",s=matchMedia("(prefers-color-scheme: dark)"),a=()=>{try{return localStorage.getItem(o)||"system"}catch{return"system"}},c=e=>{let t=document.documentElement;t.dataset.themeSetting=e,t.dataset.theme=e==="system"?s.matches?"dark":"light":e};c(a());})();
+</script><link rel="stylesheet" href="/assets/changelog.css"><meta name="generator" content="tests"><style>body { --site-rule: 1; }</style></head><body data-section="404.html"><a class="nacara-skip-link" href="#nacara-content">Skip to content</a><header class="nacara-navbar" role="banner" data-nacara-navbar="true"><button class="nacara-icon-button" type="button" data-nacara-menu-toggle="true" aria-label="Open the menu"><span><svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span></button><a class="nacara-navbar__brand" href="/">Fixture</a><ul class="nacara-navbar__items" role="navigation" aria-label="Main"><li><a class="nacara-navbar__link" href="/guide/getting-started/" data-active="false">Guide</a></li><li><a class="nacara-navbar__link" href="/changelog/one/" data-active="false">Changelog</a></li><li class="nacara-dropdown" data-nacara-dropdown-root="true"><button class="nacara-navbar__link" type="button" data-nacara-dropdown="true" aria-expanded="false">More</button><ul class="nacara-dropdown__panel"><li><a class="nacara-dropdown__item" href="/guide/advanced/"><span>Advanced</span><span class="nacara-dropdown__description">The deep end</span></a></li><li class="nacara-dropdown__divider"></li><li><a class="nacara-navbar__link" href="https://example.com/repo">Repository</a></li></ul></li></ul><ul class="nacara-navbar__items nacara-navbar__items--end" data-nacara-widgets-end="true"><li><a class="nacara-icon-button" href="https://example.com/repo" aria-label="GitHub" title="GitHub"><span><svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 16 16"
+                 fill="currentColor"
+                 aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></span></a></li><li><span class="widget">Widget</span></li><li><span>Fixture</span></li><li><select class="nacara-theme-select" data-nacara-theme="true" aria-label="Colour scheme"><option value="light">Light</option><option value="dark">Dark</option><option value="system">System</option></select></li></ul></header><div class="nacara-layout nacara-layout--bare"><nav class="nacara-sidebar nacara-sidebar--drawer" aria-label="Section" data-nacara-sidebar="true"><ul class="nacara-sidebar__sections"><li><a class="nacara-sidebar__link" href="/guide/getting-started/">Guide</a></li><li><a class="nacara-sidebar__link" href="/changelog/one/">Changelog</a></li><li><p class="nacara-sidebar__title">More</p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/guide/advanced/">Advanced</a></li><li><a class="nacara-sidebar__link" href="https://example.com/repo">Repository</a></li></ul></li></ul><ul class="nacara-sidebar__widgets" data-nacara-widgets-shelf="true" hidden=""></ul></nav><main id="nacara-content" tabIndex="-1" data-nacara-generated-by="theme.default"><div><p>The page you asked for is not here. It may have been renamed, or the link that brought you here may be out of date.</p><p><a href="/">Back to the start of the site</a></p></div></main></div><footer class="nacara-footer"><p>The footer</p></footer><script src="/assets/nacara-behaviours.HASH.js" defer="defer"></script><script src="/assets/nacara-menu.HASH.js" defer="defer"></script></body></html>
+=== end-snapshot ===

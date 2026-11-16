@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Theme.Docs</PackageId>
+        <JsOutputPath>$(BaseIntermediateOutputPath)js/</JsOutputPath>
+        <Description>What a Nacara documentation theme is built from: the vocabulary of a documentation site, and the models of its navbar, sidebar, table of contents and page navigation.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Vocabulary.fs" />
+        <Compile Include="DocPage.fs" />
+        <Compile Include="DocFrontMatter.fs" />
+        <Compile Include="Models.fs" />
+        <Compile Include="Navbar.fs" />
+        <Compile Include="Sidebar.fs" />
+        <Compile Include="Toc.fs" />
+        <Compile Include="PageNav.fs" />
+        <Compile Include="EditLink.fs" />
+        <Compile Include="NotFound.fs" />
+        <Compile Include="MenuBehaviours.fs" />
+        <Compile Include="Docs.fs" />
+        <Compile Include="ThemeDocs.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <ThemeSource Include="js/**/*.js" />
+        <None Include="@(ThemeSource)" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+        <ProjectReference Include="../Nacara.Theme.Core/Nacara.Theme.Core.fsproj" />
+    </ItemGroup>
+
+    <Target Name="BundleMenu" Inputs="@(ThemeSource)" Outputs="$(JsOutputPath)nacara-menu.js">
+        <MakeDir Directories="$(JsOutputPath)" />
+        <Exec WorkingDirectory="$(MSBuildThisFileDirectory)"
+              Command="npx --no-install esbuild js/nacara-menu.js --bundle --minify --format=iife --outfile=&quot;$(JsOutputPath)nacara-menu.js&quot;" />
+    </Target>
+
+    <!-- AssignTargetPaths walks @(EmbeddedResource); an item added after it has run is dropped. -->
+    <Target Name="EmbedMenuAssets" BeforeTargets="AssignTargetPaths" DependsOnTargets="BundleMenu">
+        <ItemGroup>
+            <EmbeddedResource Include="$(JsOutputPath)nacara-menu.js" LogicalName="Nacara.Theme.Docs.assets.nacara-menu.js" />
+        </ItemGroup>
+    </Target>
+</Project>

@@ -11,6 +11,7 @@
         <Compile Include="Tests.Tool.fs" />
         <Compile Include="Tests.Build.fs" />
         <Compile Include="Tests.Collections.fs" />
+        <Compile Include="Tests.Theme.fs" />
         <Compile Include="Tests.Locale.fs" />
         <Compile Include="Tests.CodeBlock.fs" />
         <Compile Include="Tests.Changelog.fs" />
@@ -45,6 +46,8 @@
         <ProjectReference Include="../../src/Nacara.Plugin.Assets.LightningCss/Nacara.Plugin.Assets.LightningCss.fsproj" />
         <ProjectReference Include="../../src/Nacara.Plugin.Assets.Nuglify/Nacara.Plugin.Assets.Nuglify.fsproj" />
         <ProjectReference Include="../../src/Nacara.Plugin.LiveExample/Nacara.Plugin.LiveExample.fsproj" />
+        <ProjectReference Include="../../src/Nacara.Theme.Core/Nacara.Theme.Core.fsproj" />
+        <ProjectReference Include="../../src/Nacara.Theme.Docs/Nacara.Theme.Docs.fsproj" />
         <ProjectReference Include="../../src/Nacara.Theme.Default/Nacara.Theme.Default.fsproj" />
     </ItemGroup>
     <ItemGroup>

@@ -950,25 +950,21 @@ let all =
                     let root = Fixture.copyToTemporaryDirectory ()
 
                     let theme =
-                        { Theme.defaults with
-                            Menus =
-                                Map
+                        Theme.defaults
+                        |> Theme.menu
+                            "guide"
+                            [
+                                Menu.section
+                                    "Section"
                                     [
-                                        "guide",
-                                        [
-                                            Menu.section
-                                                "Section"
-                                                [
-                                                    Menu.group
-                                                        "guide/advanced.md"
-                                                        [
-                                                            Menu.page "guide/getting-started.md"
-                                                            |> Menu.badge "New"
-                                                        ]
-                                                ]
-                                        ]
+                                        Menu.group
+                                            "guide/advanced.md"
+                                            [
+                                                Menu.page "guide/getting-started.md"
+                                                |> Menu.badge "New"
+                                            ]
                                     ]
-                        }
+                            ]
 
                     let site =
                         Site.create "Fixture"

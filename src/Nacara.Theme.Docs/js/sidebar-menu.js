@@ -16,39 +16,25 @@ export const foldMemory = () => {
     }
 };
 
-/** One entry of a menu, as the markup the sidebar writes for it. */
-const entryOf = (node) => {
-    const item = document.createElement("li");
+/** The markup the sidebar writes for an entry, cloned from the templates it left for this. */
+const entryOf = (templates, node) => {
+    const template = node.children ? templates.group : templates.leaf;
+    const item = template.content.firstElementChild.cloneNode(true);
     item.dataset.nacaraMenuAdded = "";
     item.hidden = true;
 
-    const link = document.createElement("a");
+    const link = item.querySelector("a");
     link.href = node.url;
-    link.textContent = node.label;
+    (link.querySelector("span") ?? link).textContent = node.label;
 
-    if (!node.children) {
-        link.className = "nacara-sidebar__link";
-        item.append(link);
+    if (node.children) {
+        const group = item.querySelector("details");
+        group.dataset.nacaraMenuGroup = node.label;
 
-        return item;
+        item.querySelector("details > ul").append(
+            ...node.children.map((child) => entryOf(templates, child)),
+        );
     }
-
-    link.className = "nacara-sidebar__group-link";
-
-    const group = document.createElement("details");
-    group.className = "nacara-sidebar__group";
-    group.dataset.nacaraMenuGroup = node.label;
-
-    const summary = document.createElement("summary");
-    summary.className = "nacara-sidebar__group-title";
-    summary.append(link);
-
-    const list = document.createElement("ul");
-    list.className = "nacara-sidebar__list";
-    list.append(...node.children.map(entryOf));
-
-    group.append(summary, list);
-    item.append(group);
 
     return item;
 };
@@ -56,7 +42,7 @@ const entryOf = (node) => {
 const linkOf = (item) => item.querySelector(":scope > a, :scope > details > summary > a");
 
 /** The entries a pruned page left out, put back where they belong. */
-const graft = (list, nodes) => {
+const graft = (templates, list, nodes) => {
     if (!list) return;
 
     const present = new Map(
@@ -67,19 +53,24 @@ const graft = (list, nodes) => {
         const item = present.get(node.url);
 
         if (!item) {
-            list.append(entryOf(node));
+            list.append(entryOf(templates, node));
             continue;
         }
 
         if (node.children) {
-            graft(item.querySelector(":scope > details > ul"), node.children);
+            graft(templates, item.querySelector(":scope > details > ul"), node.children);
         }
     }
 };
 
 export const menuFilter = (box) => {
-    const sidebar = box.closest(".nacara-sidebar");
+    const sidebar = box.closest("[data-nacara-sidebar]");
     if (!sidebar) return;
+
+    const templates = {
+        leaf: sidebar.querySelector("[data-nacara-menu-leaf-template]"),
+        group: sidebar.querySelector("[data-nacara-menu-group-template]"),
+    };
 
     const folded = new Map();
     const source = box.dataset.nacaraMenuSource;
@@ -94,13 +85,15 @@ export const menuFilter = (box) => {
     // The menu on a page of a large section holds a part of it. The rest is fetched once and put
     // into the tree hidden, so filtering it is filtering an ordinary menu.
     const whole = () => {
-        if (!source) return Promise.resolve();
+        if (!source || !templates.leaf || !templates.group) return Promise.resolve();
 
         grafted =
             grafted ||
             fetch(source)
                 .then((answer) => answer.json())
-                .then((nodes) => graft(sidebar.querySelector(".nacara-sidebar__list"), nodes))
+                .then((nodes) =>
+                    graft(templates, sidebar.querySelector("[data-nacara-menu-list]"), nodes),
+                )
                 .catch(() => {});
 
         return grafted;

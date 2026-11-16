@@ -1,0 +1,665 @@
+/*
+    What the markdown plugin and the other plugins emit, styled against the tokens.
+    Heading anchors, callouts, steps, tabs, previews, disclosures, file trees, code frames.
+*/
+
+/*
+    Heading anchors
+*/
+
+:is(h1, h2, h3, h4, h5, h6):has(> .nacara-heading-anchor) {
+    position: relative;
+}
+.nacara-heading-anchor {
+    position: absolute;
+    left: -1.5em;
+    top: 0.15em;
+    width: 1em;
+    height: 1em;
+    opacity: 0;
+    background: currentColor;
+    color: var(--nacara-text-muted);
+    text-decoration: none;
+    transition: opacity 0.12s;
+    mask:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71'/%3E%3Cpath d='M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71'/%3E%3C/svg%3E")
+        no-repeat center / 0.85em;
+}
+:is(h1, h2, h3, h4, h5, h6):hover .nacara-heading-anchor,
+.nacara-heading-anchor:focus-visible {
+    opacity: 1;
+}
+.nacara-heading-anchor:hover {
+    color: var(--nacara-primary);
+}
+@media (max-width: 1000px) {
+    .nacara-heading-anchor {
+        position: static;
+        display: inline-block;
+        margin-left: var(--nacara-space-2);
+        vertical-align: middle;
+    }
+}
+@media (hover: none) {
+    .nacara-heading-anchor {
+        opacity: 0.5;
+    }
+}
+
+/*
+    Callouts
+*/
+
+.nacara-callout {
+    --callout-color: var(--nacara-note);
+    margin: 0 0 var(--nacara-space-4);
+    padding: var(--nacara-space-3) var(--nacara-space-4);
+    border: 1px solid color-mix(in srgb, var(--callout-color) 35%, var(--nacara-border));
+    border-left-width: 3px;
+    border-left-color: var(--callout-color);
+    border-radius: var(--nacara-radius);
+    background: color-mix(in srgb, var(--callout-color) 6%, var(--nacara-bg));
+}
+.nacara-callout[data-kind="tip"] {
+    --callout-color: var(--nacara-tip);
+}
+.nacara-callout[data-kind="warning"],
+.nacara-callout[data-kind="caution"] {
+    --callout-color: var(--nacara-warning);
+}
+.nacara-callout[data-kind="danger"] {
+    --callout-color: var(--nacara-danger);
+}
+.nacara-callout > :last-child {
+    margin-bottom: 0;
+}
+.nacara-callout[data-title]::before {
+    content: attr(data-title);
+    display: block;
+    margin-bottom: var(--nacara-space-1);
+    font-weight: 650;
+    color: var(--callout-color);
+}
+
+/*
+    Steps
+*/
+
+.nacara-steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nacara-space-6);
+    margin: 0 0 var(--nacara-space-4);
+    padding-left: 0;
+    list-style: none;
+}
+/* The bar groups a step's content; the number carries the sequence. Neither says anything about
+   state, so no step is singled out. */
+.nacara-steps__step {
+    border-left: 2px solid var(--nacara-border);
+    padding-left: var(--nacara-space-4);
+}
+.nacara-steps__number {
+    display: block;
+    margin-bottom: var(--nacara-space-1);
+    color: var(--nacara-primary);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+.nacara-steps .nacara-steps__title {
+    margin: 0 0 var(--nacara-space-2);
+    font-size: 1.125rem;
+    line-height: 1.2;
+}
+.nacara-steps .nacara-steps__step > :last-child {
+    margin-bottom: 0;
+}
+/* A step is indented by its own bar, so there is no margin to hang the anchor in. */
+.nacara-steps .nacara-steps__title .nacara-heading-anchor {
+    position: static;
+    display: inline-block;
+    margin-left: var(--nacara-space-2);
+    vertical-align: middle;
+}
+
+/*
+    Tabs
+*/
+
+nacara-tabs {
+    display: block;
+    margin: 0 0 var(--nacara-space-4);
+    border: 1px solid var(--nacara-border);
+    border-radius: var(--nacara-radius);
+    overflow: hidden;
+}
+.nacara-tabs__list {
+    display: flex;
+    gap: var(--nacara-space-1);
+    padding: var(--nacara-space-1);
+    background: var(--nacara-bg-subtle);
+    border-bottom: 1px solid var(--nacara-border);
+    overflow-x: auto;
+}
+.nacara-tabs__tab {
+    padding: var(--nacara-space-2) var(--nacara-space-3);
+    border: none;
+    border-radius: var(--nacara-radius-sm);
+    background: none;
+    color: var(--nacara-text-muted);
+    font: inherit;
+    font-size: 0.9375rem;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.nacara-tabs__tab[aria-selected="true"] {
+    background: var(--nacara-bg);
+    color: var(--nacara-text);
+    font-weight: 600;
+    box-shadow: var(--nacara-shadow);
+}
+nacara-tab {
+    display: block;
+    padding: var(--nacara-space-4);
+}
+nacara-tab[hidden] {
+    display: none;
+}
+nacara-tab > :last-child {
+    margin-bottom: 0;
+}
+
+/*
+    Previews
+*/
+
+.nacara-preview {
+    margin: var(--nacara-space-6) 0;
+    border: 1px solid var(--nacara-border);
+    border-radius: var(--nacara-radius);
+    overflow: hidden;
+}
+.nacara-preview > .nacara-code {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+}
+.nacara-preview > pre {
+    margin: 0;
+    border-radius: 0;
+}
+.nacara-preview__result {
+    padding: var(--nacara-space-4);
+    border-top: 1px solid var(--nacara-border);
+    background: var(--nacara-bg);
+}
+.nacara-preview__result::before {
+    content: "Preview";
+    display: block;
+    margin-bottom: var(--nacara-space-3);
+    color: var(--nacara-text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+.nacara-preview__result > :first-child {
+    margin-top: 0;
+}
+.nacara-preview__result > :last-child {
+    margin-bottom: 0;
+}
+
+/*
+    Disclosures
+*/
+
+.nacara-details {
+    margin: 0 0 var(--nacara-space-4);
+    border: 1px solid var(--nacara-border);
+    border-radius: var(--nacara-radius);
+    background: var(--nacara-bg-subtle);
+}
+.nacara-details > summary {
+    display: flex;
+    align-items: center;
+    gap: var(--nacara-space-2);
+    padding: var(--nacara-space-2) var(--nacara-space-4);
+    border-radius: var(--nacara-radius);
+    color: var(--nacara-text);
+    list-style: none;
+    cursor: pointer;
+}
+.nacara-details > summary::-webkit-details-marker {
+    display: none;
+}
+.nacara-details > summary::before {
+    content: "";
+    flex: none;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(-45deg);
+    transition: transform 0.15s ease;
+    opacity: 0.6;
+}
+.nacara-details[open] > summary::before {
+    transform: rotate(45deg);
+}
+.nacara-details > summary:hover {
+    background: var(--nacara-bg);
+}
+.nacara-details[open] > summary {
+    border-bottom: 1px solid var(--nacara-border);
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+}
+.nacara-details > :not(summary) {
+    margin-inline: var(--nacara-space-4);
+}
+.nacara-details > summary + * {
+    margin-top: var(--nacara-space-3);
+}
+.nacara-details > :last-child {
+    margin-bottom: var(--nacara-space-3);
+}
+
+/*
+    File trees
+*/
+
+.nacara-file-tree {
+    margin: 0 0 var(--nacara-space-4);
+    padding: var(--nacara-space-3) var(--nacara-space-4);
+    border: 1px solid var(--nacara-border);
+    border-radius: var(--nacara-radius);
+    background: var(--nacara-bg-subtle);
+    font-family: var(--nacara-font-mono);
+    font-size: 0.875rem;
+    line-height: 1.7;
+}
+/* This has to out-weigh the prose rules for lists. */
+.nacara-file-tree .nacara-file-tree__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.nacara-file-tree li,
+.nacara-file-tree li + li {
+    margin: 0;
+}
+.nacara-file-tree__list .nacara-file-tree__list {
+    margin-left: 0.55rem;
+    padding-left: var(--nacara-space-4);
+    border-left: 1px solid var(--nacara-border);
+}
+.nacara-file-tree__folder > summary {
+    list-style: none;
+    cursor: pointer;
+}
+.nacara-file-tree__folder > summary::-webkit-details-marker {
+    display: none;
+}
+.nacara-file-tree__folder > summary::after {
+    content: "";
+    flex: none;
+    width: 0.75rem;
+    height: 0.75rem;
+    background: currentColor;
+    opacity: 0.5;
+    transition: transform 0.15s ease;
+    mask:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+}
+.nacara-file-tree__folder:not([open]) > summary::after {
+    transform: rotate(-90deg);
+}
+.nacara-file-tree__name {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--nacara-space-2);
+}
+.nacara-file-tree__name::before {
+    content: "";
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    background: currentColor;
+    opacity: 0.65;
+}
+[data-kind="directory"] .nacara-file-tree__name::before {
+    mask:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5l2 3h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2Z'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+    color: var(--nacara-primary);
+    opacity: 0.85;
+}
+[data-kind="file"] .nacara-file-tree__name::before {
+    mask:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z'/%3E%3Cpath d='M14 3v5h5'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+}
+.nacara-file-tree strong {
+    color: var(--nacara-primary);
+    font-weight: 700;
+}
+
+/*
+    The block
+*/
+
+.nacara-code {
+    margin: 0 0 var(--nacara-space-4);
+    border: 1px solid var(--nacara-border);
+    border-radius: var(--nacara-radius);
+    background: var(--nacara-bg-subtle);
+    overflow: hidden;
+}
+.nacara-code[data-frame="none"] {
+    border: none;
+    background: none;
+}
+.nacara-code__title {
+    padding: var(--nacara-space-2) var(--nacara-space-4);
+    border-bottom: 1px solid var(--nacara-border);
+    color: var(--nacara-text-muted);
+    font-family: var(--nacara-font-mono);
+    font-size: 0.8125rem;
+}
+.nacara-code__body {
+    position: relative;
+    /* A block that folds lines is drawn as several <pre>. */
+    padding: var(--nacara-space-4) 0;
+    max-height: var(--nacara-code-max-height, none);
+    overflow-y: auto;
+}
+.nacara-code pre {
+    margin: 0;
+    padding: 0;
+    overflow-x: auto;
+}
+/* A ligature font draws |> as one arrow, and the bar is then not there to copy or find. */
+.nacara-code code {
+    display: block;
+    font-family: var(--nacara-font-mono);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    font-variant-ligatures: none;
+}
+
+.nacara-code[data-frame="terminal"] .nacara-code__title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--nacara-space-2);
+    position: relative;
+    padding-left: 4.25rem;
+    padding-right: 4.25rem;
+    font-family: var(--nacara-font-sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
+}
+.nacara-code[data-frame="terminal"] .nacara-code__title::before {
+    content: "";
+    position: absolute;
+    left: var(--nacara-space-4);
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--nacara-danger);
+    box-shadow:
+        0.95rem 0 0 var(--nacara-warning),
+        1.9rem 0 0 var(--nacara-tip);
+    opacity: 0.75;
+}
+.nacara-code[data-frame="terminal"] .nacara-code__body {
+    background: var(--nacara-bg);
+}
+.nacara-code[data-frame="terminal"] pre {
+    padding-left: var(--nacara-space-2);
+}
+
+/*
+    Lines, markers and words
+*/
+
+.nacara-code__line {
+    position: relative;
+    display: block;
+    padding: 0 var(--nacara-space-4);
+    border-left: 2px solid transparent;
+}
+.nacara-code[data-line-numbers="true"] .nacara-code__line::before {
+    content: attr(data-line);
+    display: inline-block;
+    width: 2.5em;
+    margin-left: -1em;
+    padding-right: var(--nacara-space-3);
+    text-align: right;
+    color: var(--nacara-text-muted);
+    user-select: none;
+}
+.nacara-code[data-wrap="true"] .nacara-code__line {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+.nacara-code__line[data-marker="mark"] {
+    background: color-mix(in srgb, var(--nacara-primary) 12%, transparent);
+    border-left-color: var(--nacara-primary);
+}
+.nacara-code__line[data-marker="ins"] {
+    background: color-mix(in srgb, var(--nacara-tip) 14%, transparent);
+    border-left-color: var(--nacara-tip);
+}
+.nacara-code__line[data-marker="del"] {
+    background: color-mix(in srgb, var(--nacara-danger) 14%, transparent);
+    border-left-color: var(--nacara-danger);
+}
+.nacara-code__line[data-marker="ins"]::after,
+.nacara-code__line[data-marker="del"]::after {
+    position: absolute;
+    top: 0;
+    right: var(--nacara-space-2);
+    font-weight: 700;
+}
+.nacara-code__line[data-marker="ins"]::after {
+    content: "+";
+    color: var(--nacara-tip);
+}
+.nacara-code__line[data-marker="del"]::after {
+    content: "−";
+    color: var(--nacara-danger);
+}
+.nacara-code__word {
+    padding: 0.1em 0.2em;
+    border-radius: var(--nacara-radius-sm);
+    background: color-mix(in srgb, var(--nacara-primary) 18%, transparent);
+    color: inherit;
+}
+.nacara-code__word[data-marker="ins"] {
+    background: color-mix(in srgb, var(--nacara-tip) 22%, transparent);
+}
+.nacara-code__word[data-marker="del"] {
+    background: color-mix(in srgb, var(--nacara-danger) 22%, transparent);
+}
+.nacara-code__collapsed summary {
+    padding: var(--nacara-space-1) var(--nacara-space-4);
+    border-top: 1px solid var(--nacara-border);
+    border-bottom: 1px solid var(--nacara-border);
+    background: var(--nacara-border);
+    color: var(--nacara-text);
+    font-size: 0.8125rem;
+    cursor: pointer;
+
+    &:hover {
+        background: color-mix(in srgb, var(--nacara-text-muted) 25%, var(--nacara-border));
+    }
+}
+.nacara-code__collapsed[open] summary {
+    border-bottom-color: transparent;
+}
+.nacara-code__collapsed[open] pre {
+    border-bottom: 1px solid var(--nacara-border);
+    background: color-mix(in srgb, var(--nacara-border) 50%, transparent);
+}
+
+/*
+    Copy button
+*/
+
+.nacara-code__copy {
+    position: absolute;
+    top: var(--nacara-space-2);
+    right: var(--nacara-space-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--nacara-border);
+    border-radius: var(--nacara-radius-sm);
+    background: var(--nacara-bg);
+    color: var(--nacara-text-muted);
+    opacity: 0;
+    transition: opacity 0.12s ease;
+    cursor: pointer;
+}
+.nacara-code__body:hover .nacara-code__copy,
+.nacara-code__copy:focus-visible {
+    opacity: 1;
+}
+.nacara-code__copy:hover {
+    color: var(--nacara-text);
+}
+.nacara-code__copy svg {
+    width: 1.125rem;
+    height: 1.125rem;
+}
+.nacara-code__copy .nacara-code__copy-done,
+.nacara-code__copy[data-copied="true"] .nacara-code__copy-idle {
+    display: none;
+}
+.nacara-code__copy[data-copied="true"] .nacara-code__copy-done {
+    display: block;
+    color: var(--nacara-tip);
+}
+.nacara-code__copy[data-copied] {
+    opacity: 1;
+}
+.nacara-code__copy[data-copied="false"] {
+    color: var(--nacara-danger, var(--nacara-text));
+}
+
+.nacara-code__copy[data-feedback]::after {
+    content: attr(data-feedback);
+    position: absolute;
+    right: calc(100% + var(--nacara-space-2));
+    padding: 0.125rem 0.5rem;
+    border: 1px solid var(--nacara-border);
+    border-radius: var(--nacara-radius-sm);
+    background: var(--nacara-bg);
+    color: var(--nacara-text);
+    font-size: 0.75rem;
+    line-height: 1.6;
+    white-space: nowrap;
+}
+
+/*
+    Tokens
+*/
+
+.tok-comment {
+    color: var(--tok-comment);
+    font-style: italic;
+}
+.tok-string {
+    color: var(--tok-string);
+}
+.tok-number {
+    color: var(--tok-number);
+}
+.tok-constant {
+    color: var(--tok-constant);
+}
+.tok-constructor {
+    color: var(--tok-constructor);
+}
+.tok-property {
+    color: var(--tok-property);
+}
+.tok-escape {
+    color: var(--tok-escape);
+}
+.tok-keyword {
+    color: var(--tok-keyword);
+}
+.tok-operator {
+    color: var(--tok-operator);
+}
+.tok-function {
+    color: var(--tok-function);
+}
+.tok-type {
+    color: var(--tok-type);
+}
+.tok-namespace {
+    color: var(--tok-namespace);
+}
+.tok-variable {
+    color: var(--tok-variable);
+}
+.tok-parameter {
+    color: var(--tok-parameter);
+}
+.tok-punctuation {
+    color: var(--tok-punctuation);
+}
+.tok-tag {
+    color: var(--tok-tag);
+}
+.tok-attribute {
+    color: var(--tok-attribute);
+}
+.tok-preprocessor {
+    color: var(--tok-preprocessor);
+}
+.tok-invalid {
+    color: var(--tok-invalid);
+    text-decoration: underline wavy;
+}
+.tok-inserted {
+    color: var(--tok-inserted);
+}
+.tok-deleted {
+    color: var(--tok-deleted);
+}
+.tok-bold {
+    font-weight: 700;
+}
+.tok-italic {
+    font-style: italic;
+}
+.tok-heading {
+    font-weight: 700;
+    color: var(--nacara-primary);
+}
+
+/*
+    Announcers
+*/
+
+.nacara-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}

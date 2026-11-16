@@ -314,45 +314,6 @@
     font-variant-ligatures: none;
 }
 
-.nacara-content :is(h2, h3, h4, h5, h6) {
-    position: relative;
-}
-.nacara-content .nacara-heading-anchor {
-    position: absolute;
-    left: -1.5em;
-    top: 0.15em;
-    width: 1em;
-    height: 1em;
-    opacity: 0;
-    background: currentColor;
-    color: var(--nacara-text-muted);
-    text-decoration: none;
-    transition: opacity 0.12s;
-    mask:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71'/%3E%3Cpath d='M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71'/%3E%3C/svg%3E")
-        no-repeat center / 0.85em;
-}
-.nacara-content :is(h2, h3, h4, h5, h6):hover .nacara-heading-anchor,
-.nacara-content .nacara-heading-anchor:focus-visible {
-    opacity: 1;
-}
-.nacara-content .nacara-heading-anchor:hover {
-    color: var(--nacara-primary);
-}
-@media (max-width: 1000px) {
-    .nacara-content .nacara-heading-anchor {
-        position: static;
-        display: inline-block;
-        margin-left: var(--nacara-space-2);
-        vertical-align: middle;
-    }
-}
-@media (hover: none) {
-    .nacara-content .nacara-heading-anchor {
-        opacity: 0.5;
-    }
-}
-
 /*
     Table of contents
 */

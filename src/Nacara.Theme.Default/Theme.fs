@@ -1,59 +1,53 @@
 namespace Nacara.Theme
 
-open System.IO
 open System.Reflection
 open Feliz.ViewEngine
 open Nacara.Core
+open Nacara.Theme.Core
+open Nacara.Theme.Docs
 
 /// <summary>The default theme: a documentation layout and the assets it needs.</summary>
 [<RequireQualifiedAccess>]
 module Theme =
 
-    let defaults =
+    let defaults: ThemeOptions =
         {
-            Navbar = []
-            NavbarEnd = []
-            Menus = Map.empty
-            EditUrlBase = None
+            Docs = DocsOptions.defaults
             HeadExtra = []
             Css = []
             Footer = None
             FavIcon = None
-            MenuLimit = 500
-            MenuGroupLimit = 150
+            Parts = Parts.defaults
+        }
+
+    let private withDocs (configure: DocsOptions -> DocsOptions) (options: ThemeOptions) =
+        { options with
+            Docs = configure options.Docs
         }
 
     /// <summary>How many pages a section's menu writes into a page before it prunes.</summary>
     /// <param name="value">The value to use. <c>0</c> never prunes.</param>
     /// <param name="options">The options so far.</param>
     let menuLimit value (options: ThemeOptions) =
-        { options with
-            MenuLimit = value
-        }
+        withDocs (DocsOptions.menuLimit value) options
 
     /// <summary>Which groups are pruned, once a menu is over the limit.</summary>
     /// <param name="value">The value to use. <c>0</c> prunes none of them.</param>
     /// <param name="options">The options so far.</param>
     let menuGroupLimit value (options: ThemeOptions) =
-        { options with
-            MenuGroupLimit = value
-        }
+        withDocs (DocsOptions.menuGroupLimit value) options
 
     /// <summary>The items on the left of the navbar, after the site's title.</summary>
     /// <param name="value">The items, in the order they are shown.</param>
     /// <param name="options">The options so far.</param>
     let navbar value (options: ThemeOptions) =
-        { options with
-            Navbar = value
-        }
+        withDocs (DocsOptions.navbar value) options
 
     /// <summary>The items on the right of the navbar - search, a repository link, the theme toggle.</summary>
     /// <param name="value">The items, in the order they are shown.</param>
     /// <param name="options">The options so far.</param>
     let navbarEnd value (options: ThemeOptions) =
-        { options with
-            NavbarEnd = value
-        }
+        withDocs (DocsOptions.navbarEnd value) options
 
     /// <summary>The menu for one section, replacing the one its pages would have produced.</summary>
     /// <remarks>
@@ -71,26 +65,20 @@ module Theme =
     /// <param name="items">What the menu holds.</param>
     /// <param name="options">The options so far.</param>
     let menu section items (options: ThemeOptions) =
-        { options with
-            Menus = Map.add section items options.Menus
-        }
+        withDocs (DocsOptions.menu section items) options
 
     /// <summary>Every menu at once, replacing any set before.</summary>
     /// <param name="value">The menus, keyed by section.</param>
     /// <param name="options">The options so far.</param>
     let menus value (options: ThemeOptions) =
-        { options with
-            Menus = value
-        }
+        withDocs (DocsOptions.menus value) options
 
     /// <summary>Base URL for the "edit this page" link.</summary>
     /// <param name="value">Where an edit starts, such as
     /// <c>https://github.com/owner/repo/edit/main/docs</c>.</param>
     /// <param name="options">The options so far.</param>
     let editUrl value (options: ThemeOptions) =
-        { options with
-            EditUrlBase = Some value
-        }
+        withDocs (DocsOptions.editUrl value) options
 
     /// <summary>Markup added at the end of <c>&lt;head&gt;</c> on every page.</summary>
     /// <param name="value">What to add - an analytics snippet, a font, a meta tag.</param>
@@ -135,52 +123,41 @@ module Theme =
             FavIcon = Some value
         }
 
-    let private readResource = Resource.text (Assembly.GetExecutingAssembly())
+    /// <summary>Replace how a part of the page is rendered, keeping the rest.</summary>
+    /// <example>
+    /// <code lang="fsharp">
+    /// Theme.defaults
+    /// |> Theme.parts (fun parts ->
+    ///     { parts with
+    ///         Footer = fun context -> Html.div [ Parts.footer context; Html.p "Hosted by us" ] })
+    /// </code>
+    /// </example>
+    /// <param name="configure">What to change of the parts, starting from the theme's own.</param>
+    /// <param name="options">The options so far.</param>
+    let parts (configure: ThemeParts -> ThemeParts) (options: ThemeOptions) =
+        { options with
+            Parts = configure options.Parts
+        }
 
-    /// Assets carry a content hash in their name, so a deployed site can cache them forever and
-    /// still pick up a change immediately.
-    let private fingerprinted (name: string) (extension: string) =
-        lazy
-            (let content = readResource (name + extension)
-             let hash = BuildCache.Hash(content).Substring(0, 8).ToLowerInvariant()
-             $"assets/%s{name}.%s{hash}%s{extension}", content)
+    let private readResource = Resource.text (Assembly.GetExecutingAssembly())
 
     let private entryStyleSheet = "nacara.css"
 
     let private styleSheetParts =
         [
             entryStyleSheet
-            "tokens.css"
             "base.css"
             "navbar.css"
             "layout.css"
-            "components.css"
-            "code.css"
             "responsive.css"
         ]
 
     /// <summary>The stylesheet's parts, and where the bundle is served from.</summary>
     let private styles =
         lazy
-            (let parts =
-                styleSheetParts |> List.map (fun name -> name, readResource $"css.%s{name}")
-
-             let hash =
-                 parts
-                 |> List.map snd
-                 |> String.concat "\n"
-                 |> BuildCache.Hash
-                 |> fun value -> value.Substring(0, 8).ToLowerInvariant()
-
-             parts, $"assets/css/nacara.%s{hash}.css")
-
-    let private script = fingerprinted "nacara" ".js"
-
-    /// <summary>Settles the colour scheme before first paint, so nobody sees the wrong one flash.</summary>
-    let private themeBootstrap = lazy readResource "theme-bootstrap.js"
-
-    let private rawHtml (markup: string) =
-        Html.span [ prop.dangerouslySetInnerHTML markup ]
+            (styleSheetParts
+             |> List.map (fun name -> name, readResource $"css.%s{name}")
+             |> Styles.bundle "nacara")
 
     /// <summary>Render a full page with the theme's chrome.</summary>
     /// <param name="options">The theme's own configuration: navbar, menus, footer.</param>
@@ -194,17 +171,39 @@ module Theme =
     /// </remarks>
     let shell (options: ThemeOptions) (doc: DocPage) (context: PageContext<'FrontMatter>) =
         let _, cssPath = styles.Value
-        let scriptPath, _ = script.Value
+        let scope = PageScope.ofContext context
+        let site = context.Site
+        let parts = options.Parts
 
-        let layoutClass =
-            if not doc.Styled then
-                "nacara-layout nacara-layout--bare"
-            elif not doc.ShowMenu then
-                "nacara-layout nacara-layout--splash"
-            elif not doc.ShowToc then
-                "nacara-layout nacara-layout--no-toc"
+        let part =
+            {
+                Scope = scope
+                Doc = doc
+                Options = options
+            }
+
+        let render (renderer: PartContext -> 'Model -> ReactElement) (model: 'Model option) =
+            match model with
+            | Some model -> renderer part model
+            | None -> Html.none
+
+        let editLink =
+            if doc.ShowEditLink then
+                EditLink.resolve options.Docs scope |> render parts.EditLink
             else
-                "nacara-layout"
+                Html.none
+
+        let pageNav =
+            if doc.ShowPageNav then
+                PageNav.resolve options.Docs scope |> render parts.PageNav
+            else
+                Html.none
+
+        let toc =
+            if doc.ShowMenu then
+                Toc.resolve doc scope |> Option.map (parts.Toc part)
+            else
+                None
 
         Html.html
             [
@@ -214,97 +213,21 @@ module Theme =
                     [
                         Html.head
                             [
-                                Html.meta [ prop.charset.utf8 ]
-                                Html.meta
-                                    [
-                                        prop.name "viewport"
-                                        prop.content "width=device-width, initial-scale=1"
-                                    ]
-                                Html.title (
-                                    if doc.Title = context.Site.Title then
-                                        doc.Title
-                                    else
-                                        $"%s{doc.Title} · %s{context.Site.Title}"
-                                )
-                                match doc.Description |> Option.orElse context.Site.Description with
-                                | Some description ->
-                                    Html.meta
-                                        [
-                                            prop.name "description"
-                                            prop.content description
-                                        ]
-                                | None -> Html.none
-                                match context.Site.AbsoluteUrlOf context.Page.Route with
-                                | Some url ->
-                                    Html.link
-                                        [
-                                            prop.rel "canonical"
-                                            prop.href url
-                                        ]
-
-                                    Html.meta
-                                        [
-                                            prop.custom ("property", "og:url")
-                                            prop.content url
-                                        ]
-                                | None -> Html.none
-                                Html.meta
-                                    [
-                                        prop.custom ("property", "og:site_name")
-                                        prop.content context.Site.Title
-                                    ]
-                                Html.meta
-                                    [
-                                        prop.custom ("property", "og:locale")
-                                        prop.content context.Page.Locale.Code
-                                    ]
-                                Html.meta
-                                    [
-                                        prop.name "twitter:card"
-                                        prop.content "summary_large_image"
-                                    ]
-                                match doc.Description |> Option.orElse context.Site.Description with
-                                | Some description ->
-                                    Html.meta
-                                        [
-                                            prop.custom ("property", "og:description")
-                                            prop.content description
-                                        ]
-                                | None -> Html.none
-                                Html.meta
-                                    [
-                                        prop.custom ("property", "og:title")
-                                        prop.content doc.Title
-                                    ]
-                                Html.meta
-                                    [
-                                        prop.custom ("property", "og:type")
-                                        prop.content "article"
-                                    ]
-                                match options.FavIcon with
-                                | Some icon ->
-                                    Html.link
-                                        [
-                                            prop.rel "icon"
-                                            prop.href (context.Site.UrlOfAsset icon)
-                                        ]
-                                | None -> Html.none
+                                yield!
+                                    parts.Head
+                                        part
+                                        (Head.resolve
+                                            doc.Title
+                                            doc.Description
+                                            options.FavIcon
+                                            scope)
                                 Html.link
                                     [
                                         prop.rel "stylesheet"
-                                        prop.href (context.Site.UrlOfAsset cssPath)
+                                        prop.href (site.UrlOfAsset cssPath)
                                     ]
-                                Html.script [ prop.dangerouslySetInnerHTML themeBootstrap.Value ]
-                                for asset in context.Site.PageAssets do
-                                    match asset with
-                                    | Stylesheet path ->
-                                        Html.link
-                                            [
-                                                prop.rel "stylesheet"
-                                                prop.href (context.Site.UrlOfAsset path)
-                                            ]
-                                    | Script _
-                                    | InlineScript _ -> Html.none
+                                Behaviours.bootstrapTag ()
+                                yield! Shell.stylesheetLinks site
                                 yield! options.HeadExtra
 
                                 if not options.Css.IsEmpty then
@@ -317,124 +240,34 @@ module Theme =
                             ]
                         Html.body
                             [
-                                prop.custom ("data-section", Components.sectionOf context.Page)
+                                prop.custom ("data-section", Pages.section context.Page)
                                 prop.children
                                     [
-                                        Html.a
-                                            [
-                                                prop.className "nacara-skip-link"
-                                                prop.href "#nacara-content"
-                                                prop.text "Skip to content"
-                                            ]
-                                        Components.navbar options context
-                                        Html.div
-                                            [
-                                                prop.className layoutClass
-                                                prop.children
-                                                    [
-                                                        // Rendered even with no menu to show: on a
-                                                        // narrow screen it is what the navbar's
-                                                        // sections fold into.
-                                                        Components.sidebar options doc context
-                                                        Html.main
-                                                            [
-                                                                for name, value in
-                                                                    doc.MainAttributes do
-                                                                    prop.custom (name, value)
-                                                                prop.id "nacara-content"
-                                                                prop.tabIndex -1
-
-                                                                if doc.Styled then
-                                                                    prop.className "nacara-content"
-                                                                match context.Page.Source with
-                                                                | Generated origin ->
-                                                                    prop.custom (
-                                                                        "data-nacara-generated-by",
-                                                                        origin
-                                                                    )
-                                                                | FromFile _ -> ()
-                                                                prop.children
-                                                                    [
-                                                                        match
-                                                                            context.Page.TryData<
-                                                                                string
-                                                                             >
-                                                                                PageData
-                                                                                    .UntranslatedFrom
-                                                                        with
-                                                                        | Some source ->
-                                                                            Html.aside
-                                                                                [
-                                                                                    prop.className
-                                                                                        "nacara-callout"
-                                                                                    prop.custom (
-                                                                                        "data-kind",
-                                                                                        "note"
-                                                                                    )
-                                                                                    prop.custom (
-                                                                                        "data-title",
-                                                                                        "Not translated yet"
-                                                                                    )
-                                                                                    prop.children
-                                                                                        [
-                                                                                            Html.p
-                                                                                                $"This page has not been translated into %s{context.Page.Locale.Label} yet - you are reading the '%s{source}' version."
-                                                                                        ]
-                                                                                ]
-                                                                        | None -> Html.none
-                                                                        if doc.ShowTitle then
-                                                                            Html.h1 doc.Title
-                                                                        Html.div
-                                                                            [
-                                                                                prop
-                                                                                    .dangerouslySetInnerHTML
-                                                                                    context.Content
-                                                                            ]
-                                                                        if doc.ShowEditLink then
-                                                                            Components.editLink
-                                                                                options
-                                                                                context
-                                                                        if doc.ShowPageNav then
-                                                                            Components.pageNav
-                                                                                options
-                                                                                context
-                                                                    ]
-                                                            ]
-                                                        if
-                                                            doc.ShowMenu
-                                                            && doc.ShowToc
-                                                            && not (
-                                                                List.isEmpty context.Page.Headings
-                                                            )
-                                                        then
-                                                            Components.toc context
-                                                    ]
-                                            ]
-                                        match options.Footer with
-                                        | Some footer ->
-                                            Html.footer
-                                                [
-                                                    prop.className "nacara-footer"
-                                                    prop.children [ footer ]
-                                                ]
-                                        | None -> Html.none
-                                        Html.script
-                                            [
-                                                prop.src (context.Site.UrlOfAsset scriptPath)
-                                                prop.custom ("defer", "defer")
-                                            ]
-                                        for asset in context.Site.PageAssets do
-                                            match asset with
-                                            | Script(path, defer) ->
-                                                Html.script
-                                                    [
-                                                        prop.src (context.Site.UrlOfAsset path)
-                                                        if defer then
-                                                            prop.custom ("defer", "defer")
-                                                    ]
-                                            | InlineScript code ->
-                                                Html.script [ prop.dangerouslySetInnerHTML code ]
-                                            | Stylesheet _ -> Html.none
+                                        Shell.skipLink "nacara-skip-link" "#nacara-content"
+                                        parts.Frame
+                                            part
+                                            {
+                                                Navbar =
+                                                    parts.Navbar
+                                                        part
+                                                        (Navbar.resolve options.Docs scope)
+                                                Sidebar =
+                                                    parts.Sidebar
+                                                        part
+                                                        (Sidebar.resolve options.Docs doc scope)
+                                                Main =
+                                                    parts.Article
+                                                        part
+                                                        {
+                                                            Content = context.Content
+                                                            EditLink = editLink
+                                                            PageNav = pageNav
+                                                        }
+                                                Toc = toc
+                                                Footer = parts.Footer part
+                                            }
+                                        Behaviours.scriptTag site
+                                        yield! Shell.scripts site
                                     ]
                             ]
                     ]
@@ -458,109 +291,7 @@ module Theme =
     /// <param name="options">The theme's own configuration, which its layout is given.</param>
     /// <param name="name">What the collection is called, which is also the directory its content
     /// is read from.</param>
-    let docs (options: ThemeOptions) (name: string) =
-        Collection.create name DocFrontMatter.decoder
-        |> Collection.sourceAll name
-        |> Collection.title _.Title
-        |> Collection.order (fun frontMatter -> frontMatter.Order |> Option.defaultValue 0)
-        |> Collection.toc (fun frontMatter ->
-            match frontMatter.Toc with
-            | Some(TocLevels range) -> Some range
-            | Some TocOff
-            | None -> None
-        )
-        |> Collection.layout (layout options)
-
-    /// <summary>
-    /// The page a reader gets when a url matches nothing, unless the site writes its own.
-    /// </summary>
-    let private writeDefaultNotFound (options: ThemeOptions) (context: HookContext) =
-        let occupied =
-            context.Pages
-            |> List.map (fun page -> RelativePath.value (Url.outputPath page.Route))
-            |> Set.ofList
-
-        for locale in context.Site.Locales do
-            let route = Route.file locale "404.html"
-            let path = RelativePath.value (Url.outputPath route)
-
-            if not (occupied.Contains path) then
-                let frontMatter =
-                    {
-                        Title = "Page not found"
-                        Description = Some "That page does not exist"
-                        Order = None
-                        Layout = Some "bare"
-                        PageNav = None
-                        MenuFilter = None
-                        MenuMemory = None
-                        Toc = None
-                        Main = []
-                    }
-
-                let body =
-                    [
-                        "<p>"
-                        "The page you asked for is not here. It may have been renamed, or the link "
-                        "that brought you here may be out of date."
-                        "</p>"
-                        "<p>"
-                        $"""<a href="%s{context.Site.UrlOf(Route.home locale)}">Back to the start of the site</a>"""
-                        "</p>"
-                    ]
-                    |> String.concat ""
-
-                let page =
-                    {
-                        Id = $"theme.default:404:%s{locale.Code}"
-                        Collection = "theme.default"
-                        Source = Generated "theme.default"
-                        ProjectPath = None
-                        Format = ".html"
-                        Locale = locale
-                        Route = route
-                        BodyLine = 1
-                        Title = frontMatter.Title
-                        Order = 0
-                        Body = body
-                        Html = body
-                        Headings = []
-                        FrontMatter = box frontMatter
-                        Dependencies = []
-                        Data = Map.empty
-                    }
-
-                let html =
-                    layout
-                        options
-                        {
-                            Page = page
-                            FrontMatter = frontMatter
-                            Site = context.Site
-                            Pages = context.Pages
-                            Content = body
-                        }
-                    |> Render.htmlDocument
-
-                context.Write path html |> ignore
-
-    /// <summary>Writes every section's menu, whole.</summary>
-    /// <remarks>A page holds the menu it was rendered with, which for a large section is a part of
-    /// it. The filter box reads this to search the rest.</remarks>
-    let private writeMenus (options: ThemeOptions) (context: HookContext) =
-        let sections =
-            [
-                for section in options.Menus.Keys -> section, options.Menus[section]
-                for outline in OfferedMenus.all () do
-                    if not (options.Menus.ContainsKey outline.Section) then
-                        yield outline.Section, Menu.ofOutline outline.Items
-            ]
-
-        for section, items in sections do
-            if options.MenuLimit > 0 && Components.menuSize items > options.MenuLimit then
-                let json = Components.menuJson context.Site context.Pages items
-
-                context.Write (Components.menuSourcePath section) json |> ignore
+    let docs (options: ThemeOptions) (name: string) = Docs.collection name (layout options)
 
     type private ThemePlugin(options: ThemeOptions) =
         interface IPlugin with
@@ -568,17 +299,15 @@ module Theme =
 
             member _.Configure registry =
                 let parts, cssPath = styles.Value
-                let scriptPath, javascript = script.Value
-
-                OfferedMenus.remember (Registry.extras<MenuOutline> registry)
 
                 registry
+                |> ThemeDocs.configure
+                    {
+                        Origin = "theme.default"
+                        Docs = options.Docs
+                        NotFound = Some(layout options)
+                    }
                 |> Registry.asset (Bundle(parts, entryStyleSheet, RelativePath.create cssPath))
-                |> Registry.asset (WriteText(javascript, RelativePath.create scriptPath))
-                |> Registry.extra (NacaraCodeBlockRenderer() :> ICodeBlockRenderer)
-                |> Registry.onPagesRouted (writeMenus options)
-                |> Registry.preserve "assets/menu"
-                |> Registry.onBuildComplete (writeDefaultNotFound options)
 
     /// <summary>The theme's assets. Add it to the site alongside the layout you use.</summary>
     let create (options: ThemeOptions) = ThemePlugin(options) :> IPlugin

@@ -59,6 +59,8 @@ plugin replaces another.
 
 | Package | What it gives you |
 |---|---|
+| [`Nacara.Theme.Core`](themes/core/index.md) | What any site builds its layouts on: the head, the shell, the shared stylesheet and script |
+| [`Nacara.Theme.Docs`](themes/docs/index.md) | What a documentation theme is built from: the options, the navbar, sidebar and table of contents models |
 | [`Nacara.Theme.Default`](themes/default/index.md) | The layout this site uses: navbar, sidebar, table of contents, dark mode |
 
 Its own pages cover [customising](themes/default/customising.md) it,

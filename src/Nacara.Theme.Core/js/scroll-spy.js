@@ -1,5 +1,5 @@
 export const scrollSpy = () => {
-    const entries = [...document.querySelectorAll(".nacara-toc__link")]
+    const entries = [...document.querySelectorAll("[data-nacara-toc-link]")]
         .map((link) => ({
             link,
             heading: document.getElementById(decodeURIComponent(link.hash.slice(1))),
@@ -26,7 +26,7 @@ export const scrollSpy = () => {
             return;
         }
 
-        const bar = document.querySelector(".nacara-navbar");
+        const bar = document.querySelector("[data-nacara-navbar]");
         const line = (bar ? bar.getBoundingClientRect().height : 56) + 24;
 
         const atBottom =

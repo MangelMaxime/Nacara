@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Theme.Core</PackageId>
+        <Description>What any Nacara site can build its layouts on: the head, the shell, the shared script, the tokens and the styles of what plugins emit.</Description>
+        <JsOutputPath>$(BaseIntermediateOutputPath)js/</JsOutputPath>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Icons.fs" />
+        <Compile Include="CodeBlocks.fs" />
+        <Compile Include="Models.fs" />
+        <Compile Include="Pages.fs" />
+        <Compile Include="Head.fs" />
+        <Compile Include="Assets.fs" />
+        <Compile Include="Shell.fs" />
+        <Compile Include="ThemeCore.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <ThemeSource Include="js/**/*.js" />
+        <None Include="@(ThemeSource)" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="assets/css/*.css" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+    </ItemGroup>
+
+    <!--
+        Separate from EmbedThemeAssets so Inputs/Outputs can skip bundling without skipping the
+        EmbeddedResource items.
+    -->
+    <Target Name="BundleTheme"
+            Inputs="@(ThemeSource)"
+            Outputs="$(JsOutputPath)nacara-behaviours.js;$(JsOutputPath)theme-bootstrap.js">
+        <MakeDir Directories="$(JsOutputPath)" />
+        <Exec WorkingDirectory="$(MSBuildThisFileDirectory)"
+              Command="npx --no-install esbuild js/nacara-behaviours.js --bundle --minify --format=iife --outfile=&quot;$(JsOutputPath)nacara-behaviours.js&quot;" />
+        <Exec WorkingDirectory="$(MSBuildThisFileDirectory)"
+              Command="npx --no-install esbuild js/theme-bootstrap.js --bundle --minify --format=iife --outfile=&quot;$(JsOutputPath)theme-bootstrap.js&quot;" />
+    </Target>
+
+    <!-- AssignTargetPaths walks @(EmbeddedResource); an item added after it has run is dropped. -->
+    <Target Name="EmbedThemeAssets" BeforeTargets="AssignTargetPaths" DependsOnTargets="BundleTheme">
+        <ItemGroup>
+            <EmbeddedResource Include="$(JsOutputPath)nacara-behaviours.js" LogicalName="Nacara.Theme.Core.assets.nacara-behaviours.js" />
+            <EmbeddedResource Include="$(JsOutputPath)theme-bootstrap.js" LogicalName="Nacara.Theme.Core.assets.theme-bootstrap.js" />
+        </ItemGroup>
+    </Target>
+</Project>

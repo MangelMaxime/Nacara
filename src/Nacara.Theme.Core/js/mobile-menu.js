@@ -1,5 +1,5 @@
 export const mobileMenu = () => {
-    const drawer = document.querySelector(".nacara-sidebar");
+    const drawer = document.querySelector("[data-nacara-sidebar]");
 
     if (!drawer) return;
 
@@ -20,7 +20,7 @@ export const mobileMenu = () => {
         }
 
         // The scrim belongs to the layout, so anything landing on it is outside the drawer.
-        if (drawer.dataset.open === "true" && !event.target.closest(".nacara-sidebar")) {
+        if (drawer.dataset.open === "true" && !event.target.closest("[data-nacara-sidebar]")) {
             setOpen(false);
         }
     });

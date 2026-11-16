@@ -46,7 +46,9 @@ cd docs && dotnet run -- watch
 | `Nacara.Plugin.Assets.LightningCss` | CSS compiled for the browsers you name, bundled and minified |
 | `Nacara.Plugin.Assets.Esbuild` | JavaScript bundled from what it imports, and minified |
 | `Nacara.Plugin.Assets.Nuglify` | HTML, JavaScript and CSS minified through NUglify |
-| `Nacara.Theme.Default` | Layout, design tokens and web components |
+| `Nacara.Theme.Core` | What any site builds its layouts on: the head, the shell, the shared stylesheet and script |
+| `Nacara.Theme.Docs` | What a documentation theme is built from: the options, the navbar, sidebar and table of contents models |
+| `Nacara.Theme.Default` | The default layout over Theme.Docs, with parts a site can replace |
 | `Nacara.Templates` | `dotnet new nacara-docs` |
 
 `docs/` is this repository's own site, built by the engine it documents.

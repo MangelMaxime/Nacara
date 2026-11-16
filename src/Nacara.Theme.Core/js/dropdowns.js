@@ -16,14 +16,16 @@ export const dropdowns = () => {
     };
 
     const closeAll = (except) => {
-        for (const dropdown of document.querySelectorAll('.nacara-dropdown[data-open="true"]')) {
+        for (const dropdown of document.querySelectorAll(
+            '[data-nacara-dropdown-root][data-open="true"]',
+        )) {
             if (dropdown !== except) setOpen(dropdown, false);
         }
     };
 
     document.addEventListener("click", (event) => {
         const trigger = event.target.closest("[data-nacara-dropdown]");
-        const dropdown = trigger?.closest(".nacara-dropdown");
+        const dropdown = trigger?.closest("[data-nacara-dropdown-root]");
 
         closeAll(dropdown);
 
@@ -44,7 +46,7 @@ export const dropdowns = () => {
         if (event.key === "Escape") closeAll();
     });
 
-    for (const dropdown of document.querySelectorAll(".nacara-dropdown")) {
+    for (const dropdown of document.querySelectorAll("[data-nacara-dropdown-root]")) {
         let timer = null;
 
         const after = (delay, action) => {

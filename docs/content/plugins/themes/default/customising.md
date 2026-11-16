@@ -53,7 +53,7 @@ Call it more than once and the rules add up.
 
 Colours, spacing, radii, fonts, the widths of the frame and the colours code is painted in are all
 custom properties.
-[`tokens.css`](https://github.com/MangelMaxime/Nacara/blob/main/src/Nacara.Theme.Default/assets/css/tokens.css)
+[`tokens.css`](https://github.com/MangelMaxime/Nacara/blob/main/src/Nacara.Theme.Core/assets/css/tokens.css)
 declares every one of them, for both colour schemes. They cover:
 
 | | |
@@ -152,5 +152,5 @@ URL stays exactly as you wrote it.
 
 ## Changing the markup
 
-Tokens and your own stylesheet cover colours, spacing and type. For different markup, compose the
-theme's pieces yourself - see [Components](components.md).
+Tokens and your own stylesheet cover colours, spacing and type. For different markup, replace a
+part of the page with `Theme.parts` - see [Parts](components.md).

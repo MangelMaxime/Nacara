@@ -23,6 +23,8 @@
     <Project Path="src/Nacara.Plugin.Linter.Rumdl/Nacara.Plugin.Linter.Rumdl.fsproj" />
     <Project Path="src/Nacara.Plugin.Deploy.GitHubPages/Nacara.Plugin.Deploy.GitHubPages.fsproj" />
     <Project Path="src/Nacara.Plugin.FSharpApi/Nacara.Plugin.FSharpApi.fsproj" />
+    <Project Path="src/Nacara.Theme.Core/Nacara.Theme.Core.fsproj" />
+    <Project Path="src/Nacara.Theme.Docs/Nacara.Theme.Docs.fsproj" />
     <Project Path="src/Nacara.Theme.Default/Nacara.Theme.Default.fsproj" />
   </Folder>
   <Folder Name="/templates/">

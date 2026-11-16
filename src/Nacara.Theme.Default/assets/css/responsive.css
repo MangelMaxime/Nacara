@@ -42,7 +42,7 @@
         box-shadow: var(--nacara-shadow);
         overflow-y: auto;
     }
-    .nacara-sidebar[data-open="true"]:has(.nacara-sidebar__widgets) {
+    .nacara-sidebar[data-open="true"]:has(.nacara-sidebar__widgets:not([hidden])) {
         padding-bottom: 0;
     }
     /* What the drawer covers, dimmed. The navbar stays clear of it, burger included. */
@@ -64,7 +64,7 @@
         display: block;
     }
 
-    .nacara-sidebar__widgets {
+    .nacara-sidebar__widgets:not([hidden]) {
         position: sticky;
         bottom: 0;
         display: flex;

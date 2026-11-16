@@ -56,12 +56,11 @@ let theme =
 - [Menu](menu.md) - where a sidebar comes from, and how to write your own
 - [Front matter](front-matter.md) - what a page says about itself
 - [Customising](customising.md) - colours, spacing, fonts, your own CSS
-- [Components](components.md) - the pieces on their own, and building a layout
+- [Parts](components.md) - replacing one part of the page, and building a layout
 
 ## Using another theme
 
-Register your own theme instead. [Theming](../../../guide/theme.md) explains what a theme has to
-provide.
+Register your own theme instead. It is built on [Theme.Docs](../docs/index.md), as this one is.
 
 ## Reference
 

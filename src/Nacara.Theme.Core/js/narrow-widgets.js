@@ -1,18 +1,18 @@
-// The breakpoint is the one responsive.css hides the navbar's links at.
+// The breakpoint is read from --nacara-narrow, which the theme sets beside its media query.
 export const narrowWidgets = () => {
-    const end = document.querySelector(".nacara-navbar__items--end");
-    const sidebar = document.querySelector(".nacara-sidebar");
+    const end = document.querySelector("[data-nacara-widgets-end]");
+    const shelf = document.querySelector("[data-nacara-widgets-shelf]");
 
-    if (!end || !sidebar) return;
+    if (!end || !shelf) return;
 
     const movable = [...end.children].filter((item) => !item.querySelector("[data-nacara-search]"));
 
     if (movable.length === 0) return;
 
-    const shelf = document.createElement("ul");
-    shelf.className = "nacara-sidebar__widgets";
-
-    const narrow = matchMedia("(max-width: 860px)");
+    const width =
+        getComputedStyle(document.documentElement).getPropertyValue("--nacara-narrow").trim() ||
+        "860px";
+    const narrow = matchMedia(`(max-width: ${width})`);
     let placed = null;
 
     const place = () => {
@@ -21,13 +21,13 @@ export const narrowWidgets = () => {
         placed = narrow.matches;
 
         if (narrow.matches) {
-            sidebar.append(shelf);
-
             for (const item of movable) shelf.append(item);
+
+            shelf.hidden = false;
         } else {
             for (const item of movable) end.append(item);
 
-            shelf.remove();
+            shelf.hidden = true;
         }
     };
 

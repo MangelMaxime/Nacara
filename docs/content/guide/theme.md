@@ -15,7 +15,7 @@ Collection.create "docs" decoder
 
 That function receives a `PageContext<'FrontMatter>` - the page, its decoded front matter, the site,
 every other page, and the rendered content - and returns markup. Everything else a theme does
-(stylesheets, scripts, web components) it contributes as a plugin:
+(stylesheets, scripts, hooks) it contributes as a plugin:
 
 ```fsharp
 registry
@@ -42,19 +42,20 @@ frames. It is documented with the other packages:
 - [Navbar](../plugins/themes/default/navbar.md) - sections, dropdowns, and the frame
 - [Menu](../plugins/themes/default/menu.md) - where a sidebar comes from, and writing your own
 - [Front matter](../plugins/themes/default/front-matter.md) - what a page says about itself
-- [Components](../plugins/themes/default/components.md) - composing a layout of your own
+- [Parts](../plugins/themes/default/components.md) - replacing one part of the page, or composing a layout of your own
 
 ## Three ways to make it yours
 
 **Override the tokens.** Colours, spacing and the measure are custom properties, and your own
 stylesheet is loaded after the theme's, so yours wins.
 
-**Compose the pieces.** The navbar, sidebar, table of contents and page navigation are exported
-functions. Your own layout can use them and arrange the middle differently - a landing page, a
-reference page with two columns.
+**Replace a part.** The navbar, sidebar, table of contents, page navigation, footer and frame are
+each a function the theme calls. `Theme.parts` swaps one for yours, and yours can wrap the theme's.
 
-**Write a theme.** A layout function, a stylesheet, and `register`; nothing else is required.
-Publish it and it is an ordinary NuGet package, like the default one.
+**Write a theme.** `Nacara.Theme.Docs` holds what every documentation theme shares: the options a
+site writes and the models a layout renders. `Nacara.Theme.Core` holds the shared stylesheet and
+script. A theme of your own is markup and CSS over them. [Theme.Docs](../plugins/themes/docs/index.md)
+shows one. Publish it and it is an ordinary NuGet package, like the default one.
 
 ## What the engine owns
 

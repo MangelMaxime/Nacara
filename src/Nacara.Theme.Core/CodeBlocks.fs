@@ -4,7 +4,7 @@ open System.Text
 open Nacara.Core
 
 /// <summary>
-/// How this theme draws a code block.
+/// How a code block is drawn: a frame, its lines, and a button that copies them.
 /// </summary>
 type NacaraCodeBlockRenderer() =
 
@@ -12,6 +12,7 @@ type NacaraCodeBlockRenderer() =
     let copyButton =
         [
             """<button class="nacara-code__copy"
+                       data-nacara-code-copy="true"
                        type="button"
                        aria-label="Copy code">"""
             """<svg class="nacara-code__copy-idle"
@@ -111,7 +112,7 @@ type NacaraCodeBlockRenderer() =
         |> List.rev
 
     interface ICodeBlockRenderer with
-        member _.Name = "theme.default"
+        member _.Name = "theme.core"
 
         member _.Render(block: PreparedCodeBlock) =
             let builder = StringBuilder()
@@ -129,6 +130,7 @@ type NacaraCodeBlockRenderer() =
                     "figure"
                     [
                         "class", "nacara-code"
+                        "data-nacara-code", "true"
                         "data-language", CodeBlock.escapeAttribute language
                         "data-frame", frame
 
@@ -162,7 +164,8 @@ type NacaraCodeBlockRenderer() =
                 |> ignore
             | None, _ -> ()
 
-            builder.Append """<div class="nacara-code__body">""" |> ignore
+            builder.Append """<div class="nacara-code__body" data-nacara-code-body="true">"""
+            |> ignore
 
             let blockRuns = runs block.Lines
 

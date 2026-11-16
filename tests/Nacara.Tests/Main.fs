@@ -12,6 +12,7 @@ let main _ =
             Tool.all
             Build.all
             Collections.all
+            DefaultTheme.all
             Locale.all
             CodeBlock.all
             Changelog.all

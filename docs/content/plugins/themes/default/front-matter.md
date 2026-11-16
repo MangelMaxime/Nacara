@@ -41,6 +41,8 @@ Pages without one come last, in title order.
 
 **type:** `'splash' | 'bare'`
 
+Any other value fails the build.
+
 Set to `splash` for a page without the menu or the table of contents. The theme's styles and
 spacing are kept, over a wider measure - `--nacara-splash-width`, 68rem. Landing pages are the
 usual case.
@@ -117,5 +119,5 @@ main:
 
 `Theme.docs` reads the theme's `DocFrontMatter`, which is these fields and nothing else. To add
 fields of your own - an author, a tag, a product - declare your own record and decoder, then map it
-onto what the theme needs. [Components](components.md) shows how, along with the `DocPage` setters
+onto what the theme needs. [Parts](components.md) shows how, along with the `DocPage` setters
 that decide the same things from code.

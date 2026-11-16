@@ -1,7 +1,7 @@
 {
     "name": "nacara-dev-tools",
     "private": true,
-    "description": "Development tools, and the bundler for the JavaScript that ships inside the packages. Biome formats it; esbuild bundles the default theme's scripts and the live-example client. Nothing here is needed to build a site.",
+    "description": "Development tools, and the bundler for the JavaScript that ships inside the packages. Biome formats it; esbuild bundles the theme behaviours and the live-example client. Nothing here is needed to build a site.",
     "scripts": {
         "format": "biome format --write .",
         "format:check": "biome format ."

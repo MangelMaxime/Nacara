@@ -185,11 +185,28 @@
           "Thoth.Json.System.Text.Json": "[0.4.0, )"
         }
       },
-      "nacara.theme.default": {
+      "nacara.theme.core": {
         "type": "Project",
         "dependencies": {
           "FSharp.Core": "[10.1.300, )",
           "Nacara.Core": "[1.0.0, )"
+        }
+      },
+      "nacara.theme.default": {
+        "type": "Project",
+        "dependencies": {
+          "FSharp.Core": "[10.1.300, )",
+          "Nacara.Core": "[1.0.0, )",
+          "Nacara.Theme.Core": "[1.0.0, )",
+          "Nacara.Theme.Docs": "[1.0.0, )"
+        }
+      },
+      "nacara.theme.docs": {
+        "type": "Project",
+        "dependencies": {
+          "FSharp.Core": "[10.1.300, )",
+          "Nacara.Core": "[1.0.0, )",
+          "Nacara.Theme.Core": "[1.0.0, )"
         }
       },
       "Feliz.ViewEngine": {
