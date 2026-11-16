@@ -328,6 +328,8 @@ Site.create "Blog"
 |> Site.file "pages.json" (fun context -> Json.serialize (List.map _.Title context.Pages))
 ```
 
+The [feed plugin](../plugins/feed.md) writes an Atom feed this way.
+
 The file is written through the build: left alone when nothing changed, and never pruned.
 
 ## Table of contents

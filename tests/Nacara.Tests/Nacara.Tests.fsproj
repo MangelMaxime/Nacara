@@ -18,6 +18,7 @@
         <Compile Include="Tests.Versions.fs" />
         <Compile Include="Tests.Literate.fs" />
         <Compile Include="Tests.Sitemap.fs" />
+        <Compile Include="Tests.Feed.fs" />
         <Compile Include="Tests.Components.fs" />
         <Compile Include="Tests.LinkValidator.fs" />
         <Compile Include="Tests.Rumdl.fs" />
@@ -40,6 +41,7 @@
         <ProjectReference Include="../../src/Nacara.Plugin.Versions/Nacara.Plugin.Versions.fsproj" />
         <ProjectReference Include="../../src/Nacara.Plugin.Literate/Nacara.Plugin.Literate.fsproj" />
         <ProjectReference Include="../../src/Nacara.Plugin.Sitemap/Nacara.Plugin.Sitemap.fsproj" />
+        <ProjectReference Include="../../src/Nacara.Plugin.Feed/Nacara.Plugin.Feed.fsproj" />
         <ProjectReference Include="../../src/Nacara.Plugin.LinkValidator/Nacara.Plugin.LinkValidator.fsproj" />
         <ProjectReference Include="../../src/Nacara.Plugin.Linter.Rumdl/Nacara.Plugin.Linter.Rumdl.fsproj" />
         <ProjectReference Include="../../src/Nacara.Plugin.FSharpApi/Nacara.Plugin.FSharpApi.fsproj" />

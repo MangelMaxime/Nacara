@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageId>Nacara.Plugin.Feed</PackageId>
+        <Description>An Atom feed of the pages of a Nacara collection.</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Feed.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../Nacara.Core/Nacara.Core.fsproj" />
+    </ItemGroup>
+</Project>

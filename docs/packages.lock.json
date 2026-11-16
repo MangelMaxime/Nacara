@@ -59,6 +59,13 @@
           "Nacara.Core": "[1.0.0, )"
         }
       },
+      "nacara.plugin.feed": {
+        "type": "Project",
+        "dependencies": {
+          "FSharp.Core": "[10.1.300, )",
+          "Nacara.Core": "[1.0.0, )"
+        }
+      },
       "nacara.plugin.fsharpapi": {
         "type": "Project",
         "dependencies": {

@@ -41,6 +41,7 @@ plugin replaces another.
 |---|---|
 | [`Nacara.Plugin.Search`](search.md) | A search box and modal, indexed by Pagefind |
 | [`Nacara.Plugin.Sitemap`](sitemap.md) | `sitemap.xml`, `robots.txt`, canonical links |
+| [`Nacara.Plugin.Feed`](feed.md) | An Atom feed of the pages of a collection |
 | [`Nacara.Plugin.Versions`](versions.md) | Several versions side by side, with a switcher |
 | [`Nacara.Plugin.Deploy.GitHubPages`](github-pages.md) | The build published to the branch GitHub Pages serves |
 | [`Nacara.Plugin.Assets.LightningCss`](assets/lightningcss.md) | Smaller CSS, compiled for the browsers you name |

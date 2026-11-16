@@ -19,6 +19,7 @@ let main _ =
             Versions.all
             Literate.all
             Sitemap.all
+            Feed.all
             Components.all
             LinkValidator.all
             FSharpApi.all

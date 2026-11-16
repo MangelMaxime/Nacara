@@ -15,6 +15,7 @@
     <Project Path="src/Nacara.Plugin.Versions/Nacara.Plugin.Versions.fsproj" />
     <Project Path="src/Nacara.Plugin.Literate/Nacara.Plugin.Literate.fsproj" />
     <Project Path="src/Nacara.Plugin.Sitemap/Nacara.Plugin.Sitemap.fsproj" />
+    <Project Path="src/Nacara.Plugin.Feed/Nacara.Plugin.Feed.fsproj" />
     <Project Path="src/Nacara.Plugin.Assets.Esbuild/Nacara.Plugin.Assets.Esbuild.fsproj" />
     <Project Path="src/Nacara.Plugin.Assets.LightningCss/Nacara.Plugin.Assets.LightningCss.fsproj" />
     <Project Path="src/Nacara.Plugin.Assets.Nuglify/Nacara.Plugin.Assets.Nuglify.fsproj" />

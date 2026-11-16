@@ -33,6 +33,7 @@ let apiOptions =
                         "Nacara.Plugin.Changelog"
                         "Nacara.Plugin.Search"
                         "Nacara.Plugin.Sitemap"
+                        "Nacara.Plugin.Feed"
                         "Nacara.Plugin.Versions"
                         "Nacara.Plugin.Deploy.GitHubPages"
                         "Nacara.Plugin.Assets.LightningCss"
@@ -118,6 +119,7 @@ let theme =
                 [
                     Menu.page "plugins/search.md"
                     Menu.page "plugins/sitemap.md"
+                    Menu.page "plugins/feed.md"
                     Menu.page "plugins/versions.md"
                     Menu.page "plugins/github-pages.md"
                     Menu.section
