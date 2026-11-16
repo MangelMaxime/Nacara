@@ -6,6 +6,7 @@ open System.Net.Sockets
 open System.Threading
 open Scriptorium.Nib.Assertion
 open type Scriptorium.Quill.Test
+open Feliz.ViewEngine
 open Nacara.Core
 open Nacara.Plugins
 open Nacara.Tests
@@ -187,6 +188,51 @@ let all =
                     assertThat
                         (reported |> List.forall (fun message -> message.Contains "not-there"))
                         (tag "named in the message" >> isTrue)
+            )
+
+            test (
+                "an anchor the layout writes counts as being on the page",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    File.WriteAllText(
+                        Path.Combine(AbsolutePath.value root, "docs/anchors.md"),
+                        "---\ntitle: Anchors\n---\n\n<a href=\"/anchors/#from-the-layout\">there</a>\n<a href=\"/anchors/#not-there\">gone</a>\n"
+                    )
+
+                    let withId (context: PageContext<Fixture.DocFrontMatter>) =
+                        Html.div
+                            [
+                                prop.id "from-the-layout"
+                                prop.children [ Fixture.layout context ]
+                            ]
+
+                    let docs =
+                        Collection.create "docs" Fixture.decoder
+                        |> Collection.source "docs" [ "**/*.md" ]
+                        |> Collection.title _.Title
+                        |> Collection.layout withId
+
+                    let site =
+                        Site.create "Fixture"
+                        |> Site.baseUrl "/"
+                        |> Site.output "output"
+                        |> Site.plugin (Markdown.create ())
+                        |> Site.collection docs
+                        |> Site.plugin (LinkValidator.create ())
+
+                    let reported =
+                        (Build.run root site).Diagnostics
+                        |> List.filter (fun item -> item.Code = "link-validator/anchor-missing")
+                        |> List.map _.Message
+
+                    assertThat
+                        (reported |> List.exists (fun message -> message.Contains "from-the-layout"))
+                        (tag "the layout's id is found" >> isFalse)
+
+                    assertThat
+                        (reported |> List.exists (fun message -> message.Contains "not-there"))
+                        (tag "an id nothing wrote is still reported" >> isTrue)
             )
 
             test (

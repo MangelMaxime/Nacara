@@ -335,14 +335,21 @@ module LinkValidator =
                 |> List.map (fun page -> RelativePath.value (Url.outputPath page.Route), page)
                 |> dict
 
+            let documents =
+                context.Rendered
+                |> List.map (fun (page, document) ->
+                    RelativePath.value (Url.outputPath page.Route), document
+                )
+                |> dict
+
             let anchors = ConcurrentDictionary<string, Set<string>>()
 
             let anchorsIn (relative: string) (file: string) =
                 anchors.GetOrAdd(
                     relative,
                     fun _ ->
-                        match written.TryGetValue relative with
-                        | true, page -> anchorsOf page.Html
+                        match documents.TryGetValue relative with
+                        | true, document -> anchorsOf document
                         | _ ->
                             if File.Exists file then
                                 anchorsOf (File.ReadAllText file)
