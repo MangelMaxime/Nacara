@@ -752,12 +752,14 @@ let all =
                             closing - opening - letter.Length + 6
                         )
 
-                    for letter in
+                    let letters =
                         [
                             "A"
                             "B"
                             "C"
-                        ] do
+                        ]
+
+                    for letter in letters do
                         assertThat
                             ((span letter).Contains "<span class=\"tok-keyword\">let</span>")
                             (tag $"%s{letter} is coloured" >> isTrue)

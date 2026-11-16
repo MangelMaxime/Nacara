@@ -525,11 +525,13 @@ let all =
                     let compiler = published "compiler"
                     let refs = published "refs"
 
-                    for path in
+                    let paths =
                         [
                             $"%s{compiler}/worker.min.js"
                             $"%s{compiler}/bundle.min.js"
-                        ] do
+                        ]
+
+                    for path in paths do
                         assertThat (exists path) (tag path >> isTrue)
 
                     // The colouring is the highlighting plugin's, and sits in its own directory.
@@ -747,8 +749,10 @@ let all =
                     | Error message ->
                         assertThat message (tag "MSBuild should answer" >> isEqualTo "")
                     | Ok before ->
-                        for file in
-                            Directory.EnumerateFiles(root, "*.fs", SearchOption.AllDirectories) do
+                        let files =
+                            Directory.EnumerateFiles(root, "*.fs", SearchOption.AllDirectories)
+
+                        for file in files do
                             File.SetLastWriteTimeUtc(file, System.DateTime.UtcNow.AddMinutes 1.)
 
                         match ProjectInputs.read [] project with

@@ -125,8 +125,10 @@ let copyToTemporaryDirectory () =
     let target =
         Path.Combine(Path.GetTempPath(), "nacara-tests", System.Guid.NewGuid().ToString "N")
 
-    for source in
-        Directory.EnumerateFiles(AbsolutePath.value root, "*", SearchOption.AllDirectories) do
+    let sources =
+        Directory.EnumerateFiles(AbsolutePath.value root, "*", SearchOption.AllDirectories)
+
+    for source in sources do
         let relative = Path.GetRelativePath(AbsolutePath.value root, source)
         let destination = Path.Combine(target, relative)
         Directory.CreateDirectory(Path.GetDirectoryName destination) |> ignore

@@ -275,21 +275,23 @@ module Toolchain =
 
     /// <summary>Where a repository keeps its licence, which travels with what is built from it.</summary>
     let private licenceIn (directory: string) =
-        let parent = Path.GetDirectoryName directory
+        let places =
+            [
+                directory
+                Path.GetDirectoryName directory
+            ]
+
+        let names =
+            [
+                "LICENSE"
+                "LICENSE.md"
+                "LICENSE.txt"
+                "COPYING"
+            ]
 
         [
-            for place in
-                [
-                    directory
-                    parent
-                ] do
-                for name in
-                    [
-                        "LICENSE"
-                        "LICENSE.md"
-                        "LICENSE.txt"
-                        "COPYING"
-                    ] do
+            for place in places do
+                for name in names do
                     Path.Combine(place, name)
         ]
         |> List.tryFind File.Exists

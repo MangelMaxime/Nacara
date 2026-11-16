@@ -244,11 +244,13 @@ module Rumdl =
             start.ArgumentList.Add "fmt"
             configure options root start.ArgumentList
 
-            for target in
-                (if List.isEmpty arguments then
-                     [ AbsolutePath.value root ]
-                 else
-                     arguments) do
+            let targets =
+                if List.isEmpty arguments then
+                    [ AbsolutePath.value root ]
+                else
+                    arguments
+
+            for target in targets do
                 start.ArgumentList.Add target
 
             use rumdl = Process.Start start

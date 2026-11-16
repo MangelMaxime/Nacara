@@ -62,7 +62,7 @@ let all =
                     let beside (path: string) =
                         Path.Combine(AbsolutePath.value root, "output/assets/tree-sitter", path)
 
-                    for path in
+                    let paths =
                         [
                             "highlight.js"
                             "highlight-worker.js"
@@ -72,7 +72,9 @@ let all =
                             "grammars/json/highlights.scm"
                             "grammars/json/captures.json"
                             "grammars/fsharp/grammar.wasm.gz"
-                        ] do
+                        ]
+
+                    for path in paths do
                         assertThat (File.Exists(beside path)) (tag path >> isTrue)
 
                     let script = File.ReadAllText(beside "highlight.js")
@@ -223,7 +225,7 @@ let all =
                 fun _ ->
                     let shipped = TreeSitter.bundledLanguages.Value
 
-                    for language in
+                    let languages =
                         [
                             "fsharp"
                             "c_sharp"
@@ -232,7 +234,9 @@ let all =
                             "yaml"
                             "toml"
                             "markdown"
-                        ] do
+                        ]
+
+                    for language in languages do
                         assertThat
                             (List.contains language shipped)
                             (tag $"%s{language} needs no building" >> isEqualTo true)
@@ -368,13 +372,15 @@ let all =
                 fun _ ->
                     let fsharp = TreeSitter.grammar "fsharp" "grammar.wasm" "highlights.scm"
 
-                    for name in
+                    let names =
                         [
                             "fsharp"
                             "fs"
                             "fsx"
                             "fsi"
-                        ] do
+                        ]
+
+                    for name in names do
                         assertThat
                             ((TreeSitter.namesOf fsharp).Contains name)
                             (tag $"a fence saying '%s{name}' finds it" >> isEqualTo true)

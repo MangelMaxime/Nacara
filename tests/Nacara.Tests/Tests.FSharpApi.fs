@@ -164,13 +164,15 @@ let all =
                             false
                             library.Namespaces.Head
 
-                    for heading in
+                    let headings =
                         [
                             "## Module"
                             "## Record"
                             "## Union"
                             "## Interface"
-                        ] do
+                        ]
+
+                    for heading in headings do
                         assertThat (page.Contains heading) (tag heading >> isTrue)
 
                     let people = declaration "People"
@@ -210,11 +212,13 @@ let all =
                         (many.Contains "| Package |")
                         (tag "the column says what it lists" >> isTrue)
 
-                    for package in
+                    let packages =
                         [
                             "Nacara.Plugin.Markdown"
                             "Nacara.Plugin.Search"
-                        ] do
+                        ]
+
+                    for package in packages do
                         assertThat
                             (many.Contains $"[`%s{package}`](/reference/%s{Slug.create package}/)")
                             (tag $"%s{package} is named, and links to its own page" >> isTrue)
@@ -495,11 +499,13 @@ let all =
                         built [ "fixture-api-dependent" ] "Fixture.Dependent.dll"
                         |> AbsolutePath.value
 
-                    for extension in
+                    let extensions =
                         [
                             ".dll"
                             ".xml"
-                        ] do
+                        ]
+
+                    for extension in extensions do
                         let name = Path.GetFileNameWithoutExtension dependent + extension
 
                         File.Copy(
@@ -558,11 +564,13 @@ let all =
                         built [ "fixture-api-dependent" ] "Fixture.Dependent.dll"
                         |> AbsolutePath.value
 
-                    for extension in
+                    let extensions =
                         [
                             ".dll"
                             ".xml"
-                        ] do
+                        ]
+
+                    for extension in extensions do
                         let name = Path.GetFileNameWithoutExtension dependent + extension
 
                         File.Copy(

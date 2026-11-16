@@ -101,11 +101,13 @@ module Esbuild =
             with exn ->
                 Error exn.Message
         finally
-            for file in
+            let files =
                 [
                     input
                     output
-                ] do
+                ]
+
+            for file in files do
                 try
                     File.Delete file
                 with _ ->

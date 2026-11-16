@@ -147,11 +147,13 @@ let all =
                 fun _ ->
                     let root = Fixture.copyToTemporaryDirectory ()
 
-                    for name in
+                    let names =
                         [
                             "Alpha"
                             "Beta"
-                        ] do
+                        ]
+
+                    for name in names do
                         let directory = Path.Combine(AbsolutePath.value root, "packages", name)
                         Directory.CreateDirectory directory |> ignore
                         File.WriteAllText(Path.Combine(directory, "CHANGELOG.md"), sample)

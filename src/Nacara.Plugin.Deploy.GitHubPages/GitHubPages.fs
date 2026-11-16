@@ -186,11 +186,13 @@ module GitHubPages =
                 return! gitRead [ "write-tree" ]
             }
         finally
-            for path in
+            let paths =
                 [
                     index
                     staging
-                ] do
+                ]
+
+            for path in paths do
                 if File.Exists path then
                     File.Delete path
 
