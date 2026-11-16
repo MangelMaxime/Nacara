@@ -27,7 +27,8 @@ export const scrollSpy = () => {
         }
 
         const bar = document.querySelector("[data-nacara-navbar]");
-        const line = (bar ? bar.getBoundingClientRect().height : 56) + 24;
+        const stuck = bar && ["sticky", "fixed"].includes(getComputedStyle(bar).position);
+        const line = (stuck ? bar.getBoundingClientRect().height : 0) + 24;
 
         const atBottom =
             Math.ceil(scrollY + innerHeight) >= document.documentElement.scrollHeight - 2;

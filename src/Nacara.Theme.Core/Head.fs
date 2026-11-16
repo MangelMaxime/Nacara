@@ -30,7 +30,11 @@ module Head =
             Canonical = scope.Site.AbsoluteUrlOf scope.Page.Route
             SiteName = scope.Site.Title
             Locale = scope.Page.Locale.Code
-            OgType = "article"
+            OgType =
+                if Route.isHome scope.Page.Route then
+                    "website"
+                else
+                    "article"
             Favicon = favicon |> Option.map scope.Site.UrlOfAsset
         }
 
@@ -110,3 +114,10 @@ module Head =
                     ]
             | None -> ()
         ]
+
+    let ofContext
+        (title: string)
+        (description: string option)
+        (context: PageContext<'FrontMatter>)
+        =
+        meta (resolve title description None (PageScope.ofContext context))

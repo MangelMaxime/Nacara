@@ -69,7 +69,8 @@ by leaving it off. The menu's attributes are read by
 | Attribute | On | Behaviour |
 |---|---|---|
 | `data-nacara-theme` | A `<select>` with `light`, `dark` and `system` | The colour scheme, remembered across visits |
-| `data-nacara-navbar` | The navbar | Its height offsets the table of contents' scroll spy |
+| `data-nacara-theme-pick="light"`, `"dark"` or `"system"` | A button | Picks that colour scheme. `aria-pressed` says which button is picked |
+| `data-nacara-navbar` | The navbar | Its height offsets the table of contents' scroll spy when it is `sticky` or `fixed` |
 | `data-nacara-dropdown-root` | An element holding a dropdown | Opens on hover and on click, `data-open` and `data-pinned` say which |
 | `data-nacara-dropdown` | The dropdown's button | Toggles it, and carries `aria-expanded` |
 | `data-nacara-sidebar` | The sidebar | The drawer on a narrow screen, `data-open` says whether it shows |

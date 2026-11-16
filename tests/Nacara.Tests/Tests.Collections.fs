@@ -592,6 +592,32 @@ let private siteHelpers =
                         (File.Exists(outputOf root "soon/index.html"))
                         (tag "serving does" >> isTrue)
             )
+
+            test (
+                "a site without a theme gets the default tokens unless it brings its own",
+                fun _ ->
+                    let tokensWritten (site: Site) =
+                        let root = Fixture.copyToTemporaryDirectory ()
+                        Build.run root site |> ignore
+
+                        Directory.EnumerateFiles(outputOf root "assets")
+                        |> Seq.exists (fun file ->
+                            (Path.GetFileName file).StartsWith "nacara-core-tokens."
+                        )
+
+                    assertThat
+                        (tokensWritten (Fixture.site |> Nacara.Theme.Core.ThemeCore.register))
+                        (tag "by default" >> isTrue)
+
+                    assertThat
+                        (tokensWritten (
+                            Fixture.site
+                            |> Nacara.Theme.Core.ThemeCore.registerWith (
+                                Nacara.Theme.Core.ThemeCore.defaultTokens false
+                            )
+                        ))
+                        (tag "and not when it says so" >> isFalse)
+            )
         ]
     )
 

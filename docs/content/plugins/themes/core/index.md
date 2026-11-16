@@ -6,6 +6,7 @@ description: What any Nacara site builds its layouts on
 `Nacara.Theme.Core` is what any site builds its layouts on: the head, the shell, the shared
 script, the default tokens and the stylesheet that draws what plugins emit.
 
+A site that writes its own layouts uses it directly.
 [Theme.Docs](../docs/index.md) and the themes are built on it.
 
 ## Add it
@@ -13,6 +14,14 @@ script, the default tokens and the stylesheet that draws what plugins emit.
 ```bash frame="terminal"
 dotnet add package Nacara.Theme.Core --prerelease
 ```
+
+## A site with its own layouts
+
+`ThemeCore.register` adds what a site that writes its own layouts needs: the code-block renderer,
+the behaviours script, the default tokens and the content stylesheet.
+`ThemeCore.registerWith (ThemeCore.defaultTokens false)` leaves the tokens out.
+
+`ThemeCore.tokensStylesheet` registers the default tokens on their own.
 
 ## The shell
 
@@ -51,6 +60,9 @@ from the `PageContext` a layout is given.
 `ThemeCore.configureBase` registers the code-block renderer and the behaviours script. A theme
 calls it from its own plugin. A documentation theme calls
 [`ThemeDocs.configure`](../docs/index.md#registration), which calls it.
+
+`ThemeCore.contentStylesheet` registers `nacara-core-content.css` as a stylesheet of its own,
+linked by `Shell.stylesheetLinks`. Use it when the content styles are not part of a bundle.
 
 The code-block renderer is `NacaraCodeBlockRenderer`. Register your own `ICodeBlockRenderer` after
 it to replace its markup. See [Code blocks](../../../guide/code-blocks.md).
