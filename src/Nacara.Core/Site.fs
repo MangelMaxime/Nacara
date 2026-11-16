@@ -29,6 +29,8 @@ type Site =
         Stylesheets: string list
         /// Scripts of your own, loaded on every page. Paths are relative to the project root.
         Scripts: string list
+        /// Files written beside the pages, rendered from them: a feed, a search index.
+        Files: (string * (HookContext -> string)) list
         Plugins: IPlugin list
         Collections: CollectionDefinition list
     }
@@ -52,6 +54,7 @@ module Site =
             StaticDirectory = Some "static"
             Stylesheets = []
             Scripts = []
+            Files = []
             Plugins = []
             Collections = []
         }
@@ -78,6 +81,26 @@ module Site =
     let script (path: string) (site: Site) =
         { site with
             Scripts = site.Scripts @ [ path ]
+        }
+
+    /// <summary>A file written beside the pages, rendered from them.</summary>
+    /// <remarks>
+    /// For a feed, a search index, a manifest: anything that is a rendering of the pages rather
+    /// than a page. Written once the pages are routed and rendered, through the build, so it is
+    /// left alone when nothing changed and never pruned.
+    /// </remarks>
+    /// <example>
+    /// <code lang="fsharp">
+    /// Site.create "Blog"
+    /// |> Site.file "pages.json" (fun context -> Json.serialize (List.map _.Title context.Pages))
+    /// </code>
+    /// </example>
+    /// <param name="path">Where it goes, relative to the output directory.</param>
+    /// <param name="render">What it holds, given the built site.</param>
+    /// <param name="site">The site being described.</param>
+    let file (path: string) (render: HookContext -> string) (site: Site) =
+        { site with
+            Files = site.Files @ [ path, render ]
         }
 
     /// <summary>What your site is about, for pages that have nothing better to say.</summary>
@@ -212,6 +235,7 @@ module Site =
             Locales = site.Locales
             RootLocale = rootLocale site
             PageAssets = []
+            Extras = Map.empty
         }
 
     /// <summary>Configuration problems worth refusing to build over.</summary>

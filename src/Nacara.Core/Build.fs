@@ -310,6 +310,47 @@ module Build =
                     Dependencies = content.Dependencies
                 }
             )
+        // Derived once the collections it reads are loaded; see the load phase.
+        | Derived _ -> []
+
+    /// <summary>
+    /// The files of a derived collection, from the loaded pages of the collections it names.
+    /// </summary>
+    let private deriveFrom
+        (projectRoot: AbsolutePath)
+        (site: Site)
+        (diagnostics: DiagnosticBag)
+        (name: string)
+        (from: string list)
+        (derive: DerivedContext -> GeneratedContent list)
+        (pages: Page list)
+        =
+        let sources = pages |> List.filter (fun page -> List.contains page.Collection from)
+
+        let context =
+            {
+                Site = Site.toInfo site
+                ProjectRoot = projectRoot
+                Diagnostics = DiagnosticSink(diagnostics, name)
+                Pages = sources
+            }
+
+        // A change to any page it was derived from is a change to it.
+        let dependencies = sources |> List.choose _.SourceFile
+
+        derive context
+        |> List.sortBy (fun content -> RelativePath.value content.Path)
+        |> List.map (fun content ->
+            {
+                Site = context.Site
+                Locale = Site.rootLocale site
+                RelativePath = content.Path
+                ProjectPath = None
+                Source = Generated name
+                Text = content.Text
+                Dependencies = content.Dependencies @ dependencies
+            }
+        )
 
     /// <summary>
     /// Resolve which locale a page belongs to from its path.
@@ -475,6 +516,15 @@ module Build =
                 |> Registry.extra (asPageAsset destination)
 
         let registry =
+            (registry, site.Files)
+            ||> List.fold (fun registry (path, render) ->
+                registry
+                |> Registry.onPagesRouted (fun context ->
+                    context.Write path (render context) |> ignore
+                )
+            )
+
+        let registry =
             let withStyles =
                 (registry, site.Stylesheets)
                 ||> List.fold (fun registry path -> own Stylesheet path registry)
@@ -485,6 +535,7 @@ module Build =
         let siteInfo =
             { Site.toInfo site with
                 PageAssets = Registry.extras<PageAsset> registry
+                Extras = registry.Extras
             }
 
         let outputDirectory = AbsolutePath.combine projectRoot [ site.OutputDirectory ]
@@ -566,25 +617,17 @@ module Build =
                             FrontMatter = block
                         }
 
-        let pages =
-            registry.Collections
-            |> List.collect (fun definition ->
-                discover
-                    projectRoot
-                    site
-                    (registry.FrontMatterFormats |> List.collect _.Extensions |> List.distinct)
-                    diagnostics
-                    definition
-                |> List.map (resolveLocale site)
-                |> Array.ofList
-                |> parallelMap (fun file ->
-                    let key =
-                        $"%s{definition.Name}:%s{RelativePath.value file.RelativePath}:%s{string file.Locale}:%s{BuildCache.Hash file.Text}"
+        let load (definition: CollectionDefinition) (files: DiscoveredFile list) =
+            files
+            |> List.map (resolveLocale site)
+            |> Array.ofList
+            |> parallelMap (fun file ->
+                let key =
+                    $"%s{definition.Name}:%s{RelativePath.value file.RelativePath}:%s{string file.Locale}:%s{BuildCache.Hash file.Text}"
 
-                    cache.Load(key, fun () -> readFrontMatter file |> Result.bind definition.Load)
-                )
-                |> List.ofArray
+                cache.Load(key, fun () -> readFrontMatter file |> Result.bind definition.Load)
             )
+            |> List.ofArray
             |> List.choose (fun result ->
                 match result with
                 | Ok page -> Some page
@@ -592,6 +635,83 @@ module Build =
                     diagnostics.Add diagnostic
                     None
             )
+
+        let formats =
+            registry.FrontMatterFormats |> List.collect _.Extensions |> List.distinct
+
+        let sourced, derived =
+            registry.Collections
+            |> List.partition (fun definition ->
+                match definition.Source with
+                | Derived _ -> false
+                | _ -> true
+            )
+
+        let pages =
+            sourced
+            |> List.collect (fun definition ->
+                discover projectRoot site formats diagnostics definition |> load definition
+            )
+
+        let known = registry.Collections |> List.map _.Name |> Set.ofList
+
+        // A derived collection waits for what it reads, which may itself be derived.
+        let rec deriveAll
+            (pending: CollectionDefinition list)
+            (loaded: Set<string>)
+            (pages: Page list)
+            =
+            let sourcesOf (definition: CollectionDefinition) =
+                match definition.Source with
+                | Derived(_, from, _) -> from
+                | _ -> []
+
+            let ready, waiting =
+                pending
+                |> List.partition (fun definition ->
+                    sourcesOf definition |> List.forall loaded.Contains
+                )
+
+            match ready with
+            | [] ->
+                for definition in waiting do
+                    let unknown = sourcesOf definition |> List.filter (known.Contains >> not)
+
+                    if not unknown.IsEmpty then
+                        let names = String.concat "', '" unknown
+
+                        diagnostics.Add(
+                            Diagnostic.error
+                                "nacara/derived-source-unknown"
+                                $"Collection '%s{definition.Name}' derives from '%s{names}', which no collection is called"
+                            |> Diagnostic.withHint
+                                "Name the collections as Site.collection registers them"
+                        )
+                    else
+                        diagnostics.Add(
+                            Diagnostic.error
+                                "nacara/derived-cycle"
+                                $"Collection '%s{definition.Name}' derives from a collection that derives from it"
+                            |> Diagnostic.withHint "One of them has to read files instead"
+                        )
+
+                pages
+            | ready ->
+                let pages =
+                    (pages, ready)
+                    ||> List.fold (fun pages definition ->
+                        match definition.Source with
+                        | Derived(name, from, derive) ->
+                            pages
+                            @ (deriveFrom projectRoot site diagnostics name from derive pages
+                               |> load definition)
+                        | _ -> pages
+                    )
+
+                let loaded = Set.union loaded (ready |> List.map _.Name |> Set.ofList)
+                deriveAll waiting loaded pages
+
+        let pages = deriveAll derived (sourced |> List.map _.Name |> Set.ofList) pages
 
         phase "Loaded the content"
 

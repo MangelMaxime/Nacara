@@ -75,18 +75,20 @@ Four conventions make yours feel like the rest:
 
 | Registration | When it runs |
 |---|---|
-| `Registry.contentSource` | Discovery: contribute files or generated content |
 | `Registry.collection` | Discovery: contribute a whole collection |
-| `Registry.markdownExtension` | Parsing: extend the markdown pipeline |
-| `Registry.codeBlockAnnotation` | Rendering: extend code blocks |
-| `Registry.layout` | Rendering: contribute a named layout |
+| `Registry.frontMatter` | Discovery: teach the engine how a kind of file carries its front matter |
+| `Registry.transform` | Parsing: turn a page's body into html |
+| `Registry.codeBlockCheck` | Parsing: a rule run over every code block |
 | `Registry.asset` | Output: ship CSS, JS or files |
 | `Registry.assetTransform` | Output: change a text asset on its way out, such as minifying it |
+| `Registry.assetBundler` | Output: resolve what a `Bundle` asset imports |
+| `Registry.preserve` | Output: a path pruning must leave alone |
 | `Registry.onPagesRouted` | After every page is routed and rendered, before writing |
 | `Registry.onBuildComplete` | After the output is written: indexes, sitemaps, manifests |
-| `Registry.frontMatter` | Discovery: teach the engine how a kind of file carries its front matter |
 | `Registry.extra` | Contribute a typed value other plugins read back |
 | `Registry.command` | Add a subcommand to the site's command line |
+
+A layout is not registered. A collection names its own with `Collection.layout`.
 
 Some of those typed values are extension points the engine looks for by name:
 
@@ -95,6 +97,9 @@ Some of those typed values are extension points the engine looks for by name:
 | `IHighlighter` | the highlight plugin | how code is tokenised |
 | `ICodeBlockRenderer` | the theme | what a code block looks like |
 | `PageAsset` | any plugin | stylesheets and scripts every page loads |
+| `MenuOutline` | a plugin generating a section | the menu a theme shows for it, unless the site declares one |
+
+A layout reads them from `context.Site.ExtrasOf<'T>()`, a hook from `context.Site` too.
 
 The last `ICodeBlockRenderer` registered wins, so a site can override the one its theme provides.
 With none registered the engine falls back to plain `<pre><code>`, so even a site with no theme
@@ -206,6 +211,9 @@ identical, so a build that changes nothing changes nothing on disk - a file rewr
 one a dev server, a deploy tool or another process reacts to every time. And it tells the build the
 file exists, so pruning does not remove it as an orphan on the next run.
 
+A file that is a rendering of the pages, such as a feed, needs no hook: a site registers it with
+[`Site.file`](../guide/content.md#files-that-are-not-pages).
+
 Use `Registry.preserve` for output the build cannot write itself, like a search index produced by an
 external binary. It is the exception, not the habit.
 
@@ -248,6 +256,10 @@ Collection.create "api" decoder
     )
 )
 ```
+
+Pages generated from other pages - an index over a collection, a tag page - use
+`Collection.derive` instead, which runs once the collections it names are loaded and hands over
+their pages. See [content that is not on disk](../guide/content.md#content-that-is-not-on-disk).
 
 ## Registration composes
 

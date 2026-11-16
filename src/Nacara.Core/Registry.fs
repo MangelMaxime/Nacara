@@ -497,25 +497,17 @@ module Registry =
             BuildCompleteHooks = registry.BuildCompleteHooks @ [ scoped ]
         }
 
-    let private key<'T> = typeof<'T>.FullName
-
     /// <summary>Contribute a typed value that other plugins can read back.</summary>
     /// <param name="value">Anything: a stylesheet to load, a highlighter, a code-block renderer.
     /// The type is the contract, so nobody has to agree on a name.</param>
     /// <param name="registry">What the plugin is contributing to.</param>
     let extra (value: 'T) (registry: Registry) =
-        let existing = registry.Extras |> Map.tryFind key<'T> |> Option.defaultValue []
-
         { registry with
-            Extras = registry.Extras |> Map.add key<'T> (existing @ [ box value ])
+            Extras = Extras.add value registry.Extras
         }
 
     /// <summary>Every value of type <c>'T</c> contributed by any plugin, in registration order.</summary>
-    let extras<'T> (registry: Registry) : 'T list =
-        registry.Extras
-        |> Map.tryFind key<'T>
-        |> Option.defaultValue []
-        |> List.map (fun value -> value :?> 'T)
+    let extras<'T> (registry: Registry) : 'T list = Extras.ofType<'T> registry.Extras
 
     /// <summary>Apply every plugin, in order.</summary>
     /// <param name="plugins">The site's plugins. Each one's contributions are stamped with its

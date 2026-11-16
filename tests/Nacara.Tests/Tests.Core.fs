@@ -167,7 +167,7 @@ let fileRoutes =
         "fileRoutes",
         [
             test (
-                "a segment with an extension makes the route a file",
+                "only a route made with Route.file is a file",
                 fun _ ->
                     assertThat
                         (Route.isFile (Route.file en "404.html"))
@@ -176,6 +176,28 @@ let fileRoutes =
                     assertThat
                         (Route.isFile (Route.ofPath en "guide/setup"))
                         (tag "a page is not" >> isFalse)
+
+                    let dotted =
+                        Route.create
+                            en
+                            [
+                                "blog"
+                                "tag"
+                                "thoth.json"
+                            ]
+
+                    assertThat
+                        (Route.isFile dotted)
+                        (tag "and neither is a page whose segment holds a dot" >> isFalse)
+
+                    assertThat
+                        (RelativePath.value (Url.outputPath dotted))
+                        (tag "which is written as a directory"
+                         >> isEqualTo "blog/tag/thoth.json/index.html")
+
+                    assertThat
+                        (Url.ofRoute (SiteUrl.create "/") dotted)
+                        (tag "and linked with a trailing slash" >> isEqualTo "/blog/tag/thoth.json/")
             )
 
             test (

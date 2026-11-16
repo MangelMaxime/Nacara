@@ -1126,7 +1126,7 @@ let all =
                             (signature "Route")
                             (tag "a record is written out"
                              >> isEqualTo
-                                 "type Route =\n    {\n        Locale: Locale\n        Segments: string list\n    }")
+                                 "type Route =\n    {\n        Locale: Locale\n        Segments: string list\n        IsFile: bool\n    }")
 
                         assertThat
                             (signature "Slug")

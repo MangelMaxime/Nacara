@@ -15,6 +15,9 @@ type Route =
     {
         Locale: Locale
         Segments: string list
+        /// Written at its own path, extension and all, rather than as a directory holding an
+        /// <c>index.html</c>.
+        IsFile: bool
     }
 
     override this.ToString() =
@@ -23,15 +26,16 @@ type Route =
 [<RequireQualifiedAccess>]
 module Route =
 
-    /// <summary>Create a route from already-slugified segments.</summary>
+    /// <summary>Create a route from segments taken as they are.</summary>
     /// <param name="locale">Which language this page is in. The root locale writes no prefix, the
     /// others write their code as the first segment.</param>
-    /// <param name="segments">The path, one entry per segment, each one already a slug. Use
-    /// <see cref="M:Nacara.Core.Route.ofPath"/> when they are not.</param>
+    /// <param name="segments">The path, one entry per segment, written as given - a dot in one is
+    /// a dot in the url. Use <see cref="M:Nacara.Core.Route.ofPath"/> to slug them.</param>
     let create (locale: Locale) (segments: string list) =
         {
             Locale = locale
             Segments = segments |> List.filter (String.IsNullOrWhiteSpace >> not)
+            IsFile = false
         }
 
     /// <summary>
@@ -63,15 +67,13 @@ module Route =
     /// <param name="locale">Which language this file belongs to.</param>
     /// <param name="path">The literal path to write, extension and all: <c>404.html</c>.</param>
     let file (locale: Locale) (path: string) =
-        create locale (path.Split('/', StringSplitOptions.RemoveEmptyEntries) |> List.ofArray)
+        { create locale (path.Split('/', StringSplitOptions.RemoveEmptyEntries) |> List.ofArray) with
+            IsFile = true
+        }
 
     /// <summary>True when this route names a file, rather than a page in a directory.</summary>
     /// <param name="route">The route to ask about.</param>
-    let isFile (route: Route) =
-        route.Segments
-        |> List.tryLast
-        |> Option.map (fun segment -> segment.Contains "." && not (segment.EndsWith "."))
-        |> Option.defaultValue false
+    let isFile (route: Route) = route.IsFile
 
     /// <summary>The route of the locale's home page.</summary>
     /// <param name="locale">Whose home page: the root locale's is <c>/</c>, another's is

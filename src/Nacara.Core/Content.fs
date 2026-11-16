@@ -92,6 +92,26 @@ type PageAsset =
     | Script of path: string * defer: bool
     | InlineScript of code: string
 
+/// <summary>Typed values plugins contribute, keyed by the name of their type.</summary>
+[<RequireQualifiedAccess>]
+module Extras =
+
+    let key<'T> = typeof<'T>.FullName
+
+    /// <summary>Add a value under its type.</summary>
+    /// <param name="value">What to add.</param>
+    /// <param name="extras">What was added so far.</param>
+    let add (value: 'T) (extras: Map<string, obj list>) =
+        let existing = extras |> Map.tryFind key<'T> |> Option.defaultValue []
+        extras |> Map.add key<'T> (existing @ [ box value ])
+
+    /// <summary>Every value of type <c>'T</c>, in the order they were added.</summary>
+    let ofType<'T> (extras: Map<string, obj list>) : 'T list =
+        extras
+        |> Map.tryFind key<'T>
+        |> Option.defaultValue []
+        |> List.map (fun value -> value :?> 'T)
+
 /// <summary>Site-level information handed to layouts and plugins.</summary>
 type SiteInfo =
     {
@@ -105,7 +125,12 @@ type SiteInfo =
         RootLocale: Locale
         /// Stylesheets and scripts contributed by plugins.
         PageAssets: PageAsset list
+        /// Every typed value plugins contributed, which is what layouts and hooks read them from.
+        Extras: Map<string, obj list>
     }
+
+    /// <summary>Every value of type <c>'T</c> contributed by any plugin, in registration order.</summary>
+    member this.ExtrasOf<'T>() : 'T list = Extras.ofType<'T> this.Extras
 
     /// <summary>Root-relative URL of a route.</summary>
     member this.UrlOf(route: Route) = Url.ofRoute this.Url route

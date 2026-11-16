@@ -1743,5 +1743,107 @@ let all =
                         ))
                         (tag "which is one the build wrote, not one it pruned" >> isTrue)
             )
+
+            test (
+                "a derived collection is given the pages it names, once they are loaded",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    let index =
+                        Collection.create "docs-index" Fixture.decoder
+                        |> Collection.derive
+                            "docs-index"
+                            [ "docs" ]
+                            (fun context ->
+                                let titles =
+                                    context.Pages
+                                    |> List.sortBy _.Title
+                                    |> List.map _.Title
+                                    |> String.concat ", "
+
+                                [
+                                    GeneratedContent.create
+                                        "index.md"
+                                        $"---\ntitle: Every page\n---\n\n%i{context.Pages.Length} pages: %s{titles}\n"
+                                ]
+                            )
+                        |> Collection.title _.Title
+                        |> Collection.routePrefix "list"
+                        |> Collection.layout Fixture.layout
+
+                    let result = Build.run root (Fixture.site |> Site.collection index)
+
+                    assertThat
+                        (result.Diagnostics
+                         |> List.forall (fun diagnostic -> diagnostic.Severity <> Severity.Error))
+                        (tag "the build is clean" >> isTrue)
+
+                    let html =
+                        File.ReadAllText(
+                            Path.Combine(AbsolutePath.value root, "output/list/index.html")
+                        )
+
+                    assertThat
+                        (html.Contains "3 pages: Advanced, Getting started, Home")
+                        (tag "the derived page saw every page of the docs, front matter decoded"
+                         >> isTrue)
+            )
+
+            test (
+                "a derived collection naming no collection fails the build",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    let index =
+                        Collection.create "docs-index" Fixture.decoder
+                        |> Collection.derive "docs-index" [ "posts" ] (fun _ -> [])
+                        |> Collection.layout Fixture.layout
+
+                    let result = Build.run root (Fixture.site |> Site.collection index)
+
+                    assertThat
+                        (result.Diagnostics
+                         |> List.exists (fun diagnostic ->
+                             diagnostic.Code = "nacara/derived-source-unknown"
+                             && diagnostic.Message.Contains "'posts'"
+                         ))
+                        (tag "the unknown name is reported" >> isTrue)
+            )
+
+            test (
+                "a file of the site is rendered from the pages and written beside them",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    let site =
+                        Fixture.site
+                        |> Site.file
+                            "feed.txt"
+                            (fun context ->
+                                context.Pages
+                                |> List.map (fun page -> context.Site.UrlOf page.Route)
+                                |> List.sort
+                                |> String.concat "\n"
+                            )
+
+                    let cache = BuildCache()
+                    Build.runWith cache root site |> ignore
+
+                    let path = Path.Combine(AbsolutePath.value root, "output/feed.txt")
+                    assertThat (File.Exists path) (tag "the file is written" >> isTrue)
+
+                    assertThat
+                        (File.ReadAllText path)
+                        (tag "from the routed pages"
+                         >> isEqualTo "/\n/guide/advanced/\n/guide/getting-started/")
+
+                    let again = Build.runWith cache root site
+
+                    assertThat
+                        (File.Exists path)
+                        (tag "and a rebuild keeps it rather than pruning it" >> isTrue)
+
+                    assertThat again.WrittenFiles (tag "without writing it again" >> isEqualTo 0)
+            )
         ]
     )

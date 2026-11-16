@@ -183,6 +183,32 @@ A collection can generate its pages instead of reading them. That is how the
 Generated pages go through everything a file does: the same transforms, routing, link checking and
 layout. Use `dependsOn` so watch mode rebuilds them when their source changes.
 
+A producer runs before any page is loaded. A page that lists or counts other pages - an index, an
+archive, a tag page - derives from their collections instead, and is given their pages with the
+front matter decoded:
+
+```fsharp
+Collection.create "blog-index" IndexFrontMatter.decoder
+|> Collection.derive "blog-index" [ "blog" ] (fun context ->
+    [ GeneratedContent.create "index.md" (renderIndex context.Pages) ]
+)
+```
+
+A derived collection may derive from another derived one. Watch mode rebuilds its pages when any
+page it was derived from changes.
+
+## Files that are not pages
+
+A search index or a manifest is a rendering of the pages rather than a page. `Site.file` writes
+one beside them, once the pages are routed and rendered:
+
+```fsharp
+Site.create "Blog"
+|> Site.file "pages.json" (fun context -> Json.serialize (List.map _.Title context.Pages))
+```
+
+The file is written through the build: left alone when nothing changed, and never pruned.
+
 ## Table of contents
 
 Headings are collected while a page renders and handed to the layout, which is where the
