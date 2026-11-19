@@ -123,33 +123,38 @@ the part the page holds.
 
 ## Large menus
 
-A section's menu is written into every page of that section, so a generated reference of thousands
-of pages writes all of them into all of them.
+Every page of a section contains the menu of that section. In a section of thousands of pages, such
+as a generated API reference, this makes every page large.
 
-Up to 500 entries a menu is written whole, and the filter box covers every page it holds. Past that,
-a group of more than 150 pages keeps the trail to the page being read and a link to its own page,
-which lists them all. A reference of 3600 types goes from 690 KB a page to 12 KB, and from 2.4 GB to
-54 MB.
+When a section's menu has more than 500 entries, the theme prunes it. In a pruned menu, a group of
+more than 150 pages shows only:
 
-Both numbers move, and `0` on the first never prunes:
+- the entries that lead to the page being read;
+- a "_N_ more" link to the page of the group.
+
+A menu of 500 entries or fewer is written whole.
+
+| Option | Default | Effect |
+|---|---|---|
+| `Theme.menuLimit` | `500` | Number of entries above which a section's menu is pruned. `0` never prunes. |
+| `Theme.menuGroupLimit` | `150` | Number of pages above which a group of a pruned menu is cut. `0` cuts no group. |
 
 ```fsharp
 |> Theme.menuLimit 1000
 |> Theme.menuGroupLimit 40
 ```
 
-The filter box reaches every page either way. On a menu that was written whole it narrows the tree
-in place; on a pruned one it reads `assets/menu/<section>.json`, written once per section that
-prunes, and lists what matches.
+The [filter box](#filtering) searches every page of the section, also when the menu is pruned. For
+each pruned section, the theme writes the full menu to `assets/menu/<section>.json`, and the filter
+box reads it from there.
 
 ## Menu memory
 
-A group the reader folds stays folded on the next page. Reading a section through does not mean
-opening the same group again on every page of it.
+When the reader opens or closes a group of the menu, the next page shows the group the same way.
+The theme keeps this state until the browser tab is closed. A group that holds the page being read
+is always open.
 
-That helps a reader going through a section in order. It helps nobody arriving at a page by name: in
-a reference, the folds left from the last page say nothing about this one. Turn the memory off
-there:
+To turn the memory off on a page, set `menuMemory: false` in its [front matter](front-matter.md):
 
 ```yaml
 ---
@@ -158,5 +163,6 @@ menuMemory: false
 ---
 ```
 
-Every page of the section then opens the menu the same way - the trail down to the page being read,
-and nothing else. The [API reference](../../fsharp-api.md) sets it on the pages it generates.
+On that page, the menu opens only the groups that lead to the page, and the reader's changes are
+not kept. The [API reference](../../fsharp-api.md) sets `menuMemory: false` on the pages it
+generates.
