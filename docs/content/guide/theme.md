@@ -46,8 +46,8 @@ frames. It is documented with the other packages:
 
 ## Three ways to make it yours
 
-**Override the tokens.** Colours, spacing and the measure are custom properties, and your own
-stylesheet is loaded after the theme's, so yours wins.
+**Override the tokens.** Colours, spacing and the measure are custom properties. The theme's
+stylesheet is in cascade layers and your own stylesheet is not, so yours wins.
 
 **Replace a part.** The navbar, sidebar, table of contents, page navigation, footer and frame are
 each a function the theme calls. `Theme.parts` swaps one for yours, and yours can wrap the theme's.

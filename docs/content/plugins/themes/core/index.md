@@ -63,8 +63,9 @@ from the `PageContext` a layout is given.
 calls it from its own plugin. A documentation theme calls
 [`ThemeDocs.configure`](../docs/index.md#registration), which calls it.
 
-`ThemeCore.contentStylesheet` registers `nacara-core-content.css` as a stylesheet of its own,
-linked by `Shell.stylesheetLinks`. Use it when the content styles are not part of a bundle.
+`ThemeCore.contentStylesheet` registers the content styles as a stylesheet of its own, in the
+`nacara.content` layer, linked by `Shell.stylesheetLinks`. Use it when the content styles are not
+part of a bundle.
 
 The code-block renderer is `NacaraCodeBlockRenderer`. Register your own `ICodeBlockRenderer` after
 it to replace its markup. See [Code blocks](../../../guide/code-blocks.md).

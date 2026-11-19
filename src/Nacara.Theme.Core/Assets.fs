@@ -17,36 +17,108 @@ module Assets =
         let hash = BuildCache.Hash(content).Substring(0, 8).ToLowerInvariant()
         $"assets/%s{name}.%s{hash}%s{extension}"
 
-/// <summary>The stylesheets every theme builds on.</summary>
+/// <summary>A part of a theme's stylesheet, written into the cascade layer
+/// <c>nacara.&lt;Name&gt;</c>.</summary>
+type StyleLayer =
+    {
+        Name: string
+        Css: string
+    }
+
+/// <summary>The stylesheets every theme builds on, and the cascade layers they are written
+/// into.</summary>
 [<RequireQualifiedAccess>]
 module Styles =
 
     let private readResource = Resource.text (Assembly.GetExecutingAssembly())
 
-    /// <summary>The default tokens: colours, spacing, fonts, radii, light and dark.</summary>
-    /// <remarks>A theme includes them and overrides what it wants, or brings tokens of its own
-    /// that define the same names.</remarks>
-    let tokens = lazy ("nacara-core-tokens.css", readResource "css.tokens.css")
+    /// <summary>The layer every plugin writes its stylesheet into, after the layers of the
+    /// theme.</summary>
+    [<Literal>]
+    let PluginsLayer = "nacara.plugins"
 
-    /// <summary>What plugins emit, styled against the tokens: callouts, tabs, steps, file trees,
-    /// code frames, heading anchors.</summary>
-    let content = lazy ("nacara-core-content.css", readResource "css.content.css")
+    /// <summary>A layer of a theme's stylesheet.</summary>
+    /// <param name="name">Lowercase letters, digits and hyphens, starting with a letter. The
+    /// layer is <c>nacara.&lt;name&gt;</c>. <c>plugins</c> is taken by
+    /// <see cref="F:Nacara.Theme.Core.Styles.PluginsLayer" />.</param>
+    /// <param name="css">The rules of the layer.</param>
+    let layer (name: string) (css: string) =
+        if
+            not (System.Text.RegularExpressions.Regex.IsMatch(name, "^[a-z][a-z0-9-]*$"))
+            || name = "plugins"
+        then
+            invalidArg
+                (nameof name)
+                $"'%s{name}' is not a layer name. Use lowercase letters, digits and hyphens, and not 'plugins'"
 
-    /// <summary>Both shared stylesheets, named as a theme's entry imports them.</summary>
-    let parts () =
-        [
-            tokens.Value
-            content.Value
-        ]
+        {
+            Name = name
+            Css = css
+        }
 
-    /// <summary>A theme's stylesheet: the shared parts and its own, and where the bundle is
-    /// served from.</summary>
-    /// <remarks>Register the result as <c>Bundle(parts, entry, path)</c>. The entry imports the
-    /// parts by name, and the site's bundler resolves them.</remarks>
+    /// <summary>The default tokens, in the <c>nacara.tokens</c> layer: colours, spacing, fonts,
+    /// radii, light and dark.</summary>
+    let tokens = lazy (layer "tokens" (readResource "css.tokens.css"))
+
+    /// <summary>What plugins emit, in the <c>nacara.content</c> layer, styled against the tokens:
+    /// callouts, tabs, steps, file trees, code frames, heading anchors.</summary>
+    let content = lazy (layer "content" (readResource "css.content.css"))
+
+    /// <summary>The <c>@layer</c> statement that orders the layers, with
+    /// <see cref="F:Nacara.Theme.Core.Styles.PluginsLayer" /> last.</summary>
+    /// <param name="layers">The layers, first one lowest.</param>
+    let order (layers: StyleLayer list) =
+        let names =
+            [
+                for layer in layers do
+                    $"nacara.%s{layer.Name}"
+
+                PluginsLayer
+            ]
+
+        $"""@layer %s{String.concat ", " names};"""
+
+    /// <summary>The rules of a layer, inside their <c>@layer</c> block.</summary>
+    /// <param name="layer">The layer to write.</param>
+    let wrap (layer: StyleLayer) =
+        $"@layer nacara.%s{layer.Name} {{\n%s{layer.Css}\n}}\n"
+
+    /// <summary>A theme's stylesheet, as a <c>Bundle</c> asset, and the path it is served
+    /// from.</summary>
+    /// <remarks>Each layer is a file of the bundle. The entry orders the layers and imports
+    /// them.</remarks>
     /// <param name="name">What the bundle is called, without its extension.</param>
-    /// <param name="own">The theme's own stylesheets, each named as the entry imports it.</param>
-    let bundle (name: string) (own: (string * string) list) =
-        let parts = parts () @ own
+    /// <param name="layers">The layers, first one lowest.</param>
+    let bundle (name: string) (layers: StyleLayer list) =
+        let duplicates =
+            layers
+            |> List.countBy _.Name
+            |> List.filter (fun (_, count) -> count > 1)
+            |> List.map fst
+
+        if not duplicates.IsEmpty then
+            invalidArg
+                (nameof layers)
+                $"""These layers are given more than once: %s{String.concat ", " duplicates}"""
+
+        let files =
+            [
+                for layer in layers do
+                    $"nacara-%s{layer.Name}.css", wrap layer
+            ]
+
+        let entryName = $"%s{name}.css"
+
+        let entry =
+            [
+                order layers
+
+                for file, _ in files do
+                    $"@import \"%s{file}\";"
+            ]
+            |> String.concat "\n"
+
+        let parts = (entryName, entry) :: files
 
         let hash =
             parts
@@ -55,7 +127,9 @@ module Styles =
             |> BuildCache.Hash
             |> fun value -> value.Substring(0, 8).ToLowerInvariant()
 
-        parts, $"assets/css/%s{name}.%s{hash}.css"
+        let path = $"assets/css/%s{name}.%s{hash}.css"
+
+        Bundle(parts, entryName, RelativePath.create path), path
 
 /// <summary>The script every theme shares, and what it attaches to.</summary>
 /// <remarks>

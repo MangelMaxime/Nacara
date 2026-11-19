@@ -46,6 +46,20 @@ An item's url is a page's source file, written as the [menu](menu.md) writes it,
 the site starting with `/`. Either way the theme adds the base url and the version prefix, so write
 neither. Anything else is used as written.
 
+## Brand icon
+
+`Theme.brandIcon` shows an icon before the site's title. It is `1.5rem` tall.
+
+```fsharp
+Theme.defaults
+|> Theme.brandIcon (BrandIcon.Image "assets/logo.svg")
+```
+
+| Case | Effect |
+|---|---|
+| `BrandIcon.Image path` | An `<img>` of the file, by its path relative to the site root |
+| `BrandIcon.Svg markup` | The SVG markup, written into the page. Use `currentColor` in it to follow the colour scheme |
+
 ## Around the page
 
 | Option | Effect |

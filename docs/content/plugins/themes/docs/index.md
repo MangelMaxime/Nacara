@@ -46,7 +46,15 @@ module Theme =
             Footer = None
         }
 
-    let private styles = lazy (Styles.bundle "mine" [ "mine.css", Stylesheet.text ])
+    let private styles =
+        lazy
+            (Styles.bundle
+                "mine"
+                [
+                    Styles.tokens.Value
+                    Styles.layer "layout" Stylesheet.text
+                    Styles.content.Value
+                ])
 
     let shell (options: ThemeOptions) (doc: DocPage) (context: PageContext<'FrontMatter>) =
         let scope = PageScope.ofContext context
@@ -82,7 +90,7 @@ module Theme =
             member _.Name = "theme.mine"
 
             member _.Configure registry =
-                let parts, cssPath = styles.Value
+                let stylesheet, _ = styles.Value
 
                 registry
                 |> ThemeDocs.configure
@@ -91,7 +99,7 @@ module Theme =
                         Docs = options.Docs
                         NotFound = Some(layout options)
                     }
-                |> Registry.asset (Bundle(parts, "mine.css", RelativePath.create cssPath))
+                |> Registry.asset stylesheet
 
     let register (options: ThemeOptions) (site: Site) = Site.plugin (ThemePlugin options) site
 ```

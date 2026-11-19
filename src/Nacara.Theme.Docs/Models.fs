@@ -24,6 +24,8 @@ type NavbarModel =
     {
         BrandLabel: string
         BrandUrl: string
+        /// <summary>The icon before the title. An <c>Image</c> holds the image's url.</summary>
+        BrandIcon: BrandIcon option
         /// After the brand.
         Start: NavbarEntry list
         /// At the other end of the bar.

@@ -8,29 +8,33 @@ lists the files, the tokens and the attributes they read.
 
 ## Stylesheets
 
-A theme's stylesheet is an entry file that imports the two shared stylesheets and the theme's own
-files:
+A theme's stylesheet is a list of layers. Each layer is written into the cascade layer
+`nacara.<name>`, and a later layer wins over an earlier one. The stylesheets of the plugins are in
+the `nacara.plugins` layer, after every layer of the theme. A rule outside any layer, such as the
+site's own stylesheet, wins over all of them.
 
-```css
-/* mine.css */
-@import "nacara-core-tokens.css";
-@import "layout.css";
-@import "nacara-core-content.css";
-```
+`Styles.layer name css` creates a layer. `name` uses lowercase letters, digits and hyphens.
+`plugins` is taken.
 
-`Styles.bundle` takes the name of the bundle and the theme's own files, as `(file name, content)`
-pairs. It returns:
+`Styles.bundle` takes the name of the bundle and the layers. It returns:
 
-- the files to bundle: the two shared stylesheets and the theme's own files;
-- the path of the bundle, `assets/css/<name>.<hash>.css`. The hash changes when a file changes.
+- the `Bundle` asset: one file per layer, and an entry file that orders the layers and imports
+  them;
+- the path of the bundle, `assets/css/<name>.<hash>.css`. The hash changes when a layer changes.
 
-Register them as a `Bundle` asset, with the name of the entry file, and link the path from the
-page's `<head>`:
+Register the asset, and link the path from the page's `<head>`:
 
 ```fsharp
-let parts, cssPath = Styles.bundle "mine" [ "mine.css", mineCss; "layout.css", layoutCss ]
+let stylesheet, cssPath =
+    Styles.bundle
+        "mine"
+        [
+            Styles.tokens.Value
+            Styles.layer "layout" layoutCss
+            Styles.content.Value
+        ]
 
-registry |> Registry.asset (Bundle(parts, "mine.css", RelativePath.create cssPath))
+registry |> Registry.asset stylesheet
 
 Html.link [ prop.rel "stylesheet"; prop.href (context.Site.UrlOfAsset cssPath) ]
 ```
@@ -39,16 +43,26 @@ When the site uses a CSS bundler, such as [LightningCSS](../../assets/lightningc
 written as one file. Without one, the entry file is written at the path of the bundle, and the
 other files next to it.
 
-### `nacara-core-tokens.css`
+A plugin writes its stylesheet into a layer of its own under `nacara.plugins`:
 
-The default [tokens](#tokens): colours, spacing, fonts, radii, for the light and the dark scheme.
-To change a token, set it again after this import. To replace them all, define the same names in
-a stylesheet of your own instead.
+```css
+@layer nacara.plugins.search {
+    .nacara-search__trigger {
+        display: inline-flex;
+    }
+}
+```
 
-### `nacara-core-content.css`
+### `Styles.tokens`
 
-The styles of what the plugins write into a page. Import it after your own layout rules. To change
-one of them, write the rule again after this import.
+The `tokens` layer. The default [tokens](#tokens): colours, spacing, fonts, radii, for the light
+and the dark scheme. To change a token, set it again in a later layer or outside the layers.
+To replace them all, leave this layer out and define the same names in a layer of your own.
+
+### `Styles.content`
+
+The `content` layer. The styles of what the plugins write into a page. Put it after your own
+layout layers. To change one of them, write the rule again in a later layer or outside the layers.
 
 | Selector | Written by |
 |---|---|
@@ -64,8 +78,8 @@ one of them, write the rule again after this import.
 
 ## Tokens
 
-`nacara-core-content.css` reads these tokens. A theme that does not import
-`nacara-core-tokens.css` must define all of them.
+The `content` layer reads these tokens. A theme without the `tokens` layer must define all of
+them.
 
 | Token | Used for |
 |---|---|

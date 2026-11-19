@@ -341,6 +341,111 @@ let all =
             )
 
             test (
+                "the stylesheet is written in layers, which can be replaced, added and dropped",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    let theme =
+                        Theme.defaults
+                        |> Theme.replaceLayer "navbar" ".mine-navbar { color: red; }"
+                        |> Theme.layerAfter "layout" "brand" ".mine-brand { color: blue; }"
+                        |> Theme.dropLayer "responsive"
+
+                    let site =
+                        Site.create "Fixture"
+                        |> Site.baseUrl "/"
+                        |> Site.output "output"
+                        |> Site.noStaticFiles
+                        |> Markdown.register
+                        |> Theme.register theme
+                        |> Site.collection (Theme.docs theme "docs")
+
+                    Build.run root site |> ignore
+
+                    let css = Path.Combine(AbsolutePath.value root, "output/assets/css")
+
+                    let read name =
+                        File.ReadAllText(Path.Combine(css, name))
+
+                    let entry =
+                        Directory.EnumerateFiles(css, "nacara.*.css")
+                        |> Seq.exactlyOne
+                        |> File.ReadAllText
+
+                    assertThat
+                        (entry.StartsWith
+                            "@layer nacara.tokens, nacara.base, nacara.navbar, nacara.layout, nacara.brand, nacara.content, nacara.plugins;")
+                        (tag "the entry orders the layers, plugins last" >> isTrue)
+
+                    assertThat
+                        (read "nacara-navbar.css")
+                        (tag "a replaced layer holds its new rules"
+                         >> isEqualTo "@layer nacara.navbar {\n.mine-navbar { color: red; }\n}\n")
+
+                    assertThat
+                        (read "nacara-brand.css")
+                        (tag "an added layer is written too"
+                         >> isEqualTo "@layer nacara.brand {\n.mine-brand { color: blue; }\n}\n")
+
+                    assertThat
+                        (File.Exists(Path.Combine(css, "nacara-responsive.css")))
+                        (tag "and a dropped one is not" >> isFalse)
+            )
+
+            test (
+                "a layer the theme does not have is refused, naming the ones it has",
+                fun _ ->
+                    assertThat
+                        (fun () -> Theme.defaults |> Theme.replaceLayer "navbr" "" |> ignore)
+                        (tag "replacing it throws" >> throws)
+
+                    assertThat
+                        (fun () -> Theme.defaults |> Theme.layerAfter "layout" "base" "" |> ignore)
+                        (tag "and so does adding one it already has" >> throws)
+
+                    let message =
+                        try
+                            Theme.defaults |> Theme.dropLayer "navbr" |> ignore
+                            ""
+                        with :? System.ArgumentException as error ->
+                            error.Message
+
+                    assertThat
+                        (message.Contains "tokens, base, navbar, layout, content, responsive")
+                        (tag "the message lists the layers" >> isTrue)
+            )
+
+            test (
+                "the brand icon is drawn before the site's title",
+                fun _ ->
+                    let render icon =
+                        let root = Fixture.copyToTemporaryDirectory ()
+                        let theme = Theme.defaults |> Theme.brandIcon icon
+
+                        let site =
+                            Site.create "Fixture"
+                            |> Site.baseUrl "/docs/"
+                            |> Site.output "output"
+                            |> Site.noStaticFiles
+                            |> Markdown.register
+                            |> Theme.register theme
+                            |> Site.collection (Theme.docs theme "docs")
+
+                        Build.run root site |> ignore
+                        File.ReadAllText(Path.Combine(AbsolutePath.value root, "output/index.html"))
+
+                    assertThat
+                        ((render (BrandIcon.Image "assets/logo.svg")).Contains
+                            "<img class=\"nacara-navbar__brand-icon\" src=\"/docs/assets/logo.svg\" alt=\"\">Fixture</a>")
+                        (tag "an image is linked under the base url" >> isTrue)
+
+                    assertThat
+                        ((render (BrandIcon.Svg "<svg viewBox=\"0 0 1 1\"></svg>")).Contains
+                            "<span class=\"nacara-navbar__brand-icon\" aria-hidden=\"true\"><svg viewBox=\"0 0 1 1\"></svg></span>Fixture</a>")
+                        (tag "and svg is written into the page" >> isTrue)
+            )
+
+            test (
                 "a layout the theme does not know fails the build",
                 fun _ ->
                     let root = Fixture.copyToTemporaryDirectory ()

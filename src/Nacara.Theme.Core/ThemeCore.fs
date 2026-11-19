@@ -23,15 +23,24 @@ module ThemeCore =
         |> Registry.extra (NacaraCodeBlockRenderer() :> ICodeBlockRenderer)
         |> Registry.asset (Behaviours.asset ())
 
-    let private standalone (name: string, css: string) (registry: Registry) =
-        let path =
-            Assets.fingerprint (System.IO.Path.GetFileNameWithoutExtension name) ".css" css
+    let private standalone (layer: StyleLayer) (registry: Registry) =
+        let css =
+            Styles.order
+                [
+                    Styles.tokens.Value
+                    Styles.content.Value
+                ]
+            + "\n"
+            + Styles.wrap layer
+
+        let path = Assets.fingerprint $"nacara-core-%s{layer.Name}" ".css" css
 
         registry
         |> Registry.asset (WriteText(css, RelativePath.create path))
         |> Registry.extra (Stylesheet path)
 
-    /// <summary>Register the shared content stylesheet on its own, linked from every page by
+    /// <summary>Register the shared content stylesheet on its own, in the <c>nacara.content</c>
+    /// layer, linked from every page by
     /// <see cref="M:Nacara.Theme.Core.Shell.stylesheetLinks" />.</summary>
     /// <remarks>It reads the <c>--nacara-*</c> tokens, which the site defines or takes from
     /// <see cref="M:Nacara.Theme.Core.ThemeCore.tokensStylesheet" />.</remarks>
@@ -39,8 +48,8 @@ module ThemeCore =
     let contentStylesheet (registry: Registry) =
         standalone Styles.content.Value registry
 
-    /// <summary>Register the default tokens on their own, linked from every page before the
-    /// site's stylesheet.</summary>
+    /// <summary>Register the default tokens on their own, in the <c>nacara.tokens</c> layer,
+    /// linked from every page before the site's stylesheet.</summary>
     /// <remarks>They set the tokens on <c>:root</c>, <c>:root[data-theme="light"]</c> and
     /// <c>:root[data-theme="dark"]</c>. A site overriding one writes it under the same
     /// selector.</remarks>

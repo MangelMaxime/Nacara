@@ -186,7 +186,27 @@ module Parts =
                             [
                                 prop.className "nacara-navbar__brand"
                                 prop.href model.BrandUrl
-                                prop.text model.BrandLabel
+                                prop.children
+                                    [
+                                        match model.BrandIcon with
+                                        | Some(BrandIcon.Image url) ->
+                                            Html.img
+                                                [
+                                                    prop.className "nacara-navbar__brand-icon"
+                                                    prop.src url
+                                                    prop.alt ""
+                                                ]
+                                        | Some(BrandIcon.Svg markup) ->
+                                            Html.span
+                                                [
+                                                    prop.className "nacara-navbar__brand-icon"
+                                                    prop.ariaHidden true
+                                                    prop.dangerouslySetInnerHTML markup
+                                                ]
+                                        | None -> ()
+
+                                        Html.text model.BrandLabel
+                                    ]
                             ]
                         Html.ul
                             [

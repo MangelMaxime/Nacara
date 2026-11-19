@@ -1,6 +1,7 @@
 namespace Nacara.Theme
 
 open System.Reflection
+open System.Runtime.CompilerServices
 open Feliz.ViewEngine
 open Nacara.Core
 open Nacara.Theme.Core
@@ -10,10 +11,29 @@ open Nacara.Theme.Docs
 [<RequireQualifiedAccess>]
 module Theme =
 
+    let private readResource = Resource.text (Assembly.GetExecutingAssembly())
+
+    let private themeLayer name =
+        Styles.layer name (readResource $"css.%s{name}.css")
+
+    /// <summary>The layers of the theme's stylesheet, first one lowest: <c>tokens</c>,
+    /// <c>base</c>, <c>navbar</c>, <c>layout</c>, <c>content</c>, <c>responsive</c>.</summary>
+    let defaultStyles =
+        lazy
+            [
+                Styles.tokens.Value
+                themeLayer "base"
+                themeLayer "navbar"
+                themeLayer "layout"
+                Styles.content.Value
+                themeLayer "responsive"
+            ]
+
     let defaults: ThemeOptions =
         {
             Docs = DocsOptions.defaults
             HeadExtra = []
+            Styles = defaultStyles.Value
             Css = []
             Footer = None
             FavIcon = None
@@ -73,6 +93,18 @@ module Theme =
     let menus value (options: ThemeOptions) =
         withDocs (DocsOptions.menus value) options
 
+    /// <summary>The icon before the site's title in the navbar.</summary>
+    /// <example>
+    /// <code lang="fsharp">
+    /// Theme.defaults |> Theme.brandIcon (BrandIcon.Image "assets/logo.svg")
+    /// </code>
+    /// </example>
+    /// <param name="value">An image file, by its path relative to the site root, or SVG
+    /// markup.</param>
+    /// <param name="options">The options so far.</param>
+    let brandIcon value (options: ThemeOptions) =
+        withDocs (DocsOptions.brandIcon value) options
+
     /// <summary>Base URL for the "edit this page" link.</summary>
     /// <param name="value">Where an edit starts, such as
     /// <c>https://github.com/owner/repo/edit/main/docs</c>.</param>
@@ -88,7 +120,7 @@ module Theme =
             HeadExtra = value
         }
 
-    /// <summary>CSS added to every page, after the theme's own.</summary>
+    /// <summary>CSS added to every page, outside any layer, so it wins over the theme's own.</summary>
     /// <remarks>
     /// For a rule or two - a token to override, one section to treat differently. Anything larger
     /// belongs in a file of its own, shipped as a static asset and linked with
@@ -139,25 +171,79 @@ module Theme =
             Parts = configure options.Parts
         }
 
-    let private readResource = Resource.text (Assembly.GetExecutingAssembly())
+    let private indexOfLayer (name: string) (options: ThemeOptions) =
+        match options.Styles |> List.tryFindIndex (fun layer -> layer.Name = name) with
+        | Some index -> index
+        | None ->
+            let known = options.Styles |> List.map _.Name |> String.concat ", "
+            invalidArg (nameof name) $"The theme has no layer '%s{name}'. Its layers are: %s{known}"
 
-    let private entryStyleSheet = "nacara.css"
+    /// <summary>Replace the rules of a layer of the theme's stylesheet. The layer keeps its
+    /// place.</summary>
+    /// <example>
+    /// <code lang="fsharp">
+    /// Theme.defaults |> Theme.replaceLayer "navbar" (File.ReadAllText "css/navbar.css")
+    /// </code>
+    /// </example>
+    /// <param name="name">The layer, such as <c>navbar</c>. A name the theme does not have
+    /// throws.</param>
+    /// <param name="css">The rules of the layer.</param>
+    /// <param name="options">The options so far.</param>
+    let replaceLayer (name: string) (css: string) (options: ThemeOptions) =
+        let index = indexOfLayer name options
 
-    let private styleSheetParts =
-        [
-            entryStyleSheet
-            "base.css"
-            "navbar.css"
-            "layout.css"
-            "responsive.css"
-        ]
+        { options with
+            Styles = options.Styles |> List.updateAt index (Styles.layer name css)
+        }
 
-    /// <summary>The stylesheet's parts, and where the bundle is served from.</summary>
-    let private styles =
-        lazy
-            (styleSheetParts
-             |> List.map (fun name -> name, readResource $"css.%s{name}")
-             |> Styles.bundle "nacara")
+    /// <summary>Remove a layer of the theme's stylesheet.</summary>
+    /// <param name="name">The layer, such as <c>responsive</c>. A name the theme does not have
+    /// throws.</param>
+    /// <param name="options">The options so far.</param>
+    let dropLayer (name: string) (options: ThemeOptions) =
+        let index = indexOfLayer name options
+
+        { options with
+            Styles = options.Styles |> List.removeAt index
+        }
+
+    let private insertLayer (index: int) (name: string) (css: string) (options: ThemeOptions) =
+        if options.Styles |> List.exists (fun layer -> layer.Name = name) then
+            invalidArg (nameof name) $"The theme already has a layer '%s{name}'"
+
+        { options with
+            Styles = options.Styles |> List.insertAt index (Styles.layer name css)
+        }
+
+    /// <summary>Add a layer to the theme's stylesheet, before another one. The other layer wins
+    /// over it.</summary>
+    /// <param name="anchor">The layer to add it before. A name the theme does not have
+    /// throws.</param>
+    /// <param name="name">The new layer, written as <c>nacara.&lt;name&gt;</c>.</param>
+    /// <param name="css">The rules of the layer.</param>
+    /// <param name="options">The options so far.</param>
+    let layerBefore (anchor: string) (name: string) (css: string) (options: ThemeOptions) =
+        insertLayer (indexOfLayer anchor options) name css options
+
+    /// <summary>Add a layer to the theme's stylesheet, after another one. It wins over the other
+    /// layer.</summary>
+    /// <example>
+    /// <code lang="fsharp">
+    /// Theme.defaults |> Theme.layerAfter "layout" "brand" (File.ReadAllText "css/brand.css")
+    /// </code>
+    /// </example>
+    /// <param name="anchor">The layer to add it after. A name the theme does not have
+    /// throws.</param>
+    /// <param name="name">The new layer, written as <c>nacara.&lt;name&gt;</c>.</param>
+    /// <param name="css">The rules of the layer.</param>
+    /// <param name="options">The options so far.</param>
+    let layerAfter (anchor: string) (name: string) (css: string) (options: ThemeOptions) =
+        insertLayer (indexOfLayer anchor options + 1) name css options
+
+    let private bundles = ConditionalWeakTable<StyleLayer list, Asset * string>()
+
+    let private stylesOf (options: ThemeOptions) =
+        bundles.GetValue(options.Styles, fun layers -> Styles.bundle "nacara" layers)
 
     /// <summary>Render a full page with the theme's chrome.</summary>
     /// <param name="options">The theme's own configuration: navbar, menus, footer.</param>
@@ -170,7 +256,7 @@ module Theme =
     /// site with its own front-matter type uses the same layout by mapping onto that record.
     /// </remarks>
     let shell (options: ThemeOptions) (doc: DocPage) (context: PageContext<'FrontMatter>) =
-        let _, cssPath = styles.Value
+        let _, cssPath = stylesOf options
         let scope = PageScope.ofContext context
         let site = context.Site
         let parts = options.Parts
@@ -298,7 +384,7 @@ module Theme =
             member _.Name = "theme.default"
 
             member _.Configure registry =
-                let parts, cssPath = styles.Value
+                let stylesheet, _ = stylesOf options
 
                 registry
                 |> ThemeDocs.configure
@@ -307,7 +393,7 @@ module Theme =
                         Docs = options.Docs
                         NotFound = Some(layout options)
                     }
-                |> Registry.asset (Bundle(parts, entryStyleSheet, RelativePath.create cssPath))
+                |> Registry.asset stylesheet
 
     /// <summary>The theme's assets. Add it to the site alongside the layout you use.</summary>
     let create (options: ThemeOptions) = ThemePlugin(options) :> IPlugin

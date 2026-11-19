@@ -40,6 +40,13 @@ module Navbar =
         {
             BrandLabel = scope.Site.Title
             BrandUrl = scope.Site.UrlOf(Route.home scope.Site.RootLocale)
+            BrandIcon =
+                options.BrandIcon
+                |> Option.map (
+                    function
+                    | BrandIcon.Image path -> BrandIcon.Image(scope.Site.UrlOfAsset path)
+                    | BrandIcon.Svg _ as icon -> icon
+                )
             Start = options.Navbar |> List.choose (entry scope)
             End = options.NavbarEnd |> List.choose (entry scope)
             Section = Pages.section scope.Page

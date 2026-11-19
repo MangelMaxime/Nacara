@@ -4,8 +4,9 @@ toc:
   to: 3
 ---
 
-The theme is built on CSS custom properties, so most changes are a value rather than a rule. Your
-own stylesheet is linked after the theme's, so anything you do write wins without `!important`.
+The theme is built on CSS custom properties, so most changes are a value rather than a rule. The
+theme's stylesheet is written in [cascade layers](#the-layers). Your own stylesheet is outside them,
+so its rules win over the theme's, whatever their selectors.
 
 ## Your own stylesheet
 
@@ -48,6 +49,39 @@ Theme.defaults
 ```
 
 Call it more than once and the rules add up.
+
+## The layers
+
+The theme's stylesheet is split in layers. A later layer wins over an earlier one.
+
+| Layer | Holds |
+|---|---|
+| `nacara.tokens` | The [tokens](#the-tokens) |
+| `nacara.base` | The element defaults |
+| `nacara.navbar` | The navbar |
+| `nacara.layout` | The frame, the sidebar, the table of contents and the page's content |
+| `nacara.content` | What the plugins write into a page: callouts, tabs, steps, code blocks |
+| `nacara.responsive` | The narrow-screen rules |
+| `nacara.plugins` | The stylesheets of the plugins, such as search and versions |
+
+Change them on the theme's options. A layer name the theme does not have throws.
+
+| Function | Effect |
+|---|---|
+| `Theme.replaceLayer name css` | Replaces the rules of a layer. The layer keeps its place |
+| `Theme.dropLayer name` | Removes a layer |
+| `Theme.layerBefore anchor name css` | Adds a layer before `anchor` |
+| `Theme.layerAfter anchor name css` | Adds a layer after `anchor` |
+
+```fsharp
+Theme.defaults
+|> Theme.replaceLayer "navbar" (File.ReadAllText "css/navbar.css")
+|> Theme.layerAfter "layout" "brand" (File.ReadAllText "css/brand.css")
+|> Theme.dropLayer "responsive"
+```
+
+`name` is written without the `nacara.` prefix. `nacara.plugins` is not one of the theme's layers,
+and cannot be changed.
 
 ## The tokens
 

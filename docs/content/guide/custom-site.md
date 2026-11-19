@@ -400,8 +400,9 @@ returns is the front matter of one page. The pages have no source file, so the c
 ## Styles
 
 `ThemeCore.register` registers the shared script, the default `--nacara-*` tokens and the
-stylesheet that draws what plugins emit: code blocks, callouts, tabs. The site's own stylesheet is
-linked after them.
+stylesheet that draws what plugins emit: code blocks, callouts, tabs. They are in the
+`nacara.tokens` and `nacara.content` cascade layers. The site's own stylesheet is outside the
+layers, so its rules win over them.
 
 ```css title="assets/site.css"
 body {

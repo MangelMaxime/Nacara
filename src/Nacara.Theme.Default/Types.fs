@@ -69,7 +69,10 @@ and ThemeOptions =
         Docs: DocsOptions
         /// Extra markup injected at the end of <c>&lt;head&gt;</c>.
         HeadExtra: ReactElement list
-        /// <summary>CSS added to every page, after the theme's own.</summary>
+        /// <summary>The layers of the theme's stylesheet, first one lowest.</summary>
+        Styles: StyleLayer list
+        /// <summary>CSS added to every page, outside any layer, so it wins over the theme's
+        /// own.</summary>
         /// <remarks>For a rule or two. A stylesheet of your own belongs in a file, shipped as a
         /// static asset and linked from <c>HeadExtra</c>.</remarks>
         Css: string list

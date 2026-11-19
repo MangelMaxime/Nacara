@@ -163,6 +163,15 @@ module Menu =
                     }
         }
 
+/// <summary>The icon before the site's title in the navbar.</summary>
+[<RequireQualifiedAccess>]
+type BrandIcon =
+    /// <summary>An image file, by its path relative to the site root.</summary>
+    | Image of path: string
+    /// <summary>SVG markup, written into the page. It is drawn with <c>currentColor</c> when the
+    /// markup uses it.</summary>
+    | Svg of markup: string
+
 /// <summary>What a documentation theme is told about the site it draws.</summary>
 /// <remarks>
 /// The part of a theme's options every documentation theme shares: what the navbar holds, which
@@ -172,6 +181,8 @@ type DocsOptions =
     {
         Navbar: NavbarItem list
         NavbarEnd: NavbarItem list
+        /// The icon before the site's title in the navbar.
+        BrandIcon: BrandIcon option
         /// Explicit menus, keyed by the first segment of a page's route.
         /// Sections with no entry here get a menu built from their pages.
         Menus: Map<string, MenuItem list>
@@ -196,6 +207,7 @@ module DocsOptions =
         {
             Navbar = []
             NavbarEnd = []
+            BrandIcon = None
             Menus = Map.empty
             EditUrlBase = None
             MenuLimit = 500
@@ -237,6 +249,14 @@ module DocsOptions =
     let menus value (options: DocsOptions) =
         { options with
             Menus = value
+        }
+
+    /// <summary>The icon before the site's title in the navbar.</summary>
+    /// <param name="value">An image file or SVG markup.</param>
+    /// <param name="options">The options so far.</param>
+    let brandIcon value (options: DocsOptions) =
+        { options with
+            BrandIcon = Some value
         }
 
     /// <summary>Base URL for the "edit this page" link.</summary>
