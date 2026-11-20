@@ -319,10 +319,11 @@ module Theme =
                                             scope
                                          |> fun head ->
                                              match doc.Image, options.SocialImage with
-                                             | Some path, _ ->
-                                                 Head.withImage site path doc.ImageAlt head
-                                             | None, Some path -> Head.withImage site path None head
-                                             | None, None -> head)
+                                             | PageImage.Image image, _ ->
+                                                 Head.withImage site image head
+                                             | PageImage.Unspecified, Some path ->
+                                                 Head.withImage site (SocialImage.ofPath path) head
+                                             | _ -> head)
                                 Html.link
                                     [
                                         prop.rel "stylesheet"

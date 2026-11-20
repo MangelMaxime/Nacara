@@ -23,12 +23,40 @@ type TranslationModel =
         Current: bool
     }
 
+/// <summary>An image a link to a page is shown with on social sites, as a page or a site names
+/// it.</summary>
+type SocialImage =
+    {
+        /// A path relative to the site root, or an absolute url.
+        Path: string
+        Alt: string option
+        /// Width in pixels.
+        Width: int option
+        /// Height in pixels.
+        Height: int option
+    }
+
+[<RequireQualifiedAccess>]
+module SocialImage =
+
+    /// <summary>An image with nothing but its path.</summary>
+    /// <param name="path">A path relative to the site root, or an absolute url.</param>
+    let ofPath (path: string) =
+        {
+            Path = path
+            Alt = None
+            Width = None
+            Height = None
+        }
+
 /// <summary>The image a link to the page is shown with on social sites.</summary>
 type HeadImage =
     {
         /// The absolute url of the image, or a root-relative one when the site has no origin.
         Url: string
         Alt: string option
+        Width: int option
+        Height: int option
     }
 
 /// <summary>What the <c>&lt;head&gt;</c> of a page says about it.</summary>

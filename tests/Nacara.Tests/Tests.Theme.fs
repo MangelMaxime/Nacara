@@ -457,10 +457,18 @@ let all =
                         Directory.CreateDirectory(at "static") |> ignore
                         File.WriteAllText(at "static/card.png", "")
 
-                        File.WriteAllText(
-                            at "docs/card.md",
-                            "---\ntitle: Card\nimage: card.png\nimageAlt: The logo\n---\n\nText.\n"
-                        )
+                        let page name (frontMatter: string) =
+                            File.WriteAllText(
+                                at $"docs/%s{name}.md",
+                                $"---\ntitle: %s{name}\n%s{frontMatter}\n---\n\nText.\n"
+                            )
+
+                        page
+                            "card"
+                            "ogImage:\n  url: card.png\n  alt: The logo\n  width: 1200\n  height: 630"
+
+                        page "plain" "ogImage: card.png"
+                        page "none" "ogImage: false"
 
                         let theme = Theme.defaults |> Theme.socialImage "missing.png"
 
@@ -479,10 +487,12 @@ let all =
                             | None -> site
 
                         let result = Build.run root site
-                        let read path = File.ReadAllText(at $"output/%s{path}")
-                        result, read "card/index.html", read "index.html"
+                        let read name = File.ReadAllText(at $"output/%s{name}")
+                        result, read
 
-                    let result, card, home = build (Some "https://example.com")
+                    let result, read = build (Some "https://example.com")
+                    let card = read "card/index.html"
+                    let home = read "index.html"
 
                     assertThat
                         (card.Contains
@@ -492,6 +502,19 @@ let all =
                     assertThat
                         (card.Contains "<meta name=\"twitter:image:alt\" content=\"The logo\">")
                         (tag "with what it shows" >> isTrue)
+
+                    assertThat
+                        (card.Contains "<meta property=\"og:image:width\" content=\"1200\">")
+                        (tag "and its size" >> isTrue)
+
+                    assertThat
+                        ((read "plain/index.html").Contains
+                            "<meta property=\"og:image\" content=\"https://example.com/docs/card.png\">")
+                        (tag "a path alone is enough" >> isTrue)
+
+                    assertThat
+                        ((read "none/index.html").Contains "og:image")
+                        (tag "false leaves the site's image out too" >> isFalse)
 
                     assertThat
                         (home.Contains
@@ -506,12 +529,42 @@ let all =
                          |> List.length)
                         (tag "an image that is not in the output is reported once" >> isEqualTo 1)
 
-                    let result, _, _ = build None
+                    let result, _ = build None
 
                     assertThat
                         (codes result
                          |> List.exists (fun code -> code.EndsWith "/image-needs-origin"))
                         (tag "and so is a site with no origin" >> isTrue)
+            )
+
+            test (
+                "an image mapping without a url fails the build",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    File.WriteAllText(
+                        Path.Combine(AbsolutePath.value root, "docs/card.md"),
+                        "---\ntitle: Card\nogImage:\n  uri: card.png\n---\n\nText.\n"
+                    )
+
+                    let theme = Theme.defaults
+
+                    let site =
+                        Site.create "Fixture"
+                        |> Site.output "output"
+                        |> Site.noStaticFiles
+                        |> Markdown.register
+                        |> Theme.register theme
+                        |> Site.collection (Theme.docs theme "docs")
+
+                    let result = Build.run root site
+
+                    assertThat result.Succeeded (tag "the page is refused" >> isFalse)
+
+                    assertThat
+                        (result.Diagnostics
+                         |> List.exists (fun item -> item.Message.Contains "'ogImage.url'"))
+                        (tag "naming the field it misses" >> isTrue)
             )
 
             test (

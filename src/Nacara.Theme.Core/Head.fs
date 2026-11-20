@@ -41,22 +41,23 @@ module Head =
 
     /// <summary>The image a link to the page is shown with on social sites.</summary>
     /// <param name="site">The site the page is in.</param>
-    /// <param name="path">A path relative to the site root, or an absolute url.</param>
-    /// <param name="alt">What the image shows.</param>
+    /// <param name="image">The image.</param>
     /// <param name="model">The head so far.</param>
-    let withImage (site: SiteInfo) (path: string) (alt: string option) (model: HeadModel) =
+    let withImage (site: SiteInfo) (image: SocialImage) (model: HeadModel) =
         let url =
-            if path.StartsWith "https://" || path.StartsWith "http://" then
-                path
+            if image.Path.StartsWith "https://" || image.Path.StartsWith "http://" then
+                image.Path
             else
-                (site.Origin |> Option.defaultValue "") + site.UrlOfAsset path
+                (site.Origin |> Option.defaultValue "") + site.UrlOfAsset image.Path
 
         { model with
             Image =
                 Some
                     {
                         Url = url
-                        Alt = alt
+                        Alt = image.Alt
+                        Width = image.Width
+                        Height = image.Height
                     }
         }
 
@@ -134,6 +135,21 @@ module Head =
                         prop.custom ("property", "og:image")
                         prop.content image.Url
                     ]
+
+                match image.Width, image.Height with
+                | Some width, Some height ->
+                    Html.meta
+                        [
+                            prop.custom ("property", "og:image:width")
+                            prop.content (string width)
+                        ]
+
+                    Html.meta
+                        [
+                            prop.custom ("property", "og:image:height")
+                            prop.content (string height)
+                        ]
+                | _ -> ()
 
                 Html.meta
                     [

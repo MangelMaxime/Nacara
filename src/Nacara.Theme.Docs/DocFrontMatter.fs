@@ -1,6 +1,7 @@
 namespace Nacara.Theme
 
 open Nacara.Core
+open Nacara.Theme.Core
 
 /// <summary>
 /// Front matter understood by the theme's ready-made collection.
@@ -16,11 +17,17 @@ type DocFrontMatter =
         Title: string
         /// <summary>One sentence about the page, for search results and the page's meta description.</summary>
         Description: string option
-        /// <summary>The image a link to the page is shown with on social sites, by its path
-        /// relative to the site root or an absolute url.</summary>
-        Image: string option
-        /// <summary>What <c>image</c> shows.</summary>
-        ImageAlt: string option
+        /// <summary>The image a link to the page is shown with on social sites.</summary>
+        /// <remarks>
+        /// A path relative to the site root or an absolute url, a mapping with <c>url</c>,
+        /// <c>alt</c>, <c>width</c> and <c>height</c>, or <c>false</c> for no image at all:
+        /// <code>
+        /// ogImage:
+        ///   url: social/install.png
+        ///   alt: The installer
+        /// </code>
+        /// </remarks>
+        OgImage: PageImage
         /// <summary>
         /// Where the page sits among the pages of its section.
         /// </summary>
@@ -95,6 +102,33 @@ module DocFrontMatter =
                 "tabindex"
             ]
 
+    let private ogImageMapping =
+        Decode.object (fun image ->
+            PageImage.Image
+                {
+                    Path = image.Required.Field "url" Decode.string
+                    Alt = image.Optional.Field "alt" Decode.string
+                    Width = image.Optional.Field "width" Decode.int
+                    Height = image.Optional.Field "height" Decode.int
+                }
+        )
+
+    let private ogImagePath =
+        Decode.string
+        |> Decode.andThen (fun value ->
+            match value.ToLowerInvariant() with
+            | "false"
+            | "none" -> Decode.succeed PageImage.OptedOut
+            | "true" -> Decode.error' "Name the image, or write false for none"
+            | _ -> Decode.succeed (PageImage.Image(SocialImage.ofPath value))
+        )
+
+    let private ogImageDecoder: Decoder<PageImage> =
+        fun path node ->
+            match node with
+            | :? YamlDotNet.RepresentationModel.YamlMappingNode -> ogImageMapping path node
+            | _ -> ogImagePath path node
+
     let private tocDecoder =
         Decode.oneOf
             "false or a range of heading levels"
@@ -159,8 +193,9 @@ module DocFrontMatter =
             {
                 Title = get.Required.Field "title" Decode.string
                 Description = get.Optional.Field "description" Decode.string
-                Image = get.Optional.Field "image" Decode.string
-                ImageAlt = get.Optional.Field "imageAlt" Decode.string
+                OgImage =
+                    get.Optional.Field "ogImage" ogImageDecoder
+                    |> Option.defaultValue PageImage.Unspecified
                 Order = get.Optional.Field "order" Decode.int
                 Layout = get.Optional.Field "layout" layoutDecoder
                 PageNav = get.Optional.Field "pageNav" Decode.bool
@@ -183,9 +218,9 @@ module DocFrontMatter =
             DocPage.create frontMatter.Title
             |> DocPage.describedBy frontMatter.Description
             |> fun page ->
-                match frontMatter.Image with
-                | Some path -> DocPage.image path frontMatter.ImageAlt page
-                | None -> page
+                { page with
+                    Image = frontMatter.OgImage
+                }
             |> DocPage.mainAttributes frontMatter.Main
 
         let page =

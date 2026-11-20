@@ -20,8 +20,7 @@ module NotFound =
             {
                 Title = "Page not found"
                 Description = Some "That page does not exist"
-                Image = None
-                ImageAlt = None
+                OgImage = PageImage.Unspecified
                 Order = None
                 Layout = Some "bare"
                 PageNav = None
