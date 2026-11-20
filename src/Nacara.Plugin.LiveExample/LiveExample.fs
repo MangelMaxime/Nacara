@@ -195,7 +195,7 @@ module LiveExample =
                         match cli, project with
                         | _ when clash.IsSome -> None
                         | Some cli, Some(project, properties) ->
-                            let root = Nacara.defaultProjectRoot ()
+                            let root = AbsolutePath.value registry.Context.ProjectRoot
 
                             let path =
                                 if Path.IsPathRooted project then
