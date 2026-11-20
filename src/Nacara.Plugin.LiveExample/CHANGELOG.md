@@ -1,5 +1,5 @@
 ---
-last_commit_released: 52991dcb39361c6c36a8a9e38abade34eb03975e
+last_commit_released: 6602c4d64e2751e5457356f852a3fe963e7ec169
 ---
 
 # Changelog
@@ -11,6 +11,18 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 1.0.0-beta.11 - 2026-11-20
+
+### 🚀 Features
+
+* *(theme-default)* Add cascade layers and a brand icon ([7f2e761](https://github.com/MangelMaxime/Nacara/commit/7f2e7618a781d94d07048dc5c34a3b3f7b9f922e))
+
+### 🐞 Bug Fixes
+
+* *(live-example)* Resolve its project from the project root ([a1b5344](https://github.com/MangelMaxime/Nacara/commit/a1b534457b28517ff4ce688618a7459270d0f57e))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/52991dcb39361c6c36a8a9e38abade34eb03975e..6602c4d64e2751e5457356f852a3fe963e7ec169)</small></strong>
 
 ## 1.0.0-beta.10 - 2026-09-29
 
