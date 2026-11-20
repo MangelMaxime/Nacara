@@ -107,9 +107,9 @@ module Site =
     /// <param name="value">One sentence. It becomes the meta description of any page whose front
     /// matter carries none of its own.</param>
     /// <param name="site">The site being described.</param>
-    let description value (site: Site) =
+    let description (value: string) (site: Site) =
         { site with
-            Description = Some(value: string)
+            Description = Some value
         }
 
     /// <summary>The path the site is served from.</summary>
@@ -132,18 +132,18 @@ module Site =
     /// <param name="value">The scheme and host you deploy under, with no trailing slash:
     /// <c>https://example.github.io</c>.</param>
     /// <param name="site">The site being described.</param>
-    let origin value (site: Site) =
+    let origin (value: string) (site: Site) =
         { site with
-            Origin = Some((value: string).TrimEnd '/')
+            Origin = Some(value.TrimEnd '/')
         }
 
     /// <summary>Deploy this build under a version prefix, alongside other versions.</summary>
     /// <param name="prefix">What this build is called in a URL, like <c>v2</c> or <c>next</c>. It
     /// becomes the first segment of every route the build writes.</param>
     /// <param name="site">The site being described.</param>
-    let version prefix (site: Site) =
+    let version (prefix: string) (site: Site) =
         { site with
-            VersionPrefix = Some(prefix: string)
+            VersionPrefix = Some prefix
         }
 
     /// <summary>
@@ -186,9 +186,9 @@ module Site =
     /// <param name="value">Relative to the project root. Its contents land at the root of your
     /// site, so <c>static/logo.svg</c> is served as <c>/logo.svg</c>.</param>
     /// <param name="site">The site being described.</param>
-    let staticFiles value (site: Site) =
+    let staticFiles (value: string) (site: Site) =
         { site with
-            StaticDirectory = Some(value: string)
+            StaticDirectory = Some value
         }
 
     /// <summary>Copy no directory as it is: every file your site publishes is produced.</summary>

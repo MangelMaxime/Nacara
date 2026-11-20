@@ -154,7 +154,7 @@ module Markdown =
             )
         else
 
-            let extension = Path.GetExtension(path: string).ToLowerInvariant()
+            let extension = Path.GetExtension(path).ToLowerInvariant()
 
             match page.SourceFile with
             | None ->

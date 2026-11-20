@@ -68,9 +68,9 @@ module DocPage =
     /// <summary>What the page is about, for search results and social cards.</summary>
     /// <param name="value">One sentence.</param>
     /// <param name="page">The page being described.</param>
-    let description value (page: DocPage) =
+    let description (value: string) (page: DocPage) =
         { page with
-            Description = Some(value: string)
+            Description = Some value
         }
 
     /// <summary>The same, from front matter that may or may not carry one.</summary>

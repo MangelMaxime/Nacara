@@ -125,9 +125,9 @@ module SiteUrl =
     /// <summary>Put every URL of this build under a version's prefix.</summary>
     /// <param name="prefix">What this version is called in a URL: <c>v2</c>, <c>next</c>.</param>
     /// <param name="siteUrl">Where the site is served from.</param>
-    let withVersionPrefix prefix (siteUrl: SiteUrl) =
+    let withVersionPrefix (prefix: string) (siteUrl: SiteUrl) =
         { siteUrl with
-            VersionPrefix = Some(prefix: string)
+            VersionPrefix = Some prefix
         }
 
 [<RequireQualifiedAccess>]

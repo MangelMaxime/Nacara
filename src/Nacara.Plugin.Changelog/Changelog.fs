@@ -69,9 +69,9 @@ module ChangelogSource =
     /// </remarks>
     /// <param name="value">Path in, name out.</param>
     /// <param name="source">The changelogs being described.</param>
-    let labelledBy value (source: ChangelogSource) =
+    let labelledBy (value: string -> string) (source: ChangelogSource) =
         { source with
-            LabelFrom = Some(value: string -> string)
+            LabelFrom = Some value
         }
 
     /// <summary>Every changelog matching a pattern, named after the directory holding it.</summary>
@@ -102,18 +102,18 @@ module ChangelogSource =
     /// <param name="value">The segment to publish it under - <c>core</c> rather than
     /// <c>nacara-core</c>.</param>
     /// <param name="source">The changelog being described.</param>
-    let slug value (source: ChangelogSource) =
+    let slug (value: string) (source: ChangelogSource) =
         { source with
-            Slug = Some(value: string)
+            Slug = Some value
         }
 
     /// <summary>Put this changelog under a heading in the menu.</summary>
     /// <param name="value">Name of the heading, for example "Plugins". Changelogs you give the
     /// same name are listed together, in the order you declared them.</param>
     /// <param name="source">The changelog to group.</param>
-    let group value (source: ChangelogSource) =
+    let group (value: string) (source: ChangelogSource) =
         { source with
-            Group = Some(value: string)
+            Group = Some value
         }
 
 [<RequireQualifiedAccess>]

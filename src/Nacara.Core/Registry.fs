@@ -288,9 +288,9 @@ module PluginCommand =
     /// <remarks>Say what the arguments are, and show one being used.</remarks>
     /// <param name="value">The text, as it should appear.</param>
     /// <param name="command">The command being described.</param>
-    let help value (command: PluginCommand) =
+    let help (value: string) (command: PluginCommand) =
         { command with
-            Help = Some(value: string)
+            Help = Some value
         }
 
 [<RequireQualifiedAccess>]

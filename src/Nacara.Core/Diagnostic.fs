@@ -90,9 +90,9 @@ module Diagnostic =
     /// <param name="hint">What to do next, said plainly - which option to set, which package to
     /// add.</param>
     /// <param name="diagnostic">What is being reported.</param>
-    let withHint hint (diagnostic: Diagnostic) =
+    let withHint (hint: string) (diagnostic: Diagnostic) =
         { diagnostic with
-            Hint = Some(hint: string)
+            Hint = Some hint
         }
 
     /// <summary>An error from an exception: its type and message, and its stack as the hint.</summary>
