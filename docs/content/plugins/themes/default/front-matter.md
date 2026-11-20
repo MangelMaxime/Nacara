@@ -30,6 +30,22 @@ the menu, and in search results.
 
 The page description, picked up by search engines and in social previews.
 
+### `image`
+
+**type:** `string`
+
+**default:** the theme's [`SocialImage`](navbar.md#around-the-page)
+
+The image shown when a link to the page is shared on a social site. Write a path relative to the
+site root, such as `social/install.png`, or an absolute url. It is written as `og:image` and
+`twitter:image`, and as an absolute url when the site sets `Site.origin`.
+
+### `imageAlt`
+
+**type:** `string`
+
+What `image` shows, for readers who cannot see it.
+
 ### `order`
 
 **type:** `number`

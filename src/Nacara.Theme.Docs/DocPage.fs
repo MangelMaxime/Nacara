@@ -11,6 +11,10 @@ type DocPage =
     {
         Title: string
         Description: string option
+        /// <summary>The image a link to the page is shown with on social sites, by its path
+        /// relative to the site root or an absolute url.</summary>
+        Image: string option
+        ImageAlt: string option
         /// Show the table of contents next to the content.
         ShowToc: bool
         /// Show previous and next links at the bottom.
@@ -53,6 +57,8 @@ module DocPage =
         {
             Title = title
             Description = None
+            Image = None
+            ImageAlt = None
             ShowToc = true
             ShowPageNav = true
             ShowMenu = true
@@ -80,6 +86,16 @@ module DocPage =
     let describedBy value (page: DocPage) =
         { page with
             Description = value
+        }
+
+    /// <summary>The image a link to the page is shown with on social sites.</summary>
+    /// <param name="path">A path relative to the site root, or an absolute url.</param>
+    /// <param name="alt">What the image shows.</param>
+    /// <param name="page">The page being described.</param>
+    let image (path: string) (alt: string option) (page: DocPage) =
+        { page with
+            Image = Some path
+            ImageAlt = alt
         }
 
     /// <summary>No table of contents beside the content.</summary>

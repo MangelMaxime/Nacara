@@ -15,13 +15,68 @@ type SiteOptions =
 [<RequireQualifiedAccess>]
 module ThemeCore =
 
-    /// <summary>Register what every theme needs, documentation or not: the code-block renderer and
-    /// the behaviours script.</summary>
+    let private socialImage =
+        System.Text.RegularExpressions.Regex("<meta property=\"og:image\" content=\"([^\"]*)\"")
+
+    let private checkSocialImages (context: HookContext) =
+        let images =
+            context.Rendered
+            |> List.choose (fun (page, html) ->
+                let found = socialImage.Match html
+
+                if found.Success then
+                    Some(page, System.Net.WebUtility.HtmlDecode found.Groups[1].Value)
+                else
+                    None
+            )
+
+        let relative = images |> List.filter (fun (_, url) -> url.StartsWith "/")
+
+        if not relative.IsEmpty then
+            context.Diagnostics.Add(
+                Diagnostic.warning
+                    "image-needs-origin"
+                    $"%i{relative.Length} pages have a social image, but the site has no origin, so its url is not absolute"
+                |> Diagnostic.withHint "Set it: |> Site.origin \"https://example.com\""
+            )
+
+        if context.Writes then
+            let baseUrl = context.Site.Url.BaseUrl.TrimEnd '/' + "/"
+            let own = (context.Site.Origin |> Option.defaultValue "") + baseUrl
+
+            for url, pages in
+                images
+                |> List.groupBy snd
+                |> List.map (fun (url, pages) -> url, List.map fst pages) do
+                if url.StartsWith own || url.StartsWith baseUrl then
+                    let inSite =
+                        if url.StartsWith own then
+                            url.Substring own.Length
+                        else
+                            url.Substring baseUrl.Length
+
+                    let file =
+                        AbsolutePath.combine
+                            context.OutputDirectory
+                            [ (System.Uri.UnescapeDataString inSite).TrimStart '/' ]
+
+                    if not (System.IO.File.Exists(AbsolutePath.value file)) then
+                        context.Diagnostics.Add(
+                            Diagnostic.warning
+                                "image-missing"
+                                $"The social image '%s{url}' is not in the output"
+                            |> Diagnostic.withHint
+                                $"""Put it in the static directory, or change the path. It is used by %i{pages.Length} pages, such as '%s{(List.head pages).Id}'"""
+                        )
+
+    /// <summary>Register what every theme needs, documentation or not: the code-block renderer,
+    /// the behaviours script, and the check that a page's social image exists.</summary>
     /// <param name="registry">What the theme is contributing to.</param>
     let configureBase (registry: Registry) =
         registry
         |> Registry.extra (NacaraCodeBlockRenderer() :> ICodeBlockRenderer)
         |> Registry.asset (Behaviours.asset ())
+        |> Registry.onBuildComplete checkSocialImages
 
     let private standalone (layer: StyleLayer) (registry: Registry) =
         let css =

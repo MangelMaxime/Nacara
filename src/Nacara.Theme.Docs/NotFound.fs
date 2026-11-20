@@ -20,6 +20,8 @@ module NotFound =
             {
                 Title = "Page not found"
                 Description = Some "That page does not exist"
+                Image = None
+                ImageAlt = None
                 Order = None
                 Layout = Some "bare"
                 PageNav = None

@@ -16,6 +16,11 @@ type DocFrontMatter =
         Title: string
         /// <summary>One sentence about the page, for search results and the page's meta description.</summary>
         Description: string option
+        /// <summary>The image a link to the page is shown with on social sites, by its path
+        /// relative to the site root or an absolute url.</summary>
+        Image: string option
+        /// <summary>What <c>image</c> shows.</summary>
+        ImageAlt: string option
         /// <summary>
         /// Where the page sits among the pages of its section.
         /// </summary>
@@ -154,6 +159,8 @@ module DocFrontMatter =
             {
                 Title = get.Required.Field "title" Decode.string
                 Description = get.Optional.Field "description" Decode.string
+                Image = get.Optional.Field "image" Decode.string
+                ImageAlt = get.Optional.Field "imageAlt" Decode.string
                 Order = get.Optional.Field "order" Decode.int
                 Layout = get.Optional.Field "layout" layoutDecoder
                 PageNav = get.Optional.Field "pageNav" Decode.bool
@@ -175,6 +182,10 @@ module DocFrontMatter =
         let page =
             DocPage.create frontMatter.Title
             |> DocPage.describedBy frontMatter.Description
+            |> fun page ->
+                match frontMatter.Image with
+                | Some path -> DocPage.image path frontMatter.ImageAlt page
+                | None -> page
             |> DocPage.mainAttributes frontMatter.Main
 
         let page =

@@ -23,6 +23,14 @@ type TranslationModel =
         Current: bool
     }
 
+/// <summary>The image a link to the page is shown with on social sites.</summary>
+type HeadImage =
+    {
+        /// The absolute url of the image, or a root-relative one when the site has no origin.
+        Url: string
+        Alt: string option
+    }
+
 /// <summary>What the <c>&lt;head&gt;</c> of a page says about it.</summary>
 type HeadModel =
     {
@@ -38,4 +46,5 @@ type HeadModel =
         OgType: string
         /// The favicon's url.
         Favicon: string option
+        Image: HeadImage option
     }

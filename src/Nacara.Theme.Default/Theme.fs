@@ -37,6 +37,7 @@ module Theme =
             Css = []
             Footer = None
             FavIcon = None
+            SocialImage = None
             Parts = Parts.defaults
         }
 
@@ -153,6 +154,15 @@ module Theme =
     let favIcon value (options: ThemeOptions) =
         { options with
             FavIcon = Some value
+        }
+
+    /// <summary>The image a link to a page is shown with on social sites, for a page whose front
+    /// matter names none.</summary>
+    /// <param name="value">A path relative to the site root, or an absolute url.</param>
+    /// <param name="options">The options so far.</param>
+    let socialImage value (options: ThemeOptions) =
+        { options with
+            SocialImage = Some value
         }
 
     /// <summary>Replace how a part of the page is rendered, keeping the rest.</summary>
@@ -306,7 +316,13 @@ module Theme =
                                             doc.Title
                                             doc.Description
                                             options.FavIcon
-                                            scope)
+                                            scope
+                                         |> fun head ->
+                                             match doc.Image, options.SocialImage with
+                                             | Some path, _ ->
+                                                 Head.withImage site path doc.ImageAlt head
+                                             | None, Some path -> Head.withImage site path None head
+                                             | None, None -> head)
                                 Html.link
                                     [
                                         prop.rel "stylesheet"

@@ -446,6 +446,75 @@ let all =
             )
 
             test (
+                "a page is shown on social sites with its image, or the site's",
+                fun _ ->
+                    let build (origin: string option) =
+                        let root = Fixture.copyToTemporaryDirectory ()
+
+                        let at path =
+                            Path.Combine(AbsolutePath.value root, path)
+
+                        Directory.CreateDirectory(at "static") |> ignore
+                        File.WriteAllText(at "static/card.png", "")
+
+                        File.WriteAllText(
+                            at "docs/card.md",
+                            "---\ntitle: Card\nimage: card.png\nimageAlt: The logo\n---\n\nText.\n"
+                        )
+
+                        let theme = Theme.defaults |> Theme.socialImage "missing.png"
+
+                        let site =
+                            Site.create "Fixture"
+                            |> Site.baseUrl "/docs/"
+                            |> Site.output "output"
+                            |> Site.staticFiles "static"
+                            |> Markdown.register
+                            |> Theme.register theme
+                            |> Site.collection (Theme.docs theme "docs")
+
+                        let site =
+                            match origin with
+                            | Some origin -> site |> Site.origin origin
+                            | None -> site
+
+                        let result = Build.run root site
+                        let read path = File.ReadAllText(at $"output/%s{path}")
+                        result, read "card/index.html", read "index.html"
+
+                    let result, card, home = build (Some "https://example.com")
+
+                    assertThat
+                        (card.Contains
+                            "<meta property=\"og:image\" content=\"https://example.com/docs/card.png\">")
+                        (tag "the page's own image is absolute" >> isTrue)
+
+                    assertThat
+                        (card.Contains "<meta name=\"twitter:image:alt\" content=\"The logo\">")
+                        (tag "with what it shows" >> isTrue)
+
+                    assertThat
+                        (home.Contains
+                            "<meta property=\"og:image\" content=\"https://example.com/docs/missing.png\">")
+                        (tag "a page with none has the site's" >> isTrue)
+
+                    let codes (result: BuildResult) = result.Diagnostics |> List.map _.Code
+
+                    assertThat
+                        (codes result
+                         |> List.filter (fun code -> code.EndsWith "/image-missing")
+                         |> List.length)
+                        (tag "an image that is not in the output is reported once" >> isEqualTo 1)
+
+                    let result, _, _ = build None
+
+                    assertThat
+                        (codes result
+                         |> List.exists (fun code -> code.EndsWith "/image-needs-origin"))
+                        (tag "and so is a site with no origin" >> isTrue)
+            )
+
+            test (
                 "a layout the theme does not know fails the build",
                 fun _ ->
                     let root = Fixture.copyToTemporaryDirectory ()

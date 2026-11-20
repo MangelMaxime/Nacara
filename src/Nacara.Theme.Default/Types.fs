@@ -79,6 +79,9 @@ and ThemeOptions =
         Footer: ReactElement option
         /// Path of the favicon, relative to the site root.
         FavIcon: string option
+        /// <summary>The image a link to a page is shown with on social sites, for a page that
+        /// names none, by its path relative to the site root or an absolute url.</summary>
+        SocialImage: string option
         /// What renders each part of a page.
         Parts: ThemeParts
     }

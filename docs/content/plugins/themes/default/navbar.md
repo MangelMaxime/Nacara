@@ -68,6 +68,7 @@ Theme.defaults
 | `Footer` | Markup under every page |
 | `HeadExtra` | Markup in every `<head>` - stylesheets, fonts, analytics |
 | `FavIcon` | Path to the icon |
+| `SocialImage` | The image shown when a link to a page is shared, for a page whose [front matter](front-matter.md#image) names none |
 
 ```fsharp
 Theme.defaults

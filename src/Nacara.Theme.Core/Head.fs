@@ -36,6 +36,28 @@ module Head =
                 else
                     "article"
             Favicon = favicon |> Option.map scope.Site.UrlOfAsset
+            Image = None
+        }
+
+    /// <summary>The image a link to the page is shown with on social sites.</summary>
+    /// <param name="site">The site the page is in.</param>
+    /// <param name="path">A path relative to the site root, or an absolute url.</param>
+    /// <param name="alt">What the image shows.</param>
+    /// <param name="model">The head so far.</param>
+    let withImage (site: SiteInfo) (path: string) (alt: string option) (model: HeadModel) =
+        let url =
+            if path.StartsWith "https://" || path.StartsWith "http://" then
+                path
+            else
+                (site.Origin |> Option.defaultValue "") + site.UrlOfAsset path
+
+        { model with
+            Image =
+                Some
+                    {
+                        Url = url
+                        Alt = alt
+                    }
         }
 
     /// <summary>The tags every page carries: charset, viewport, title, description, canonical
@@ -105,6 +127,35 @@ module Head =
                     prop.custom ("property", "og:type")
                     prop.content model.OgType
                 ]
+            match model.Image with
+            | Some image ->
+                Html.meta
+                    [
+                        prop.custom ("property", "og:image")
+                        prop.content image.Url
+                    ]
+
+                Html.meta
+                    [
+                        prop.name "twitter:image"
+                        prop.content image.Url
+                    ]
+
+                match image.Alt with
+                | Some alt ->
+                    Html.meta
+                        [
+                            prop.custom ("property", "og:image:alt")
+                            prop.content alt
+                        ]
+
+                    Html.meta
+                        [
+                            prop.name "twitter:image:alt"
+                            prop.content alt
+                        ]
+                | None -> ()
+            | None -> ()
             match model.Favicon with
             | Some icon ->
                 Html.link
