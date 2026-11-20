@@ -791,6 +791,53 @@ let all =
             )
 
             test (
+                "a plugin knows the build it configures, reports from there, and names files to follow",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    let outside =
+                        AbsolutePath.create (Path.Combine(Path.GetTempPath(), "nacara-motion.json"))
+
+                    let seen = ResizeArray<AbsolutePath * bool>()
+
+                    let plugin =
+                        { new IPlugin with
+                            member _.Name = "motion"
+
+                            member _.Configure registry =
+                                seen.Add(registry.Context.ProjectRoot, registry.Context.IsWatch)
+
+                                registry.Context.Diagnostics.Add(
+                                    Diagnostic.warning
+                                        "not-translated"
+                                        "One hover is not translated"
+                                )
+
+                                registry |> Registry.watch [ outside ]
+                        }
+
+                    let result =
+                        Build.runWatch (BuildCache()) root (Fixture.site |> Site.plugin plugin)
+
+                    assertThat
+                        (List.ofSeq seen)
+                        (tag "it is told the project root, and that it is serving"
+                         >> isEqualTo [ root, true ])
+
+                    assertThat
+                        (result.Diagnostics
+                         |> List.exists (fun item -> item.Code = "motion/not-translated"))
+                        (tag "what it reports is stamped with its name" >> isTrue)
+
+                    assertThat result.Succeeded (tag "and a warning lets the build go on" >> isTrue)
+
+                    assertThat
+                        result.Watched
+                        (tag "the file it reads outside the project is followed"
+                         >> isEqualTo [ outside ])
+            )
+
+            test (
                 "a plugin can add a command of its own",
                 fun _ ->
                     let ran = ResizeArray<string>()
@@ -812,7 +859,7 @@ let all =
                                 )
                         }
 
-                    let registry = Registry.ofPlugins [ plugin ]
+                    let registry = Registry.ofPlugins Registry.empty.Context [ plugin ]
 
                     assertThat
                         (registry.Commands |> List.map _.Name)

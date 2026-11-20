@@ -27,6 +27,19 @@ type Asset =
         | WriteBytes(_, destination)
         | Bundle(_, _, destination) -> destination
 
+/// <summary>What a plugin is told while it configures.</summary>
+[<ReferenceEquality>]
+type ConfigureContext =
+    {
+        ProjectRoot: AbsolutePath
+        /// <summary>True while <c>watch</c> is rebuilding.</summary>
+        IsWatch: bool
+        /// <summary>Where a plugin reports a problem it finds while it configures.</summary>
+        /// <remarks>A warning lets the build go on. An error fails it, once the rest of the site
+        /// is built.</remarks>
+        Diagnostics: DiagnosticSink
+    }
+
 /// <summary>
 /// What a content transform can see while it works.
 /// </summary>
@@ -253,6 +266,10 @@ and Registry =
         /// Subcommands the plugins added, in the order they were registered.
         Commands: PluginCommand list
         Extras: Map<string, obj list>
+        /// <summary>Files outside the project that a rebuild follows while serving.</summary>
+        Watched: AbsolutePath list
+        /// <summary>The build the plugins are configured for.</summary>
+        Context: ConfigureContext
         /// <summary>
         /// The plugin being configured right now, or <c>nacara</c> outside of one.
         /// </summary>
@@ -315,6 +332,13 @@ module Registry =
             Preserved = []
             Commands = []
             Extras = Map.empty
+            Watched = []
+            Context =
+                {
+                    ProjectRoot = AbsolutePath.create (System.IO.Directory.GetCurrentDirectory())
+                    IsWatch = false
+                    Diagnostics = DiagnosticSink(DiagnosticBag(), engineSource)
+                }
             Source = engineSource
         }
 
@@ -477,6 +501,23 @@ module Registry =
             Preserved = registry.Preserved @ [ path.Trim('/') ]
         }
 
+    /// <summary>Rebuild while serving when one of these files changes.</summary>
+    /// <remarks>Every file in the project is watched already. A plugin that reads a file outside
+    /// it, while it configures, names the file here.</remarks>
+    /// <example>
+    /// <code lang="fsharp">
+    /// member _.Configure registry =
+    ///     let document = AbsolutePath.combine registry.Context.ProjectRoot [ "../design/motion.json" ]
+    ///     registry |> Registry.watch [ document ]
+    /// </code>
+    /// </example>
+    /// <param name="paths">The files.</param>
+    /// <param name="registry">What the plugin is contributing to.</param>
+    let watch (paths: AbsolutePath list) (registry: Registry) =
+        { registry with
+            Watched = registry.Watched @ paths
+        }
+
     /// <summary>Run after every page has a route, before rendering.</summary>
     /// <param name="hook">Given every page and where it will be published. This is the moment to
     /// check links, build a menu, or report on the site as a whole.</param>
@@ -512,10 +553,12 @@ module Registry =
     let extras<'T> (registry: Registry) : 'T list = Extras.ofType<'T> registry.Extras
 
     /// <summary>Apply every plugin, in order.</summary>
+    /// <param name="context">The build the plugins are configured for. Each plugin reports under
+    /// its own name.</param>
     /// <param name="plugins">The site's plugins. Each one's contributions are stamped with its
     /// name, and that is the name its diagnostics report under.</param>
     /// <returns>Everything the plugins contributed, as one registry.</returns>
-    let ofPlugins (plugins: IPlugin list) =
+    let ofPlugins (context: ConfigureContext) (plugins: IPlugin list) =
         let configured =
             plugins
             |> List.fold
@@ -523,10 +566,17 @@ module Registry =
                     plugin.Configure
                         { registry with
                             Source = plugin.Name
+                            Context =
+                                { context with
+                                    Diagnostics = context.Diagnostics.For plugin.Name
+                                }
                         }
                 )
-                empty
+                { empty with
+                    Context = context
+                }
 
         { configured with
             Source = engineSource
+            Context = context
         }

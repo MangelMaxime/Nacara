@@ -21,6 +21,9 @@ type BuildResult =
         UnchangedFiles: int
         /// Files removed because nothing produced them any more.
         PrunedFiles: int
+        /// <summary>Files outside the project the plugins asked to be followed while
+        /// serving.</summary>
+        Watched: AbsolutePath list
         Elapsed: TimeSpan
     }
 
@@ -490,7 +493,13 @@ module Build =
         Site.validate site |> List.iter diagnostics.Add
 
         let registry =
-            Registry.ofPlugins site.Plugins
+            Registry.ofPlugins
+                {
+                    ProjectRoot = projectRoot
+                    IsWatch = isWatch
+                    Diagnostics = DiagnosticSink(diagnostics, Registry.engineSource)
+                }
+                site.Plugins
             |> fun registry ->
                 site.Collections
                 |> List.fold (fun registry item -> Registry.collection item registry) registry
@@ -1169,6 +1178,7 @@ module Build =
             WrittenFiles = written
             UnchangedFiles = unchanged
             PrunedFiles = pruned
+            Watched = registry.Watched
             Elapsed = stopwatch.Elapsed
         }
 

@@ -71,6 +71,43 @@ Four conventions make yours feel like the rest:
   stamped with it.
 - Ship your CSS and JS as assets of the plugin rather than asking the theme to carry them.
 
+## The build being configured
+
+`registry.Context` describes the build the plugin is configured for. `Configure` runs on every
+build, including each rebuild while serving, so it reads its files again each time.
+
+| Field | Type | What it is |
+|---|---|---|
+| `ProjectRoot` | `AbsolutePath` | The root of the project, as `--root` sets it |
+| `IsWatch` | `bool` | `true` while `watch` is rebuilding |
+| `Diagnostics` | `DiagnosticSink` | Where the plugin reports a problem it finds while configuring |
+
+Read the files the plugin needs here, from `ProjectRoot`, and not when the site is described.
+
+```fsharp
+member _.Configure registry =
+    let document = AbsolutePath.combine registry.Context.ProjectRoot [ "design/motion.json" ]
+
+    match Motion.read document with
+    | Ok css -> registry |> Registry.asset (WriteText(css, RelativePath.create "assets/motion.css"))
+    | Error message ->
+        registry.Context.Diagnostics.Add(Diagnostic.error "document-invalid" message)
+        registry
+```
+
+### Files outside the project
+
+Every file in the project is watched while serving. `Registry.watch` names a file outside it, so
+that a change to it rebuilds the site:
+
+```fsharp
+member _.Configure registry =
+    let document = AbsolutePath.combine registry.Context.ProjectRoot [ "../design/motion.json" ]
+
+    registry
+    |> Registry.watch [ document ]
+```
+
 ## Extension points
 
 | Registration | When it runs |
@@ -379,8 +416,9 @@ Deleting it costs a rebuild and nothing else, and `nacara clean` removes it alon
 
 ## Diagnostics
 
-Report problems through the build's diagnostics rather than throwing. Give the rule, the position,
-and above all the fix:
+Report problems through the build's diagnostics rather than throwing. In `Configure`, use
+`registry.Context.Diagnostics`. In a hook or a transform, use its context's `Diagnostics`. Give
+the rule, the position, and above all the fix:
 
 ```fsharp
 context.Diagnostics.Add(

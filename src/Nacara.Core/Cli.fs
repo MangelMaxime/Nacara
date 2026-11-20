@@ -331,7 +331,9 @@ NOTE
             watcher.Start()
             watcher
 
-        follow.Value <- fun result -> result.Pages |> List.collect _.Dependencies |> watcher.Follow
+        follow.Value <-
+            fun result ->
+                (result.Pages |> List.collect _.Dependencies) @ result.Watched |> watcher.Follow
 
         last.Value |> Option.iter follow.Value
 
@@ -365,7 +367,23 @@ NOTE
                 | Some version -> Site.version version site
                 | None -> site
 
-            let registry = lazy Registry.ofPlugins site.Plugins
+            let registry =
+                lazy
+                    (let diagnostics = DiagnosticBag()
+
+                     let registry =
+                         Registry.ofPlugins
+                             {
+                                 ProjectRoot = options.ProjectRoot
+                                 IsWatch = false
+                                 Diagnostics = DiagnosticSink(diagnostics, Registry.engineSource)
+                             }
+                             site.Plugins
+
+                     for diagnostic in diagnostics.ToList() do
+                         Log.diagnostic diagnostic
+
+                     registry)
 
             match options.Command with
             | "help" ->
