@@ -346,6 +346,252 @@ let private failures =
         ]
     )
 
+let private writeBytes (root: AbsolutePath) (path: string) (bytes: byte array) =
+    let file = Path.Combine(AbsolutePath.value root, path)
+    Directory.CreateDirectory(Path.GetDirectoryName file) |> ignore
+    File.WriteAllBytes(file, bytes)
+
+let private be16 (value: int) =
+    [|
+        byte (value >>> 8)
+        byte value
+    |]
+
+let private be32 (value: int) =
+    [|
+        byte (value >>> 24)
+        byte (value >>> 16)
+        byte (value >>> 8)
+        byte value
+    |]
+
+let private le16 (value: int) =
+    [|
+        byte value
+        byte (value >>> 8)
+    |]
+
+let private le24 (value: int) =
+    [|
+        byte value
+        byte (value >>> 8)
+        byte (value >>> 16)
+    |]
+
+let private ascii (text: string) = Text.Encoding.ASCII.GetBytes text
+
+let private png (width: int) (height: int) =
+    Array.concat
+        [
+            [| 0x89uy |]
+            ascii "PNG\r\n\u001a\n"
+            be32 13
+            ascii "IHDR"
+            be32 width
+            be32 height
+            Array.zeroCreate 5
+        ]
+
+let private jpeg (width: int) (height: int) (orientation: int) =
+    let exif =
+        Array.concat
+            [
+                ascii "Exif\u0000\u0000"
+                ascii "MM"
+                be16 42
+                be32 8
+                be16 1
+                be16 0x0112
+                be16 3
+                be32 1
+                be16 orientation
+                be16 0
+                be32 0
+            ]
+
+    Array.concat
+        [
+            [|
+                0xFFuy
+                0xD8uy
+            |]
+            [|
+                0xFFuy
+                0xE1uy
+            |]
+            be16 (exif.Length + 2)
+            exif
+            [|
+                0xFFuy
+                0xC0uy
+            |]
+            be16 17
+            [| 8uy |]
+            be16 height
+            be16 width
+            Array.zeroCreate 10
+        ]
+
+let private webp (width: int) (height: int) =
+    Array.concat
+        [
+            ascii "RIFF"
+            be32 0
+            ascii "WEBPVP8X"
+            le16 10
+            le16 0
+            Array.zeroCreate 4
+            le24 (width - 1)
+            le24 (height - 1)
+        ]
+
+let private avif (width: int) (height: int) =
+    Array.concat
+        [
+            be32 20
+            ascii "ftypavif"
+            Array.zeroCreate 8
+            be32 20
+            ascii "ispe"
+            be32 0
+            be32 width
+            be32 height
+        ]
+
+let private images =
+    testList (
+        "images",
+        [
+            test (
+                "the size of an image is read from its header",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    let at name =
+                        Path.Combine(AbsolutePath.value root, name)
+
+                    writeBytes root "a.png" (png 640 480)
+
+                    writeBytes
+                        root
+                        "a.gif"
+                        (Array.concat
+                            [
+                                ascii "GIF89a"
+                                le16 32
+                                le16 16
+                            ])
+
+                    writeBytes root "a.jpg" (jpeg 800 600 1)
+                    writeBytes root "turned.jpg" (jpeg 800 600 6)
+                    writeBytes root "a.webp" (webp 300 200)
+                    writeBytes root "a.avif" (avif 1200 630)
+
+                    write
+                        root
+                        "sized.svg"
+                        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24px\" height=\"12\"></svg>"
+
+                    write
+                        root
+                        "box.svg"
+                        "<?xml version=\"1.0\"?>\n<svg viewBox=\"0 0 100 50\"></svg>"
+
+                    assertThat
+                        (ImageSize.read (at "a.png"))
+                        (tag "png" >> isEqualTo (Some(640, 480)))
+
+                    assertThat (ImageSize.read (at "a.gif")) (tag "gif" >> isEqualTo (Some(32, 16)))
+
+                    assertThat
+                        (ImageSize.read (at "a.jpg"))
+                        (tag "jpeg" >> isEqualTo (Some(800, 600)))
+
+                    assertThat
+                        (ImageSize.read (at "turned.jpg"))
+                        (tag "a jpeg turned by its orientation" >> isEqualTo (Some(600, 800)))
+
+                    assertThat
+                        (ImageSize.read (at "a.webp"))
+                        (tag "webp" >> isEqualTo (Some(300, 200)))
+
+                    assertThat
+                        (ImageSize.read (at "a.avif"))
+                        (tag "avif" >> isEqualTo (Some(1200, 630)))
+
+                    assertThat
+                        (ImageSize.read (at "sized.svg"))
+                        (tag "svg with a size" >> isEqualTo (Some(24, 12)))
+
+                    assertThat
+                        (ImageSize.read (at "box.svg"))
+                        (tag "svg with a view box" >> isEqualTo (Some(100, 50)))
+
+                    assertThat
+                        (ImageSize.read (at "none.png"))
+                        (tag "a missing file" >> isEqualTo None)
+            )
+
+            test (
+                "an image from the static directory gets its size, and is loaded lazily",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+                    writeBytes root "static/img/logo.png" (png 640 480)
+
+                    write
+                        root
+                        "docs/pictures.md"
+                        "---\ntitle: Pictures\n---\n\n![Logo](/img/logo.png)\n\n![Far](https://example.com/far.png)\n\n![Sized](/img/logo.png){width=100}\n"
+
+                    let cache = BuildCache()
+                    Build.runWatch cache root Fixture.site |> ignore
+
+                    assertThat
+                        ((output root "pictures/index.html").Contains
+                            "<img src=\"/img/logo.png\" width=\"640\" height=\"480\" loading=\"lazy\" decoding=\"async\" alt=\"Logo\" />")
+                        (tag "a local image is sized" >> isTrue)
+
+                    assertThat
+                        ((output root "pictures/index.html").Contains
+                            "<img src=\"https://example.com/far.png\" loading=\"lazy\" decoding=\"async\" alt=\"Far\" />")
+                        (tag "and a remote one is only loaded lazily" >> isTrue)
+
+                    assertThat
+                        ((output root "pictures/index.html").Contains
+                            "<img src=\"/img/logo.png\" width=\"100\" loading=\"lazy\" decoding=\"async\" alt=\"Sized\" />")
+                        (tag "an image with a size of its own keeps it" >> isTrue)
+
+                    let under = Fixture.copyToTemporaryDirectory ()
+                    writeBytes under "static/img/logo.png" (png 640 480)
+
+                    write
+                        under
+                        "docs/pictures.md"
+                        "---\ntitle: Pictures\n---\n\n![Logo](/docs/img/logo.png)\n"
+
+                    Build.run under (Fixture.site |> Site.baseUrl "/docs/") |> ignore
+
+                    assertThat
+                        ((output under "pictures/index.html").Contains
+                            "width=\"640\" height=\"480\"")
+                        (tag "a path written under the base url is found too" >> isTrue)
+
+                    writeBytes root "static/img/logo.png" (png 320 240)
+
+                    File.SetLastWriteTimeUtc(
+                        Path.Combine(AbsolutePath.value root, "static/img/logo.png"),
+                        DateTime.UtcNow.AddMinutes 1.0
+                    )
+
+                    Build.runWatch cache root Fixture.site |> ignore
+
+                    assertThat
+                        ((output root "pictures/index.html").Contains "width=\"320\" height=\"240\"")
+                        (tag "a changed image is sized again while serving" >> isTrue)
+            )
+        ]
+    )
+
 let all =
     testList (
         "Components",
@@ -353,5 +599,6 @@ let all =
             directives
             inlineMarkdown
             failures
+            images
         ]
     )

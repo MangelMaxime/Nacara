@@ -49,6 +49,23 @@ let greet name =
 ```
 ````
 
+## Images
+
+An image gets `loading="lazy"` and `decoding="async"`. An image from the static directory, written
+from the site root as `/img/logo.png`, also gets its `width` and `height`, read from the file. The
+browser then keeps its space while it loads.
+
+```markdown
+![The logo](/img/logo.png)
+```
+
+```html
+<img src="/img/logo.png" width="640" height="480" loading="lazy" decoding="async" alt="The logo" />
+```
+
+The size is read from PNG, JPEG, GIF, WebP, AVIF and SVG files. An image that sets its own `width`
+or `height` in [attributes](#attributes) keeps them.
+
 ## Attributes
 
 Any element takes attributes in braces, so you can name something yourself:

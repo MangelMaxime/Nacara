@@ -38,6 +38,8 @@ type TransformContext =
         Pages: Page list
         Diagnostics: DiagnosticSink
         ProjectRoot: AbsolutePath
+        /// <summary>The directory copied to the output as it is, when the site has one.</summary>
+        StaticDirectory: AbsolutePath option
         /// Everything plugins registered, so a transform can read extension points others filled.
         Registry: Registry
     }

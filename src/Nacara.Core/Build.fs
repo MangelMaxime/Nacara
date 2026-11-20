@@ -31,7 +31,9 @@ type BuildResult =
 /// What survives between two builds of the same process.
 /// </summary>
 type BuildCache(writes: bool) =
-    let transformed = ConcurrentDictionary<string, Page * Diagnostic list>()
+    let transformed =
+        ConcurrentDictionary<string, Page * Diagnostic list * (string * DateTime) list>()
+
     let loaded = ConcurrentDictionary<string, Result<Page, Diagnostic>>()
     let rendered = ConcurrentDictionary<string, string>()
     let written = ConcurrentDictionary<string, string>()
@@ -78,7 +80,8 @@ type BuildCache(writes: bool) =
             rendered[key] <- html
             html
 
-    /// <summary>Reuse the transform of a page whose body and data have not changed.</summary>
+    /// <summary>Reuse the transform of a page whose body and data have not changed, and whose
+    /// files the transform added to <c>Dependencies</c> have not changed either.</summary>
     /// <param name="key">What the transform is, so two of them never share a cached result.</param>
     /// <param name="page">The page being transformed.</param>
     /// <param name="sink">Where what the transform says ends up.</param>
@@ -90,20 +93,31 @@ type BuildCache(writes: bool) =
         // in the key as much as its body does.
         let cacheKey = $"%s{key}:%s{BuildCache.Hash page.Body}:%i{hash page.Data}"
 
+        let stamp (path: string) = path, File.GetLastWriteTimeUtc path
+
         match transformed.TryGetValue cacheKey with
-        | true, (cached, diagnostics) ->
+        | true, (cached, diagnostics, read) when
+            read |> List.forall (fun (path, time) -> snd (stamp path) = time)
+            ->
             sink.AddRange diagnostics
 
             { page with
                 Html = cached.Html
                 Headings = cached.Headings
                 Data = cached.Data
+                Dependencies = cached.Dependencies
             }
         | _ ->
             let caught = DiagnosticBag()
             let result = compute (DiagnosticSink(caught, sink.Source))
             let diagnostics = caught.ToList() |> List.ofSeq
-            transformed[cacheKey] <- (result, diagnostics)
+
+            let read =
+                result.Dependencies
+                |> List.except page.Dependencies
+                |> List.map (AbsolutePath.value >> stamp)
+
+            transformed[cacheKey] <- (result, diagnostics, read)
             sink.AddRange diagnostics
             result
 
@@ -795,6 +809,9 @@ module Build =
                 Pages = pages
                 Diagnostics = DiagnosticSink(diagnostics, Registry.engineSource)
                 ProjectRoot = projectRoot
+                StaticDirectory =
+                    site.StaticDirectory
+                    |> Option.map (fun directory -> AbsolutePath.combine projectRoot [ directory ])
                 Registry = registry
             }
 

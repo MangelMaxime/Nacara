@@ -318,6 +318,59 @@ module Markdown =
                 html
         )
 
+    let private imageFile (context: TransformContext) (url: string) =
+        let path =
+            Uri.UnescapeDataString(
+                url.Split(
+                    [|
+                        '?'
+                        '#'
+                    |]
+                )[0]
+            )
+
+        if path.StartsWith "/" then
+            let baseUrl = context.Site.Url.BaseUrl.TrimEnd '/' + "/"
+
+            let inSite =
+                if path.StartsWith baseUrl then
+                    path.Substring baseUrl.Length
+                else
+                    path.TrimStart '/'
+
+            context.StaticDirectory
+            |> Option.map (fun directory -> AbsolutePath.combine directory [ inSite ])
+        else
+            None
+
+    let private sizeImages (context: TransformContext) (document: MarkdownDocument) =
+        [
+            for link in document.Descendants<LinkInline>() do
+                if link.IsImage && not (isNull link.Url) then
+                    let attributes = link.GetAttributes()
+
+                    let has name =
+                        not (isNull attributes.Properties)
+                        && attributes.Properties |> Seq.exists (fun property -> property.Key = name)
+
+                    if not (isExternal link.Url || link.Url.StartsWith "data:") then
+                        match imageFile context link.Url with
+                        | Some file ->
+                            file
+
+                            if not (has "width" || has "height") then
+                                match ImageSize.read (AbsolutePath.value file) with
+                                | Some(width, height) ->
+                                    attributes.AddProperty("width", string width)
+                                    attributes.AddProperty("height", string height)
+                                | None -> ()
+                        | None -> ()
+
+                    attributes.AddPropertyIfNotExist("loading", "lazy")
+                    attributes.AddPropertyIfNotExist("decoding", "async")
+        ]
+        |> List.distinct
+
     let private transform (options: MarkdownOptions) (context: TransformContext) (page: Page) =
         let pipeline = pipelineFor context.Registry
 
@@ -326,6 +379,7 @@ module Markdown =
 
         let inFile line = page.BodyLine + line + nested.Value
         let document = Markdig.Markdown.Parse(page.Body, pipeline)
+        let images = sizeImages context document
         let links = ResizeArray<OutgoingLink>()
 
         for link in document.Descendants<LinkInline>() do
@@ -474,6 +528,7 @@ module Markdown =
         { page with
             Html = html
             Headings = headings
+            Dependencies = page.Dependencies @ images
         }
             .WithData(LinksKey, List.ofSeq links)
             .WithData(AnchorsKey, anchors)
