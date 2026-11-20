@@ -327,6 +327,7 @@ type NacaraContainerRenderer
                 Content = content
                 Page = page
                 Site = site
+                Report = fun diagnostic -> fail diagnostic container.Line container.Column
             }
 
         try

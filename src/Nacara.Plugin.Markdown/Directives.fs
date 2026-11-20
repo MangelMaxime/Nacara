@@ -17,9 +17,38 @@ type DirectiveContext =
         /// The page the directive is on.
         Page: Page
         Site: SiteInfo
+        /// <summary>Adds a diagnostic at the directive's opening line. <c>Warn</c> and
+        /// <c>Error</c> call it.</summary>
+        Report: Diagnostic -> unit
     }
 
     member this.Attribute(name: string) = Map.tryFind name this.Attributes
+
+    /// <summary>Reports a warning at the directive's opening line, with the code
+    /// <c>directive-&lt;name&gt;</c>.</summary>
+    /// <param name="message">What is wrong.</param>
+    /// <param name="hint">How to fix it.</param>
+    member this.Warn(message: string, ?hint: string) =
+        this.Report(
+            Diagnostic.warning $"directive-%s{this.Name.ToLowerInvariant()}" message
+            |> fun diagnostic ->
+                match hint with
+                | Some hint -> Diagnostic.withHint hint diagnostic
+                | None -> diagnostic
+        )
+
+    /// <summary>Reports an error at the directive's opening line, with the code
+    /// <c>directive-&lt;name&gt;</c>. The build fails, and the page is still rendered.</summary>
+    /// <param name="message">What is wrong.</param>
+    /// <param name="hint">How to fix it.</param>
+    member this.Error(message: string, ?hint: string) =
+        this.Report(
+            Diagnostic.error $"directive-%s{this.Name.ToLowerInvariant()}" message
+            |> fun diagnostic ->
+                match hint with
+                | Some hint -> Diagnostic.withHint hint diagnostic
+                | None -> diagnostic
+        )
 
     /// <summary><c>Content</c> as an element, with no element around it.</summary>
     member this.Body = Interop.createRawTextElement this.Content

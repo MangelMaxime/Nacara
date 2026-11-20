@@ -128,6 +128,52 @@ let private directives =
             )
 
             test (
+                "a directive reports warnings and errors at its line, and is still rendered",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    write root "docs/video.md" "---\ntitle: Video\n---\n\n:::video\nNo id.\n:::\n"
+
+                    let video (directive: DirectiveContext) =
+                        directive.Warn "No title given"
+
+                        directive.Error(
+                            "A video needs its id",
+                            "Write it after the name: :::video <id>"
+                        )
+
+                        Html.div
+                            [
+                                prop.className "video"
+                                prop.children [ directive.Body ]
+                            ]
+
+                    let result = Build.run root (Fixture.site |> Markdown.directive "video" video)
+
+                    let reported severity =
+                        result.Diagnostics
+                        |> List.tryFind (fun item ->
+                            item.Code = "markdown/directive-video" && item.Severity = severity
+                        )
+
+                    assertThat
+                        (reported Severity.Warning |> Option.bind _.Span |> Option.map _.Line)
+                        (tag "the warning is on the line that opens it" >> isEqualTo (Some 5))
+
+                    let error = reported Severity.Error
+
+                    assertThat
+                        (error |> Option.bind _.Hint)
+                        (tag "the error keeps its hint"
+                         >> isEqualTo (Some "Write it after the name: :::video <id>"))
+
+                    assertThat
+                        (result.Diagnostics
+                         |> List.exists (fun item -> item.Code = "markdown/directive-failed"))
+                        (tag "and it is not reported as a failure" >> isFalse)
+            )
+
+            test (
                 "an unknown directive names the ones the site adds",
                 fun _ ->
                     let root = Fixture.copyToTemporaryDirectory ()

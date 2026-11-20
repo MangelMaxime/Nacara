@@ -254,7 +254,33 @@ The page the directive is on.
 
 **type:** `SiteInfo`
 
-### When it fails
+### `Report`
+
+**type:** `Diagnostic -> unit`
+
+Adds a diagnostic at the directive's opening line. `Warn` and `Error` call it.
+
+### Reporting a problem
+
+`directive.Warn(message, ?hint)` reports a warning. `directive.Error(message, ?hint)` reports an
+error, which fails the build. Both are reported at the directive's opening line, with the code
+`markdown/directive-<name>`. The directive's markup is still written.
+
+```fsharp
+|> Markdown.directive "youtube" (fun directive ->
+    match directive.Argument with
+    | Some id ->
+        if directive.Attribute "title" |> Option.isNone then
+            directive.Warn("No title given", "Add one: :::youtube <id> {title=\"The launch talk\"}")
+
+        Html.iframe [ prop.src $"https://www.youtube-nocookie.com/embed/{id}" ]
+    | None ->
+        directive.Error("Name the video: :::youtube <id>")
+        Html.none
+)
+```
+
+### When it throws
 
 An exception that `render` throws fails the build with `markdown/directive-failed`, at the
 directive's opening line. The page shows what the directive holds in its place:
