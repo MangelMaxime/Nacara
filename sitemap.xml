@@ -25,6 +25,9 @@
     <loc>https://mangelmaxime.github.io/Nacara/changelog/nacara-plugin-deploy-githubpages/</loc>
   </url>
   <url>
+    <loc>https://mangelmaxime.github.io/Nacara/changelog/nacara-plugin-feed/</loc>
+  </url>
+  <url>
     <loc>https://mangelmaxime.github.io/Nacara/changelog/nacara-plugin-fsharpapi/</loc>
   </url>
   <url>
@@ -61,7 +64,13 @@
     <loc>https://mangelmaxime.github.io/Nacara/changelog/nacara-templates/</loc>
   </url>
   <url>
+    <loc>https://mangelmaxime.github.io/Nacara/changelog/nacara-theme-core/</loc>
+  </url>
+  <url>
     <loc>https://mangelmaxime.github.io/Nacara/changelog/nacara-theme-default/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/changelog/nacara-theme-docs/</loc>
   </url>
   <url>
     <loc>https://mangelmaxime.github.io/Nacara/guide/code-blocks/</loc>
@@ -71,6 +80,9 @@
   </url>
   <url>
     <loc>https://mangelmaxime.github.io/Nacara/guide/content/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/guide/custom-site/</loc>
   </url>
   <url>
     <loc>https://mangelmaxime.github.io/Nacara/guide/deploy/</loc>
@@ -110,6 +122,9 @@
   </url>
   <url>
     <loc>https://mangelmaxime.github.io/Nacara/plugins/community/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/plugins/feed/</loc>
   </url>
   <url>
     <loc>https://mangelmaxime.github.io/Nacara/plugins/fsharp-api/</loc>
@@ -157,6 +172,12 @@
     <loc>https://mangelmaxime.github.io/Nacara/plugins/sitemap/</loc>
   </url>
   <url>
+    <loc>https://mangelmaxime.github.io/Nacara/plugins/themes/core/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/plugins/themes/core/contracts/</loc>
+  </url>
+  <url>
     <loc>https://mangelmaxime.github.io/Nacara/plugins/themes/default/</loc>
   </url>
   <url>
@@ -173,6 +194,9 @@
   </url>
   <url>
     <loc>https://mangelmaxime.github.io/Nacara/plugins/themes/default/navbar/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/plugins/themes/docs/</loc>
   </url>
   <url>
     <loc>https://mangelmaxime.github.io/Nacara/plugins/versions/</loc>
@@ -244,6 +268,9 @@
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/commandcontext/</loc>
   </url>
   <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/configurecontext/</loc>
+  </url>
+  <url>
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/contentsource/</loc>
   </url>
   <url>
@@ -268,6 +295,9 @@
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/decoder/</loc>
   </url>
   <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/derivedcontext/</loc>
+  </url>
+  <url>
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/devserver/</loc>
   </url>
   <url>
@@ -278,6 +308,9 @@
   </url>
   <url>
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/diagnosticsink/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/extras/</loc>
   </url>
   <url>
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/frame/</loc>
@@ -343,13 +376,25 @@
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/pagecontext/</loc>
   </url>
   <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/paged/</loc>
+  </url>
+  <url>
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/pagedata/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/pageindex/</loc>
   </url>
   <url>
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/pageinfo/</loc>
   </url>
   <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/pagerslot/</loc>
+  </url>
+  <url>
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/pagesource/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/paging/</loc>
   </url>
   <url>
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/plugincommand/</loc>
@@ -397,6 +442,12 @@
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/sourcespan/</loc>
   </url>
   <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/taxonomy/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/term/</loc>
+  </url>
+  <url>
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/textdirection/</loc>
   </url>
   <url>
@@ -419,6 +470,9 @@
   </url>
   <url>
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/transformcontext/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/typedpage/</loc>
   </url>
   <url>
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-core/nacara-core/url/</loc>
@@ -503,6 +557,21 @@
   </url>
   <url>
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-plugin-deploy-githubpages/nacara-plugins/githubpagesoptions/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-plugin-feed/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-plugin-feed/nacara-plugins/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-plugin-feed/nacara-plugins/feed/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-plugin-feed/nacara-plugins/feedentry/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-plugin-feed/nacara-plugins/feedoptions/</loc>
   </url>
   <url>
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-plugin-fsharpapi/</loc>
@@ -691,7 +760,16 @@
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-plugin-markdown/nacara-plugins/</loc>
   </url>
   <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-plugin-markdown/nacara-plugins/directivecontext/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-plugin-markdown/nacara-plugins/imagesize/</loc>
+  </url>
+  <url>
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-plugin-markdown/nacara-plugins/markdown/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-plugin-markdown/nacara-plugins/markdowndirective/</loc>
   </url>
   <url>
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-plugin-markdown/nacara-plugins/markdownoptions/</loc>
@@ -736,46 +814,85 @@
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-plugin-versions/nacara-plugins/versionsoptions/</loc>
   </url>
   <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme-core/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme-core/assets/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme-core/behaviours/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme-core/head/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme-core/headimage/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme-core/headmodel/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme-core/links/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme-core/pages/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme-core/pagescope/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme-core/shell/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme-core/siteoptions/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme-core/socialimage/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme-core/stylelayer/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme-core/styles/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme-core/themecore/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme-core/translationmodel/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme-core/translations/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme/icons/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-core/nacara-theme/nacaracodeblockrenderer/</loc>
+  </url>
+  <url>
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/</loc>
   </url>
   <url>
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/</loc>
   </url>
   <url>
-    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/badge/</loc>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/articleslots/</loc>
   </url>
   <url>
-    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/components/</loc>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/frameslots/</loc>
   </url>
   <url>
-    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/docfrontmatter/</loc>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/partcontext/</loc>
   </url>
   <url>
-    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/docpage/</loc>
-  </url>
-  <url>
-    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/icons/</loc>
-  </url>
-  <url>
-    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/menu/</loc>
-  </url>
-  <url>
-    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/menubadge/</loc>
-  </url>
-  <url>
-    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/menuentry/</loc>
-  </url>
-  <url>
-    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/menuitem/</loc>
-  </url>
-  <url>
-    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/nacaracodeblockrenderer/</loc>
-  </url>
-  <url>
-    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/navbaritem/</loc>
-  </url>
-  <url>
-    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/offeredmenus/</loc>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/parts/</loc>
   </url>
   <url>
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/theme/</loc>
@@ -784,6 +901,117 @@
     <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/themeoptions/</loc>
   </url>
   <url>
-    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/tocsetting/</loc>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-default/nacara-theme/themeparts/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/docs/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/editlink/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/editlinkmodel/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/menubehaviours/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/menufiltermodel/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/menunode/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/menunodekind/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/menusource/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/menustore/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/navbar/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/navbarentry/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/navbarmodel/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/notfound/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/pagelink/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/pagenav/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/pagenavmodel/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/sidebar/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/sidebarmodel/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/themedocs/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/themeregistration/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/toc/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme-docs/tocmodel/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme/badge/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme/brandicon/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme/docfrontmatter/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme/docpage/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme/docsoptions/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme/menu/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme/menubadge/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme/menuentry/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme/menuitem/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme/navbaritem/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme/pageimage/</loc>
+  </url>
+  <url>
+    <loc>https://mangelmaxime.github.io/Nacara/reference/nacara-theme-docs/nacara-theme/tocsetting/</loc>
   </url>
 </urlset>

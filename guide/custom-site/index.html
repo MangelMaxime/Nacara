@@ -1,0 +1,543 @@
+<!DOCTYPE html><html lang="en" dir="ltr"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>A site with its own look · Nacara</title><meta name="description" content="A blog built without a theme, from the engine and Theme.Core" /><link rel="canonical" href="https://mangelmaxime.github.io/Nacara/guide/custom-site/" /><meta property="og:url" content="https://mangelmaxime.github.io/Nacara/guide/custom-site/" /><meta property="og:site_name" content="Nacara" /><meta property="og:locale" content="en" /><meta name="twitter:card" content="summary_large_image" /><meta property="og:description" content="A blog built without a theme, from the engine and Theme.Core" /><meta property="og:title" content="A site with its own look" /><meta property="og:type" content="article" /><link rel="stylesheet" href="/Nacara/assets/css/nacara.dac4f247.css" /><script>(()=>{var o="nacara-theme",r=["light","dark","system"],s=matchMedia("(prefers-color-scheme: dark)"),a=()=>{try{let e=localStorage.getItem(o);return r.includes(e)?e:"system"}catch{return"system"}},c=e=>{let t=document.documentElement;t.dataset.themeSetting=e,t.dataset.theme=e==="system"?s.matches?"dark":"light":e};c(a());})();
+</script><link rel="stylesheet" href="/Nacara/assets/changelog.css" /><link rel="stylesheet" href="/Nacara/assets/search.css" /><link rel="stylesheet" href="/Nacara/assets/fsharp-api.css" /><link rel="stylesheet" href="/Nacara/assets/live-example/live-example.css" /><link rel="stylesheet" href="/Nacara/assets/versions.css" /><link rel="stylesheet" href="/Nacara/assets/landing.4d935e7a.css" /><style>[data-section="reference"] { --nacara-sidebar-width: 20rem; }</style></head><body data-section="guide"><a class="nacara-skip-link" href="#nacara-content">Skip to content</a><header class="nacara-navbar" role="banner" data-nacara-navbar><button class="nacara-icon-button" type="button" data-nacara-menu-toggle aria-label="Open the menu"><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg></span></button><a class="nacara-navbar__brand" href="/Nacara/">Nacara</a><ul class="nacara-navbar__items" role="navigation" aria-label="Main"><li><a class="nacara-navbar__link" href="/Nacara/guide/getting-started/" data-active>Guide</a></li><li><a class="nacara-navbar__link" href="/Nacara/plugins/overview/" data-active="false">Plugins</a></li><li><a class="nacara-navbar__link" href="/Nacara/reference/" data-active="false">Reference</a></li><li><a class="nacara-navbar__link" href="/Nacara/changelog/nacara-core/" data-active="false">Changelog</a></li></ul><ul class="nacara-navbar__items nacara-navbar__items--end" data-nacara-widgets-end><li><button class="nacara-search__trigger" type="button" data-nacara-search data-bundle="/Nacara/pagefind/" aria-label="Search"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg><span>Search</span><span class="nacara-search__kbd" data-nacara-search-shortcut>Ctrl K</span></button></li><li><a class="nacara-icon-button" href="https://github.com/MangelMaxime/Nacara" aria-label="GitHub" title="GitHub"><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" /></svg></span></a></li><li><select class="nacara-theme-select" data-nacara-theme aria-label="Colour scheme"><option value="light">Light</option><option value="dark">Dark</option><option value="system">System</option></select></li></ul></header><div class="nacara-layout"><nav class="nacara-sidebar" aria-label="Section" data-nacara-sidebar><ul class="nacara-sidebar__sections"><li><a class="nacara-sidebar__link" href="/Nacara/guide/getting-started/" aria-current>Guide</a></li><li><a class="nacara-sidebar__link" href="/Nacara/plugins/overview/">Plugins</a></li><li><a class="nacara-sidebar__link" href="/Nacara/reference/">Reference</a></li><li><a class="nacara-sidebar__link" href="/Nacara/changelog/nacara-core/">Changelog</a></li></ul><ul class="nacara-sidebar__list" data-nacara-menu-list><li><div class="nacara-sidebar__section"><p class="nacara-sidebar__title"><span>Getting started</span></p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/guide/getting-started/"><span>Getting started</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/guide/project-layout/"><span>Project layout</span></a></li></ul></div></li><li><div class="nacara-sidebar__section"><p class="nacara-sidebar__title"><span>Writing</span></p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/guide/content/"><span>Content and collections</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/guide/code-blocks/"><span>Code blocks</span></a></li></ul></div></li><li><div class="nacara-sidebar__section"><p class="nacara-sidebar__title"><span>Publishing</span></p><ul class="nacara-sidebar__list"><li><a class="nacara-sidebar__link" href="/Nacara/guide/theme/"><span>Theming</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/guide/custom-site/" aria-current="page"><span>A site with its own look</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/guide/command-line/"><span>Command line</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/guide/i18n/"><span>Multiple languages</span></a></li><li><a class="nacara-sidebar__link" href="/Nacara/guide/deploy/"><span>Deploying</span></a></li></ul></div></li></ul><ul class="nacara-sidebar__widgets" data-nacara-widgets-shelf hidden=""></ul></nav><main id="nacara-content" tabindex="-1" class="nacara-content"><h1>A site with its own look</h1><div><p>This page builds a small blog without a theme: a home page, an about page, posts, a page per tag, an Atom feed and a 404 page. The layouts and the stylesheet are yours. The engine and <a href="/Nacara/plugins/themes/core/">Theme.Core</a> bring the rest.</p><h2 id="create-the-project">Create the project<a class="nacara-heading-anchor" href="#create-the-project" aria-label="Link to this section" data-pagefind-ignore></a></h2><figure class="nacara-code" data-nacara-code data-language="bash" data-frame="terminal" data-source="mkdir blog &amp;&amp; cd blog
+dotnet new console -lang F# -o .
+dotnet add package Nacara.Core --prerelease
+dotnet add package Nacara.Plugin.Markdown --prerelease
+dotnet add package Nacara.Plugin.Feed --prerelease
+dotnet add package Nacara.Theme.Core --prerelease"><figcaption class="nacara-code__title">Terminal</figcaption><div class="nacara-code__body" data-nacara-code-body><pre><code><span class="nacara-code__line"><span class="tok-function">mkdir</span> blog <span class="tok-operator">&amp;&amp;</span> <span class="tok-function">cd</span> blog
+</span><span class="nacara-code__line"><span class="tok-function">dotnet</span> new console <span class="tok-constant">-lang</span> F# <span class="tok-constant">-o</span> .
+</span><span class="nacara-code__line"><span class="tok-function">dotnet</span> add package Nacara.Core <span class="tok-constant">--prerelease</span>
+</span><span class="nacara-code__line"><span class="tok-function">dotnet</span> add package Nacara.Plugin.Markdown <span class="tok-constant">--prerelease</span>
+</span><span class="nacara-code__line"><span class="tok-function">dotnet</span> add package Nacara.Plugin.Feed <span class="tok-constant">--prerelease</span>
+</span><span class="nacara-code__line"><span class="tok-function">dotnet</span> add package Nacara.Theme.Core <span class="tok-constant">--prerelease</span>
+</span></code></pre><button class="nacara-code__copy" data-nacara-code-copy type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><p>The project holds three F# files, in this order in the <code>.fsproj</code>:</p><div class="nacara-file-tree"><ul class="nacara-file-tree__list"><li data-kind="file"><span class="nacara-file-tree__name">Blog.fsproj</span></li><li data-kind="file"><span class="nacara-file-tree__name">Posts.fs</span></li><li data-kind="file"><span class="nacara-file-tree__name">Layouts.fs</span></li><li data-kind="file"><span class="nacara-file-tree__name">Site.fs</span></li><li data-kind="directory"><details class="nacara-file-tree__folder" open><summary class="nacara-file-tree__name">assets/</summary><ul class="nacara-file-tree__list"><li data-kind="file"><span class="nacara-file-tree__name">site.css</span></li></ul></details></li><li data-kind="directory"><details class="nacara-file-tree__folder" open><summary class="nacara-file-tree__name">content/</summary><ul class="nacara-file-tree__list"><li data-kind="directory"><details class="nacara-file-tree__folder" open><summary class="nacara-file-tree__name">pages/</summary><ul class="nacara-file-tree__list"><li data-kind="file"><span class="nacara-file-tree__name">index.md</span></li><li data-kind="file"><span class="nacara-file-tree__name">about.md</span></li><li data-kind="file"><span class="nacara-file-tree__name">404.md</span></li></ul></details></li><li data-kind="directory"><details class="nacara-file-tree__folder" open><summary class="nacara-file-tree__name">posts/</summary><ul class="nacara-file-tree__list"><li data-kind="file"><span class="nacara-file-tree__name">hello.md</span></li></ul></details></li></ul></details></li></ul></div><h2 id="posts">Posts<a class="nacara-heading-anchor" href="#posts" aria-label="Link to this section" data-pagefind-ignore></a></h2><p><code>Posts.fs</code> holds the front matter of a post, the collection, the tag pages and the feed.</p><figure class="nacara-code" data-nacara-code data-language="fsharp" data-frame="code" data-source='module Blog.Posts
+
+open System
+open Nacara.Core
+open Nacara.Plugins
+
+type Post =
+    {
+        Title: string
+        Date: DateTimeOffset
+        Tags: string list
+        Draft: bool
+    }
+
+let decoder: Decoder&lt;Post&gt; =
+    Decode.object (fun get -&gt;
+        {
+            Title = get.Required.Field "title" Decode.string
+            Date = get.Required.Field "date" Decode.datetime
+            Tags = get.Optional.Field "tags" (Decode.list Decode.string) |&gt; Option.defaultValue []
+            Draft = get.Optional.Field "draft" Decode.bool |&gt; Option.defaultValue false
+        }
+    )
+
+let collection =
+    Collection.create "posts" decoder
+    |&gt; Collection.title _.Title
+    |&gt; Collection.routePrefix "posts"
+    |&gt; Collection.draft _.Draft'><figcaption class="nacara-code__title">Posts.fs</figcaption><div class="nacara-code__body" data-nacara-code-body><pre><code><span class="nacara-code__line"><span class="tok-keyword">module</span> <span class="tok-namespace">Blog</span><span class="tok-punctuation">.</span><span class="tok-namespace">Posts</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">System</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Nacara</span><span class="tok-punctuation">.</span><span class="tok-namespace">Core</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Nacara</span><span class="tok-punctuation">.</span><span class="tok-namespace">Plugins</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">type</span> <span class="tok-type">Post</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">{</span>
+</span><span class="nacara-code__line">        <span class="tok-property">Title</span><span class="tok-punctuation">:</span> <span class="tok-type">string</span>
+</span><span class="nacara-code__line">        <span class="tok-property">Date</span><span class="tok-punctuation">:</span> <span class="tok-type">DateTimeOffset</span>
+</span><span class="nacara-code__line">        <span class="tok-property">Tags</span><span class="tok-punctuation">:</span> <span class="tok-type">string</span> <span class="tok-type">list</span>
+</span><span class="nacara-code__line">        <span class="tok-property">Draft</span><span class="tok-punctuation">:</span> <span class="tok-type">bool</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">}</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">decoder</span><span class="tok-punctuation">:</span> <span class="tok-type">Decoder</span><span class="tok-operator">&lt;</span><span class="tok-type">Post</span><span class="tok-operator">></span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-type">Decode</span><span class="tok-punctuation">.</span><span class="tok-property">object</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">get</span> <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">{</span>
+</span><span class="nacara-code__line">            <span class="tok-property">Title</span> <span class="tok-operator">=</span> get<span class="tok-punctuation">.</span><span class="tok-property">Required</span><span class="tok-punctuation">.</span><span class="tok-property">Field</span> <span class="tok-string">"title"</span> <span class="tok-type">Decode</span><span class="tok-punctuation">.</span><span class="tok-property">string</span>
+</span><span class="nacara-code__line">            <span class="tok-property">Date</span> <span class="tok-operator">=</span> get<span class="tok-punctuation">.</span><span class="tok-property">Required</span><span class="tok-punctuation">.</span><span class="tok-property">Field</span> <span class="tok-string">"date"</span> <span class="tok-type">Decode</span><span class="tok-punctuation">.</span><span class="tok-property">datetime</span>
+</span><span class="nacara-code__line">            <span class="tok-property">Tags</span> <span class="tok-operator">=</span> get<span class="tok-punctuation">.</span><span class="tok-property">Optional</span><span class="tok-punctuation">.</span><span class="tok-property">Field</span> <span class="tok-string">"tags"</span> <span class="tok-punctuation">(</span><span class="tok-type">Decode</span><span class="tok-punctuation">.</span><span class="tok-property">list</span> <span class="tok-type">Decode</span><span class="tok-punctuation">.</span><span class="tok-property">string</span><span class="tok-punctuation">)</span> <span class="tok-operator">|></span> <span class="tok-type">Option</span><span class="tok-punctuation">.</span><span class="tok-property">defaultValue</span> <span class="tok-punctuation">[]</span>
+</span><span class="nacara-code__line">            <span class="tok-property">Draft</span> <span class="tok-operator">=</span> get<span class="tok-punctuation">.</span><span class="tok-property">Optional</span><span class="tok-punctuation">.</span><span class="tok-property">Field</span> <span class="tok-string">"draft"</span> <span class="tok-type">Decode</span><span class="tok-punctuation">.</span><span class="tok-property">bool</span> <span class="tok-operator">|></span> <span class="tok-type">Option</span><span class="tok-punctuation">.</span><span class="tok-property">defaultValue</span> <span class="tok-constant">false</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">}</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">collection</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-type">Collection</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-string">"posts"</span> decoder
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Collection</span><span class="tok-punctuation">.</span><span class="tok-property">title</span> _<span class="tok-punctuation">.</span><span class="tok-property">Title</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Collection</span><span class="tok-punctuation">.</span><span class="tok-property">routePrefix</span> <span class="tok-string">"posts"</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Collection</span><span class="tok-punctuation">.</span><span class="tok-property">draft</span> _<span class="tok-punctuation">.</span><span class="tok-property">Draft</span>
+</span></code></pre><button class="nacara-code__copy" data-nacara-code-copy type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><p><code>Collection.create "posts"</code> reads the files of <code>content/posts</code>.</p><p><code>Collection.draft</code> names the posts that are drafts. A draft is published by <code>watch</code> and left out of <code>build</code>, including from the tag pages and the feed.</p><p>The collection has no layout yet: <code>Site.fs</code> adds it. The layouts can then read the collection.</p><h3 id="tag-pages">Tag pages<a class="nacara-heading-anchor" href="#tag-pages" aria-label="Link to this section" data-pagefind-ignore></a></h3><p>A tag page lists the posts filed under one tag, ten per page.</p><figure class="nacara-code" data-nacara-code data-language="fsharp" data-frame="code" data-source='type TagPage =
+    {
+        Tag: Term&lt;TypedPage&lt;Post&gt;&gt;
+        Paged: Paged&lt;TypedPage&lt;Post&gt;&gt;
+    }
+
+let tagPages (posts: TypedPage&lt;Post&gt; list) =
+    let tags =
+        posts
+        |&gt; List.sortByDescending _.FrontMatter.Date
+        |&gt; Taxonomy.group _.FrontMatter.Tags
+
+    [
+        for tag in tags do
+            for paged in Paging.split 10 tag.Items -&gt;
+                {
+                    Tag = tag
+                    Paged = paged
+                }
+    ]
+
+let tagRoute (locale: Locale) (tag: string) (number: int) =
+    let first =
+        Route.create
+            locale
+            [
+                "tags"
+                Slug.create tag
+            ]
+
+    Paging.route first number'><figcaption class="nacara-code__title">Posts.fs</figcaption><div class="nacara-code__body" data-nacara-code-body><pre><code><span class="nacara-code__line"><span class="tok-keyword">type</span> <span class="tok-type">TagPage</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">{</span>
+</span><span class="nacara-code__line">        <span class="tok-property">Tag</span><span class="tok-punctuation">:</span> <span class="tok-type">Term</span><span class="tok-operator">&lt;</span><span class="tok-type">TypedPage</span><span class="tok-operator">&lt;</span><span class="tok-type">Post</span><span class="tok-operator">>></span>
+</span><span class="nacara-code__line">        <span class="tok-property">Paged</span><span class="tok-punctuation">:</span> <span class="tok-type">Paged</span><span class="tok-operator">&lt;</span><span class="tok-type">TypedPage</span><span class="tok-operator">&lt;</span><span class="tok-type">Post</span><span class="tok-operator">>></span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">}</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">tagPages</span> <span class="tok-punctuation">(</span><span class="tok-parameter">posts</span><span class="tok-punctuation">:</span> <span class="tok-type">TypedPage</span><span class="tok-operator">&lt;</span><span class="tok-type">Post</span><span class="tok-operator">></span> <span class="tok-type">list</span><span class="tok-punctuation">)</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">let</span> <span class="tok-function">tags</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">        posts
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">List</span><span class="tok-punctuation">.</span><span class="tok-property">sortByDescending</span> _<span class="tok-punctuation">.</span><span class="tok-property">FrontMatter</span><span class="tok-punctuation">.</span><span class="tok-property">Date</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">Taxonomy</span><span class="tok-punctuation">.</span><span class="tok-property">group</span> _<span class="tok-punctuation">.</span><span class="tok-property">FrontMatter</span><span class="tok-punctuation">.</span><span class="tok-property">Tags</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">    <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">        <span class="tok-keyword">for</span> <span class="tok-variable">tag</span> <span class="tok-keyword">in</span> tags <span class="tok-keyword">do</span>
+</span><span class="nacara-code__line">            <span class="tok-keyword">for</span> <span class="tok-variable">paged</span> <span class="tok-keyword">in</span> <span class="tok-type">Paging</span><span class="tok-punctuation">.</span><span class="tok-property">split</span> <span class="tok-constant">10</span> tag<span class="tok-punctuation">.</span><span class="tok-property">Items</span> <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">                <span class="tok-punctuation">{</span>
+</span><span class="nacara-code__line">                    <span class="tok-property">Tag</span> <span class="tok-operator">=</span> tag
+</span><span class="nacara-code__line">                    <span class="tok-property">Paged</span> <span class="tok-operator">=</span> paged
+</span><span class="nacara-code__line">                <span class="tok-punctuation">}</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">tagRoute</span> <span class="tok-punctuation">(</span><span class="tok-parameter">locale</span><span class="tok-punctuation">:</span> <span class="tok-type">Locale</span><span class="tok-punctuation">)</span> <span class="tok-punctuation">(</span><span class="tok-parameter">tag</span><span class="tok-punctuation">:</span> <span class="tok-type">string</span><span class="tok-punctuation">)</span> <span class="tok-punctuation">(</span><span class="tok-parameter">number</span><span class="tok-punctuation">:</span> <span class="tok-type">int</span><span class="tok-punctuation">)</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">let</span> <span class="tok-function">first</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">        <span class="tok-type">Route</span><span class="tok-punctuation">.</span><span class="tok-property">create</span>
+</span><span class="nacara-code__line">            locale
+</span><span class="nacara-code__line">            <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                <span class="tok-string">"tags"</span>
+</span><span class="nacara-code__line">                <span class="tok-type">Slug</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> tag
+</span><span class="nacara-code__line">            <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">    <span class="tok-type">Paging</span><span class="tok-punctuation">.</span><span class="tok-property">route</span> first number
+</span></code></pre><button class="nacara-code__copy" data-nacara-code-copy type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><p><code>TypedPage&lt;Post></code> is a page and its decoded front matter.</p><p><code>Taxonomy.group</code> groups the posts by tag. It returns one <code>Term</code> per tag, with its <code>Name</code>, its <code>Slug</code> and its <code>Items</code>. A post with several tags is in each of them. Tags with the same slug are one term. Terms are ordered by name, ignoring case.</p><p><code>Paging.split</code> splits a list into <code>Paged</code> values. <code>Paging.route</code> gives <code>/tags/fsharp/</code> for page 1 and <code>/tags/fsharp/page/2/</code> for page 2. See <a href="/Nacara/guide/content/#paging">Paging</a>.</p><h3 id="feed">Feed<a class="nacara-heading-anchor" href="#feed" aria-label="Link to this section" data-pagefind-ignore></a></h3><figure class="nacara-code" data-nacara-code data-language="fsharp" data-frame="code" data-source="let feed =
+    Feed.ofCollection
+        collection
+        (fun post -&gt;
+            { Feed.entry post.Title post.Date with
+                Categories = post.Tags
+            }
+        )"><figcaption class="nacara-code__title">Posts.fs</figcaption><div class="nacara-code__body" data-nacara-code-body><pre><code><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">feed</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-type">Feed</span><span class="tok-punctuation">.</span><span class="tok-property">ofCollection</span>
+</span><span class="nacara-code__line">        collection
+</span><span class="nacara-code__line">        <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">post</span> <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">            <span class="tok-punctuation">{</span> <span class="tok-type">Feed</span><span class="tok-punctuation">.</span><span class="tok-property">entry</span> post<span class="tok-punctuation">.</span><span class="tok-property">Title</span> post<span class="tok-punctuation">.</span><span class="tok-property">Date</span> <span class="tok-keyword">with</span>
+</span><span class="nacara-code__line">                <span class="tok-property">Categories</span> <span class="tok-operator">=</span> post<span class="tok-punctuation">.</span><span class="tok-property">Tags</span>
+</span><span class="nacara-code__line">            <span class="tok-punctuation">}</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">)</span>
+</span></code></pre><button class="nacara-code__copy" data-nacara-code-copy type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><p>See the <a href="/Nacara/plugins/feed/">feed plugin</a>.</p><h2 id="layouts">Layouts<a class="nacara-heading-anchor" href="#layouts" aria-label="Link to this section" data-pagefind-ignore></a></h2><p>A layout is a function from a <code>PageContext&lt;'FrontMatter></code> to markup. <code>Layouts.fs</code> holds a shell shared by every page, and one layout per kind of page.</p><h3 id="the-shell">The shell<a class="nacara-heading-anchor" href="#the-shell" aria-label="Link to this section" data-pagefind-ignore></a></h3><figure class="nacara-code" data-nacara-code data-language="fsharp" data-frame="code" data-source='module Blog.Layouts
+
+open Feliz.ViewEngine
+open Nacara.Core
+open Nacara.Plugins
+open Nacara.Theme.Core
+
+let private schemes =
+    [
+        "light"
+        "dark"
+        "system"
+    ]
+
+let shell (context: PageContext&lt;&#39;FrontMatter&gt;) (title: string) (main: ReactElement list) =
+    let site = context.Site
+
+    Html.html
+        [
+            prop.lang context.Page.Locale.Code
+            prop.children
+                [
+                    Html.head
+                        [
+                            yield! Head.ofContext title None context
+                            Behaviours.bootstrapTag ()
+                            Feed.headLink site Posts.feed
+                            yield! Shell.stylesheetLinks site
+                        ]
+                    Html.body
+                        [
+                            Shell.skipLink "skip-link" "#main"
+                            Html.header
+                                [
+                                    Html.a
+                                        [
+                                            prop.href (context.LinkTo "index.md")
+                                            prop.text site.Title
+                                        ]
+                                    Html.a
+                                        [
+                                            prop.href (context.LinkTo "about.md")
+                                            prop.text "About"
+                                        ]
+                                    for scheme in schemes do
+                                        Html.button
+                                            [
+                                                prop.type&#39; "button"
+                                                prop.custom ("data-nacara-theme-pick", scheme)
+                                                prop.text scheme
+                                            ]
+                                ]
+                            Html.main
+                                [
+                                    prop.id "main"
+                                    prop.children main
+                                ]
+                            Behaviours.scriptTag site
+                            yield! Shell.scripts site
+                        ]
+                ]
+        ]'><figcaption class="nacara-code__title">Layouts.fs</figcaption><div class="nacara-code__body" data-nacara-code-body><pre><code><span class="nacara-code__line"><span class="tok-keyword">module</span> <span class="tok-namespace">Blog</span><span class="tok-punctuation">.</span><span class="tok-namespace">Layouts</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Feliz</span><span class="tok-punctuation">.</span><span class="tok-namespace">ViewEngine</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Nacara</span><span class="tok-punctuation">.</span><span class="tok-namespace">Core</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Nacara</span><span class="tok-punctuation">.</span><span class="tok-namespace">Plugins</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Nacara</span><span class="tok-punctuation">.</span><span class="tok-namespace">Theme</span><span class="tok-punctuation">.</span><span class="tok-namespace">Core</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-keyword">private</span> <span class="tok-function">schemes</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">        <span class="tok-string">"light"</span>
+</span><span class="nacara-code__line">        <span class="tok-string">"dark"</span>
+</span><span class="nacara-code__line">        <span class="tok-string">"system"</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">shell</span> <span class="tok-punctuation">(</span><span class="tok-parameter">context</span><span class="tok-punctuation">:</span> <span class="tok-type">PageContext</span><span class="tok-operator">&lt;</span><span class="tok-type">'FrontMatter</span><span class="tok-operator">></span><span class="tok-punctuation">)</span> <span class="tok-punctuation">(</span><span class="tok-parameter">title</span><span class="tok-punctuation">:</span> <span class="tok-type">string</span><span class="tok-punctuation">)</span> <span class="tok-punctuation">(</span><span class="tok-parameter">main</span><span class="tok-punctuation">:</span> <span class="tok-type">ReactElement</span> <span class="tok-type">list</span><span class="tok-punctuation">)</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">let</span> <span class="tok-function">site</span> <span class="tok-operator">=</span> context<span class="tok-punctuation">.</span><span class="tok-property">Site</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">    <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">html</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">            prop<span class="tok-punctuation">.</span><span class="tok-property">lang</span> context<span class="tok-punctuation">.</span><span class="tok-property">Page</span><span class="tok-punctuation">.</span><span class="tok-property">Locale</span><span class="tok-punctuation">.</span><span class="tok-property">Code</span>
+</span><span class="nacara-code__line">            prop<span class="tok-punctuation">.</span><span class="tok-property">children</span>
+</span><span class="nacara-code__line">                <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                    <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">head</span>
+</span><span class="nacara-code__line">                        <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                            <span class="tok-keyword">yield!</span> <span class="tok-type">Head</span><span class="tok-punctuation">.</span><span class="tok-property">ofContext</span> title None context
+</span><span class="nacara-code__line">                            <span class="tok-type">Behaviours</span><span class="tok-punctuation">.</span><span class="tok-property">bootstrapTag</span> <span class="tok-constant">()</span>
+</span><span class="nacara-code__line">                            <span class="tok-type">Feed</span><span class="tok-punctuation">.</span><span class="tok-property">headLink</span> site <span class="tok-type">Posts</span><span class="tok-punctuation">.</span><span class="tok-property">feed</span>
+</span><span class="nacara-code__line">                            <span class="tok-keyword">yield!</span> <span class="tok-type">Shell</span><span class="tok-punctuation">.</span><span class="tok-property">stylesheetLinks</span> site
+</span><span class="nacara-code__line">                        <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">                    <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">body</span>
+</span><span class="nacara-code__line">                        <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                            <span class="tok-type">Shell</span><span class="tok-punctuation">.</span><span class="tok-property">skipLink</span> <span class="tok-string">"skip-link"</span> <span class="tok-string">"#main"</span>
+</span><span class="nacara-code__line">                            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">header</span>
+</span><span class="nacara-code__line">                                <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                                    <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">a</span>
+</span><span class="nacara-code__line">                                        <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                                            prop<span class="tok-punctuation">.</span><span class="tok-property">href</span> <span class="tok-punctuation">(</span>context<span class="tok-punctuation">.</span><span class="tok-property">LinkTo</span> <span class="tok-string">"index.md"</span><span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">                                            prop<span class="tok-punctuation">.</span><span class="tok-property">text</span> site<span class="tok-punctuation">.</span><span class="tok-property">Title</span>
+</span><span class="nacara-code__line">                                        <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">                                    <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">a</span>
+</span><span class="nacara-code__line">                                        <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                                            prop<span class="tok-punctuation">.</span><span class="tok-property">href</span> <span class="tok-punctuation">(</span>context<span class="tok-punctuation">.</span><span class="tok-property">LinkTo</span> <span class="tok-string">"about.md"</span><span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">                                            prop<span class="tok-punctuation">.</span><span class="tok-property">text</span> <span class="tok-string">"About"</span>
+</span><span class="nacara-code__line">                                        <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">                                    <span class="tok-keyword">for</span> <span class="tok-variable">scheme</span> <span class="tok-keyword">in</span> schemes <span class="tok-keyword">do</span>
+</span><span class="nacara-code__line">                                        <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">button</span>
+</span><span class="nacara-code__line">                                            <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                                                prop<span class="tok-punctuation">.</span><span class="tok-property">type'</span> <span class="tok-string">"button"</span>
+</span><span class="nacara-code__line">                                                prop<span class="tok-punctuation">.</span><span class="tok-property">custom</span> <span class="tok-punctuation">(</span><span class="tok-string">"data-nacara-theme-pick"</span><span class="tok-punctuation">,</span> scheme<span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">                                                prop<span class="tok-punctuation">.</span><span class="tok-property">text</span> scheme
+</span><span class="nacara-code__line">                                            <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">                                <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">                            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">main</span>
+</span><span class="nacara-code__line">                                <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                                    prop<span class="tok-punctuation">.</span><span class="tok-property">id</span> <span class="tok-string">"main"</span>
+</span><span class="nacara-code__line">                                    prop<span class="tok-punctuation">.</span><span class="tok-property">children</span> main
+</span><span class="nacara-code__line">                                <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">                            <span class="tok-type">Behaviours</span><span class="tok-punctuation">.</span><span class="tok-property">scriptTag</span> site
+</span><span class="nacara-code__line">                            <span class="tok-keyword">yield!</span> <span class="tok-type">Shell</span><span class="tok-punctuation">.</span><span class="tok-property">scripts</span> site
+</span><span class="nacara-code__line">                        <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">                <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">]</span>
+</span></code></pre><button class="nacara-code__copy" data-nacara-code-copy type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><table><thead><tr><th>Function</th><th>What it renders</th></tr></thead><tbody><tr><td><code>Head.ofContext title description context</code></td><td>Charset, viewport, title, description, canonical url, social cards</td></tr><tr><td><code>Behaviours.bootstrapTag ()</code></td><td>The script that sets the colour scheme before the first paint</td></tr><tr><td><code>Feed.headLink site feed</code></td><td>The <code>&lt;link rel="alternate"></code> of the feed</td></tr><tr><td><code>Shell.stylesheetLinks site</code></td><td>A link to every stylesheet: the plugins' and the site's</td></tr><tr><td><code>Shell.skipLink className target</code></td><td>The link that jumps past the navigation</td></tr><tr><td><code>Behaviours.scriptTag site</code></td><td>The shared script</td></tr><tr><td><code>Shell.scripts site</code></td><td>Every script plugins contributed, and the site's</td></tr></tbody></table><p><code>context.LinkTo</code> takes the source path of a page, relative to its collection root, and returns its url. A path starting with <code>/</code> is put under the base url. A path that names no page is reported by the <a href="/Nacara/plugins/checks/link-validator/">link validator</a>.</p><p>A button with <code>data-nacara-theme-pick</code> picks a colour scheme. The shared script sets <code>aria-pressed</code> on the button picked. See the <a href="/Nacara/plugins/themes/core/contracts/#behaviours">attributes</a> it reads.</p><h3 id="posts-and-tag-pages">Posts and tag pages<a class="nacara-heading-anchor" href="#posts-and-tag-pages" aria-label="Link to this section" data-pagefind-ignore></a></h3><figure class="nacara-code" data-nacara-code data-language="fsharp" data-frame="code" data-source='let private postLink (context: PageContext&lt;&#39;FrontMatter&gt;) (post: TypedPage&lt;Posts.Post&gt;) =
+    Html.li
+        [
+            Html.a
+                [
+                    prop.href (context.Site.UrlOf post.Page.Route)
+                    prop.text post.FrontMatter.Title
+                ]
+        ]
+
+let post (context: PageContext&lt;Posts.Post&gt;) =
+    let tagUrl tag =
+        context.Site.UrlOf(Posts.tagRoute context.Page.Locale tag 1)
+
+    shell
+        context
+        context.FrontMatter.Title
+        [
+            Html.h1 context.FrontMatter.Title
+            Html.div [ prop.dangerouslySetInnerHTML context.Content ]
+            Html.ul
+                [
+                    for tag in context.FrontMatter.Tags -&gt;
+                        Html.li
+                            [
+                                Html.a
+                                    [
+                                        prop.href (tagUrl tag)
+                                        prop.text tag
+                                    ]
+                            ]
+                ]
+        ]
+
+let tag (context: PageContext&lt;Posts.TagPage&gt;) =
+    let page = context.FrontMatter
+
+    let href number =
+        context.Site.UrlOf(Posts.tagRoute context.Page.Locale page.Tag.Name number)
+
+    shell
+        context
+        page.Tag.Name
+        [
+            Html.h1 page.Tag.Name
+            Html.ul [ for post in page.Paged.Items -&gt; postLink context post ]
+            Html.nav
+                [
+                    for slot in Paging.slots page.Paged.Number page.Paged.PageCount -&gt;
+                        match slot with
+                        | PageNumber number -&gt;
+                            Html.a
+                                [
+                                    prop.href (href number)
+                                    prop.text number
+                                ]
+                        | Gap -&gt; Html.span "…"
+                ]
+        ]'><figcaption class="nacara-code__title">Layouts.fs</figcaption><div class="nacara-code__body" data-nacara-code-body><pre><code><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-keyword">private</span> <span class="tok-function">postLink</span> <span class="tok-punctuation">(</span><span class="tok-parameter">context</span><span class="tok-punctuation">:</span> <span class="tok-type">PageContext</span><span class="tok-operator">&lt;</span><span class="tok-type">'FrontMatter</span><span class="tok-operator">></span><span class="tok-punctuation">)</span> <span class="tok-punctuation">(</span><span class="tok-parameter">post</span><span class="tok-punctuation">:</span> <span class="tok-type">TypedPage</span><span class="tok-operator">&lt;</span><span class="tok-type">Posts</span><span class="tok-punctuation">.</span><span class="tok-type">Post</span><span class="tok-operator">></span><span class="tok-punctuation">)</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">li</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">a</span>
+</span><span class="nacara-code__line">                <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                    prop<span class="tok-punctuation">.</span><span class="tok-property">href</span> <span class="tok-punctuation">(</span>context<span class="tok-punctuation">.</span><span class="tok-property">Site</span><span class="tok-punctuation">.</span><span class="tok-property">UrlOf</span> post<span class="tok-punctuation">.</span><span class="tok-property">Page</span><span class="tok-punctuation">.</span><span class="tok-property">Route</span><span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">                    prop<span class="tok-punctuation">.</span><span class="tok-property">text</span> post<span class="tok-punctuation">.</span><span class="tok-property">FrontMatter</span><span class="tok-punctuation">.</span><span class="tok-property">Title</span>
+</span><span class="nacara-code__line">                <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">post</span> <span class="tok-punctuation">(</span><span class="tok-parameter">context</span><span class="tok-punctuation">:</span> <span class="tok-type">PageContext</span><span class="tok-operator">&lt;</span><span class="tok-type">Posts</span><span class="tok-punctuation">.</span><span class="tok-type">Post</span><span class="tok-operator">></span><span class="tok-punctuation">)</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">let</span> <span class="tok-function">tagUrl</span> <span class="tok-parameter">tag</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">        context<span class="tok-punctuation">.</span><span class="tok-property">Site</span><span class="tok-punctuation">.</span><span class="tok-property">UrlOf</span><span class="tok-punctuation">(</span><span class="tok-type">Posts</span><span class="tok-punctuation">.</span><span class="tok-property">tagRoute</span> context<span class="tok-punctuation">.</span><span class="tok-property">Page</span><span class="tok-punctuation">.</span><span class="tok-property">Locale</span> tag <span class="tok-constant">1</span><span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">    <span class="tok-function">shell</span>
+</span><span class="nacara-code__line">        context
+</span><span class="nacara-code__line">        context<span class="tok-punctuation">.</span><span class="tok-property">FrontMatter</span><span class="tok-punctuation">.</span><span class="tok-property">Title</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">h1</span> context<span class="tok-punctuation">.</span><span class="tok-property">FrontMatter</span><span class="tok-punctuation">.</span><span class="tok-property">Title</span>
+</span><span class="nacara-code__line">            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">div</span> <span class="tok-punctuation">[</span> prop<span class="tok-punctuation">.</span><span class="tok-property">dangerouslySetInnerHTML</span> context<span class="tok-punctuation">.</span><span class="tok-property">Content</span> <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">ul</span>
+</span><span class="nacara-code__line">                <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                    <span class="tok-keyword">for</span> <span class="tok-variable">tag</span> <span class="tok-keyword">in</span> context<span class="tok-punctuation">.</span><span class="tok-property">FrontMatter</span><span class="tok-punctuation">.</span><span class="tok-property">Tags</span> <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">                        <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">li</span>
+</span><span class="nacara-code__line">                            <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                                <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">a</span>
+</span><span class="nacara-code__line">                                    <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                                        prop<span class="tok-punctuation">.</span><span class="tok-property">href</span> <span class="tok-punctuation">(</span><span class="tok-function">tagUrl</span> tag<span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">                                        prop<span class="tok-punctuation">.</span><span class="tok-property">text</span> tag
+</span><span class="nacara-code__line">                                    <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">                            <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">                <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">tag</span> <span class="tok-punctuation">(</span><span class="tok-parameter">context</span><span class="tok-punctuation">:</span> <span class="tok-type">PageContext</span><span class="tok-operator">&lt;</span><span class="tok-type">Posts</span><span class="tok-punctuation">.</span><span class="tok-type">TagPage</span><span class="tok-operator">></span><span class="tok-punctuation">)</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">let</span> <span class="tok-function">page</span> <span class="tok-operator">=</span> context<span class="tok-punctuation">.</span><span class="tok-property">FrontMatter</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">    <span class="tok-keyword">let</span> <span class="tok-function">href</span> <span class="tok-parameter">number</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">        context<span class="tok-punctuation">.</span><span class="tok-property">Site</span><span class="tok-punctuation">.</span><span class="tok-property">UrlOf</span><span class="tok-punctuation">(</span><span class="tok-type">Posts</span><span class="tok-punctuation">.</span><span class="tok-property">tagRoute</span> context<span class="tok-punctuation">.</span><span class="tok-property">Page</span><span class="tok-punctuation">.</span><span class="tok-property">Locale</span> page<span class="tok-punctuation">.</span><span class="tok-property">Tag</span><span class="tok-punctuation">.</span><span class="tok-property">Name</span> number<span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">    <span class="tok-function">shell</span>
+</span><span class="nacara-code__line">        context
+</span><span class="nacara-code__line">        page<span class="tok-punctuation">.</span><span class="tok-property">Tag</span><span class="tok-punctuation">.</span><span class="tok-property">Name</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">h1</span> page<span class="tok-punctuation">.</span><span class="tok-property">Tag</span><span class="tok-punctuation">.</span><span class="tok-property">Name</span>
+</span><span class="nacara-code__line">            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">ul</span> <span class="tok-punctuation">[</span> <span class="tok-keyword">for</span> <span class="tok-variable">post</span> <span class="tok-keyword">in</span> page<span class="tok-punctuation">.</span><span class="tok-property">Paged</span><span class="tok-punctuation">.</span><span class="tok-property">Items</span> <span class="tok-keyword">-></span> <span class="tok-function">postLink</span> context post <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">nav</span>
+</span><span class="nacara-code__line">                <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                    <span class="tok-keyword">for</span> <span class="tok-variable">slot</span> <span class="tok-keyword">in</span> <span class="tok-type">Paging</span><span class="tok-punctuation">.</span><span class="tok-property">slots</span> page<span class="tok-punctuation">.</span><span class="tok-property">Paged</span><span class="tok-punctuation">.</span><span class="tok-property">Number</span> page<span class="tok-punctuation">.</span><span class="tok-property">Paged</span><span class="tok-punctuation">.</span><span class="tok-property">PageCount</span> <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">                        <span class="tok-keyword">match</span> slot <span class="tok-keyword">with</span>
+</span><span class="nacara-code__line">                        <span class="tok-keyword">|</span> <span class="tok-constructor">PageNumber</span> <span class="tok-variable">number</span> <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">                            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">a</span>
+</span><span class="nacara-code__line">                                <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">                                    prop<span class="tok-punctuation">.</span><span class="tok-property">href</span> <span class="tok-punctuation">(</span><span class="tok-function">href</span> number<span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">                                    prop<span class="tok-punctuation">.</span><span class="tok-property">text</span> number
+</span><span class="nacara-code__line">                                <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">                        <span class="tok-keyword">|</span> <span class="tok-constructor">Gap</span> <span class="tok-keyword">-></span> <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">span</span> <span class="tok-string">"…"</span>
+</span><span class="nacara-code__line">                <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">]</span>
+</span></code></pre><button class="nacara-code__copy" data-nacara-code-copy type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><p><code>context.Content</code> is the page's rendered body. <code>Paging.slots</code> lists the pages of a pager, with a <code>Gap</code> for the pages left out.</p><h3 id="pages">Pages<a class="nacara-heading-anchor" href="#pages" aria-label="Link to this section" data-pagefind-ignore></a></h3><p>The pages that are not posts name their layout in their front matter.</p><figure class="nacara-code" data-nacara-code data-language="fsharp" data-frame="code" data-source='type Page =
+    {
+        Title: string
+        Layout: string
+    }
+
+let pageDecoder: Decoder&lt;Page&gt; =
+    Decode.object (fun get -&gt;
+        {
+            Title = get.Required.Field "title" Decode.string
+            Layout = get.Optional.Field "layout" Decode.string |&gt; Option.defaultValue "page"
+        }
+    )
+
+let page (context: PageContext&lt;Page&gt;) =
+    shell
+        context
+        context.FrontMatter.Title
+        [ Html.div [ prop.dangerouslySetInnerHTML context.Content ] ]
+
+let home (context: PageContext&lt;Page&gt;) =
+    let latest =
+        context.PagesOf Posts.collection
+        |&gt; List.sortByDescending _.FrontMatter.Date
+        |&gt; List.truncate 5
+
+    shell
+        context
+        context.FrontMatter.Title
+        [
+            Html.div [ prop.dangerouslySetInnerHTML context.Content ]
+            Html.ul [ for post in latest -&gt; postLink context post ]
+        ]'><figcaption class="nacara-code__title">Layouts.fs</figcaption><div class="nacara-code__body" data-nacara-code-body><pre><code><span class="nacara-code__line"><span class="tok-keyword">type</span> <span class="tok-type">Page</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">{</span>
+</span><span class="nacara-code__line">        <span class="tok-property">Title</span><span class="tok-punctuation">:</span> <span class="tok-type">string</span>
+</span><span class="nacara-code__line">        <span class="tok-property">Layout</span><span class="tok-punctuation">:</span> <span class="tok-type">string</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">}</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">pageDecoder</span><span class="tok-punctuation">:</span> <span class="tok-type">Decoder</span><span class="tok-operator">&lt;</span><span class="tok-type">Page</span><span class="tok-operator">></span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-type">Decode</span><span class="tok-punctuation">.</span><span class="tok-property">object</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">get</span> <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">{</span>
+</span><span class="nacara-code__line">            <span class="tok-property">Title</span> <span class="tok-operator">=</span> get<span class="tok-punctuation">.</span><span class="tok-property">Required</span><span class="tok-punctuation">.</span><span class="tok-property">Field</span> <span class="tok-string">"title"</span> <span class="tok-type">Decode</span><span class="tok-punctuation">.</span><span class="tok-property">string</span>
+</span><span class="nacara-code__line">            <span class="tok-property">Layout</span> <span class="tok-operator">=</span> get<span class="tok-punctuation">.</span><span class="tok-property">Optional</span><span class="tok-punctuation">.</span><span class="tok-property">Field</span> <span class="tok-string">"layout"</span> <span class="tok-type">Decode</span><span class="tok-punctuation">.</span><span class="tok-property">string</span> <span class="tok-operator">|></span> <span class="tok-type">Option</span><span class="tok-punctuation">.</span><span class="tok-property">defaultValue</span> <span class="tok-string">"page"</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">}</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">page</span> <span class="tok-punctuation">(</span><span class="tok-parameter">context</span><span class="tok-punctuation">:</span> <span class="tok-type">PageContext</span><span class="tok-operator">&lt;</span><span class="tok-type">Page</span><span class="tok-operator">></span><span class="tok-punctuation">)</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-function">shell</span>
+</span><span class="nacara-code__line">        context
+</span><span class="nacara-code__line">        context<span class="tok-punctuation">.</span><span class="tok-property">FrontMatter</span><span class="tok-punctuation">.</span><span class="tok-property">Title</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">[</span> <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">div</span> <span class="tok-punctuation">[</span> prop<span class="tok-punctuation">.</span><span class="tok-property">dangerouslySetInnerHTML</span> context<span class="tok-punctuation">.</span><span class="tok-property">Content</span> <span class="tok-punctuation">]</span> <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">home</span> <span class="tok-punctuation">(</span><span class="tok-parameter">context</span><span class="tok-punctuation">:</span> <span class="tok-type">PageContext</span><span class="tok-operator">&lt;</span><span class="tok-type">Page</span><span class="tok-operator">></span><span class="tok-punctuation">)</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-keyword">let</span> <span class="tok-function">latest</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">        context<span class="tok-punctuation">.</span><span class="tok-property">PagesOf</span> <span class="tok-type">Posts</span><span class="tok-punctuation">.</span><span class="tok-property">collection</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">List</span><span class="tok-punctuation">.</span><span class="tok-property">sortByDescending</span> _<span class="tok-punctuation">.</span><span class="tok-property">FrontMatter</span><span class="tok-punctuation">.</span><span class="tok-property">Date</span>
+</span><span class="nacara-code__line">        <span class="tok-operator">|></span> <span class="tok-type">List</span><span class="tok-punctuation">.</span><span class="tok-property">truncate</span> <span class="tok-constant">5</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line">    <span class="tok-function">shell</span>
+</span><span class="nacara-code__line">        context
+</span><span class="nacara-code__line">        context<span class="tok-punctuation">.</span><span class="tok-property">FrontMatter</span><span class="tok-punctuation">.</span><span class="tok-property">Title</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">div</span> <span class="tok-punctuation">[</span> prop<span class="tok-punctuation">.</span><span class="tok-property">dangerouslySetInnerHTML</span> context<span class="tok-punctuation">.</span><span class="tok-property">Content</span> <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">            <span class="tok-type">Html</span><span class="tok-punctuation">.</span><span class="tok-property">ul</span> <span class="tok-punctuation">[</span> <span class="tok-keyword">for</span> <span class="tok-variable">post</span> <span class="tok-keyword">in</span> latest <span class="tok-keyword">-></span> <span class="tok-function">postLink</span> context post <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">]</span>
+</span></code></pre><button class="nacara-code__copy" data-nacara-code-copy type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><p><code>context.PagesOf collection</code> returns the pages of a collection in the page's locale, as <code>TypedPage</code> values.</p><h2 id="the-site">The site<a class="nacara-heading-anchor" href="#the-site" aria-label="Link to this section" data-pagefind-ignore></a></h2><figure class="nacara-code" data-nacara-code data-language="fsharp" data-frame="code" data-source='module Blog.Site
+
+open Nacara.Core
+open Nacara.Plugins
+open Nacara.Theme.Core
+open Blog
+
+let pages =
+    Collection.create "pages" Layouts.pageDecoder
+    |&gt; Collection.title _.Title
+    |&gt; Collection.layouts
+        _.Layout
+        [
+            "page", Layouts.page
+            "home", Layouts.home
+        ]
+
+let posts = Posts.collection |&gt; Collection.layout Layouts.post
+
+let tags =
+    Collection.fromPages "tags" Posts.collection Posts.tagPages
+    |&gt; Collection.title _.Tag.Name
+    |&gt; Collection.route (fun page -&gt;
+        Posts.tagRoute page.Locale page.FrontMatter.Tag.Name page.FrontMatter.Paged.Number
+    )
+    |&gt; Collection.layout Layouts.tag
+
+let site =
+    Site.create "My blog"
+    |&gt; Site.origin "https://example.com"
+    |&gt; Site.stylesheet "assets/site.css"
+    |&gt; Markdown.register
+    |&gt; ThemeCore.register
+    |&gt; Feed.register Posts.feed
+    |&gt; Site.collection pages
+    |&gt; Site.collection posts
+    |&gt; Site.collection tags
+
+[&lt;EntryPoint&gt;]
+let main argv = Nacara.run site argv'><figcaption class="nacara-code__title">Site.fs</figcaption><div class="nacara-code__body" data-nacara-code-body><pre><code><span class="nacara-code__line"><span class="tok-keyword">module</span> <span class="tok-namespace">Blog</span><span class="tok-punctuation">.</span><span class="tok-namespace">Site</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Nacara</span><span class="tok-punctuation">.</span><span class="tok-namespace">Core</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Nacara</span><span class="tok-punctuation">.</span><span class="tok-namespace">Plugins</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Nacara</span><span class="tok-punctuation">.</span><span class="tok-namespace">Theme</span><span class="tok-punctuation">.</span><span class="tok-namespace">Core</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">open</span> <span class="tok-namespace">Blog</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">pages</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-type">Collection</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-string">"pages"</span> <span class="tok-type">Layouts</span><span class="tok-punctuation">.</span><span class="tok-property">pageDecoder</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Collection</span><span class="tok-punctuation">.</span><span class="tok-property">title</span> _<span class="tok-punctuation">.</span><span class="tok-property">Title</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Collection</span><span class="tok-punctuation">.</span><span class="tok-property">layouts</span>
+</span><span class="nacara-code__line">        _<span class="tok-punctuation">.</span><span class="tok-property">Layout</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">[</span>
+</span><span class="nacara-code__line">            <span class="tok-string">"page"</span><span class="tok-punctuation">,</span> <span class="tok-type">Layouts</span><span class="tok-punctuation">.</span><span class="tok-property">page</span>
+</span><span class="nacara-code__line">            <span class="tok-string">"home"</span><span class="tok-punctuation">,</span> <span class="tok-type">Layouts</span><span class="tok-punctuation">.</span><span class="tok-property">home</span>
+</span><span class="nacara-code__line">        <span class="tok-punctuation">]</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">posts</span> <span class="tok-operator">=</span> <span class="tok-type">Posts</span><span class="tok-punctuation">.</span><span class="tok-property">collection</span> <span class="tok-operator">|></span> <span class="tok-type">Collection</span><span class="tok-punctuation">.</span><span class="tok-property">layout</span> <span class="tok-type">Layouts</span><span class="tok-punctuation">.</span><span class="tok-property">post</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">tags</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-type">Collection</span><span class="tok-punctuation">.</span><span class="tok-property">fromPages</span> <span class="tok-string">"tags"</span> <span class="tok-type">Posts</span><span class="tok-punctuation">.</span><span class="tok-property">collection</span> <span class="tok-type">Posts</span><span class="tok-punctuation">.</span><span class="tok-property">tagPages</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Collection</span><span class="tok-punctuation">.</span><span class="tok-property">title</span> _<span class="tok-punctuation">.</span><span class="tok-property">Tag</span><span class="tok-punctuation">.</span><span class="tok-property">Name</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Collection</span><span class="tok-punctuation">.</span><span class="tok-property">route</span> <span class="tok-punctuation">(</span><span class="tok-keyword">fun</span> <span class="tok-parameter">page</span> <span class="tok-keyword">-></span>
+</span><span class="nacara-code__line">        <span class="tok-type">Posts</span><span class="tok-punctuation">.</span><span class="tok-property">tagRoute</span> page<span class="tok-punctuation">.</span><span class="tok-property">Locale</span> page<span class="tok-punctuation">.</span><span class="tok-property">FrontMatter</span><span class="tok-punctuation">.</span><span class="tok-property">Tag</span><span class="tok-punctuation">.</span><span class="tok-property">Name</span> page<span class="tok-punctuation">.</span><span class="tok-property">FrontMatter</span><span class="tok-punctuation">.</span><span class="tok-property">Paged</span><span class="tok-punctuation">.</span><span class="tok-property">Number</span>
+</span><span class="nacara-code__line">    <span class="tok-punctuation">)</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Collection</span><span class="tok-punctuation">.</span><span class="tok-property">layout</span> <span class="tok-type">Layouts</span><span class="tok-punctuation">.</span><span class="tok-property">tag</span>
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">site</span> <span class="tok-operator">=</span>
+</span><span class="nacara-code__line">    <span class="tok-type">Site</span><span class="tok-punctuation">.</span><span class="tok-property">create</span> <span class="tok-string">"My blog"</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Site</span><span class="tok-punctuation">.</span><span class="tok-property">origin</span> <span class="tok-string">"https://example.com"</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Site</span><span class="tok-punctuation">.</span><span class="tok-property">stylesheet</span> <span class="tok-string">"assets/site.css"</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Markdown</span><span class="tok-punctuation">.</span><span class="tok-property">register</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">ThemeCore</span><span class="tok-punctuation">.</span><span class="tok-property">register</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Feed</span><span class="tok-punctuation">.</span><span class="tok-property">register</span> <span class="tok-type">Posts</span><span class="tok-punctuation">.</span><span class="tok-property">feed</span>
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Site</span><span class="tok-punctuation">.</span><span class="tok-property">collection</span> pages
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Site</span><span class="tok-punctuation">.</span><span class="tok-property">collection</span> posts
+</span><span class="nacara-code__line">    <span class="tok-operator">|></span> <span class="tok-type">Site</span><span class="tok-punctuation">.</span><span class="tok-property">collection</span> tags
+</span><span class="nacara-code__line">
+</span><span class="nacara-code__line"><span class="tok-punctuation">[&lt;</span><span class="tok-attribute">EntryPoint</span><span class="tok-punctuation">>]</span>
+</span><span class="nacara-code__line"><span class="tok-keyword">let</span> <span class="tok-function">main</span> <span class="tok-parameter">argv</span> <span class="tok-operator">=</span> <span class="tok-type">Nacara</span><span class="tok-punctuation">.</span><span class="tok-property">run</span> site argv
+</span></code></pre><button class="nacara-code__copy" data-nacara-code-copy type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><p><code>Collection.layouts</code> renders each page with the layout its front matter names. A page naming another layout fails the build.</p><p><code>Collection.fromPages</code> makes a collection from the pages of another. Each value the function returns is the front matter of one page. The pages have no source file, so the collection needs a <code>Collection.route</code>.</p><p><code>content/pages/404.md</code> is written as <code>404.html</code>, where static hosts look for it.</p><h2 id="styles">Styles<a class="nacara-heading-anchor" href="#styles" aria-label="Link to this section" data-pagefind-ignore></a></h2><p><code>ThemeCore.register</code> registers the shared script, the default <code>--nacara-*</code> tokens and the stylesheet that draws what plugins emit: code blocks, callouts, tabs. They are in the <code>nacara.tokens</code> and <code>nacara.content</code> cascade layers. The site's own stylesheet is outside the layers, so its rules win over them.</p><figure class="nacara-code" data-nacara-code data-language="css" data-frame="code" data-source="body {
+    font-family: var(--nacara-font-sans);
+    color: var(--nacara-text);
+    background: var(--nacara-bg);
+}"><figcaption class="nacara-code__title">assets/site.css</figcaption><div class="nacara-code__body" data-nacara-code-body><pre><code><span class="nacara-code__line"><span class="tok-tag">body</span> <span class="tok-punctuation">{</span>
+</span><span class="nacara-code__line">    <span class="tok-property">font-family</span><span class="tok-punctuation">:</span> <span class="tok-function">var</span><span class="tok-punctuation">(</span><span class="tok-variable">--nacara-font-sans</span><span class="tok-punctuation">);</span>
+</span><span class="nacara-code__line">    <span class="tok-property">color</span><span class="tok-punctuation">:</span> <span class="tok-function">var</span><span class="tok-punctuation">(</span><span class="tok-variable">--nacara-text</span><span class="tok-punctuation">);</span>
+</span><span class="nacara-code__line">    <span class="tok-property">background</span><span class="tok-punctuation">:</span> <span class="tok-function">var</span><span class="tok-punctuation">(</span><span class="tok-variable">--nacara-bg</span><span class="tok-punctuation">);</span>
+</span><span class="nacara-code__line"><span class="tok-punctuation">}</span>
+</span></code></pre><button class="nacara-code__copy" data-nacara-code-copy type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><p>The tokens are set on <code>:root</code>, <code>:root[data-theme="light"]</code> and <code>:root[data-theme="dark"]</code>. To change one, set it under the same selector. A site that defines every token itself turns the default ones off:</p><figure class="nacara-code" data-nacara-code data-language="fsharp" data-frame="code" data-source="|&gt; ThemeCore.registerWith (ThemeCore.defaultTokens false)"><div class="nacara-code__body" data-nacara-code-body><pre><code><span class="nacara-code__line"><span class="tok-operator">|></span> <span class="tok-type">ThemeCore</span><span class="tok-punctuation">.</span><span class="tok-property">registerWith</span> <span class="tok-punctuation">(</span><span class="tok-type">ThemeCore</span><span class="tok-punctuation">.</span><span class="tok-property">defaultTokens</span> <span class="tok-constant">false</span><span class="tok-punctuation">)</span>
+</span></code></pre><button class="nacara-code__copy" data-nacara-code-copy type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure><p>The <a href="/Nacara/plugins/themes/core/contracts/#tokens">tokens</a> lists them.</p><h2 id="run-it">Run it<a class="nacara-heading-anchor" href="#run-it" aria-label="Link to this section" data-pagefind-ignore></a></h2><figure class="nacara-code" data-nacara-code data-language="bash" data-frame="terminal" data-source="dotnet run -- watch    # served with the drafts
+dotnet run -- build    # written to output/, without the drafts"><figcaption class="nacara-code__title">Terminal</figcaption><div class="nacara-code__body" data-nacara-code-body><pre><code><span class="nacara-code__line"><span class="tok-function">dotnet</span> run <span class="tok-constant">--</span> watch    <span class="tok-comment"># served with the drafts</span>
+</span><span class="nacara-code__line"><span class="tok-function">dotnet</span> run <span class="tok-constant">--</span> build    <span class="tok-comment"># written to output/, without the drafts</span>
+</span></code></pre><button class="nacara-code__copy" data-nacara-code-copy type="button" aria-label="Copy code"><svg class="nacara-code__copy-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2" /><path d="M5 15V5a2 2 0 0 1 2-2h10" /></svg><svg class="nacara-code__copy-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg></button></div></figure></div><a class="nacara-edit-link" href="https://github.com/MangelMaxime/Nacara/edit/main/docs/content/guide/custom-site.md"><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg></span><span>Edit this page</span></a><nav class="nacara-page-nav"><a class="nacara-page-nav__link nacara-page-nav__link--previous" href="/Nacara/guide/theme/"><span class="nacara-page-nav__label">Previous</span><span>Theming</span></a><a class="nacara-page-nav__link nacara-page-nav__link--next" href="/Nacara/guide/command-line/"><span class="nacara-page-nav__label">Next</span><span>Command line</span></a></nav></main><nav class="nacara-toc" aria-label="On this page"><p class="nacara-toc__title">On this page</p><ul class="nacara-toc__list"><li><a class="nacara-toc__link" data-level="2" href="#create-the-project" data-nacara-toc-link>Create the project</a></li><li><a class="nacara-toc__link" data-level="2" href="#posts" data-nacara-toc-link>Posts</a></li><li><a class="nacara-toc__link" data-level="3" href="#tag-pages" data-nacara-toc-link>Tag pages</a></li><li><a class="nacara-toc__link" data-level="3" href="#feed" data-nacara-toc-link>Feed</a></li><li><a class="nacara-toc__link" data-level="2" href="#layouts" data-nacara-toc-link>Layouts</a></li><li><a class="nacara-toc__link" data-level="3" href="#the-shell" data-nacara-toc-link>The shell</a></li><li><a class="nacara-toc__link" data-level="3" href="#posts-and-tag-pages" data-nacara-toc-link>Posts and tag pages</a></li><li><a class="nacara-toc__link" data-level="3" href="#pages" data-nacara-toc-link>Pages</a></li><li><a class="nacara-toc__link" data-level="2" href="#the-site" data-nacara-toc-link>The site</a></li><li><a class="nacara-toc__link" data-level="2" href="#styles" data-nacara-toc-link>Styles</a></li><li><a class="nacara-toc__link" data-level="2" href="#run-it" data-nacara-toc-link>Run it</a></li></ul></nav></div><footer class="nacara-footer"><p>Nacara is built with F# · <a href="https://github.com/MangelMaxime/Nacara">Source</a></p></footer><script src="/Nacara/assets/nacara-behaviours.f0491338.js" defer="defer"></script><script src="/Nacara/assets/tree-sitter/highlight.js" defer="defer"></script><script src="/Nacara/assets/search.js" defer="defer"></script><script src="/Nacara/assets/fsharp-api.js" defer="defer"></script><script src="/Nacara/assets/live-example/live-example.js" defer="defer"></script><script src="/Nacara/assets/versions.js" defer="defer"></script><script src="/Nacara/assets/nacara-menu.aaa7990c.js" defer="defer"></script></body></html>
