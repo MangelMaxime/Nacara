@@ -361,10 +361,7 @@ type DevServer(root: AbsolutePath, basePath: string, host: string, port: int) =
                         diagnostic.Span
                         |> Option.map (fun span ->
                             let file =
-                                Path.GetRelativePath(
-                                    AbsolutePath.value projectRoot,
-                                    AbsolutePath.value span.File
-                                )
+                                RelativePath.fromRoot projectRoot span.File |> RelativePath.value
 
                             $"%s{file}(%i{span.Line},%i{span.Column})"
                         )
