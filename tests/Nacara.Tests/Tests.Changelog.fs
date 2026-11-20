@@ -453,6 +453,34 @@ let all =
             )
 
             test (
+                "the menu reads the changelogs from the project root it is built for",
+                fun _ ->
+                    let root = Fixture.copyToTemporaryDirectory ()
+
+                    File.WriteAllText(
+                        Path.Combine(AbsolutePath.value root, "CHANGELOG.md"),
+                        "---\nname: Named in the file\n---\n\n# Changelog\n\n## 1.0.0\n\n- Something\n"
+                    )
+
+                    let registry =
+                        Registry.ofPlugins
+                            { Registry.empty.Context with
+                                ProjectRoot = root
+                            }
+                            [
+                                Changelog.createWith
+                                    "changelog"
+                                    [ ChangelogSource.create "Mine" "CHANGELOG.md" ]
+                            ]
+
+                    assertThat
+                        (Registry.extras<MenuOutline> registry
+                         |> List.collect _.Items
+                         |> List.map _.Label)
+                        (tag "the name the file declares wins" >> isEqualTo [ "Named in the file" ])
+            )
+
+            test (
                 "the changelogs a site declares are the menu it gets",
                 fun _ ->
                     let sources =
@@ -465,7 +493,8 @@ let all =
                             |> ChangelogSource.group "Plugins"
                         ]
 
-                    let menu = Changelog.menu "changelog" sources
+                    let menu =
+                        Changelog.menu (Fixture.copyToTemporaryDirectory ()) "changelog" sources
 
                     assertThat
                         menu.Section

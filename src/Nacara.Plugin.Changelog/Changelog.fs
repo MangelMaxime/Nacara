@@ -263,11 +263,11 @@ module Changelog =
     /// that name, in the order the groups first appear, and the rest where you declared them. A
     /// menu the site writes for the section is used instead.
     /// </remarks>
+    /// <param name="root">What the sources' paths are resolved against: the project root.</param>
     /// <param name="section">Name of the section this menu is for - the collection's name.</param>
     /// <param name="sources">The changelogs the collection publishes.</param>
-    let menu (section: string) (sources: ChangelogSource list) =
-        let sources =
-            Sources.resolve (AbsolutePath.create (Nacara.defaultProjectRoot ())) sources
+    let menu (root: AbsolutePath) (section: string) (sources: ChangelogSource list) =
+        let sources = Sources.resolve root sources
 
         let page (source: ChangelogSource) =
             let slug = source.Slug |> Option.defaultValue (Slug.create source.Label)
@@ -306,7 +306,7 @@ module Changelog =
 
     let private changelogCss = lazy readResource "changelog.css"
 
-    type private ChangelogPlugin(offered: MenuOutline option) =
+    type private ChangelogPlugin(section: string option, sources: ChangelogSource list) =
         interface IPlugin with
             member _.Name = "changelog"
 
@@ -318,18 +318,19 @@ module Changelog =
                     )
                     |> Registry.extra (Stylesheet "assets/changelog.css")
 
-                match offered with
-                | Some outline -> registry |> Registry.extra outline
+                match section with
+                | Some section ->
+                    registry |> Registry.extra (menu registry.Context.ProjectRoot section sources)
                 | None -> registry
 
     /// <summary>The styling of changelog pages. The collection produces the pages.</summary>
-    let create () = ChangelogPlugin(None) :> IPlugin
+    let create () = ChangelogPlugin(None, []) :> IPlugin
 
     /// <summary>The styling, plus a menu built from the changelogs you publish.</summary>
     /// <param name="section">The collection's name, which is the section the menu is for.</param>
     /// <param name="sources">The same changelogs you gave the collection.</param>
     let createWith (section: string) (sources: ChangelogSource list) =
-        ChangelogPlugin(Some(menu section sources)) :> IPlugin
+        ChangelogPlugin(Some section, sources) :> IPlugin
 
     /// <summary>Add changelog styling to a site.</summary>
     let register (site: Site) = Site.plugin (create ()) site
