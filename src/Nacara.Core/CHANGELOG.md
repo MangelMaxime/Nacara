@@ -1,5 +1,5 @@
 ---
-last_commit_released: 4df579722848356abcfd265a61967830b991af33
+last_commit_released: 6602c4d64e2751e5457356f852a3fe963e7ec169
 ---
 
 # Changelog
@@ -11,6 +11,25 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 This changelog is generated using [EasyBuild.ShipIt](https://github.com/easybuild-org/EasyBuild.ShipIt).
 
 ⚠ Only edit the front matter metadata at the top of this file. All other changes will be overwritten when a new release is created.
+
+## 2.0.0-beta.7 - 2026-11-20
+
+### 🚀 Features
+
+* *(core)* Derived collections and site files ([7991142](https://github.com/MangelMaxime/Nacara/commit/7991142f0c0230e18bd4072098621d3a11aae286))
+* *(core)* Default the source, output and 404 route ([43699e1](https://github.com/MangelMaxime/Nacara/commit/43699e14b311ee7fb45aabc98a625009d6477a63))
+* *(core)* Typed pages, paging and taxonomies ([0561723](https://github.com/MangelMaxime/Nacara/commit/056172339e3ade93debf337c0af99e8664a01feb))
+* *(core)* Leave drafts out of a build ([bfc625d](https://github.com/MangelMaxime/Nacara/commit/bfc625d4fd6b356bf52ebe0033862a0c9bf02503))
+* *(core)* Page lookup and per-page layouts ([b0d72c9](https://github.com/MangelMaxime/Nacara/commit/b0d72c9cecf8662598e8459e594b36fd4c14a977))
+* *(core)* Show build problems in the browser ([0561219](https://github.com/MangelMaxime/Nacara/commit/0561219380d0c1a4d15ba9efcabad72588e41812))
+* *(core)* Tell a plugin which build it configures ([8e17783](https://github.com/MangelMaxime/Nacara/commit/8e177838cfa65af348fb5cb4f836a3defbe13363))
+* *(markdown)* Size images and load them lazily ([fba46ec](https://github.com/MangelMaxime/Nacara/commit/fba46ec355b57ccd9f568fa943e36f421abbf749))
+
+### 🐞 Bug Fixes
+
+* *(core)* Show problem locations with forward slashes ([6602c4d](https://github.com/MangelMaxime/Nacara/commit/6602c4d64e2751e5457356f852a3fe963e7ec169))
+
+<strong><small>[View changes on Github](https://github.com/MangelMaxime/Nacara/compare/4df579722848356abcfd265a61967830b991af33..6602c4d64e2751e5457356f852a3fe963e7ec169)</small></strong>
 
 ## 2.0.0-beta.6 - 2026-09-16
 
